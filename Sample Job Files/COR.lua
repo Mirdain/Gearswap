@@ -29,38 +29,61 @@ function get_sets()
 	sets.Movement = {
 		legs="Carmine Cuisses +1",
 	}
+
+	sets.Ammo = {}
+	sets.Ammo.RA = {}
+	sets.Ammo.WS = {}
+	sets.Ammo.MAB = {}
+	sets.Ammo.QS = {}
+
 	sets.Precast = {}
+	-- 70 snapshot is Cap.  Need 60 due to 10 from gifts
+	-- Snapshot / Rapidshot
+	-- Rapid shot is like quick magic
+	-- Snapshot is like Fast Cast
+
+	--No flurry - max Snapshot gear
 	sets.Precast.RA = {
-		body="Oshosi Vest +1",
-		feet="Meg. Jam. +2",
-		waist="Yemaya Belt",
-		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}},
+	    head="Chass. Tricorne +1", -- 0/14
+		--Taeon Chapeau
+		body="Oshosi Vest +1", -- 14/0
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
+		feet="Meg. Jam. +2", -- 10/0
+		waist="Yemaya Belt", -- 0/10
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 10/0
+		-- Totals 62/24
     }
+	-- Flurry
 	sets.Precast.RA.Flurry = {
-        --ammo=gear.RAbullet,
-        --head=gear.Taeon_RA_head, --10/0
-        body="Oshosi Vest +1", --14/0
-        hands="Carmine Fin. Ga. +1", --8/11
-        --legs=gear.Adhemar_D_legs, --9/10
-        feet="Meg. Jam. +2", --10/0
-        --back=gear.COR_SNP_Cape, --10/0
-        waist="Yemaya Belt", --0/5
+	    head="Chass. Tricorne +1", -- 0/14
+		-- Need Taeon Chapeau for +10 Snapshot
+		body="Oshosi Vest +1", -- 14/0
+		-- Need COR AF body for Snapshot +20
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
+		feet="Meg. Jam. +2", -- 10/0
+		waist="Yemaya Belt", -- 0/10
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 10/0
     } 
+	-- Flurry II
 	sets.Precast.RA.Flurry_II = {
-        --ammo=gear.RAbullet,
-        --head=gear.Taeon_RA_head, --10/0
-        body="Oshosi Vest +1", --14/0
-        hands="Carmine Fin. Ga. +1", --8/11
-        --legs=gear.Adhemar_D_legs, --9/10
-        feet="Meg. Jam. +2", --10/0
-        --back=gear.COR_SNP_Cape, --10/0
-        waist="Yemaya Belt", --0/5
+	    head="Chass. Tricorne +1", -- 0/14
+		body="Oshosi Vest +1", -- 14/0
+		-- Need COR AF body for Rapid shot +20
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
+		feet="Meg. Jam. +2", -- 10/0
+		-- Persuers Feet for Rapidshot
+		waist="Yemaya Belt", -- 0/10
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 10/0
     } 
 	sets.Precast.Enmity = {}
 	sets.Midcast = {}
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = {
-        --ammo=gear.RAbullet,
+		main={ name="Rostam", augments={'Path: A',}},
+		sub="Nusku Shield",
         head="Malignance Chapeau",
         body="Malignance Tabard",
         hands="Malignance Gloves",
@@ -68,10 +91,11 @@ function get_sets()
         feet="Malignance Boots",
         neck="Iskur Gorget",
         ear1="Enervating Earring",
-        ear2="Telos Earring",
+		ear2="Neritic Earring"
+        --ear2="Telos Earring",
         ring1="Dingir Ring",
         ring2="Ilabrat Ring",
-        --back=gear.COR_RA_Cape,
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}},
         waist="Yemaya Belt",
     }
 	-- Ranged Attack Gear (Triple Shot Midshot)
@@ -81,7 +105,9 @@ function get_sets()
         hands="Lanun Gants +3",
         legs="Osh. Trousers +1", --6
         feet="Osh. Leggings +1", --3
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}},
     } --27
+
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
 	-- Cure Set
