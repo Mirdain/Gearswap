@@ -1,11 +1,11 @@
 
---Mirdain
+--Salidar
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "1"
+LockStylePallet = "9"
 MacroBook = "9"
 MacroSet = "1"
 
@@ -17,128 +17,98 @@ send_command('bind f9 gs c SongBuff')
 add_to_chat(8,'[F9] - 4 Song Pre-Buff')
 
 function get_sets()
-		-- Instruments to use
-		sets.Song ={}
-		sets.Song.Count = {
-			range="Daurdabla"
-		}
-		sets.Song.Strength = {
-			range="Gjallarhorn"
-		}
-		sets.Song.Honor = {
-			range="Marsyas"
-		}
-		sets.Song.AOE_Sleep = {
-			range="Daurdabla"
-		}
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		main={ name="Kali", augments={'MP+60','Mag. Acc.+20','"Refresh"+1',}},
 		sub="Genmei Shield",
+		range="Marsyas",
+		head="Inyanga Tiara +2",
+		body="Inyanga Jubbah +2",
+		hands="Inyan. Dastanas +2",
+		legs="Inyanga Shalwar +2",
+		feet="Inyan. Crackows +2",
+		neck="Loricate Torque +1",
+		waist="Flume Belt +1",
+		left_ear={ name="Moonshade Earring", augments={'Mag. Acc.+4','Latent effect: "Refresh"+1',}},
+		right_ear="Sanare Earring",
 		left_ring="Stikini Ring +1",
-		head="Aya. Zucchetto +2",
-		body={ name="Vanya Robe", augments={'HP+50','MP+50','"Refresh"+2',}},
-		hands="Aya. Manopolas +2",
-		legs="Aya. Cosciales +2",
-		feet="Fili Cothurnes +1",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Genmei Earring",
-		right_ear="Etiolation Earring",
 		right_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}},
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
-	sets.Movement = {}
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
-	    main={ name="Kali", augments={'MP+60','Mag. Acc.+20','"Refresh"+1',}},
-		sub="Genmei Shield",
-		head="Aya. Zucchetto +2",
-		body="Ayanmo Corazza +2",
-		hands="Aya. Manopolas +2",
-		legs="Aya. Cosciales +2",
-		feet="Aya. Gambieras +2",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Genmei Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back="Moonbeam Cape",
+	sets.Idle.Pet = {}
+	--Used to swap into movement gear when the player is detected movement when not engaged
+	sets.Movement = {
+		feet="Fili Cothurnes +1",
+	}
+	-- Instruments to use
+	sets.Song ={}
+	sets.Song.Count = {
+	    range="Daurdabla"
+	}
+	sets.Song.Strength = {
+		range="Gjallarhorn"
+	}
+	sets.Song.Honor = {
+		range="Marsyas"
+	}
+	sets.Song.AOE_Sleep = {
+	    range="Daurdabla"
 	}
 	sets.Precast = {}
 	-- Used to account for -Song Casting Time vs Fast Cast
 	sets.Precast.Songs = {
-		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}}, --7
+		main={ name="Kali", augments={'MP+60','Mag. Acc.+20','"Refresh"+1',}},
 		sub="Genmei Shield",
-		right_ring="Stikini Ring +1",
-		head="Fili Calot +1", --14
-		body="Inyanga Jubbah +2", --14
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
-		legs="Aya. Cosciales +2", --6
-		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -6%',}}, --12
-		neck="Voltsurge Torque", --14
-		waist="Tempus Fugit",
-		left_ear="Loquac. Earring", --2
-		right_ear="Etiolation Earring", --1
-		left_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}, --10
-	}
-	-- Used for Magic Spells
-		sets.Precast.FastCast = {
-		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}}, --7
-		sub="Genmei Shield",
-		head={ name="Vanya Hood", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
-		body="Inyanga Jubbah +2", --14
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
-		legs="Aya. Cosciales +2", --4
-		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}}, --4
-		neck="Voltsurge Torque", --4
-		waist="Witful Belt", --3
-		left_ear="Loquac. Earring", --2
-		right_ear="Etiolation Earring", --1
-		left_ring="Prolix Ring", --3
-		right_ring="Kishar Ring", --4
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}, --10
-	}
-	-- Used to force song override (low duration dummy songs)
-	sets.Precast.DummySongs = {
-		main="Qutrub Knife",
-		sub="Genmei Shield",
-		right_ring="Stikini Ring +1",
 		head="Fili Calot +1",
 		body="Inyanga Jubbah +2",
-		hands="Fili Manchettes +1",
-		legs="Fili Rhingrave +1",
-		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -6%',}},
-		neck="Voltsurge Torque",
+		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}},
+		legs="Aya. Cosciales +2",
+		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -7%',}},
+		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
-		left_ear="Genmei Earring",
-		right_ear="Loquac. Earring",
-		left_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}},
+		left_ear="Etiolation Earring",
+		right_ear="Thureous Earring",
+		left_ring="Defending Ring",
+		right_ring="Kishar Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-	sets.Precast.Enmity = {
-	    ammo="Sapience Orb", -- 2
-	    left_ear="Cryptic Earring", -- 4
-		right_ear="Friomisi Earring", --2
-		left_ring="Petrov Ring", -- 4
-	    back="Phalangite Mantle", -- 5
+	-- Used for Magic Spells
+	sets.Precast.FastCast = {
+		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		sub="Genmei Shield",
+		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}},
+		body="Inyanga Jubbah +2",
+		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}},
+		legs={ name="Kaykaus Tights", augments={'MP+60','Spell interruption rate down +10%','"Cure" spellcasting time -5%',}},
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		neck="Voltsurge Torque",
+		waist="Channeler's Stone",
+		left_ear="Loquac. Earring",
+		right_ear="Enchntr. Earring +1",
+		left_ring="Rahab Ring",
+		right_ring="Kishar Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
+	-- Used to force song override (low duration dummy songs)
+	sets.Precast.DummySongs = sets.Idle
+	-- Enmity Set
+	sets.Precast.Enmity = {}
 	-- Default song duration / strength
 	sets.Midcast = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 		sub="Genmei Shield",
 		head="Fili Calot +1",
-		right_ring="Stikini Ring +1",
 		body="Fili Hongreline +1",
 		hands="Fili Manchettes +1",
 		legs="Inyanga Shalwar +2",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
 		waist="Flume Belt +1",
-		left_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
+		left_ear="Etiolation Earring",
+		right_ear="Regal Earring",
+		left_ring="Defending Ring",
+		right_ring="Patricius Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
@@ -146,42 +116,50 @@ function get_sets()
 	sets.Midcast.Cure = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 		sub="Genmei Shield",
-		head={ name="Vanya Hood", augments={'MP+50','"Cure" potency +7%','Enmity-6',}}, --17
-		body="Inyanga Jubbah +2",
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}}, --11
-		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}},
-		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}}, --17
-		neck="Voltsurge Torque",
-		waist="Channeler's Stone",
-		left_ear="Mendi. Earring", --5
-		right_ear="Etiolation Earring",
+		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}},
+		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
+		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
+		legs={ name="Kaykaus Tights", augments={'MP+60','Spell interruption rate down +10%','"Cure" spellcasting time -5%',}},
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		neck="Nodens Gorget",
+		waist="Acerbic Sash +1",
+		left_ear="Mendi. Earring",
+		right_ear="Regal Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}},
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
-	-- Enhancing Skill
-	sets.Midcast.Enhancing = {
-	}
+	-- Base set for duration
+	sets.Midcast.Enhancing = {}
+	-- Curaga Set (different rules than cure)
+	sets.Midcast.CuragaSet = sets.Midcast.Cure
+	-- Cursna Set
+	sets.Midcast.Cursna = {}
+	--Used for elemental Bar Magic Spells
+	sets.Midcast.Enhancing.Elemental = {}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
-		sub="Genmei Shield",
-		head="Aya. Zucchetto +2",
-		body="Inyanga Jubbah +2",
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
+		sub="Ammurapi Shield",
+		range="Marsyas",
+		head="Brioso Roundlet +3",
+		body="Fili Hongreline +1",
+		hands="Brioso Cuffs +3",
 		legs="Inyanga Shalwar +2",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
 		waist="Luminary Sash",
-		left_ear="Hermetic Earring",
-		right_ear="Digni. Earring",
+		left_ear="Digni. Earring",
+		right_ear="Regal Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}},
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-
 	-- Bard Specific Sets
-	sets.Midcast.Lullaby ={}
+	sets.Midcast.Lullaby ={
+		body="Fili Hongreline +1",
+		legs="Inyanga Shalwar +2",
+	}
 	sets.Midcast.Finale = {}
 	sets.Midcast.Requiem = {}
 	sets.Midcast.Elegy = {}
@@ -198,42 +176,26 @@ function get_sets()
     sets.Midcast.Mambo = {}
     sets.Midcast.Carol = {}
     sets.Midcast.Etude = {}
-
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
 	}
 	-- Job Abilities
 	sets.JA = {}
-	sets.JA["Nightingale"] = {feet={ name="Bihu Slippers", augments={'Enhances "Nightingale" effect',}}}
-	sets.JA["Troubadour"] = {body={ name="Bihu Justaucorps", augments={'Enhances "Troubadour" effect',}}}
-	sets.JA["Soul Voice"] = {}
+	sets.JA["Nightingale"] = {feet={ name="Bihu Slippers +1", augments={'Enhances "Nightingale" effect',}}}
+	sets.JA["Troubadour"] = {body={ name="Bihu Jstcorps +1", augments={'Enhances "Troubadour" effect',}}}
+	sets.JA["Soul Voice"] = {legs={ name="Bihu Cannions +1", augments={'Enhances "Soul Voice" effect',}}}
 	sets.JA["Tenuto"] = {}
 	sets.JA["Marcato"] = {}
 	sets.JA["Clarion"] = {}
 	sets.JA["Pianissimo"] = {}
-
 	--Base TP set to build off
 	sets.TP = {
-	    main="Naegling",
-		sub="Genmei Shield",
-		head="Aya. Zucchetto +2",
-		body="Ayanmo Corazza +2",
-		hands="Aya. Manopolas +2",
-		legs="Aya. Cosciales +2",
-		feet="Aya. Gambieras +2",
-		neck="Sanctity Necklace",
-		waist="Kentarch Belt +1",
-		left_ear="Brutal Earring",
-		right_ear="Digni. Earring",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back="Moonbeam Cape",
+
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
-		body="Malignance Tabard",
-		legs="Malignance Tights",
+
 	}
 	--The following sets augment the base TP set
 	sets.TP.DW = {}
@@ -242,19 +204,6 @@ function get_sets()
 	}
 	--Default WS set base
 	sets.WS = {
-		ammo="Knobkierrie",
-		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
-		hands="Ken. Tekko +1",
-		legs="Ken. Hakama +1",
-		feet="Ken. Sune-Ate +1",
-		neck="Fotia Gorget",
-		waist="Moonbow Belt +1",
-		left_ear="Sherida Earring",
-		right_ear="Brutal Earring",
-		left_ring="Niqmaddu Ring",
-		right_ring="Hetairoi Ring",
-		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
@@ -262,16 +211,13 @@ function get_sets()
 	sets.WS.WSD = {}
 	sets.WS["Savage Blade"] = sets.WS.WSD
 	sets.WS["Mordant Rime"] = {}
-
 	--Custome sets for each jobsetup
 	sets.Custom = {}
-
 	sets.TreasureHunter = {
-	   --main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		waist="Chaac Belt",
-	    head="Wh. Rarab Cap +1",
+		--main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		--waist="Chaac Belt",
+	    --head="Wh. Rarab Cap +1",
 	}
-
 	organizer_items  = {		
 		item1 = "Echo Drops",
 		item2 = "Remedy",
@@ -286,8 +232,6 @@ end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
-
-
 
 end
 -- Augment basic equipment sets
