@@ -139,14 +139,7 @@ function get_sets()
 	sets.JA["Fold"] = {
 		hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}},
 	}
-	sets.JA["Triple Shot"] = {
-		head="Oshosi Mask +1",
-		body="Chasseur's Frac +1",
-		hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}},
-		legs="Osh. Trousers +1",
-		feet="Osh. Leggings +1",
-		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- Need Updated Cape
-	}
+	sets.JA["Triple Shot"] = {} --Gear to be worn during Midshot
 	sets.JA["Cutting Cards"] = {}
 	sets.JA["Crooked Cards"] = {}
 	--Base Set used for all rolls
@@ -238,6 +231,11 @@ function get_sets()
 	sets.WS["Spirits Within"] = {}
 	sets.WS["Savage Blade"] = {}
 	sets.WS["Requiescat"] = {}
+
+	sets.QuickDraw = {}
+	sets.QuickDraw.ACC = {}
+	sets.QuickDraw.DMG = {}
+	sets.QuickDraw.STP = {}
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
