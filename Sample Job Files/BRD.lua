@@ -25,14 +25,14 @@ function get_sets()
 		head="Inyanga Tiara +2",
 		body="Inyanga Jubbah +2",
 		hands="Inyan. Dastanas +2",
-		legs="Inyanga Shalwar +2",
+		legs="Brioso Cannions +3",
 		feet="Inyan. Crackows +2",
 		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
 		left_ear={ name="Moonshade Earring", augments={'Mag. Acc.+4','Latent effect: "Refresh"+1',}},
-		right_ear="Sanare Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		right_ear="Etiolation Earring",
+		left_ring="Defending Ring",
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
 	sets.Idle.Pet = {}
@@ -116,17 +116,18 @@ function get_sets()
 	sets.Midcast.Cure = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 		sub="Genmei Shield",
+		range="Marsyas",
 		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}},
 		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Kaykaus Tights", augments={'MP+60','Spell interruption rate down +10%','"Cure" spellcasting time -5%',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck="Nodens Gorget",
-		waist="Acerbic Sash +1",
+		neck="Incanter's Torque",
+		waist="Bishop's Sash",
 		left_ear="Mendi. Earring",
 		right_ear="Regal Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
 	-- Base set for duration
@@ -141,22 +142,23 @@ function get_sets()
 	sets.Midcast.Enfeebling = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 		sub="Ammurapi Shield",
-		range="Marsyas",
+		range="Gjallarhorn",
 		head="Brioso Roundlet +3",
-		body="Fili Hongreline +1",
+		body="Brioso Justau. +3",
 		hands="Brioso Cuffs +3",
-		legs="Inyanga Shalwar +2",
+		legs="Brioso Cannions +3",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
 		waist="Luminary Sash",
 		left_ear="Digni. Earring",
-		right_ear="Regal Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		right_ear="Enchntr. Earring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Bard Specific Sets
 	sets.Midcast.Lullaby ={
+		right_ear="Regal Earring",
 		body="Fili Hongreline +1",
 		legs="Inyanga Shalwar +2",
 	}
@@ -170,12 +172,14 @@ function get_sets()
     sets.Midcast.Ballad = {legs="Fili Rhingrave +1"}
     sets.Midcast.Scherzo = {feet="Fili Cothurnes +1"}
     sets.Midcast.Mazurka = {}
-    sets.Midcast.Paeon = {}
+    sets.Midcast.Paeon = {head="Brioso Roundlet +3"}
     sets.Midcast.Threnody = {}
     sets.Midcast.Minne = {}
     sets.Midcast.Mambo = {}
-    sets.Midcast.Carol = {}
+    sets.Midcast.Carol = {hands="Mousai Gages +1"}
     sets.Midcast.Etude = {}
+	sets.Midcast.Dirge = {}
+	sets.Midcast.Sirvente = {}
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
@@ -211,8 +215,6 @@ function get_sets()
 	sets.WS.WSD = {}
 	sets.WS["Savage Blade"] = sets.WS.WSD
 	sets.WS["Mordant Rime"] = {}
-	--Custome sets for each jobsetup
-	sets.Custom = {}
 	sets.TreasureHunter = {
 		--main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
 		--waist="Chaac Belt",
