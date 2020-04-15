@@ -91,7 +91,7 @@ function get_sets()
         feet="Malignance Boots",
         neck="Iskur Gorget",
         ear1="Enervating Earring",
-		ear2="Neritic Earring"
+		ear2="Neritic Earring",
         --ear2="Telos Earring",
         ring1="Dingir Ring",
         ring2="Ilabrat Ring",
@@ -142,15 +142,17 @@ function get_sets()
 	sets.JA["Triple Shot"] = {} --Gear to be worn during Midshot
 	sets.JA["Cutting Cards"] = {}
 	sets.JA["Crooked Cards"] = {}
+
 	--Base Set used for all rolls
 	sets.PhantomRoll = {
-		main={ name="Rostam", augments={'Path: C',}}, -- +8 Effect and 60 second duration
+		main={ name="Rostam", augments={'Path: C',}}, -- +8 Effect and 60 sec Duration
+		range="Compensator", -- 20 sec Duration
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
 		body="Malignance Tabard",
 		hands="Chasseur's Gants +1", --50 sec Duration
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck="Iskur Gorget", -- Need Regal
+		neck="Regal Necklace", -- 20 sec Duration
 		waist="Flume Belt +1",
 		left_ear="Sanare Earring",
 		right_ear="Thureous Earring",
@@ -180,26 +182,46 @@ function get_sets()
 	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Tactician\'s Roll'] = sets.PhantomRoll
-	--Base TP set to build off
+
+	--Base TP set to build off when melee'n
 	sets.TP = {
-        --head=gear.Adhemar_B_head,
-        --body=gear.Adhemar_B_body, --6
-        hands="Floral Gauntlets", --5
-        legs="Carmine Cuisses +1", --6
-        --feet=gear.Taeon_DW_feet, --9
-        neck="Iskur Gorget",
-        ear1="Suppanomimi", --5
-        ear2="Brutal Earring",
-        ring1="Hetairoi Ring",
-        ring2="Epona's Ring",
-        --back=gear.COR_DW_Cape, --10
-        waist="Reiki Yotai", --7
+
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
+	    main="Naegling",
+		sub={ name="Rostam", augments={'Path: A',}},
+		range="Compensator",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Iskur Gorget",
+		waist="Sarissapho. Belt",
+		left_ear="Suppanomimi",
+		right_ear="Brutal Earring",
+		left_ring="Rajas Ring",
+		right_ring="Petrov Ring",
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}},
 	}
 	--The following sets augment the base TP set
 	sets.TP.DW = {
+	    main="Naegling",
+		sub={ name="Rostam", augments={'Path: A',}},
+		range="Compensator",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Iskur Gorget",
+		waist="Sarissapho. Belt",
+		left_ear="Suppanomimi",
+		right_ear="Brutal Earring",
+		left_ring="Rajas Ring",
+		right_ring="Petrov Ring",
+		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}},
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {
@@ -214,6 +236,7 @@ function get_sets()
 	}
 	sets.WS.MACC = {
 	}
+
 	sets.WS["Hot Shot"] = {}
 	sets.WS["Split Shot"] = {}
 	sets.WS["Sniper Shot"] = {}
@@ -241,9 +264,7 @@ function get_sets()
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
-		--main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		--waist="Chaac Belt",
-	    --head="Wh. Rarab Cap +1",
+
 	}
 
 	organizer_items  = {		
