@@ -105,12 +105,10 @@ function pretargetcheck(spell,action)
     if (pet.isvalid and pet_midaction()) then
 		cancel_spell()
 	end
-
 	-- Check that proper ammo is available if we're using ranged attacks or similar.
     if spell.action_type == 'Ranged Attack' or spell.type == 'WeaponSkill' or spell.type == 'CorsairShot' then
         do_bullet_checks(spell, spellMap, eventArgs)
     end
-
 	-- Status Ailment Check
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
@@ -261,14 +259,14 @@ function precastequip(spell)
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
-		if buffactive['Flurry'] then
+		if buffactive[265] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
-			add_to_chat(8,'Ranged Attack with Flurry')
-		elseif buffactive['Flurry II'] then
+			--add_to_chat(8,'Ranged Attack with Flurry')
+		elseif buffactive[581] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
-			add_to_chat(8,'Ranged Attack with Flurry II')
+			--add_to_chat(8,'Ranged Attack with Flurry II')
 		else
-			add_to_chat(8,'Ranged Attack with no Flurry')
+			--add_to_chat(8,'Ranged Attack with no Flurry')
 		end
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
@@ -369,9 +367,9 @@ function midcastequip(spell)
 		equipSet = sets.Midcast.RA
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
-			add_to_chat(8,'Ranged Attack with Tripple Shot')
+			--add_to_chat(8,'Ranged Attack with Tripple Shot')
 		else
-			add_to_chat(8,'Ranged Attack with no Tripple Shot')
+			--add_to_chat(8,'Ranged Attack with no Tripple Shot')
 		end
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
@@ -907,7 +905,6 @@ end
 function do_bullet_checks(spell, spellMap, eventArgs)
     local bullet_name
     local bullet_min_count = 1
-    
     if spell.type == 'WeaponSkill' then
         if spell.skill == "Marksmanship" then
             if spell.element == 'None' then
@@ -930,9 +927,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
             bullet_min_count = 3
         end
     end
-    
     local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
-
     -- If no ammo is available, give appropriate warning and end.
     if not available_bullets then
         if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
@@ -947,24 +942,20 @@ function do_bullet_checks(spell, spellMap, eventArgs)
 			return
         end
     end
-    
     -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
     if spell.type ~= 'CorsairShot' and bullet_name == ammo.bullet.QD and available_bullets.count <= bullet_min_count then
         add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 		cancel_spell()
 		return
     end
-    
     -- Low ammo warning.
     if spell.type ~= 'CorsairShot' and state.warned.value == false
         and available_bullets.count > 1 and available_bullets.count <= ammo_warning_limit then
         local msg = '*****  LOW AMMO WARNING: '..bullet_name..' *****'
-
         local border = ""
         for i = 1, #msg do
             border = border .. "*"
         end
-        
         add_to_chat(167, border)
         add_to_chat(167, msg)
         add_to_chat(167, border)
