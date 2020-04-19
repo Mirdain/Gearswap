@@ -981,10 +981,12 @@ end
 
 function self_command(command)
 	-- Updates the TH status
+	command = command:lower()
+
 	if command == 'update auto' then
 			equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
-	elseif command == "TH" then
+	elseif command == "th" then
 		if 	state.TreasureMode.value == 'Tag' then
 		    state.TreasureMode:set('None')
 			unlock_TH()
@@ -997,7 +999,7 @@ function self_command(command)
 		end
 		add_to_chat(8,'Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 	-- Toggles the Auto Buff function off/on
-	elseif command == "AutoBuff" then
+	elseif command == "autobuff" then
 		if AutoBuff == true then
 			AutoBuff = false
 			add_to_chat(8,'Auto Buff is [OFF]')
@@ -1007,7 +1009,7 @@ function self_command(command)
 			check_buff()
 		end
 	-- Toggles the Auto Burst function off/on
-	elseif command == "AutoBurst" then
+	elseif command == "autoburst" then
 		if state.BurstMode.value == 'Tier 6' then
 			state.BurstMode.value = 'OFF'
 			add_to_chat(8,'Auto Burst is [OFF]')
@@ -1035,7 +1037,7 @@ function self_command(command)
 				add_to_chat(8,'Auto Burst is [OFF]')
 			end
 		end
-	elseif command == 'Skillchain_Burst' then
+	elseif command == 'skillchain_burst' then
 		if state.BurstMode.value == 'Tier 1' then
 			windower.send_command('BT cast spell 1')
 		elseif state.BurstMode.value == 'Tier 2' then
@@ -1050,45 +1052,45 @@ function self_command(command)
 			windower.send_command('BT cast spell 6')
 		end
 	-- Calls the Bard Dummy Song function
-	elseif command == 'SongBuff' then
+	elseif command == 'songbuff' then
 		dummy_songs()
 	-- Warp Ring
-	elseif command == 'Warp' then
+	elseif command == 'warp' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Warp Ring"})
 		windower.send_command('gs disable left_ring;wait 11;input /item \"Warp Ring\" <me>;wait 6;gs enable left_ring')
 	-- Warp Club
-	elseif command == 'Warp Club' then
+	elseif command == 'warp club' then
 		is_Busy = true
 		enable('main')
 		equip({main="Warp Club"})
 		windower.send_command('wait 1;gs disable main;wait 11;input /item \"Warp Club\" <me>;wait 6;gs enable main')
 	-- Holla Teleport
-	elseif command == 'Holla' then
+	elseif command == 'golla' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Holla)"})
 		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Holla)\" <me>;wait 6;gs enable left_ring')
 	-- Dem Teleport
-	elseif command == 'Dem' then
+	elseif command == 'dem' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Dem)"})
 		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Dem)\" <me>;wait 6;gs enable left_ring')
 	-- Mea Teleport
-	elseif command == 'Mea' then
+	elseif command == 'mea' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Mea)"})
 		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Mea)\" <me>;wait 6;gs enable left_ring')
 	-- CP Ring
-	elseif command == 'CP' then
+	elseif command == 'cp' then
 		enable('left_Ring')
 		equip({left_ring="Trizek Ring"})
 		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Trizek Ring\" <me>;wait 6;gs enable left_ring')
 	-- Locks the weapons and is a custom use for SMN AFAC or want to keep AM3
-	elseif command == "Weaponlock" then
+	elseif command == "weaponlock" then
 		if Custom == true then
 			Custom = false
 			add_to_chat(8,'Weapon Lock is [OFF]')
@@ -1107,7 +1109,7 @@ function self_command(command)
 			add_to_chat(8,'Weapon Lock is [ON]')
 		end
 	-- Toggles the current player stances
-	elseif command == 'ModeChange' then
+	elseif command == 'modechange' then
 		if state.OffenseMode.value == 'Normal' then
 			state.OffenseMode:set('ACC')
 		elseif state.OffenseMode.value == 'ACC' then
