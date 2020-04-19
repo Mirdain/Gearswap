@@ -3,10 +3,11 @@ include('organizer-lib')
 -- Modes is the include for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
+res = require 'resources'
+
 AutoBuff = false
 Custom = false
 DualWield = false
-AutoBurst = false
 
 command_JA = "None"
 command_SP = "None"
@@ -28,12 +29,26 @@ state.OffenseMode = M{['description']='Melee Mode'}
 state.OffenseMode:options('Normal','ACC','DT','AFAC - Physical','AFAC - Magical','AFAC - Flaming Crush')
 state.OffenseMode:set('Normal')
 
+--Modes for Bursting
+state.BurstMode = M{['description']='Burst Mode'}
+state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6')
+state.BurstMode:set('OFF')
+
+--State for Ammunition check
+state.warned = M(false)
+
+--Ammunition
+ammo = {}
+ammo.bullet = {}
+ammo.arrow = {}
+ammo.bolt = {}
+
 --Notify current states
 add_to_chat(8,'[F12] - Melee Mode is [Normal]')
 add_to_chat(8,'[F11] - Treasure Hunter Mode is [OFF]')
 add_to_chat(8,'[F10] - Auto Buff is [OFF]')
 
-watch_buffs = S{	"light arts","addendum: white","penury","celerity","accession","perpetuance","rapture",
+watch_buffs = S{"light arts","addendum: white","penury","celerity","accession","perpetuance","rapture",
 "dark arts","addendum: black","parsimony","alacrity","manifestation","ebullience","immanence",
 "stun","petrified","silence","stun","sleep","slow","paralyze"}
 
@@ -43,6 +58,7 @@ EnfeebleSong = S{
 'Fire Threnody', 'Ice Threnody', 'Wind Threnody', 'Earth Threnody', 'Ltng. Threnody', 'Water Threnody', 'Light Threnody','Dark Threnody','Fire Threnody II',
 'Ice Threnody II', 'Wind Threnody II', 'Earth Threnody II', 'Ltng. Threnody II', 'Water Threnody II', 'Light Threnody II','Dark Threnody II','Magic Finale', 'Pining Nocturne'}
 
+--Block Spells if down
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','CorsairRoll','SummonerPact'}
 
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
@@ -79,26 +95,23 @@ areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Por
 	"Southern San d'Oria","Chateau d'Oraguille","Port Bastok","Bastok Markets","Bastok Mines","Metalworks","Aht Urhgan Whitegate","The Colosseum","Tavnazian Safehold","Nashmau","Selbina",
 	"Mhaura","Rabao","Norg","Kazham","Eastern Adoulin","Western Adoulin","Celennia Memorial Library","Mog Garden","Leafallia"
 }
--- Adoulin areas, where Ionis will grant special stat bonuses.
-areas.Adoulin = S{
-    "Yahse Hunting Grounds","Ceizak Battlegrounds","Foret de Hennetiel","Morimar Basalt Fields","Yorcia Weald","Yorcia Weald [U]","Cirdas Caverns","Cirdas Caverns [U]",
-    "Marjami Ravine","Kamihr Drifts","Sih Gates","Moh Gates","Dho Gates","Woh Gates","Rala Waterways","Rala Waterways [U]","Outer Ra'Kaznar","Outer Ra'Kaznar [U]","Ra'Kaznar Inner Court"
-}
--- Assault/Salvage areas, where Aht Urghan Rings will grant special stat bonuses.
-areas.Assault = S{"Nyzul Isle","Leujaoam Sanctum","Mamool Ja Training Grounds","Periqia","Lebros Cavern","Ilrusi Atoll","Zhayolm Remnants","Arrapago Remnants","Bhaflau Remnants","Silver Sea Remnants"}
--- Proc weapon areas, where proc weapon sets in the weapon mode will not be skipped
-areas.ProcZones = S{
 
-}
--- Laggy zones where latency will be increased.
-areas.LaggyZones = S{"Dynamis - San d'Oria [D]","Dynamis - Bastok [D]","Dynamis - Windurst [D]","Dynamis - Jeuno [D]","Reisenjima Henge","Reisenjima","Escha - Zi'Tah","Escha - Ru'Aun","Outer Ra'Kaznar [U]",}
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called from the default GearSwap Function "pretarget" to validate the user action
+-------------------------------------------------------------------------------------------------------------------
 
 function pretargetcheck(spell,action)
 	--Cancel if pet is in middle of move
     if (pet.isvalid and pet_midaction()) then
 		cancel_spell()
 	end
-	-- auto echo
+
+	-- Check that proper ammo is available if we're using ranged attacks or similar.
+    if spell.action_type == 'Ranged Attack' or spell.type == 'WeaponSkill' or spell.type == 'CorsairShot' then
+        do_bullet_checks(spell, spellMap, eventArgs)
+    end
+
+	-- Status Ailment Check
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
@@ -114,7 +127,8 @@ function pretargetcheck(spell,action)
 	if spell.type == 'WeaponSkill' and player.tp < 1000 then
 		cancel_spell()
 		add_to_chat(8,'TP:['..player.tp..']')
-		--Cancel ability due to abilty not active
+		return
+	--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 		local abil_recasts_table = windower.ffxi.get_ability_recasts()
 		local ability_time = abil_recasts_table[spell.recast_id]/60
@@ -123,14 +137,16 @@ function pretargetcheck(spell,action)
 		if ability_time > 0 then
 			add_to_chat(8,''..spell.name..' ['..string.format("%02d:%02d",min,sec)..']')
 			cancel_spell()
+			return
 		end
+	--Cancel certain actions (Defined by RecastTimers) if not ready
 	elseif RecastTimers:contains(spell.type) then
-		--Cancel spell due to abilty not active
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local spell_time = spell_recasts[spell.recast_id]/100
 		if spell_time > 0 then
 			add_to_chat(8,''..spell.name..' ['..spell_time..']')
 			cancel_spell()
+			return
 		end
 	end
 	if spell.type == 'BardSong' then
@@ -210,11 +226,18 @@ function pretargetcheck(spell,action)
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called from the default GearSwap Function "precast" to build an equipset
+-------------------------------------------------------------------------------------------------------------------
+
 function precastequip(spell)
+	--Default gearset
+	equipSet = {}
+	--Cancel for SMN if Avatar is mid action and Item use
     if (pet.isvalid and pet_midaction()) or spell.type=="Item" then
         return
     end
-	equipSet = {}
+	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
 		equipSet = sets.WS
 		if equipSet[spell.english] then		
@@ -235,8 +258,22 @@ function precastequip(spell)
 				add_to_chat(8,'Using Default WS Set')
 			end
 		end
+	-- Ranged attack
+	elseif spell.action_type == 'Ranged Attack' then
+		equipSet = sets.Precast.RA
+		if buffactive['Flurry'] then
+			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
+			add_to_chat(8,'Ranged Attack with Flurry')
+		elseif buffactive['Flurry II'] then
+			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
+			add_to_chat(8,'Ranged Attack with Flurry II')
+		else
+			add_to_chat(8,'Ranged Attack with no Flurry')
+		end
+	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast.FastCast
+	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
 		if equipSet[spell.english] then
@@ -245,6 +282,7 @@ function precastequip(spell)
 		else
 			add_to_chat(8,'JA not set')
 		end
+	-- CorsairRoll
 	elseif spell.type == 'CorsairRoll' then
 		equipSet = sets.PhantomRoll
 		if equipSet[spell.english] then
@@ -253,14 +291,20 @@ function precastequip(spell)
 		else
 			add_to_chat(8,'Roll not set')
 		end
+	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Precast.FastCast
+	-- BlackMagic
 	elseif spell.type == 'BlackMagic' then
 		equipSet = sets.Precast.FastCast
+	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
 		equipSet = sets.Precast.FastCast
+	-- BardSong
 	elseif spell.type == 'BardSong' then
+		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
+			-- Song Count for Minne and Paeon
 			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
 				equipSet = set_combine(sets.Precast.Songs, sets.Song.Count)
 			elseif spell.name == "Honor March" then
@@ -268,15 +312,17 @@ function precastequip(spell)
 			else
 				equipSet = set_combine(sets.Precast.Songs, sets.Song.Strength)
 			end
+		-- NiTro Songs (Midcast Sets)
 		else 
-			-- NiTro Songs
 			windower.add_to_chat(8,'Nitro Mode')
+			-- Song Count for Minne and Paeon
 			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
 				windower.add_to_chat(8, '['..spell.english..'] Set (Song Count - Daurdabla)')
 				equipSet = set_combine(sets.Precast.DummySongs, sets.Song.Count)
-			-- AOE sleep so equip Harp for max Range
+			-- Equip Marsyas
 			elseif spell.name == "Honor March" then
 				equipSet = set_combine(sets.Midcast, sets.Song.Honor)
+			-- Equip Harp
 			elseif spell.name:contains('Horde') then
 				windower.add_to_chat(8, '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
 				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.AOE_Sleep)
@@ -284,64 +330,97 @@ function precastequip(spell)
 			elseif EnfeebleSong:contains(spell.english) then
 				windower.add_to_chat(8, '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
 				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.Strength)
+			-- Augment the buff songs
 			else
-				-- Augment the buff songs
 				windower.add_to_chat(8, '['..spell.english..'] Set (Buff - Gjallarhorn)')
 				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), sets.Song.Strength)
 			end
 		end
+	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Precast.FastCast
+	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Precast.FastCast
+	-- Trust
 	elseif spell.type == 'Trust' then
 		equipSet = sets.Precast.FastCast
 	end
+	-- If TH mode is on check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' then
 		TH_for_first_hit()
 	end
+	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
 end
 
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called from the default GearSwap Function "midcast" to build an equipset
+-------------------------------------------------------------------------------------------------------------------
+
 function midcastequip(spell)
+	--Default gearset
 	equipSet = {}
+	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
-		--Do nothing
+		--Do nothing as these are all done precast
+	-- Ranged attack
+	elseif spell.action_type == 'Ranged Attack' then
+		equipSet = sets.Midcast.RA
+		if buffactive['Triple Shot'] then 
+			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
+			add_to_chat(8,'Ranged Attack with Tripple Shot')
+		else
+			add_to_chat(8,'Ranged Attack with no Tripple Shot')
+		end
+	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Midcast
+		-- Defined Gear Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Enhancing Magic
 		elseif spell.target.type == 'SELF' then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 			add_to_chat(8,'Enhancing set')
+		-- Enfeebling
 		elseif EnfeeblingNinjitsu:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
 			add_to_chat(8,'Enfeebling set')
+		-- Defaults to Nukes if not the above
 		else
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			add_to_chat(8,'Nuke set')
 		end
+	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Midcast
+		-- Defined Gear Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Cure
 		elseif spell.name:contains('Cure') then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cure)
 			windower.add_to_chat(8,'Cure Set')
+		-- Regen
 		elseif spell.name:contains('Regen') then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Regen)
 			windower.add_to_chat(8,'Regen Set')
+		-- Curaga 
 		elseif spell.name:contains('Cura') then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.CuragaSet)
 			windower.add_to_chat(8,'Curaga Set')
+		-- Cursna
 		elseif spell.name == 'Cursna' then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cursna)
 			windower.add_to_chat(8,'Cursna Set')
+		-- Raise (Stay in FastCast set for recast timers)
 		elseif spell.name:contains('Raise') or spell.name == "Arise" then
 			equipSet = sets.Precast.FastCast
 			windower.add_to_chat(8,'Raise Set')
+		-- Enhancing
 		elseif spell.skill == 'Enhancing Magic' then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 			--Cancel Stoneskin if it is being cast and is an active buff
@@ -351,34 +430,44 @@ function midcastequip(spell)
 					cancel('Stoneskin')
 				end
 			end
+			-- Refresh
 			if spell.name:contains('Refresh') then
 				windower.add_to_chat(8,'Refresh Set')
 				equipSet = set_combine(equipSet, sets.Midcast.Refresh)
+			-- Bar Spells
 			elseif Elemental_Bar:contains(spell.name) then 
 				equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
 				windower.add_to_chat(8,'Elemental Bar Set')
+			-- Enhancing
 			else
 				windower.add_to_chat(8,'Enhancing Magic Set')
 			end
+		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
 			windower.add_to_chat(8,'Enfeebling Magic Set')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+		-- No type found and use default Midcast
 		else
 			add_to_chat(8,'Midcast not set')
 		end
+	-- Black Magic
 	elseif spell.type == 'BlackMagic' then
 		equipSet = sets.Midcast
+		-- Defined Gear Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
 			windower.add_to_chat(8,'Enfeebling Magic Set')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+		-- Enhancing Magic
 		elseif spell.skill == 'Enhancing Magic' then
 			windower.add_to_chat(8,'Enhancing Magic Set')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 		else
-			if AutoBurst == true then
+			-- If Auto Burst mode is turned on it will use the equip set for Bursting
+			if state.BurstMode.value ~= 'OFF' then
 				windower.add_to_chat(8,'Burst Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
 			else
@@ -386,13 +475,16 @@ function midcastequip(spell)
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			end
 		end
+	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
+		-- Song Count for Minne and Paeon
 		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
 			windower.add_to_chat(8, '['..spell.english..'] Set (Song Count - Daurdabla)')
 			equipSet = set_combine(sets.Precast.DummySongs, sets.Song.Count)
-		-- AOE sleep so equip Harp for max Range
+		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
 			equipSet = set_combine(sets.Midcast, sets.Song.Honor)
+		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
 			windower.add_to_chat(8, '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
 			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.AOE_Sleep)
@@ -400,51 +492,68 @@ function midcastequip(spell)
 		elseif EnfeebleSong:contains(spell.english) then
 			windower.add_to_chat(8, '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
 			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.Strength)
+		-- Augment the buff songs
 		else
-			-- Augment the buff songs
 			windower.add_to_chat(8, '['..spell.english..'] Set (Buff - Gjallarhorn)')
 			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), sets.Song.Strength)
 		end
+	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Midcast
+		-- Use defined weapons when cleaving on blu
 		if ToggleCleave == "On" then
 			equipSet = set_combine(equipSet, sets.Custom.Cleave.Weapons)
 		end
+		-- Defined Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Defined Blue Nukes
 		elseif BlueNuke:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			add_to_chat(8,'Nuke set')
+		-- Spells that benifit from Blue Magic Skill
 		elseif BlueSkill:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			add_to_chat(8,'Blue Skill set')
+		-- Default Spell set
 		else
 			add_to_chat(8,'Midcast not set')
 		end
+	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Midcast
+		-- Defined Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Indi Equipment
 		elseif indicolure:contains(spell.english) then
 			equipSet = sets.Geomancy.Indi
+		-- Bubble Equipment
 		elseif geomancy:contains(spell.english) then
 			equipSet = sets.Geomancy.Geo
+		-- Default set
 		else
 			add_to_chat(8,'Midcast not set')
 		end
+	-- Trust
 	elseif spell.type == 'Trust' then
-		--Not Used
-	-- BP Timer gear needs to swap here
+		equipSet = sets.FastCast
+	-- BloodPactRage and BloodPactWard
 	elseif spell.type=="BloodPactWard" or spell.type=="BloodPactRage" then
+		-- BP Timer gear needs to swap here if not under Astral Conduit
 		if not buffactive["Astral Conduit"] then
 			equipSet = sets.Midcast
 			equipSet = set_combine(equipSet, sets.Midcast.BP)
 		end
+	-- Elemental Siphon
 	elseif spell.name=="Elemental Siphon" then
+		equipSet = sets.Midcast
 		equipSet = set_combine(equipSet, sets.Midcast.SummoningMagic)
+	-- Summon Avatar
 	elseif spell.type=="SummonerPact" then
+		equipSet = sets.Midcast
 		equipSet = set_combine(equipSet, sets.Midcast.Summon)
 	end
 	-- Auto-cancel existing buffs
@@ -455,10 +564,16 @@ function midcastequip(spell)
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		windower.send_command('wait 1;cancel 66;')
 	end
+	-- Built equipset to return
 	return equipSet
 end
 
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called from the default GearSwap Function "aftercast" to build an equipset
+-------------------------------------------------------------------------------------------------------------------
+
 function aftercastequip(spell)
+	-- Dont change gear as the pet is still performing an action
     if pet_midaction() then
         return
     else
@@ -468,21 +583,203 @@ function aftercastequip(spell)
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for pretarget checks
+-------------------------------------------------------------------------------------------------------------------
+
+function pretarget(spell,action)
+	--Calls the function in the include file for basic checks
+	pretargetcheck(spell,action)
+	--Calls the job specific function
+	pretarget_custom(spell,action)
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for precast checks
+-------------------------------------------------------------------------------------------------------------------
+
+function precast(spell)
+	equipSet = {}
+	-- action is started
+	is_Busy = true
+	-- Enable all gear slots
+	enable()
+	--Generate the correct set from the include file and custom function
+	equipSet = set_combine(precastequip (spell), precast_custom(spell))
+	-- here is where gear is actually equipped
+	equip(equipSet)
+	-- To ensure it is not changed during the action Lock the gear
+	disable()
+ end
+
+ -------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for midcast checks
+-------------------------------------------------------------------------------------------------------------------
+
+function midcast(spell)
+	equipSet = {}
+	-- Enable all gear slots
+	enable()
+	--Generate the correct set from the include file and custom function
+	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
+	-- here is where gear is actually equipped
+	equip(equipSet)
+	-- To ensure it is not changed during the action Lock the gear
+	disable()
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for aftercast checks
+-------------------------------------------------------------------------------------------------------------------
+
+function aftercast(spell)
+	equipSet = {}
+	-- Enable all gear slots
+	enable()
+	--Generate the correct set from the include file and custom function
+	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
+	-- here is where gear is actually equipped
+	equip(equipSet)
+	-- action is complete - release player
+	is_Busy = false
+	in_Queue = false
+	-- Player completed an action so can check if there needs to be a buff
+	coroutine.schedule(check_buff,.2)
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for any buff changes
+-------------------------------------------------------------------------------------------------------------------
+
+function buff_change(name,gain)
+	equipSet = {}
+	if 	is_Busy == false then
+		--calls the include file and custom on a buff change
+		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
+		equip(equipSet)
+		-- If there is not an action waiting to happen
+		if in_Queue == false then
+			coroutine.schedule(check_buff,.2)
+		end
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for any player status changes
+-------------------------------------------------------------------------------------------------------------------
+
+function status_change(new,old)
+	enable()
+	equipSet = {}
+	--calls the include file and custom on a state change
+	equipSet = set_combine(choose_set(), status_change_custom(new,old))
+	equip(equipSet)
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for any pet changes
+-------------------------------------------------------------------------------------------------------------------
+
+function pet_change(pet,gain)
+	equipSet = {}
+	if player.main_job == 'SMN' or player.main_job == 'GEO' then
+		if gain == false then
+			if buffactive["Astral Conduit"] then
+				windower.add_to_chat(8,"Avatar Summon")
+				check_buff() -- if Pet is lost summon
+			else
+				avatar = "None"
+			end
+		else
+			avatar = pet.name
+		end
+		enable()
+		equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
+		equip(equipSet)
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for pet mid actions
+-------------------------------------------------------------------------------------------------------------------
+
+function pet_midcast(spell)
+	equipSet = {}
+	-- This section is for SMN Blood Pact abilities
+	if player.main_job == "SMN" then
+		is_AvatarBusy = true
+		if spell.name == "Perfect Defense" then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		elseif Debuff_BPs:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		elseif Buff_BPs_Healing:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		elseif Buff_BPs_Duration:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		elseif spell.name == "Flaming Crush" then
+			equipSet = sets.Pet_Midcast.FlamingCrush
+		elseif ImpactDebuff and (spell.name=="Impact" or spell.name=="Conflag Strike") then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		elseif Magic_BPs_TP:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.Magic_BP_TP
+		elseif Magic_BPs_NoTP:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.Magic_BP
+		elseif Merit_BPs:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.Magic_BP_TP
+		elseif Debuff_Rage_BPs:contains(spell.name) then
+			equipSet = sets.Pet_Midcast.SummoningMagic
+		else
+			equipSet = sets.Pet_Midcast.Physical_BP
+		end
+		enable()
+		equip(equipSet)
+		disable()
+		-- Assign the BP being used for AFAC
+		command_BP = spell.name
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by gearswap for pet after actions
+-------------------------------------------------------------------------------------------------------------------
+
+function pet_aftercast(spell)
+	equipSet = {}
+	is_AvatarBusy = false
+	enable()
+	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
+	equip(equipSet)
+	-- If there is not an action waiting to happen check for next action
+	if in_Queue == false and is_Busy == false then
+		coroutine.schedule(check_buff,.2)
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called to determine correct sets and not a built in gearswap call
+-------------------------------------------------------------------------------------------------------------------
+
 function choose_set()
 	equipSet = {}
-	weaponcheck() --Update Combat stance
+	--Update Combat stance (Dual Wield or 2H Weapons)
+	weaponcheck()
+	-- Combat Checks
 	if player.status == "Engaged" then
+		-- Base line TP set
 		equipSet = sets.TP
 		if state.OffenseMode.value == 'Normal' then
+			-- Equip the DW specific gear
 			if DualWield == true then
 				equipSet = set_combine(equipSet, sets.TP.DW)
 			end
 		elseif state.OffenseMode.value == 'ACC' then
+			-- Equip the DW specific gear with ACC
 			if DualWield == true then
 				equipSet = set_combine(equipSet, sets.TP.DW, sets.TP.ACC)
 			else
 				equipSet = set_combine(equipSet, sets.TP.ACC)
 			end
+		-- Augment the base TP with DT set -  Priority is DT over DW
 		elseif state.OffenseMode.value == 'DT' then
 			if DualWield == true then
 				equipSet = set_combine(equipSet, sets.TP.DW, sets.TP.DT)
@@ -490,11 +787,13 @@ function choose_set()
 				equipSet = set_combine(equipSet, sets.TP.DT)
 			end
 		end
+	-- Idle sets
     else
 		equipSet = sets.Idle
 		if state.OffenseMode.value == 'DT' then
 			equipSet = set_combine(equipSet, sets.DT)
 		end
+		-- Special Cleave idle set
 		if ToggleCleave == 'On' then
 			equipSet = set_combine(equipSet, sets.Custom.Cleave.Idle)
 		end
@@ -511,13 +810,18 @@ function choose_set()
 	return equipSet
 end
 
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called to determine if there are current buffs to be used
+-------------------------------------------------------------------------------------------------------------------
+
 function check_buff()
+	-- Auto Buff is on and not in a town
 	if AutoBuff == true and is_Busy == false and in_Queue == false and not areas.Cities:contains(world.area) then
+		-- Gets players recast times
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		--Main MNK buffs
 		if player.main_job == 'MNK' then
 			if player.hpp < 51 and abil_recasts[15] == 0 then
-				--send_command('input /ja "Chakra" <me>')
 				command_JA = "Chakra"
 			elseif not buffactive.Impetus and abil_recasts[31] == 0 then
 				command_JA = "Impetus"
@@ -534,6 +838,7 @@ function check_buff()
 		--Sub WAR buffs
 		if player.sub_job == 'WAR' then
 			if player.main_job == "PLD" then
+				-- Don't use -Def abilities while tanking
 				return
 			end
 			if not buffactive['Berserk'] and abil_recasts[1] == 0 then
@@ -580,6 +885,7 @@ function check_buff()
 				command_SP = "Crusade"
 			end
 		end
+		-- Execute the Commands
 		if command_BP ~= "None" and buffactive["Astral Conduit"] and pet.isvalid and is_AvatarBusy == false then
 			in_Queue = true
 			windower.add_to_chat(8,"BP Execute")
@@ -594,198 +900,90 @@ function check_buff()
 	end
 end
 
-function command_JA_execute()
-	send_command('input /ja "'..command_JA..'" <me>')
-	command_JA = "None"
+-------------------------------------------------------------------------------------------------------------------
+-- Determine whether we have sufficient ammo for the action being attempted.
+-------------------------------------------------------------------------------------------------------------------
+
+function do_bullet_checks(spell, spellMap, eventArgs)
+    local bullet_name
+    local bullet_min_count = 1
+    
+    if spell.type == 'WeaponSkill' then
+        if spell.skill == "Marksmanship" then
+            if spell.element == 'None' then
+                -- physical weaponskills
+                bullet_name = ammo.bullet.WS
+            else
+                -- magical weaponskills
+                bullet_name = ammo.bullet.MA
+            end
+        else
+            -- Ignore non-ranged weaponskills
+            return
+        end
+    elseif spell.type == 'CorsairShot' then
+		-- quick draw
+        bullet_name = ammo.bullet.QD
+    elseif spell.action_type == 'Ranged Attack' then
+        bullet_name = ammo.bullet.RA
+        if buffactive['Triple Shot'] then
+            bullet_min_count = 3
+        end
+    end
+    
+    local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
+
+    -- If no ammo is available, give appropriate warning and end.
+    if not available_bullets then
+        if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
+            add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
+            return
+        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == ammo.bullet.RA then
+            add_to_chat(104, 'No weaponskill ammo left.  Using what\'s currently equipped (standard ranged bullets: '..player.equipment.ammo..').')
+            return
+        else
+            add_to_chat(104, 'No ammo ('..tostring(bullet_name)..') available for that action.')
+			cancel_spell()
+			return
+        end
+    end
+    
+    -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
+    if spell.type ~= 'CorsairShot' and bullet_name == ammo.bullet.QD and available_bullets.count <= bullet_min_count then
+        add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
+		cancel_spell()
+		return
+    end
+    
+    -- Low ammo warning.
+    if spell.type ~= 'CorsairShot' and state.warned.value == false
+        and available_bullets.count > 1 and available_bullets.count <= ammo_warning_limit then
+        local msg = '*****  LOW AMMO WARNING: '..bullet_name..' *****'
+
+        local border = ""
+        for i = 1, #msg do
+            border = border .. "*"
+        end
+        
+        add_to_chat(167, border)
+        add_to_chat(167, msg)
+        add_to_chat(167, border)
+		add_to_chat(167, '      Ammo Count ('..tostring(bullet_name)..') is ('..tostring(available_bullets.count)..').')
+        state.warned:set()
+    elseif available_bullets.count > ammo_warning_limit and state.warned then
+        state.warned:reset()
+    end
 end
 
-function command_SP_execute()
-	send_command('input /ma "'..command_SP..'" <me>')
-	command_JA = "None"
-end
-
-function command_BP_execute()
-	send_command('input /pet "'..command_BP..'" <bt>')
-	command_SP = "None"
-end
-
-function dummy_songs()
-	windower.add_to_chat(8,'Song Buff Begin')
-	send_command("input /ma \"Army's Paeon IV\" <me>;wait 5.5;input /ma \"Army's Paeon III\" <me>;wait 5.5;input /ma \"Army's Paeon II\" <me>;wait 5.5;input /ma \"Army's Paeon\" <me>")
-end
-
-function equip_song_gear(spell)
-	equipSet = {}
-	if spell.target.type == 'MONSTER' then
-		if string.find(spell.english,'Finale') then equipSet = sets.Midcast.Finale end
-		if string.find(spell.english,'Lullaby') then equipSet = sets.Midcast.Lullaby end
-		if string.find(spell.english,'Threnody') then equipSet = sets.Midcast.Threnody end
-		if string.find(spell.english,'Elegy') then equipSet = sets.Midcast.Elegy end
-		if string.find(spell.english,'Requiem') then equipSet = sets.Midcast.Requiem end
-	else
-		if string.find(spell.english,'March') then equipSet = sets.Midcast.March end
-		if string.find(spell.english,'Minuet') then equipSet = sets.Midcast.Minuet end
-		if string.find(spell.english,'Madrigal') then equipSet = sets.Midcast.Madrigal end
-		if string.find(spell.english,'Ballad') then equipSet = sets.Midcast.Ballad end
-		if string.find(spell.english,'Scherzo') then equipSet = sets.Midcast.Scherzo end
-		if string.find(spell.english,'Mazurka') then equipSet = sets.Midcast.Mazurka end
-		if string.find(spell.english,'Paeon') then equipSet = sets.Midcast.Paeon end
-		if string.find(spell.english,'Carol') then equipSet = sets.Midcast.Carol end
-		if string.find(spell.english,'Minne') then equipSet = sets.Midcast.Minne end
-		if string.find(spell.english,'Mambo') then equipSet = sets.Midcast.Mambo end
-		if string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude end
-		if string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude end
-	end
-	return equipSet
-end
-
-function jobsetup(LockStylePallet,MacroBook,MacroSet)
-	--Command to Lock Style and Set the correct macros
-	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait .1;input /macro set '..MacroSet..';wait .1;gs c update auto;input /echo Change Complete')
-end
-
-function sub_job_change(new,old)
-	send_command('wait 2;input /lockstyleset '..LockStylePallet..';wait 1;gs c update auto')
-end
-
-function weaponcheck()
-	if player.sub_job == 'NIN' or player.sub_job == 'THF' or player.sub_job == 'DNC'  or player.main_job == 'THF' or player.main_job == 'NIN' or player.main_job == 'DNC' then -- Dual Wield Jobs
-		if player.equipment.sub ~= nil then
-			if player.equipment.sub:contains('Grip') or player.equipment.sub:contains('Shield') then
-				DualWield = false
-			else
-				DualWield = true
-			end
-		end
-	else
-		DualWield = false
-	end
-end
-
-function pretarget(spell,action)
-	--Calls the function in the include for basic checks
-	pretargetcheck(spell,action)
-	--Calls the job specific function
-	pretarget_custom(spell,action)
-end
-
-function precast(spell)
-	is_Busy = true -- action is started
-	enable()
-	equipSet = {}
-	--Generate the correct set from the include file and custom function
-	equipSet = set_combine(precastequip (spell), precast_custom(spell))
-	equip(equipSet)
-	if spell.type == 'WeaponSkill' or  spell.type == 'JobAbility' or  spell.type == 'CorsairRoll' then
-		disable()
-	end
-	if spell.type == 'BardSong' and buffactive['Nightingale'] then
-		disable()
-	end
-	if spell.type=="BloodPactWard" or spell.type=="BloodPactRage" and buffactive["Astral Conduit"] then
-		disable()
-	end
- end
-
-function midcast(spell)
-	equipSet = {}
-	--Generate the correct set from the include file and custom function
-	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
-	equip(equipSet)
-	disable()
-end
-
-function aftercast(spell)
-	is_Busy = false -- action is complete - release player
-	enable()
-	equipSet = {}
-	--Generate the correct set from the include file and custom function
-	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
-	equip(equipSet)
-	in_Queue = false
-	coroutine.schedule(check_buff,.2)
-end
-
-function buff_change(name,gain)
-	equipSet = {}
-	--calls the include file and custom on a buff change
-	equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
-	equip(equipSet)
-
-	if is_Busy == false and in_Queue ==false then
-		coroutine.schedule(check_buff,.2)
-	end
-end
-
-function status_change(new,old)
-	enable()
-	equipSet = {}
-	--calls the include file and custom on a state change
-	equipSet = set_combine(choose_set(), status_change_custom(new,old))
-	equip(equipSet)
-end
-
-function pet_change(pet,gain)
-	if player.main_job == 'SMN' or player.main_job == 'GEO' then
-		if gain == false then
-			if buffactive["Astral Conduit"] then
-				windower.add_to_chat(8,"Avatar Summon")
-				check_buff() -- if Pet is lost summon
-			else
-				avatar = "None"
-			end
-		else
-			avatar = pet.name
-		end
-		equipSet = {}
-		equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
-		equip(equipSet)
-	end
-end
-
-function pet_midcast(spell)
-	if player.main_job == "SMN" then
-		is_AvatarBusy = true
-		if spell.name == "Perfect Defense" then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		elseif Debuff_BPs:contains(spell.name) then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		elseif Buff_BPs_Healing:contains(spell.name) then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		elseif Buff_BPs_Duration:contains(spell.name) then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		elseif spell.name == "Flaming Crush" then
-			equip(sets.Pet_Midcast.FlamingCrush)
-		elseif ImpactDebuff and (spell.name=="Impact" or spell.name=="Conflag Strike") then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		elseif Magic_BPs_TP:contains(spell.name) then
-			equip(sets.Pet_Midcast.Magic_BP_TP)
-		elseif Magic_BPs_NoTP:contains(spell.name) then
-			equip(sets.Pet_Midcast.Magic_BP)
-		elseif Merit_BPs:contains(spell.name) then
-			equip(sets.Pet_Midcast.Magic_BP_TP)
-		elseif Debuff_Rage_BPs:contains(spell.name) then
-			equip(sets.Pet_Midcast.SummoningMagic)
-		else
-			equip(sets.Pet_Midcast.Physical_BP)
-		end
-		disable()
-		command_BP = spell.name
-	end
-end
-
-function pet_aftercast(spell)
-	is_AvatarBusy = false
-	enable()
-	equipSet = {}
-	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
-	equip(equipSet)
-	check_buff()
-end
+-------------------------------------------------------------------------------------------------------------------
+-- This function is called by the user via the self command - "gs c XXXX"
+-------------------------------------------------------------------------------------------------------------------
 
 function self_command(command)
+	-- Updates the TH status
 	if command == 'update auto' then
 			equip(set_combine(choose_set(),choose_set_custom()))
+	-- Toggles the TH state
 	elseif command == "TH" then
 		if 	state.TreasureMode.value == 'Tag' then
 		    state.TreasureMode:set('None')
@@ -798,6 +996,7 @@ function self_command(command)
 			end
 		end
 		add_to_chat(8,'Treasure Hunter Mode: ['..state.TreasureMode.value..']')
+	-- Toggles the Auto Buff function off/on
 	elseif command == "AutoBuff" then
 		if AutoBuff == true then
 			AutoBuff = false
@@ -807,45 +1006,88 @@ function self_command(command)
 			add_to_chat(8,'Auto Buff is [ON]')
 			check_buff()
 		end
+	-- Toggles the Auto Burst function off/on
 	elseif command == "AutoBurst" then
-		if AutoBurst == true then
-			AutoBurst = false
+		if state.BurstMode.value == 'Tier 6' then
+			state.BurstMode.value = 'OFF'
 			add_to_chat(8,'Auto Burst is [OFF]')
-		else
-			AutoBurst = true
-			add_to_chat(8,'Auto Burst is [ON]')
+		elseif state.BurstMode.value == 'OFF' then
+			state.BurstMode.value = 'Tier 1'
+			add_to_chat(8,'Auto Burst is [Tier 1]')
+		elseif state.BurstMode.value == 'Tier 1' then
+			state.BurstMode.value = 'Tier 2'
+			add_to_chat(8,'Auto Burst is [Tier 2]')
+		elseif state.BurstMode.value == 'Tier 2' then
+			state.BurstMode.value = 'Tier 3'
+			add_to_chat(8,'Auto Burst is [Tier 3]')
+		elseif state.BurstMode.value == 'Tier 3' then
+			state.BurstMode.value = 'Tier 4'
+			add_to_chat(8,'Auto Burst is [Tier 4]')
+		elseif state.BurstMode.value == 'Tier 4' then
+			state.BurstMode.value = 'Tier 5'
+			add_to_chat(8,'Auto Burst is [Tier 5]')
+		elseif state.BurstMode.value == 'Tier 5' then
+			if player.main_job == 'BLM' then
+				state.BurstMode.value = 'Tier 6'
+				add_to_chat(8,'Auto Burst is [Tier 6]')
+			else
+				state.BurstMode.value = 'OFF'
+				add_to_chat(8,'Auto Burst is [OFF]')
+			end
 		end
+	elseif command == 'Skillchain_Burst' then
+		if state.BurstMode.value == 'Tier 1' then
+			windower.send_command('BT cast spell 1')
+		elseif state.BurstMode.value == 'Tier 2' then
+			windower.send_command('BT cast spell 2')
+		elseif state.BurstMode.value == 'Tier 3' then
+			windower.send_command('BT cast spell 3')
+		elseif state.BurstMode.value == 'Tier 4' then
+			windower.send_command('BT cast spell 4')
+		elseif state.BurstMode.value == 'Tier 5' then
+			windower.send_command('BT cast spell 5')
+		elseif state.BurstMode.value == 'Tier 6' then
+			windower.send_command('BT cast spell 6')
+		end
+	-- Calls the Bard Dummy Song function
 	elseif command == 'SongBuff' then
 		dummy_songs()
+	-- Warp Ring
 	elseif command == 'Warp' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Warp Ring"})
-		windower.send_command('wait 1;gs disable left_ring;wait 10;input /item \"Warp Ring\" <me>;wait 5;gs enable left_ring')
+		windower.send_command('gs disable left_ring;wait 11;input /item \"Warp Ring\" <me>;wait 6;gs enable left_ring')
+	-- Warp Club
 	elseif command == 'Warp Club' then
 		is_Busy = true
 		enable('main')
 		equip({main="Warp Club"})
-		windower.send_command('wait 1;gs disable main;wait 10;input /item \"Warp Club\" <me>;wait 5;gs enable main')
+		windower.send_command('wait 1;gs disable main;wait 11;input /item \"Warp Club\" <me>;wait 6;gs enable main')
+	-- Holla Teleport
 	elseif command == 'Holla' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Holla)"})
-		windower.send_command('wait 1;gs disable left_ring;wait 10;input /item \"Dim. Ring (Holla)\" <me>;wait 5;gs enable left_ring')
+		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Holla)\" <me>;wait 6;gs enable left_ring')
+	-- Dem Teleport
 	elseif command == 'Dem' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Dem)"})
-		windower.send_command('wait 1;gs disable left_ring;wait 10;input /item \"Dim. Ring (Dem)\" <me>;wait 5;gs enable left_ring')
+		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Dem)\" <me>;wait 6;gs enable left_ring')
+	-- Mea Teleport
 	elseif command == 'Mea' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Mea)"})
-		windower.send_command('wait 1;gs disable left_ring;wait 10;input /item \"Dim. Ring (Mea)\" <me>;wait 5;gs enable left_ring')
+		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Dim. Ring (Mea)\" <me>;wait 6;gs enable left_ring')
+	-- CP Ring
 	elseif command == 'CP' then
 		enable('left_Ring')
 		equip({left_ring="Trizek Ring"})
-		windower.send_command('wait 1;gs disable left_ring;wait 10;input /item \"Trizek Ring\" <me>;wait 5;gs enable left_ring')
+		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Trizek Ring\" <me>;wait 6;gs enable left_ring')
+	-- Locks the weapons and is a custom use for SMN AFAC or want to keep AM3
 	elseif command == "Weaponlock" then
 		if Custom == true then
 			Custom = false
@@ -853,7 +1095,9 @@ function self_command(command)
 			enable('main')
 			enable('sub')
 		else
-			if player.main_job ==  'SMN' then
+			enable('main')
+			enable('sub')
+			if player.main_job == 'SMN' then
 				equip({main="Nirvana"},{sub="Elan Strap +1"})
 			end
 			disable('main')
@@ -862,6 +1106,7 @@ function self_command(command)
 			choose_set()
 			add_to_chat(8,'Weapon Lock is [ON]')
 		end
+	-- Toggles the current player stances
 	elseif command == 'ModeChange' then
 		if state.OffenseMode.value == 'Normal' then
 			state.OffenseMode:set('ACC')
@@ -891,39 +1136,103 @@ function self_command(command)
 	self_command_custom(command)
 end
 
---Future Hooks
-windower.register_event('chat message', function(message,sender,mode,gm)
-    --Ignore it if it's not party chat or a tell
+-- Functin used to exectue Job Abilities
+function command_JA_execute()
+	send_command('input /ja "'..command_JA..'" <me>')
+	command_JA = "None"
+end
 
+-- Functin used to exectue Spells
+function command_SP_execute()
+	send_command('input /ma "'..command_SP..'" <me>')
+	command_JA = "None"
+end
+
+-- Functin used to exectue Blood Pacts
+function command_BP_execute()
+	send_command('input /pet "'..command_BP..'" <bt>')
+	command_SP = "None"
+end
+
+-- Function to prebuff Dummy Songs
+function dummy_songs()
+	windower.add_to_chat(8,'Song Buff Begin')
+	send_command("input /ma \"Army's Paeon IV\" <me>;wait 5.5;input /ma \"Army's Paeon III\" <me>;wait 5.5;input /ma \"Army's Paeon II\" <me>;wait 5.5;input /ma \"Army's Paeon\" <me>")
+end
+
+-- Determines correct gear for the songs
+function equip_song_gear(spell)
+	equipSet = {}
+	if spell.target.type == 'MONSTER' then
+		if string.find(spell.english,'Finale') then equipSet = sets.Midcast.Finale end
+		if string.find(spell.english,'Lullaby') then equipSet = sets.Midcast.Lullaby end
+		if string.find(spell.english,'Threnody') then equipSet = sets.Midcast.Threnody end
+		if string.find(spell.english,'Elegy') then equipSet = sets.Midcast.Elegy end
+		if string.find(spell.english,'Requiem') then equipSet = sets.Midcast.Requiem end
+	else
+		if string.find(spell.english,'March') then equipSet = sets.Midcast.March end
+		if string.find(spell.english,'Minuet') then equipSet = sets.Midcast.Minuet end
+		if string.find(spell.english,'Madrigal') then equipSet = sets.Midcast.Madrigal end
+		if string.find(spell.english,'Ballad') then equipSet = sets.Midcast.Ballad end
+		if string.find(spell.english,'Scherzo') then equipSet = sets.Midcast.Scherzo end
+		if string.find(spell.english,'Mazurka') then equipSet = sets.Midcast.Mazurka end
+		if string.find(spell.english,'Paeon') then equipSet = sets.Midcast.Paeon end
+		if string.find(spell.english,'Carol') then equipSet = sets.Midcast.Carol end
+		if string.find(spell.english,'Minne') then equipSet = sets.Midcast.Minne end
+		if string.find(spell.english,'Mambo') then equipSet = sets.Midcast.Mambo end
+		if string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude end
+		if string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude end
+		if string.find(spell.english,'Dirge') then equipSet = sets.Midcast.Dirge end
+		if string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente end
+	end
+	return equipSet
+end
+
+-- Command to Lock Style and Set the correct macros
+function jobsetup(LockStylePallet,MacroBook,MacroSet)
+	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait .1;input /macro set '..MacroSet..';wait .1;gs c update auto;input /echo Change Complete')
+end
+
+-- Lock Style on a Sub job change
+function sub_job_change(new,old)
+	send_command('wait 2;input /lockstyleset '..LockStylePallet..';wait 1;gs c update auto')
+end
+
+-- Check if you have a Grip or shield to determinate if it's a Dual Wield build
+function weaponcheck()
+	if player.sub_job == 'NIN' or player.sub_job == 'THF' or player.sub_job == 'DNC'  or player.main_job == 'THF' or player.main_job == 'NIN' or player.main_job == 'DNC' then -- Dual Wield Jobs
+		if player.equipment.sub ~= nil then
+			if player.equipment.sub:contains('Grip') or player.equipment.sub:contains('Shield') then
+				DualWield = false
+			else
+				DualWield = true
+			end
+		end
+	else
+		DualWield = false
+	end
+end
+
+--Future Hooks for PT chat or tells
+windower.register_event('chat message', function(message,sender,mode,gm)
 	-- Mode 3 is tell
 	-- Mode 4 is party
 
-    if mode ~= 3 then return end
+	--Ignore it if it's not party chat or a tell
+    if mode ~= 3 or mode ~= 4 then 
+		return
+	end
      
-    local player = windower.ffxi.get_player()
     message = message:lower()
  
+	-- Example Use
     if message:contains('hqzerg') then
 
     end
+
 end)
 
-
--- Check for various actions that we've specified in user code as being used with TH gear.
--- This will only ever be called if TreasureMode is not 'None'.
--- Category and Param are as specified in the action event packet.
--- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
-function th_action_check(category, param)
-	--add_to_chat(8,'param =['..param..']')
-    if category == 2 or -- any ranged attack
-	    category == 3 or -- Aeolian Edge
-        category == 4 or -- any magic action
-        category == 6 or -- Provoke, Animated Flourish
-        category == 14  -- Quick/Box/Stutter Step, Desperate/Violent Flourish
-        then return true
-    end
-end
-
+-- Unbind Keys when the file is unloaded
 function file_unload()
 	send_command('unbind f9')
 	send_command('unbind f10')
@@ -942,7 +1251,6 @@ function sub_job_change(newSubjob, oldSubjob)
 	send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
 end
 
-
 -------------------------------------------------------------------------------------------------------------------
 -- BELOW IS FROM MOTE TREASURE HUNTER TRACKER
 -- ADDING DUE TO FACT YOU NEEDING TO BE ENGAGED TO HIT TREASURE HUNTER LOCKSET
@@ -950,7 +1258,20 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 
-
+-- Check for various actions that we've specified in user code as being used with TH gear.
+-- This will only ever be called if TreasureMode is not 'None'.
+-- Category and Param are as specified in the action event packet.
+-- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
+function th_action_check(category, param)
+	--add_to_chat(8,'param =['..param..']')
+    if category == 2 or -- any ranged attack
+	    category == 3 or -- Aeolian Edge
+        category == 4 or -- any magic action
+        category == 6 or -- Provoke, Animated Flourish
+        category == 14  -- Quick/Box/Stutter Step, Desperate/Violent Flourish
+        then return true
+    end
+end
 
 -------------------------------------------------------------------------------------------------------------------
 -- Setup vars and events when first running the include.
@@ -984,9 +1305,6 @@ sets.TreasureHunter = {}
 function th_update(cmdParams, eventArgs)
     if (cmdParams and cmdParams[1] == 'user') or not cmdParams then
         TH_for_first_hit()
-        if _settings.debug_mode then
-            print_set(info.tagged_mobs, 'Tagged mobs')
-        end
     end
 end
 
@@ -1003,7 +1321,6 @@ function lock_TH()
     end
     disable(slots)
 end
-
 
 -- Set locked TH flag to false, and enable relevant gear slots.
 function unlock_TH()
@@ -1022,14 +1339,12 @@ end
 function TH_for_first_hit()
     if state.TreasureMode.value ~= 'None' then
         if not info.tagged_mobs[player.target.id] then
-            if _settings.debug_mode then add_to_chat(123,'Prepping for first hit on '..tostring(player.target.id)..'.') end
             equip(sets.TreasureHunter)
             lock_TH()
         elseif state.th_gear_is_locked then
-            if _settings.debug_mode then add_to_chat(123,'Target '..player.target.id..' has been tagged.  Unlocking.') end
             unlock_TH()
         else
-            if _settings.debug_mode then add_to_chat(123,'Prepping for first hit on '..player.target.id..'.  Target has already been tagged.') end
+			-- Waiting for a Hit
         end
     elseif state.TreasureMode.value == 'None' and state.th_gear_is_locked then
         unlock_TH()
@@ -1048,11 +1363,9 @@ function on_status_change_for_th(new_status_id, old_status_id)
     local old_status = gearswap.res.statuses[old_status_id].english
 
     if new_status == 'Engaged' then
-        if _settings.debug_mode then add_to_chat(123,'Engaging '..player.target.id..'.') end
         info.last_player_target_index = player.target.index
         TH_for_first_hit()
     elseif old_status == 'Engaged' then
-        if _settings.debug_mode and state.th_gear_is_locked then add_to_chat(123,'Disengaging. Unlocking TH.') end
         info.last_player_target_index = 0
         unlock_TH()
     end
@@ -1066,7 +1379,6 @@ function on_target_change_for_th(new_index, old_index)
         -- engaged with it.
         -- If it's different than the last known mob, then we've actually changed targets.
         if player.target.index == new_index and new_index ~= info.last_player_target_index then
-            if _settings.debug_mode then add_to_chat(123,'Changing target to '..player.target.id..'.') end
             info.last_player_target_index = player.target.index
             TH_for_first_hit()
         end
@@ -1080,7 +1392,7 @@ function on_action_for_th(action)
     if state.TreasureMode.value ~= 'None' and player.status == 'Engaged' or th_action_check(action.category, action.param) and state.TreasureMode.value ~= 'None' then
         if action.actor_id == player.id then
             -- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
-            if state.TreasureMode.value == 'Fulltime' or
+            if state.TreasureMode.value == 'SATA' or
                (state.TreasureMode.value == 'SATA' and (action.category == 1 or ((state.Buff['Sneak Attack'] or state.Buff['Trick Attack']) and action.category == 3))) or
                (state.TreasureMode.value == 'Tag' and action.category == 1 and state.th_gear_is_locked) or -- Tagging with a melee hit
                (th_action_check and th_action_check(action.category, action.param)) -- Any user-specified tagging actions
@@ -1219,8 +1531,6 @@ end)
 -- ALLOWS CANCELING OF BUFFS EASIER
 -------------------------------------------------------------------------------------------------------------------
 
-res = require 'resources'
-name_index = {}
 language = windower.ffxi.get_info().language:lower()
 
 function cancel(...)
@@ -1244,7 +1554,10 @@ function cancel_buff(id)
 	windower.packets.inject_outgoing(0xF1,string.char(0xF1,0x04,0,0,id%256,math.floor(id/256),0,0)) -- Inject the cancel packet
 end
 
--- Movement Detection
+-------------------------------------------------------------------------------------------------------------------
+-- Movement Detection Section
+-------------------------------------------------------------------------------------------------------------------
+
 mov = {counter=0}
 
 if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
