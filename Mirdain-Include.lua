@@ -72,6 +72,7 @@ Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare'
 Debuff_Rage_BPs = S{'Moonlit Charge','Tail Whip'}
 
 Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzard','Baraero','Barstonra','Barthundra','Barwatera'}
+Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire'}
 
 Magic_BPs_NoTP = S{'Holy Mist','Nether Blast','Aerial Blast','Searing Light','Diamond Dust','Earthen Fury','Zantetsuken','Tidal Wave','Judgment Bolt','Inferno','Howling Moon','Ruinous Omen','Night Terror','Thunderspark'}
 Magic_BPs_TP = S{'Impact','Conflag Strike','Level ? Holy','Lunar Bay'}
@@ -106,7 +107,10 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 	end
 	-- Check that proper ammo is available if we're using ranged attacks or similar.
-    if spell.action_type == 'Ranged Attack' or spell.type == 'WeaponSkill' or spell.type == 'CorsairShot' then
+    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" 
+		or spell.action_type == 'Ranged Attack' and player.equipment.ranged ~= "" 
+		or spell.type == 'WeaponSkill' 
+		or spell.type == 'CorsairShot' then
         do_bullet_checks(spell, spellMap, eventArgs)
     end
 	-- Status Ailment Check
@@ -147,6 +151,7 @@ function pretargetcheck(spell,action)
 			return
 		end
 	end
+	-- Change targets based off song
 	if spell.type == 'BardSong' then
 		-- casting a buff song while engaged
 		if spell.target.type == 'MONSTER' then
@@ -204,7 +209,7 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
-	--Used to fire a script
+	--Used to fire a second script
 	if spell.name == "Poison II" then
 		windower.add_to_chat(8,'Dancing Chains II')
 		if player.main_job == "RDM" then
@@ -428,17 +433,46 @@ function midcastequip(spell)
 					cancel('Stoneskin')
 				end
 			end
-			-- Refresh
-			if spell.name:contains('Refresh') then
-				windower.add_to_chat(8,'Refresh Set')
-				equipSet = set_combine(equipSet, sets.Midcast.Refresh)
-			-- Bar Spells
-			elseif Elemental_Bar:contains(spell.name) then 
-				equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
-				windower.add_to_chat(8,'Elemental Bar Set')
-			-- Enhancing
+			if spell.target.type == 'SELF' then
+				-- Refresh
+				if spell.name:contains('Refresh') then
+					windower.add_to_chat(8,'Refresh Set - Self')
+					equipSet = set_combine(equipSet, sets.Midcast.Refresh)
+				-- Bar Spells
+				elseif Elemental_Bar:contains(spell.name) then 
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
+					windower.add_to_chat(8,'Elemental Bar Set - Self')
+				-- Enhancing SKill
+				elseif Enhancing_Skill:contains(spell.name) then 
+					if buffactive['Accession'] then
+						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill, sets.Midcast.Enhancing.Others)
+						windower.add_to_chat(8,'Enhancing Skill - Others')
+					else
+						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
+						windower.add_to_chat(8,'Enhancing Skill - Self')
+					end
+				-- Enhancing
+				else
+					windower.add_to_chat(8,'Enhancing Magic Set - Self')
+				end
 			else
-				windower.add_to_chat(8,'Enhancing Magic Set')
+				-- Refresh
+				if spell.name:contains('Refresh') then
+					windower.add_to_chat(8,'Refresh Set - Others')
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
+				end
+				-- Bar Spells
+				if Elemental_Bar:contains(spell.name) then 
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Enhancing.Elemental)
+					windower.add_to_chat(8,'Elemental Bar Set - Others')
+				-- Enhancing SKill
+				elseif Enhancing_Skill:contains(spell.name) then 
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
+				-- Enhancing
+				else
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others)
+					windower.add_to_chat(8,'Enhancing Magic Set - Others')
+				end
 			end
 		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
@@ -1058,7 +1092,7 @@ function self_command(command)
 		equip({main="Warp Club"})
 		windower.send_command('wait 1;gs disable main;wait 11;input /item \"Warp Club\" <me>;wait 6;gs enable main')
 	-- Holla Teleport
-	elseif command == 'golla' then
+	elseif command == 'holla' then
 		is_Busy = true
 		enable('left_Ring')
 		equip({left_ring="Dim. Ring (Holla)"})
