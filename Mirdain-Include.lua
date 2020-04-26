@@ -489,6 +489,14 @@ function midcastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			add_to_chat(8, '['..spell.english..'] Set')
+		-- Aspir Gear
+		elseif spell.name:contains('Aspir') then
+			windower.add_to_chat(8,'Aspir Set')
+			equipSet = set_combine(equipSet, sets.Midcast.Aspir)
+		-- Drain Gear
+		elseif spell.name:contains('Drain') then
+			windower.add_to_chat(8,'Drain Set')
+			equipSet = set_combine(equipSet, sets.Midcast.Drain)
 		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
 			windower.add_to_chat(8,'Enfeebling Magic Set')
