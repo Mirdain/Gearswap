@@ -1,5 +1,5 @@
 
---Mirdain
+--Elendnur
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -8,6 +8,16 @@ include('Mirdain-Include')
 LockStylePallet = "11"
 MacroBook = "12"
 MacroSet = "1"
+
+--Text for the keybind
+CustomBind = "Auto Burst Mode"
+--Command to bind to the f9 key
+send_command('bind f9 gs c AutoBurst')
+--Log Message about what the key does
+add_to_chat(8,'[F9] - Auto Burst Mode [OFF]')
+
+--loads the Burst Plugin
+windower.send_command('lua l Burst')
 
 function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
@@ -25,9 +35,10 @@ function get_sets()
 		left_ear="Infused Earring",
 		right_ear="Etiolation Earring", -- 0/3
 		left_ring="Defending Ring", -- 10/10
-		right_ring="Stikini Ring +1",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: Damage taken -5%',}}, --5/5
     }
+	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = {
 		main="Malignance Pole", --20/20
 		sub="Enki Strap",
@@ -42,18 +53,18 @@ function get_sets()
 		left_ear="Infused Earring",
 		right_ear="Etiolation Earring", -- 0/3
 		left_ring="Defending Ring", -- 10/10
-		right_ring="Stikini Ring +1",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: Damage taken -5%',}}, --5/5
     }
 
 	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
 	sets.DT = {
 	}
-	--Used to swap into movement gear when the player is detected movement when not engaged
+	--Used to swap into movement gear when the player is moving and not engaged
 	sets.Movement = {
 		feet="Geo. Sandals +3",
 	}
-
+	-- Precast Sets
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -77,11 +88,15 @@ function get_sets()
 	sets.JA = {}
 	sets.JA["Collimated Fervor"] = {}
 	sets.JA["Convert"] = {}
-	sets.JA["Bolster"] = {}
+	sets.JA["Bolster"] = {
+	    body={ name="Bagua Tunic +1", augments={'Enhances "Bolster" effect',}}, 
+	}
 	sets.JA["Full Circle"] = {}
 	sets.JA["Lasting Emanation"] = {}
-	sets.JA["Ecliptic Attrition"] = {}
-	sets.JA["Life Cycle"] = {}
+	sets.JA["Ecliptic Attrition"] = {} 
+	sets.JA["Life Cycle"] = {
+		body="Geomancy Tunic +3",
+	}
 	sets.JA["Blaze of Glory"] = {}
 	sets.JA["Dematerialzie"] = {}
 	sets.JA["Theurgic Focus"] = {}
@@ -91,32 +106,27 @@ function get_sets()
 	sets.JA["Widened Compass"] = {}
 	sets.JA["Entrust"] = {}
 
-	-- ===================================================================================================================
-	--		sets.midcast
-	-- ===================================================================================================================
-
 	-- Default song duration / strength
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
-
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {
 		main={ name="Gada", augments={'Enh. Mag. eff. dur. +6','Mag. Acc.+6','"Mag.Atk.Bns."+6','DMG:+9',}},
-		sub="Ammurapi Shield",
+		sub="Sors Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+27','"Fast Cast"+6','INT+2','Mag. Acc.+8',}},
-		body={ name="Merlinic Jubbah", augments={'Mag. Acc.+23','"Fast Cast"+7','"Mag.Atk.Bns."+14',}},
-		hands={ name="Telchine Gloves", augments={'Pet: DEF+18','"Cure" potency +8%','Enh. Mag. eff. dur. +10',}},
+		head={ name="Vanya Hood", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
+		body={ name="Vanya Robe", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
+		hands={ name="Vanya Cuffs", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 		legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
-		feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
+		feet={ name="Vanya Clogs", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 		neck="Incanter's Torque",
 		waist="Luminary Sash",
 		left_ear="Mendi. Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Kishar Ring",
-		right_ring="Weather. Ring",
+		right_ear="Regal Earring",
+		left_ring="Weather. Ring",
+		right_ring="Lebeche Ring",
 		back="Perimede Cape",
     }
 	-- Enhancing Skill
@@ -131,71 +141,72 @@ function get_sets()
 		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +10',}},
 		neck="Incanter's Torque",
 		waist="Siegel Sash",
-		left_ear="Loquac. Earring",
+		left_ear="Andoaa Earring",
 		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Kishar Ring",
+		left_ring="Kishar Ring",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Nantosuelta's Cape", augments={'"Fast Cast"+10',}},
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
+		main="Daybreak",
 		sub="Ammurapi Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-		head="Geo. Galero +2",
-		body="Jhakri Robe +2",
+		head="Geo. Galero +3",
+		body="Geomancy Tunic +3",
 		hands="Geo. Mitaines +3",
 		legs="Geomancy Pants +3",
 		feet="Geo. Sandals +3",
 		neck="Incanter's Torque",
 		waist="Luminary Sash",
-		left_ear="Gwati Earring",
-		right_ear="Digni. Earring",
+		left_ear="Digni. Earring",
+		right_ear="Malignance Earring",
 		left_ring="Kishar Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
 	}
-
+	-- Free Nuke
 	sets.Midcast.Nuke = {
-		main={ name="Grioavolr", augments={'Magic burst dmg.+10%','Mag. Acc.+16','Magic Damage +2',}},
-		sub="Enki Strap",
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Pemphredo Tathlum",
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
-		body={ name="Amalric Doublet +1", augments={'MP+80','"Mag.Atk.Bns."+25','"Fast Cast"+4',}},
+		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
 		feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
-		neck="Mizu. Kubikazari",
+		neck="Sanctity Necklace",
 		waist="Refoccilation Stone",
-		left_ear="Friomisi Earring",
-		right_ear="Digni. Earring",
-		left_ring="Jhakri Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+8','"Mag.Atk.Bns."+10',}},
+		left_ear="Regal Earring",
+		right_ear="Malignance Earring",
+		left_ring="Shiva Ring +1",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
 	}
+	-- Used for Burst Mode
 	sets.Midcast.Burst = {
-		main={ name="Grioavolr", augments={'Magic burst dmg.+10%','Mag. Acc.+16','Magic Damage +2',}},
-		sub="Niobid Strap",
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Pemphredo Tathlum",
 		head="Ea Hat +1",
-		body="Ea Houppelande",
+		body="Ea Houppe. +1",
 		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs={ name="Amalric Slops +1", augments={'MP+80','"Mag.Atk.Bns."+25','Enmity-6',}},
-		feet="Ea Pigaches",
+		legs="Ea Slops +1",
+		feet="Ea Pigaches +1",
 		neck="Mizu. Kubikazari",
 		waist="Refoccilation Stone",
-		left_ear="Friomisi Earring",
-		right_ear="Digni. Earring",
+		left_ear="Malignance Earring",
+		right_ear="Regal Earring",
 		left_ring="Mujin Band",
 		right_ring="Jhakri Ring",
-		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+8','"Mag.Atk.Bns."+10',}},
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
 	}
-	-- Misc Sets
+	-- CuragaSet
 	sets.Midcast.CuragaSet = sets.Midcast.Cure
+	-- Cursna Set
 	sets.Midcast.Cursna = {}
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = {}
-
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
 		ring1="Stikini Ring +1",
@@ -203,15 +214,70 @@ function get_sets()
 		waist="Siegel Sash",
 		neck="Nodens Gorget",
 	})
+	-- Aquaveil Set
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1"
 	})
+	-- Stun Set
+	sets.Midcast["Stun"] = {
+	    main="Daybreak",
+		sub="Ammurapi Shield",
+		ammo="Pemphredo Tathlum",
+		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+27','"Fast Cast"+6','INT+2','Mag. Acc.+8',}},
+		body={ name="Merlinic Jubbah", augments={'Mag. Acc.+23','"Fast Cast"+7','"Mag.Atk.Bns."+14',}},
+		hands="Geo. Mitaines +3",
+		legs="Geomancy Pants +3",
+		feet="Geo. Sandals +3",
+		neck="Erra Pendant",
+		waist="Luminary Sash",
+		left_ear="Malignance Earring",
+		right_ear="Regal Earring",
+		left_ring="Kishar Ring",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+	}
+	-- Refresh Set
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head={ name="Amalric Coif +1"}
 	})
-
+	-- Aspir Set
+	sets.Midcast.Aspir = {
+	    main="Daybreak",
+		sub="Ammurapi Shield",
+		ammo="Pemphredo Tathlum",
+		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+		body={ name="Merlinic Jubbah", augments={'"Drain" and "Aspir" potency +11','Mag. Acc.+6','"Mag.Atk.Bns."+4',}},
+		hands="Geo. Mitaines +3",
+		legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+27','"Drain" and "Aspir" potency +10','CHR+10','"Mag.Atk.Bns."+4',}},
+		feet={ name="Merlinic Crackows", augments={'Mag. Acc.+11 "Mag.Atk.Bns."+11','"Drain" and "Aspir" potency +9','MND+10','Mag. Acc.+13','"Mag.Atk.Bns."+13',}},
+		neck="Erra Pendant",
+		waist="Fucho-no-Obi",
+		left_ear="Regal Earring",
+		right_ear="Digni. Earring",
+		left_ring="Evanescence Ring",
+		right_ring="Stikini Ring +1",
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+	}
+	-- Drain Set
+	sets.Midcast.Drain = {
+	    main="Daybreak",
+		sub="Ammurapi Shield",
+		ammo="Pemphredo Tathlum",
+		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+		body={ name="Merlinic Jubbah", augments={'"Drain" and "Aspir" potency +11','Mag. Acc.+6','"Mag.Atk.Bns."+4',}},
+		hands="Geo. Mitaines +3",
+		legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+27','"Drain" and "Aspir" potency +10','CHR+10','"Mag.Atk.Bns."+4',}},
+		feet={ name="Merlinic Crackows", augments={'Mag. Acc.+11 "Mag.Atk.Bns."+11','"Drain" and "Aspir" potency +9','MND+10','Mag. Acc.+13','"Mag.Atk.Bns."+13',}},
+		neck="Erra Pendant",
+		waist="Fucho-no-Obi",
+		left_ear="Regal Earring",
+		right_ear="Digni. Earring",
+		left_ring="Evanescence Ring",
+		right_ring="Stikini Ring +1",
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+	}
 	sets.Geomancy = {}
-
+	-- Indi Duration
 	sets.Geomancy.Indi = {
 		main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
 		sub="Ammurapi Shield",
@@ -226,9 +292,10 @@ function get_sets()
 		left_ear="Mendi. Earring",
 		right_ear="Gwati Earring",
 		left_ring="Defending Ring",
-		right_ring="Stikini Ring +1",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Nantosuelta's Cape", augments={'"Fast Cast"+10',}},
 	}
+	-- Geo Potency
 	sets.Geomancy.Geo = {
 		main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
 		sub="Ammurapi Shield",
@@ -243,22 +310,20 @@ function get_sets()
 		left_ear="Mendi. Earring",
 		right_ear="Gwati Earring",
 		left_ring="Defending Ring",
-		right_ring="Stikini Ring +1",
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Nantosuelta's Cape", augments={'"Fast Cast"+10',}},
 	}
-
-
-	-- ===================================================================================================================
-	--		sets.aftercast
-	-- ===================================================================================================================
 	--Custome sets for each jobsetup
 	sets.Custom = {}
-
+	-- Base TP set
 	sets.TP = {}
+	-- Set to use when Dual Wielding
 	sets.TP.DW = {}
+	-- TP set when in -Damage Taken mode
 	sets.TP.DT = {}
+	-- TP set to use when mode is in accuracy
 	sets.TP.ACC = {}
-
+	-- Base WS set
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
@@ -267,7 +332,6 @@ function get_sets()
 		waist="Chaac Belt",
 	    head="Wh. Rarab Cap +1",
 	}
-
 	organizer_items  = {		
 		item1 = "Echo Drops",
 		item2 = "Remedy",
@@ -318,9 +382,7 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	if T{'Idle','Resting'}:contains(new) then
 
-	end
 	return equipSet
 end
 
@@ -344,5 +406,50 @@ end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
+	if AutoBurst == true then
+		spell_1 = 157 -- Aero IV
+		spell_2 = 158 -- Aero V
+		spell_3 = 851 -- Aero VI
 
+		spell_4 = 152 -- Blizzard IV
+		spell_5 = 153 -- Blizzard V
+		spell_6 = 850 -- Blizzard V
+
+		spell_7 = 167 -- Thunder IV
+		spell_8 = 168 -- Thunder V
+		spell_9 = 853 -- Thunder V
+
+		spell_10 = 147 -- Fire IV
+		spell_11 = 148 -- Fire V
+		spell_12 = 849 -- Fire V
+
+
+		if command == 'SC_Light' then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			local spell_time = spell_recasts[spell_2]/100
+			if spell_time > 0 then
+				windower.send_command('input /ma "Aero IV" <bt>')
+			else
+				windower.send_command('input /ma "Aero V" <bt>')
+			end
+		end
+		if command == 'SC_Distortion' then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			local spell_time = spell_recasts[spell_5]/100
+			if spell_time > 0 then
+				windower.send_command('input /ma "Blizzard IV" <bt>')
+			else
+				windower.send_command('input /ma "Blizzard V" <bt>')
+			end
+		end
+		if command == 'SC_Fusion' then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			local spell_time = spell_recasts[spell_11]/100
+			if spell_time > 0 then
+				windower.send_command('input /ma "Fire IV" <bt>')
+			else
+				windower.send_command('input /ma "Fire V" <bt>')
+			end
+		end
+	end
 end
