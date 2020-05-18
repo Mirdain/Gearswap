@@ -311,11 +311,8 @@ function precastequip(spell)
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
-			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
@@ -343,7 +340,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- BlackMagic
 	elseif spell.type == 'BlackMagic' then
@@ -353,7 +349,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
@@ -363,7 +358,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- BardSong
 	elseif spell.type == 'BardSong' then
@@ -409,7 +403,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
@@ -419,7 +412,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	-- Trust
 	elseif spell.type == 'Trust' then
@@ -429,7 +421,6 @@ function precastequip(spell)
 			add_to_chat(8, '['..spell.english..'] Set')
 		else
 			equipSet = sets.Precast.FastCast
-			add_to_chat(8,'Fast Cast set')
 		end
 	end
 	-- If TH mode is on check if new mob and then equip TH gear
