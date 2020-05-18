@@ -23,9 +23,6 @@ function get_sets()
 	sets.Custom.Utsusemi.Precast = {
 	    --body={ name="Mochi. Chainmail +3", augments={'Enhances "Sange" effect',}}
 	}
-
-	--Impetus set has priority over any other modes
-	sets.Movement = {feet="Hachi. Kyahan +1"}
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		main={ name="Kannagi", augments={'Path: A',}},
@@ -44,6 +41,10 @@ function get_sets()
 		right_ring="Ilabrat Ring",
 		back="Moonbeam Cape",
     }
+	sets.Movement = {feet="Danzo Sune-Ate"}
+
+	sets.Movement.Night = {feet="Hachi. Kyahan +1"}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -271,54 +272,30 @@ end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	equipSet = choose_feet()
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-	equipSet = choose_feet()
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-	equipSet = choose_feet()
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	equipSet = choose_feet()
 	return equipSet
 end
 --Function is called by the gearswap command
 function self_command_custom(command)
-	if command == 'Movement' then
+	if command == 'movement' then
 		if world.time >= 17*60 or world.time <= 7*60 then
-			equip(sets.Custom.Movement)
+			equip(sets.Movement.Night)
 		else
-			equip(sets.Idle)
+			equip(sets.Movement)
 		end
 	end
 end
---Custom Funcntin used to select which feet to equip based off time of day
-function choose_feet()
-	equipSet = {}
-		if player.status == 'Idle' then
-			if world.time >= 17*60 or world.time <= 7*60 then
-				equipSet = sets.Custom.Movement
-			else
-				equipSet = sets.Idle
-			end
-		end
-	return equipSet
-end
-
---used to register the time change to equip correct feet
-windower.register_event('time change', function(time)
-    if (world.time == 17*60 or world.time == 7*60) and player.status == 'Idle' then
-		windower.add_to_chat(8,'Feet Set')
-        windower.send_command('gs c Movement')
-    end
-end)
