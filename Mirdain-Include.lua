@@ -212,8 +212,8 @@ function pretargetcheck(spell,action)
 					if buffactive['pianissimo'] then
 						if is_Pianissimo == false then
 							cancel_spell()
-							windower.add_to_chat(8,'Piassimo Redirect - Select Character')
-							windower.send_command('input /ma "'..spell.name..'" <stpc>')
+							add_to_chat(8,'Piassimo Redirect - Select Character')
+							send_command('input /ma "'..spell.name..'" <stpc>')
 							is_Pianissimo = true
 						else
 							is_Pianissimo = false
@@ -672,11 +672,11 @@ function midcastequip(spell)
 	end
 	-- Auto-cancel existing buffs
 	if spell.name=="Stoneskin" and buffactive["Stoneskin"] then
-		windower.send_command('cancel 37;')
+		send_command('cancel 37;')
 	elseif spell.name=="Sneak" and buffactive["Sneak"] and spell.target.type=="SELF" then
-		windower.send_command('cancel 71;')
+		send_command('cancel 71;')
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
-		windower.send_command('wait 1;cancel 66;')
+		send_command('wait 1;cancel 66;')
 	end
 	-- Built equipset to return
 	return equipSet
@@ -692,7 +692,7 @@ function aftercastequip(spell)
         return
     else
 		equipSet = {}
-		equipSet = choose_set()
+		equipSet = equip(set_combine(choose_set(),choose_set_custom()))
 		return equipSet
 	end
 end
@@ -826,6 +826,7 @@ end
 
 function pet_midcast(spell)
 	equipSet = {}
+	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 	-- This section is for SMN Blood Pact abilities
 	if player.main_job == "SMN" then
 		is_AvatarBusy = true
@@ -852,12 +853,11 @@ function pet_midcast(spell)
 		else
 			equipSet = sets.Pet_Midcast.Physical_BP
 		end
-		enable()
-		equip(equipSet)
-		disable()
 		-- Assign the BP being used for AFAC
 		command_BP = spell.name
 	end
+	equip(equipSet)
+	disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1094,7 +1094,7 @@ function self_command(command)
 	command = command:lower()
 
 	if command == 'update auto' then
-			equip(set_combine(choose_set(),choose_set_custom()))
+		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
 	elseif command == "th" then
 		if 	state.TreasureMode.value == 'Tag' then
@@ -1148,21 +1148,24 @@ function self_command(command)
 		add_to_chat(8,'Auto Buff is ['..state.AutoBuff.value..']')
 	elseif command == 'skillchain_burst' then
 		if state.BurstMode.value == 'Tier 1' then
-			windower.send_command('BT cast spell 1')
+			send_command('BT cast spell 1')
 		elseif state.BurstMode.value == 'Tier 2' then
-			windower.send_command('BT cast spell 2')
+			send_command('BT cast spell 2')
 		elseif state.BurstMode.value == 'Tier 3' then
-			windower.send_command('BT cast spell 3')
+			send_command('BT cast spell 3')
 		elseif state.BurstMode.value == 'Tier 4' then
-			windower.send_command('BT cast spell 4')
+			send_command('BT cast spell 4')
 		elseif state.BurstMode.value == 'Tier 5' then
-			windower.send_command('BT cast spell 5')
+			send_command('BT cast spell 5')
 		elseif state.BurstMode.value == 'Tier 6' then
-			windower.send_command('BT cast spell 6')
+			send_command('BT cast spell 6')
 		end
 	-- Calls the Bard Dummy Song function
 	elseif command == 'songbuff' then
 		dummy_songs()
+	-- Shuts down instnace
+	elseif command == 'shutdown' then
+		send_command('terminate')
 	-- Saves the location of HUD
 	elseif command == 'save' then
 		settings:save('all')
@@ -1232,7 +1235,7 @@ function self_command(command)
 			disable('main')
 			disable('sub')
 			Custom = true
-			choose_set()
+			equip(set_combine(choose_set(),choose_set_custom()))
 			add_to_chat(8,'Weapon Lock is [ON]')
 		end
 	elseif command == "charmed" then
@@ -1246,7 +1249,7 @@ function self_command(command)
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		Charmed = false
 		add_to_chat(8,'Charm Set Unequiped')
-		choose_set()
+		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the current player stances
 	elseif command == 'modechange' then
 		if state.OffenseMode.value == 'Normal' then
@@ -1271,7 +1274,7 @@ function self_command(command)
 			state.OffenseMode:set('Normal')
 		end
 		add_to_chat(8,'Mode: ['..state.OffenseMode.value..']')
-		equip(choose_set())
+		equip(set_combine(choose_set(),choose_set_custom()))
 	end
 	--use below for custom Job commands
 	self_command_custom(command)
@@ -1664,7 +1667,7 @@ windower.register_event('gain buff', function(id)
     for key,val in pairs(watch_buffs) do
         if key:lower() == name:lower() then
             if name:lower() == 'silence' then
-                windower.send_command('input /item "Remedy" '..windower.ffxi.get_player()["name"])
+                send_command('input /item "Remedy" '..windower.ffxi.get_player()["name"])
             end
         end
     end
@@ -1764,7 +1767,7 @@ if data.actor_id == windower.ffxi.get_player().id then
     if data.param == 28787 then
 	  is_Busy = false
 	  --windower.add_to_chat(8,'Spell Interupt - Choose Set')
-	  equip(choose_set())
+		equip(set_combine(choose_set(),choose_set_custom()))
     elseif data.param == 24931 then
 		is_Busy = true
 		--windower.add_to_chat(8,'Casting Spell')
