@@ -781,12 +781,12 @@ function buff_change(name,gain)
 	if name:lower() == 'charm' then
 		if gain == true then
 			Charmed = true
-			send_command('gs enable all')
+			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 			equipSet = sets.Charm
 			equip(equipSet)
-			send_command('gs disable all')
+			disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		else
-			send_command('gs enable all')
+			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		end
 	elseif is_Busy == false then
 		--calls the include file and custom on a buff change
@@ -801,7 +801,7 @@ end
 
 function status_change(new,old)
 	if Charmed == false then
-		enable()
+		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		equipSet = {}
 		--calls the include file and custom on a state change
 		equipSet = set_combine(choose_set(), status_change_custom(new,old))
@@ -1174,10 +1174,19 @@ function self_command(command)
 		dummy_songs()
 	-- Saves the location of HUD
 	elseif command == 'save' then
-		--settings.x_pos = gs_status.pos.x
-		--settings.y_pos = gs_status.pos.y
 		settings:save('all')
 		add_to_chat(80,'Settings saved')
+	-- Toggles dispay of the HUD
+	elseif command == 'display' then
+		if settings.visible == true then
+			settings.visible = false
+			gs_status:hide()
+			add_to_chat(80,'UI Hidden')
+		else
+			gs_status:show()
+			settings.visible = true
+			add_to_chat(80,'UI Shown')
+		end
 	-- Esha Temps
 	elseif command == 'temps' then
 		escha_temps()
@@ -1236,11 +1245,12 @@ function self_command(command)
 			add_to_chat(8,'Weapon Lock is [ON]')
 		end
 	elseif command == "charmed" then
+		add_to_chat(8,'State busy ['..tostring(is_Busy)..']')
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
-		Charmed = true
 		add_to_chat(8,'Charm Set Equiped')
 		equip(sets.Charm)
 		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		Charmed = true
 	elseif command == "reset" then
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		Charmed = false
