@@ -4,10 +4,20 @@ include('organizer-lib')
 include('Modes')
 
 res = require 'resources'
+config = require('config')
 
-AutoBuff = false
+default = {
+	visible = false,
+	box={text={size=10}}
+	}
+
+settings = config.load(default)
+
 Custom = false
 DualWield = false
+Charmed = false
+
+AutoBuffTime = os.clock()
 
 command_JA = "None"
 command_SP = "None"
@@ -34,14 +44,38 @@ state.BurstMode = M{['description']='Burst Mode'}
 state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6')
 state.BurstMode:set('OFF')
 
+--Modes for Bursting
+state.AutoBuff = M{['description']='Auto Buff Mode'}
+state.AutoBuff:options('OFF','ON')
+state.AutoBuff:set('OFF')
+
+-- TH mode handling
+state.TreasureMode = M{['description']='Treasure Mode'}
+state.TreasureMode:options('None','Tag')
+state.AutoBuff:set('OFF')
+
 --State for Ammunition check
 state.warned = M(false)
+
+enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 
 --Ammunition
 ammo = {}
 ammo.bullet = {}
 ammo.arrow = {}
 ammo.bolt = {}
+
+local display_box = function()
+    return 'State [%s]\nAuto Buff [%s]\nTreasure Hunter [%s]\nBurst Mode [%s]'
+	:format(tostring(state.OffenseMode.value),tostring(state.AutoBuff.value),tostring(state.TreasureMode.value),tostring(state.BurstMode.value))
+end
+
+gs_status = {}
+gs_status = texts.new(display_box(),settings.box)
+
+if settings.visible == true then
+	gs_status:show()
+end
 
 --Notify current states
 add_to_chat(8,'[F12] - Melee Mode is [Normal]')
@@ -275,7 +309,14 @@ function precastequip(spell)
 		end
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
@@ -296,13 +337,34 @@ function precastequip(spell)
 		end
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- BlackMagic
 	elseif spell.type == 'BlackMagic' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- BardSong
 	elseif spell.type == 'BardSong' then
 		-- Normal Song Casting
@@ -341,13 +403,34 @@ function precastequip(spell)
 		end
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	-- Trust
 	elseif spell.type == 'Trust' then
-		equipSet = sets.Precast.FastCast
+		equipSet = sets.Precast
+		if equipSet[spell.english] then
+			equipSet = equipSet[spell.english]
+			add_to_chat(8, '['..spell.english..'] Set')
+		else
+			equipSet = sets.Precast.FastCast
+			add_to_chat(8,'Fast Cast set')
+		end
 	end
 	-- If TH mode is on check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' then
@@ -641,15 +724,21 @@ end
 function precast(spell)
 	equipSet = {}
 	-- action is started
-	is_Busy = true
-	-- Enable all gear slots
-	enable()
+	if spell.type=="Item" then
+		--Do Nothing and dont lock
+	elseif is_Busy == true then
+		add_to_chat(8,'Player is Busy')
+		cancel_spell()
+		return
+	else
+		is_Busy = true
+	end
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
+	-- unlock gear for any reason it was left locked
+	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 	-- here is where gear is actually equipped
 	equip(equipSet)
-	-- To ensure it is not changed during the action Lock the gear
-	disable()
  end
 
  -------------------------------------------------------------------------------------------------------------------
@@ -658,14 +747,12 @@ function precast(spell)
 
 function midcast(spell)
 	equipSet = {}
-	-- Enable all gear slots
-	enable()
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- To ensure it is not changed during the action Lock the gear
-	disable()
+	disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -674,8 +761,7 @@ end
 
 function aftercast(spell)
 	equipSet = {}
-	-- Enable all gear slots
-	enable()
+	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
 	-- here is where gear is actually equipped
@@ -683,8 +769,6 @@ function aftercast(spell)
 	-- action is complete - release player
 	is_Busy = false
 	in_Queue = false
-	-- Player completed an action so can check if there needs to be a buff
-	coroutine.schedule(check_buff,.2)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -693,14 +777,21 @@ end
 
 function buff_change(name,gain)
 	equipSet = {}
-	if 	is_Busy == false then
+	-- change gear on charm.... I know I know....
+	if name:lower() == 'charm' then
+		if gain == true then
+			Charmed = true
+			send_command('gs enable all')
+			equipSet = sets.Charm
+			equip(equipSet)
+			send_command('gs disable all')
+		else
+			send_command('gs enable all')
+		end
+	elseif is_Busy == false then
 		--calls the include file and custom on a buff change
 		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
 		equip(equipSet)
-		-- If there is not an action waiting to happen
-		if in_Queue == false then
-			coroutine.schedule(check_buff,.2)
-		end
 	end
 end
 
@@ -709,11 +800,13 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function status_change(new,old)
-	enable()
-	equipSet = {}
-	--calls the include file and custom on a state change
-	equipSet = set_combine(choose_set(), status_change_custom(new,old))
-	equip(equipSet)
+	if Charmed == false then
+		enable()
+		equipSet = {}
+		--calls the include file and custom on a state change
+		equipSet = set_combine(choose_set(), status_change_custom(new,old))
+		equip(equipSet)
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -724,10 +817,7 @@ function pet_change(pet,gain)
 	equipSet = {}
 	if player.main_job == 'SMN' or player.main_job == 'GEO' then
 		if gain == false then
-			if buffactive["Astral Conduit"] then
-				windower.add_to_chat(8,"Avatar Summon")
-				check_buff() -- if Pet is lost summon
-			else
+			if not buffactive["Astral Conduit"] then
 				avatar = "None"
 			end
 		else
@@ -789,10 +879,6 @@ function pet_aftercast(spell)
 	enable()
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
 	equip(equipSet)
-	-- If there is not an action waiting to happen check for next action
-	if in_Queue == false and is_Busy == false then
-		coroutine.schedule(check_buff,.2)
-	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -828,7 +914,7 @@ function choose_set()
 			end
 		end
 	-- Idle sets
-    else
+	else
 		equipSet = sets.Idle
 		if state.OffenseMode.value == 'DT' then
 			equipSet = set_combine(equipSet, sets.DT)
@@ -856,7 +942,7 @@ end
 
 function check_buff()
 	-- Auto Buff is on and not in a town
-	if AutoBuff == true and is_Busy == false and in_Queue == false and not areas.Cities:contains(world.area) then
+	if state.AutoBuff.value == 'ON' and is_Busy == false and in_Queue == false and not areas.Cities:contains(world.area) then
 		-- Gets players recast times
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		--Main MNK buffs
@@ -1033,14 +1119,12 @@ function self_command(command)
 		add_to_chat(8,'Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 	-- Toggles the Auto Buff function off/on
 	elseif command == "autobuff" then
-		if AutoBuff == true then
-			AutoBuff = false
-			add_to_chat(8,'Auto Buff is [OFF]')
+		if state.AutoBuff.value == 'ON' then
+			state.AutoBuff:set('OFF')
 		else
-			AutoBuff = true
-			add_to_chat(8,'Auto Buff is [ON]')
-			check_buff()
+			state.AutoBuff:set('ON')
 		end
+		add_to_chat(8,'Auto Buff is ['..state.AutoBuff.value..']')
 	-- Toggles the Auto Burst function off/on
 	elseif command == "autoburst" then
 		if state.BurstMode.value == 'Tier 6' then
@@ -1070,6 +1154,7 @@ function self_command(command)
 				add_to_chat(8,'Auto Burst is [OFF]')
 			end
 		end
+		add_to_chat(8,'Auto Buff is ['..state.AutoBuff.value..']')
 	elseif command == 'skillchain_burst' then
 		if state.BurstMode.value == 'Tier 1' then
 			windower.send_command('BT cast spell 1')
@@ -1087,6 +1172,15 @@ function self_command(command)
 	-- Calls the Bard Dummy Song function
 	elseif command == 'songbuff' then
 		dummy_songs()
+	-- Saves the location of HUD
+	elseif command == 'save' then
+		--settings.x_pos = gs_status.pos.x
+		--settings.y_pos = gs_status.pos.y
+		settings:save('all')
+		add_to_chat(80,'Settings saved')
+	-- Esha Temps
+	elseif command == 'temps' then
+		escha_temps()
 	-- Warp Ring
 	elseif command == 'warp' then
 		is_Busy = true
@@ -1141,6 +1235,17 @@ function self_command(command)
 			choose_set()
 			add_to_chat(8,'Weapon Lock is [ON]')
 		end
+	elseif command == "charmed" then
+		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		Charmed = true
+		add_to_chat(8,'Charm Set Equiped')
+		equip(sets.Charm)
+		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	elseif command == "reset" then
+		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		Charmed = false
+		add_to_chat(8,'Charm Set Unequiped')
+		choose_set()
 	-- Toggles the current player stances
 	elseif command == 'modechange' then
 		if state.OffenseMode.value == 'Normal' then
@@ -1193,6 +1298,12 @@ end
 function dummy_songs()
 	windower.add_to_chat(8,'Song Buff Begin')
 	send_command("input /ma \"Army's Paeon IV\" <me>;wait 5.5;input /ma \"Army's Paeon III\" <me>;wait 5.5;input /ma \"Army's Paeon II\" <me>;wait 5.5;input /ma \"Army's Paeon\" <me>")
+end
+
+-- Used for Escha Temp and Zerg
+function escha_temps()
+	windower.add_to_chat(8,'Escha Temps')
+	send_command("input /item \"Monarch's Drink\" <me>;wait 2.5;input /item \"Braver's Drink\" <me>;wait 2.5;input /item \"Fighter's Drink\" <me>;wait 2.5;input /item \"Champion's Drink\" <me>;wait 2.5;input /item \"Soldier's Drink\" <me>;wait 2.5;input /item \"Barbarian's Drink\" <me>")
 end
 
 -- Determines correct gear for the songs
@@ -1314,12 +1425,8 @@ end
 
 -- Ensure base tables are defined
 options = options or {}
-state = state or {}
 info = info or {}
-state.TreasureMode = M{['description']='Treasure Mode'}
 
--- TH mode handling
-state.TreasureMode:options('None','Tag')
 
 -- Tracking vars for TH.
 info.tagged_mobs = T{}
@@ -1365,7 +1472,9 @@ function unlock_TH()
 		for slot,item in pairs(sets.TreasureHunter) do
 			slots:append(slot)
 		end
-		enable(slots)
+		if Charmed == false then
+			enable(slots)
+		end
 		send_command('gs c update auto')
 	end
 end
@@ -1602,19 +1711,25 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
 end
 
 windower.raw_register_event('prerender',function()
+	local now = os.clock()
+	if now - AutoBuffTime > .25 then
+		check_buff()
+		gs_status:text(display_box())
+		AutoBuffTime = now
+	end
     mov.counter = mov.counter + 1;
     if mov.counter > 10 then
         local pl = windower.ffxi.get_mob_by_index(player.index)
         if pl and pl.x and mov.x then
             local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.1
             if movement and not is_moving then
-				if player.status ~= "Engaged" then
+				if player.status ~= "Engaged" and Charmed == false then
 					--send_command('input /echo Moving! Status: '..player.status..'')
 					send_command('gs equip Movement')
 				end
                 is_moving = true
             elseif not movement and is_moving then
-				if player.status ~= "Engaged" then
+				if player.status ~= "Engaged" and Charmed == false then
 					--send_command('input /echo Stopped Moving! Status: '..player.status..'')
 					if pet.isvalid then
 						send_command('gs equip Idle.Pet')
