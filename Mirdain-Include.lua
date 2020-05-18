@@ -1735,7 +1735,11 @@ windower.raw_register_event('prerender',function()
             if movement and not is_moving then
 				if player.status ~= "Engaged" and Charmed == false then
 					--send_command('input /echo Moving! Status: '..player.status..'')
-					send_command('gs equip Movement')
+					if player.main_job == "NIN" then
+						send_command('gs c movement')
+					else
+						send_command('gs equip Movement')
+					end
 				end
                 is_moving = true
             elseif not movement and is_moving then
