@@ -16,6 +16,8 @@ settings = config.load(default)
 Custom = false
 DualWield = false
 Charmed = false
+SpellCastTime = 0
+Spellstart = os.time()
 
 AutoBuffTime = os.clock()
 
@@ -718,11 +720,18 @@ function precast(spell)
 	if spell.type=="Item" then
 		--Do Nothing and dont lock
 	elseif is_Busy == true then
-		add_to_chat(8,'Player is Busy')
-		cancel_spell()
-		return
+		if os.time() - Spellstart > SpellCastTime*.5 then
+			add_to_chat(8,'Action Time Out')
+		else
+			add_to_chat(8,'Player is Busy')
+			cancel_spell()
+			return
+		end
 	else
-		is_Busy = true
+		-- Spell timer counter
+		Spellstart = os.time()
+		-- Time spell takes to complete
+		SpellCastTime = spell.cast_time
 	end
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
@@ -730,6 +739,7 @@ function precast(spell)
 	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 	-- here is where gear is actually equipped
 	equip(equipSet)
+	is_Busy = true
  end
 
  -------------------------------------------------------------------------------------------------------------------
