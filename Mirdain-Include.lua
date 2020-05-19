@@ -731,6 +731,11 @@ function precast(spell)
 		-- Spell timer counter
 		Spellstart = os.time()
 		-- Time spell takes to complete
+
+		if spell.cast_time == nil then
+			spell.cast_time = 2
+		end
+
 		SpellCastTime = spell.cast_time
 	end
 	--Generate the correct set from the include file and custom function
