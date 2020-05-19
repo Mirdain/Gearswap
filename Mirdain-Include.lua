@@ -52,7 +52,7 @@ state.AutoBuff:set('OFF')
 -- TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
 state.TreasureMode:options('None','Tag')
-state.AutoBuff:set('OFF')
+state.TreasureMode:set('Tag')
 
 --State for Ammunition check
 state.warned = M(false)
@@ -1120,32 +1120,24 @@ function self_command(command)
 	elseif command == "autoburst" then
 		if state.BurstMode.value == 'Tier 6' then
 			state.BurstMode.value = 'OFF'
-			add_to_chat(8,'Auto Burst is [OFF]')
 		elseif state.BurstMode.value == 'OFF' then
 			state.BurstMode.value = 'Tier 1'
-			add_to_chat(8,'Auto Burst is [Tier 1]')
 		elseif state.BurstMode.value == 'Tier 1' then
 			state.BurstMode.value = 'Tier 2'
-			add_to_chat(8,'Auto Burst is [Tier 2]')
 		elseif state.BurstMode.value == 'Tier 2' then
 			state.BurstMode.value = 'Tier 3'
-			add_to_chat(8,'Auto Burst is [Tier 3]')
 		elseif state.BurstMode.value == 'Tier 3' then
 			state.BurstMode.value = 'Tier 4'
-			add_to_chat(8,'Auto Burst is [Tier 4]')
 		elseif state.BurstMode.value == 'Tier 4' then
 			state.BurstMode.value = 'Tier 5'
-			add_to_chat(8,'Auto Burst is [Tier 5]')
 		elseif state.BurstMode.value == 'Tier 5' then
 			if player.main_job == 'BLM' then
 				state.BurstMode.value = 'Tier 6'
-				add_to_chat(8,'Auto Burst is [Tier 6]')
 			else
 				state.BurstMode.value = 'OFF'
-				add_to_chat(8,'Auto Burst is [OFF]')
 			end
 		end
-		add_to_chat(8,'Auto Buff is ['..state.AutoBuff.value..']')
+		add_to_chat(8,'Auto Burst is ['..state.BurstMode.value..']')
 	elseif command == 'skillchain_burst' then
 		if state.BurstMode.value == 'Tier 1' then
 			send_command('BT cast spell 1')
