@@ -54,7 +54,11 @@ state.AutoBuff:set('OFF')
 -- TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
 state.TreasureMode:options('None','Tag')
-state.TreasureMode:set('Tag')
+state.TreasureMode:set('None')
+
+if player.main_job == "THF" then
+	state.TreasureMode:set('Tag')
+end
 
 --State for Ammunition check
 state.warned = M(false)
@@ -1175,7 +1179,7 @@ function self_command(command)
 		send_command('terminate')
 	-- Saves the location of HUD
 	elseif command == 'save' then
-		settings:save('all')
+		config.save(settings, windower.ffxi.get_player().name:lower())
 		add_to_chat(80,'Settings saved')
 	-- Toggles dispay of the HUD
 	elseif command == 'display' then
