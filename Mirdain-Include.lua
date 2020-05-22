@@ -8,7 +8,8 @@ config = require('config')
 
 default = {
 	visible = false,
-	box={text={size=10}}
+	box={text={size=10}},
+	debug_mode = false
 	}
 
 settings = config.load(default)
@@ -58,6 +59,7 @@ state.TreasureMode:set('None')
 
 if player.main_job == "THF" then
 	state.TreasureMode:set('Tag')
+	state.TreasureMode:options('None','Tag','Fulltime','SATA')
 end
 
 --State for Ammunition check
@@ -136,6 +138,14 @@ areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Por
 	"Southern San d'Oria","Chateau d'Oraguille","Port Bastok","Bastok Markets","Bastok Mines","Metalworks","Aht Urhgan Whitegate","The Colosseum","Tavnazian Safehold","Nashmau","Selbina",
 	"Mhaura","Rabao","Norg","Kazham","Eastern Adoulin","Western Adoulin","Celennia Memorial Library","Mog Garden","Leafallia"
 }
+
+-- For th_action_check():
+-- JA IDs for actions that always have TH: Provoke, Animated Flourish
+TH_default_ja_ids = S{35, 204}
+-- Unblinkable JA IDs for actions that always have TH: Quick/Box/Stutter Step, Desperate/Violent Flourish
+TH_default_u_ja_ids = S{201, 202, 203, 205, 207}
+-- Spells Defined to use TH on
+TH_default_ma_ids = S{}
 
 -------------------------------------------------------------------------------------------------------------------
 -- This function is called from the default GearSwap Function "pretarget" to validate the user action
@@ -777,6 +787,10 @@ function aftercast(spell)
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- action is complete - release player
+	-- Check if Need to prep for first hit
+	if player.status == "Engaged" and state.TreasureMode.value ~= 'None' then
+		TH_for_first_hit()
+	end
 	is_Busy = false
 	in_Queue = false
 end
@@ -1113,6 +1127,7 @@ function self_command(command)
 	command = command:lower()
 
 	if command == 'update auto' then
+		add_to_chat(8,'Treasure Hunter - update auto')
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
 	elseif command == "th" then
@@ -1424,12 +1439,11 @@ end
 -- Category and Param are as specified in the action event packet.
 -- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
 function th_action_check(category, param)
-	--add_to_chat(8,'param =['..param..']')
     if category == 2 or -- any ranged attack
-	    category == 3 or -- Aeolian Edge
-        category == 4 or -- any magic action
-        category == 6 or -- Provoke, Animated Flourish
-        category == 14  -- Quick/Box/Stutter Step, Desperate/Violent Flourish
+        (category == 4 and TH_default_ma_ids:contains(param)) or -- any magic action
+        (category == 3 and param == 30) or -- Aeolian Edge
+        (category == 6 and TH_default_ja_ids:contains(param)) or -- Provoke, Animated Flourish
+        (category == 14 and TH_default_u_ja_ids:contains(param)) -- Quick/Box/Stutter Step, Desperate/Violent Flourish
         then return true
     end
 end
@@ -1548,20 +1562,21 @@ end
 function on_action_for_th(action)
     --add_to_chat(123,'cat='..action.category..',param='..action.param)
     -- If player takes action, adjust TH tagging information
-    if state.TreasureMode.value ~= 'None' and player.status == 'Engaged' or th_action_check(action.category, action.param) and state.TreasureMode.value ~= 'None' then
+    if state.TreasureMode.value ~= 'None' then
         if action.actor_id == player.id then
             -- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
-            if state.TreasureMode.value == 'SATA' or
+            if state.TreasureMode.value == 'Fulltime' or
                (state.TreasureMode.value == 'SATA' and (action.category == 1 or ((state.Buff['Sneak Attack'] or state.Buff['Trick Attack']) and action.category == 3))) or
                (state.TreasureMode.value == 'Tag' and action.category == 1 and state.th_gear_is_locked) or -- Tagging with a melee hit
                (th_action_check and th_action_check(action.category, action.param)) -- Any user-specified tagging actions
                then
-				for index,target in pairs(action.targets) do
-                    if not info.tagged_mobs[target.id] and target.id ~= player.id then
-						add_to_chat(8,'Treasure Hunter Tagged.')
+                for index,target in pairs(action.targets) do
+                    if not info.tagged_mobs[target.id] and settings.debug_mode then
+                        add_to_chat(123,'Mob '..target.id..' hit. Adding to tagged mobs table.')
                     end
                     info.tagged_mobs[target.id] = os.time()
                 end
+    
                 if state.th_gear_is_locked then
                     unlock_TH()
                 end
@@ -1595,7 +1610,7 @@ function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
             -- 6 == actor defeats target
             -- 20 == target falls to the ground
             if message_id == 6 or message_id == 20 then
-                if _settings.debug_mode then add_to_chat(123,'Mob '..target_id..' died. Removing from tagged mobs table.') end
+                if settings.debug_mode then add_to_chat(123,'Mob '..target_id..' died. Removing from tagged mobs table.') end
                 info.tagged_mobs[target_id] = nil
             end
         end
@@ -1604,7 +1619,7 @@ end
 
 -- Clear out the entire tagged mobs table when zoning.
 function on_zone_change_for_th(new_zone, old_zone)
-    if _settings.debug_mode then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
+    if settings.debug_mode then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
     info.tagged_mobs:clear()
 end
 
@@ -1617,7 +1632,7 @@ end
 function job_state_change(stateField, newValue, oldValue)
     if stateField == 'Treasure Mode' then
         if newValue == 'None' and state.th_gear_is_locked then
-            if _settings.debug_mode then add_to_chat(123,'TH Mode set to None. Unlocking gear.') end
+            if settings.debug_mode then add_to_chat(123,'TH Mode set to None. Unlocking gear.') end
             unlock_TH()
         elseif oldValue == 'None' then
             TH_for_first_hit()
@@ -1646,7 +1661,7 @@ function cleanup_tagged_mobs()
         local time_since_last_action = current_time - action_time
         if time_since_last_action > 180 then
             remove_mobs:add(target_id)
-            if _settings.debug_mode then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
+            if settings.debug_mode then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
         end
     end
     -- Clean out mobs flagged for removal.
