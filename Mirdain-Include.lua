@@ -9,12 +9,11 @@ config = require('config')
 default = {
 	visible = false,
 	box={text={size=10}},
-	debug_mode = false
+	debug = false
 	}
 
 settings = config.load(default)
 
-Custom = false
 DualWield = false
 Charmed = false
 SpellCastTime = 0
@@ -28,7 +27,6 @@ command_BP = "None"
 
 avatar = "None"
 
-is_AvatarBusy = false
 is_Busy = false
 in_Queue = false
 is_Pianissimo = false
@@ -56,6 +54,11 @@ state.AutoBuff:set('OFF')
 state.TreasureMode = M{['description']='Treasure Mode'}
 state.TreasureMode:options('None','Tag')
 state.TreasureMode:set('None')
+
+-- TH mode handling
+state.WeaponLock = M{['description']='Lock Weapons'}
+state.WeaponLock:options('OFF','ON')
+state.WeaponLock:set('OFF')
 
 if player.main_job == "THF" then
 	state.TreasureMode:set('Tag')
@@ -733,7 +736,7 @@ function precast(spell)
 	-- action is started
 	if spell.type=="Item" then
 		--Do Nothing and dont lock
-	elseif is_Busy == true then
+	elseif is_Busy == true and not buffactive["Astral Conduit"] then
 		if os.time() - Spellstart > SpellCastTime*.5 then
 			add_to_chat(8,'Action Time Out')
 		else
@@ -744,10 +747,9 @@ function precast(spell)
 	else
 		-- Spell timer counter
 		Spellstart = os.time()
-		-- Time spell takes to complete
-
+		-- JA might have have cast time set to 1 second
 		if spell.cast_time == nil then
-			spell.cast_time = 2
+			spell.cast_time = 1
 		end
 
 		SpellCastTime = spell.cast_time
@@ -755,7 +757,12 @@ function precast(spell)
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
 	-- unlock gear for any reason it was left locked
-	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	if Charmed == false then
+		enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		if state.WeaponLock.value == 'OFF' then
+			enable('main','sub','range')
+		end
+	end
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	is_Busy = true
@@ -781,7 +788,12 @@ end
 
 function aftercast(spell)
 	equipSet = {}
-	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	if Charmed == false then
+		enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		if state.WeaponLock.value == 'OFF' then
+			enable('main','sub','range')
+		end
+	end
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
 	-- here is where gear is actually equipped
@@ -792,7 +804,9 @@ function aftercast(spell)
 		TH_for_first_hit()
 	end
 	is_Busy = false
-	in_Queue = false
+	if spell.type ~="BloodPactWard" or spell.type ~="BloodPactRage" then
+		in_Queue = false
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -805,12 +819,16 @@ function buff_change(name,gain)
 	if name:lower() == 'charm' then
 		if gain == true then
 			Charmed = true
+	        add_to_chat(8,'input /p <me> is Charmed >.>')
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 			equipSet = sets.Charm
 			equip(equipSet)
 			disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		else
-			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+			enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+			if state.WeaponLock.value == 'OFF' then
+				enable('main','sub','range')
+			end
 		end
 	elseif is_Busy == false then
 		--calls the include file and custom on a buff change
@@ -825,7 +843,10 @@ end
 
 function status_change(new,old)
 	if Charmed == false then
-		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+		if state.WeaponLock.value == 'OFF' then
+			enable('main','sub','range')
+		end
 		equipSet = {}
 		--calls the include file and custom on a state change
 		equipSet = set_combine(choose_set(), status_change_custom(new,old))
@@ -840,12 +861,25 @@ end
 function pet_change(pet,gain)
 	equipSet = {}
 	if player.main_job == 'SMN' or player.main_job == 'GEO' then
-		if gain == false then
+		if gain == false and player.main_job == 'SMN' then
 			if not buffactive["Astral Conduit"] then
+				-- Avatar died during AFAC
 				avatar = "None"
 			end
 		else
 			avatar = pet.name
+			-- Default Offensive Blood Pacts
+			if pet.name=='Ifrit' then
+				command_BP = 'Flaming Crush'
+			elseif pet.name=='Siren' then
+				command_BP = 'Flaming Crush'
+			elseif pet.name=='Ramuh' then
+				command_BP = 'Volt Strike'
+			elseif pet.name=='Cait Sith' then
+				command_BP = 'Meowing Lulluby'
+			else
+				command_BP = 'None'
+			end
 		end
 		enable()
 		equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
@@ -859,10 +893,12 @@ end
 
 function pet_midcast(spell)
 	equipSet = {}
-	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	if state.WeaponLock.value == 'OFF' then
+		enable('main','sub','range')
+	end
 	-- This section is for SMN Blood Pact abilities
 	if player.main_job == "SMN" then
-		is_AvatarBusy = true
 		if spell.name == "Perfect Defense" then
 			equipSet = sets.Pet_Midcast.SummoningMagic
 		elseif Debuff_BPs:contains(spell.name) then
@@ -886,8 +922,6 @@ function pet_midcast(spell)
 		else
 			equipSet = sets.Pet_Midcast.Physical_BP
 		end
-		-- Assign the BP being used for AFAC
-		command_BP = spell.name
 	end
 	equip(equipSet)
 	disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
@@ -898,11 +932,14 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_aftercast(spell)
+	enable('ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
+	if state.WeaponLock.value == 'OFF' then
+		enable('main','sub','range')
+	end
 	equipSet = {}
-	is_AvatarBusy = false
-	enable()
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
 	equip(equipSet)
+	in_Queue = false
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1036,10 +1073,27 @@ function check_buff()
 			end
 		end
 		-- Execute the Commands
-		if command_BP ~= "None" and buffactive["Astral Conduit"] and pet.isvalid and is_AvatarBusy == false then
-			in_Queue = true
-			windower.add_to_chat(8,"BP Execute")
-			coroutine.schedule(command_BP_execute,.2)
+		if command_BP ~= "None" and buffactive["Astral Conduit"] then
+			-- No avatar summon
+			if not pet.isvalid then
+				command_SP = avatar
+				command_SP_execute()
+			else
+				if is_AvatarBusy == false then
+					local pet = windower.ffxi.get_mob_by_target('pet')
+					if pet.status == 0 then
+						-- Pet is Idle - Enage if <bt> present
+						local tempcommand = command_BP
+						command_BP = "Assault"
+						coroutine.schedule(command_BP_execute,.2)
+						windower.add_to_chat(8,"Assault")
+						command_BP = tempcommand
+					elseif pet.status == 1 then
+						windower.add_to_chat(8,"BP Execute")
+						coroutine.schedule(command_BP_execute,.2)
+					end
+				end
+			end
 		elseif command_JA ~= "None" then
 			in_Queue = true
 			coroutine.schedule(command_JA_execute,.2)
@@ -1127,7 +1181,6 @@ function self_command(command)
 	command = command:lower()
 
 	if command == 'update auto' then
-		add_to_chat(8,'Treasure Hunter - update auto')
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
 	elseif command == "th" then
@@ -1247,11 +1300,10 @@ function self_command(command)
 		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Trizek Ring\" <me>;wait 6;gs enable left_ring')
 	-- Locks the weapons and is a custom use for SMN AFAC or want to keep AM3
 	elseif command == "weaponlock" then
-		if Custom == true then
-			Custom = false
-			add_to_chat(8,'Weapon Lock is [OFF]')
+		if state.WeaponLock.value == 'ON' then
 			enable('main')
 			enable('sub')
+			state.WeaponLock.value = 'OFF'
 		else
 			enable('main')
 			enable('sub')
@@ -1260,12 +1312,11 @@ function self_command(command)
 			end
 			disable('main')
 			disable('sub')
-			Custom = true
+			state.WeaponLock.value = 'ON'
 			equip(set_combine(choose_set(),choose_set_custom()))
-			add_to_chat(8,'Weapon Lock is [ON]')
 		end
+		add_to_chat(8,'Weapon Lock is ['..state.WeaponLock.value..']')
 	elseif command == "charmed" then
-		add_to_chat(8,'State busy ['..tostring(is_Busy)..']')
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		add_to_chat(8,'Charm Set Equiped')
 		equip(sets.Charm)
@@ -1320,7 +1371,7 @@ end
 
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
-	send_command('input /pet "'..command_BP..'" <bt>')
+	send_command('input /pet "'..command_BP..'" <t>')
 	command_SP = "None"
 end
 
@@ -1571,7 +1622,7 @@ function on_action_for_th(action)
                (th_action_check and th_action_check(action.category, action.param)) -- Any user-specified tagging actions
                then
                 for index,target in pairs(action.targets) do
-                    if not info.tagged_mobs[target.id] and settings.debug_mode then
+                    if not info.tagged_mobs[target.id] and settings.debug then
                         add_to_chat(123,'Mob '..target.id..' hit. Adding to tagged mobs table.')
                     end
                     info.tagged_mobs[target.id] = os.time()
@@ -1610,7 +1661,7 @@ function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
             -- 6 == actor defeats target
             -- 20 == target falls to the ground
             if message_id == 6 or message_id == 20 then
-                if settings.debug_mode then add_to_chat(123,'Mob '..target_id..' died. Removing from tagged mobs table.') end
+                if settings.debug then add_to_chat(123,'Mob '..target_id..' died. Removing from tagged mobs table.') end
                 info.tagged_mobs[target_id] = nil
             end
         end
@@ -1619,7 +1670,7 @@ end
 
 -- Clear out the entire tagged mobs table when zoning.
 function on_zone_change_for_th(new_zone, old_zone)
-    if settings.debug_mode then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
+    if settings.debug then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
     info.tagged_mobs:clear()
 end
 
@@ -1632,7 +1683,7 @@ end
 function job_state_change(stateField, newValue, oldValue)
     if stateField == 'Treasure Mode' then
         if newValue == 'None' and state.th_gear_is_locked then
-            if settings.debug_mode then add_to_chat(123,'TH Mode set to None. Unlocking gear.') end
+            if settings.debug then add_to_chat(123,'TH Mode set to None. Unlocking gear.') end
             unlock_TH()
         elseif oldValue == 'None' then
             TH_for_first_hit()
@@ -1661,7 +1712,7 @@ function cleanup_tagged_mobs()
         local time_since_last_action = current_time - action_time
         if time_since_last_action > 180 then
             remove_mobs:add(target_id)
-            if settings.debug_mode then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
+            if settings.debug then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
         end
     end
     -- Clean out mobs flagged for removal.
@@ -1742,7 +1793,8 @@ end
 
 windower.raw_register_event('prerender',function()
 	local now = os.clock()
-	if now - AutoBuffTime > .25 then
+	if now - AutoBuffTime > .1 then
+		-- check buff refresh rate
 		check_buff()
 		gs_status:text(display_box())
 		AutoBuffTime = now
