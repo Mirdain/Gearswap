@@ -141,7 +141,7 @@ EnfeebleSong = S{
 'Ice Threnody II', 'Wind Threnody II', 'Earth Threnody II', 'Ltng. Threnody II', 'Water Threnody II', 'Light Threnody II','Dark Threnody II','Magic Finale', 'Pining Nocturne'}
 
 
-RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','CorsairRoll','SummonerPact'}
+RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
 Mage_Job = S{'BLM','RDM','WHM','BRD','BLU','GEO','SCH','NIN','PLD','RUN'}
@@ -760,6 +760,31 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
+	-- action is started
+	if is_Busy == true then
+		if RecastTimers:contains(spell.type) then
+			if os.time() - Spellstart < SpellCastTime*.5 then
+				info('Player is Busy')
+				cancel_spell()
+				return
+			else
+				is_Busy = false
+				Spellstart = os.time()
+				log('Player action timed out')
+			end
+		else
+			-- Job Ability timer
+			SpellCastTime = 2
+		end
+	else
+		if RecastTimers:contains(spell.type) then
+			-- Spell timer counter
+			Spellstart = os.time()
+		else
+			-- Spell timer counter
+			SpellCastTime = 2
+		end
+	end
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
@@ -772,21 +797,6 @@ end
 
 function precast(spell)
 	equipSet = {}
-	-- action is started
-	if is_Busy == true then
-		if RecastTimers:contains(spell.type) then
-			if os.time() - Spellstart < SpellCastTime*.8 then
-				info('Player is Busy')
-				cancel_spell()
-				return
-			end
-		end
-	else
-		if RecastTimers:contains(spell.type) then
-			-- Spell timer counter
-			Spellstart = os.time()
-		end
-	end
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
 	-- here is where gear is actually equipped
@@ -1277,7 +1287,7 @@ function self_command(command)
 		if settings.debug == true then
 			settings.debug = false
 			gs_debug:hide()
-			log('Debugging [OFF]')
+			windower.add_to_chat(80,'-------Debugging [OFF]-------')
 		else
 			settings.debug = true
 			gs_debug:show()
@@ -1286,7 +1296,7 @@ function self_command(command)
 	elseif command == 'info' then
 		if settings.info == true then
 			settings.info = false
-			info('Information [OFF]')
+			windower.add_to_chat(8,'Information [OFF]')
 		else
 			settings.info = true
 			info('Information [ON]')
