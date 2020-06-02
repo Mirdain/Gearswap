@@ -762,19 +762,32 @@ end
 function pretarget(spell,action)
 	-- action is started
 	if is_Busy == true then
+		-- the action is a spell with recast timers
 		if RecastTimers:contains(spell.type) then
+			--Action not timed out yet
 			if os.time() - Spellstart < SpellCastTime*.5 then
 				info('Player is Busy')
 				cancel_spell()
 				return
+			-- Action timed out
 			else
 				is_Busy = false
 				Spellstart = os.time()
 				log('Player action timed out')
 			end
+		-- JA's with no recast timers
 		else
-			-- Job Ability timer
-			SpellCastTime = 2
+			-- Job Abilities and actions not timed out
+			if os.time() - Spellstart < SpellCastTime*.5 then
+				info('Player is Busy')
+				cancel_spell()
+				return
+			--Set time out for JA's to 2 seconds
+			else
+				is_Busy = false
+				SpellCastTime = 2
+				log('Player action timed out')
+			end
 		end
 	else
 		if RecastTimers:contains(spell.type) then
@@ -1311,8 +1324,8 @@ function self_command(command)
 		Item = "Warp Ring"
 		equip({left_ring="Warp Ring"})
 		disable('left_Ring')
-		coroutine.schedule(Use_Item,10)
-		coroutine.schedule(Unlock,18)
+		coroutine.schedule(Use_Item,11)
+		coroutine.schedule(Unlock,20)
 	-- Warp Club
 	elseif command == 'warp club' then
 		is_Busy = true
