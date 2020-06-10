@@ -42,7 +42,7 @@ ToggleCleave = 'Off'
 --Modes for Melee
 state = state or {}
 state.OffenseMode = M{['description']='Melee Mode'}
-state.OffenseMode:options('Normal','ACC','DT','AFAC - Physical','AFAC - Magical','AFAC - Flaming Crush')
+state.OffenseMode:options('Normal','ACC','DT')
 state.OffenseMode:set('Normal')
 
 --Modes for Bursting
@@ -187,10 +187,8 @@ TH_default_ma_ids = S{}
 
 function pretargetcheck(spell,action)
 	--Cancel if pet is in middle of move
-    if (pet.isvalid and pet_midaction()) or state.Charmed.value == 'ON' or is_Busy ==true then
-		if state.Charmed.value == 'ON' then
-			log('Canceled action due to Charmed Status')
-		elseif pet_midaction() == true then
+    if (pet.isvalid and pet_midaction()) or is_Busy ==true then
+		if pet_midaction() == true then
 			log('Canceled action due to Pet Midcast')
 		elseif is_Busy == true then
 			log('Canceled action due to Character Being Busy')
@@ -854,14 +852,7 @@ end
 
 function buff_change(name,gain)
 	equipSet = {}
-	-- change gear on charm.... I know I know....
-	if name:lower() == 'charm' then
-		if gain == true then
-			state.Charmed.value = 'ON'
-		else
-			state.Charmed.value = 'OFF'
-		end
-	elseif is_Busy == false then
+	if is_Busy == false then
 		--calls the include file and custom on a buff change
 		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
 		equip(equipSet)
@@ -873,7 +864,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function status_change(new,old)
-	if state.WeaponLock.value == 'OFF' then
+	if state.WeaponLock.value == 'OFF' and state.Charmed.value == "OFF" then
 		enable('main','sub','range')
 	else
 		disable('main','sub','range')
@@ -1385,44 +1376,31 @@ function self_command(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 		end
 		info('Weapon Lock is ['..state.WeaponLock.value..']')
-	elseif command == "charm" then
-		if state.Charmed.value == 'OFF' then
+	elseif command == "charmed" then
+			state.Charmed.value = "ON"
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			info('Charm Set Equiped')
 			equip(sets.Charm)
 			disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-			state.Charmed.value = 'ON'
-		else
+	elseif command == "reset" then
+			state.Charmed.value = "OFF"
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-			state.Charmed.value = 'OFF'
 			info('Charm Set Unequiped')
 			equip(set_combine(choose_set(),choose_set_custom()))
-		end
 	-- Toggles the current player stances
 	elseif command == 'modechange' then
-		if state.OffenseMode.value == 'Normal' then
-			state.OffenseMode:set('ACC')
-		elseif state.OffenseMode.value == 'ACC' then
-			state.OffenseMode:set('DT')
-		elseif state.OffenseMode.value == 'DT' then
-			if player.main_job ==  'SMN' then
-				state.OffenseMode:set('AFAC - Physical')
-				send_command('gs enable all;wait .1;gs equip Pet_Midcast.Physical_BP;wait .1;gs disable all')
-			else
-				state.OffenseMode:set('Normal')
+		for i,v in ipairs(state.OffenseMode) do
+			if state.OffenseMode.value == v then
+				if state.OffenseMode.value ~= state.OffenseMode[#state.OffenseMode] then
+					state.OffenseMode:set(state.OffenseMode[i+1])
+				else
+					state.OffenseMode:set(state.OffenseMode[1])
+				end
+				info('Mode: ['..state.OffenseMode.value..']')
+				equip(set_combine(choose_set(),choose_set_custom()))
+				return
 			end
-		elseif state.OffenseMode.value == 'AFAC - Physical' then
-			send_command('gs enable all;wait .1;gs equip Pet_Midcast.Magic_BP;wait .1;gs disable all')
-			state.OffenseMode:set('AFAC - Magical')
-		elseif state.OffenseMode.value == 'AFAC - Magical' then
-			send_command('gs enable all;wait .1;gs equip Pet_Midcast.FlamingCrush;wait .1;gs disable all')
-			state.OffenseMode:set('AFAC - Flaming Crush')
-		elseif state.OffenseMode.value == 'AFAC - Flaming Crush' then
-			send_command('gs enable all')
-			state.OffenseMode:set('Normal')
 		end
-		info('Mode: ['..state.OffenseMode.value..']')
-		equip(set_combine(choose_set(),choose_set_custom()))
 	end
 	--use below for custom Job commands
 	self_command_custom(command)
@@ -1626,7 +1604,7 @@ function unlock_TH()
 		for slot,item in pairs(sets.TreasureHunter) do
 			slots:append(slot)
 		end
-		if state.Charmed.value == 'OFF' then
+		if state.Charmed.value == "OFF" then
 			enable(slots)
 		end
 		send_command('gs c update auto')
@@ -1869,10 +1847,7 @@ windower.raw_register_event('prerender',function()
 	local now = os.clock()
 	if now - AutoBuffTime > .1 then
 		-- check buff refresh rate
-		if state.Charmed.value == 'OFF' then
-			check_buff()
-		end
-
+		check_buff()
 		gs_status:text(display_box())
 		gs_debug:text(display_box_Debug())
 		AutoBuffTime = now
@@ -1883,7 +1858,7 @@ windower.raw_register_event('prerender',function()
         if pl and pl.x and mov.x then
             local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.1
             if movement and not is_moving then
-				if player.status ~= "Engaged" and state.Charmed.value == 'OFF' then
+				if player.status ~= "Engaged" then
 					--send_command('input /echo Moving! Status: '..player.status..'')
 					if player.main_job == "NIN" then
 						send_command('gs c movement')
@@ -1893,7 +1868,7 @@ windower.raw_register_event('prerender',function()
 				end
                 is_moving = true
             elseif not movement and is_moving then
-				if player.status ~= "Engaged" and state.Charmed.value == 'OFF' then
+				if player.status ~= "Engaged" then
 					--send_command('input /echo Stopped Moving! Status: '..player.status..'')
 					if pet.isvalid then
 						send_command('gs equip Idle.Pet')
