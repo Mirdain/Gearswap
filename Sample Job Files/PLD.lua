@@ -5,57 +5,67 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "8"
+LockStylePallet = "13"
 MacroBook = "5"
 MacroSet = "1"
 
 function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
+		main="Burtgang",
 		ammo="Staunch Tathlum +1",
+		right_ring="Moonlight Ring",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-		feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		neck="Coatl Gorget +1",
+		body="Hjarrandi Breast.",
+		hands={ name="Souv. Handsch. +1", augments={'HP+65','Shield skill +15','Phys. dmg. taken -4',}},
+		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		feet={ name="Souveran Schuhs +1", augments={'Accuracy+13','Attack+12','Enmity+5',}},
+		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
+		left_ear="Odnowa Earring",
 		right_ear="Odnowa Earring +1",
 		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+3','"Fast Cast"+10','Occ. inc. resist. to stat. ailments+10',}},
+		back={ name="Rudianos's Mantle", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','VIT+10','Enmity+10','DEF+50',}},
     }
 	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
 	sets.DT = {
-		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+
+    }
+	sets.Movement = {
+		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
     }
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-	    head={ name="Odyssean Helm", augments={'Mag. Acc.+12','"Fast Cast"+5',}},
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}},
-		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+3','"Fast Cast"+10','Occ. inc. resist. to stat. ailments+10',}},
-		ammo="Sapience Orb",
-		neck="Voltsurge Torque",
-		left_ring="Prolix Ring",
-		right_ring="Kishar Ring",
-		left_ear="Etiolation Earring",
-		right_ear="Loquac. Earring",
+		ammo="Sapience Orb", --2
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, --14
+		body="Rev. Surcoat +3", --10
+		hands={ name="Souv. Handsch. +1", augments={'HP+65','Shield skill +15','Phys. dmg. taken -4',}}, 
+		legs={ name="Odyssean Cuisses", augments={'"Mag.Atk.Bns."+22','"Fast Cast"+5','INT+2',}}, --5
+		feet={ name="Odyssean Greaves", augments={'Mag. Acc.+5','"Fast Cast"+6','CHR+8',}}, --13
+		neck="Voltsurge Torque", --4
+		waist="Acerbic Sash +1",
+		left_ear="Enchntr. Earring +1", --2
+		right_ear="Loquac. Earring", --2
+		left_ring="Kishar Ring", --4
+		right_ring="Rahab Ring", --2
+		back={ name="Rudianos's Mantle", augments={'MND+20','"Fast Cast"+10',}}, --10
 	}
 	sets.Precast.Enmity = {
+		main="Burtgang",
 		ammo="Sapience Orb",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		hands={ name="Eschite Gauntlets", augments={'HP+80','Enmity+7','Phys. dmg. taken -4',}},
+		legs={ name="Odyssean Cuisses", augments={'"Mag.Atk.Bns."+8','Enmity+7','STR+6',}},
+		feet={ name="Souveran Schuhs +1", augments={'Accuracy+13','Attack+12','Enmity+5',}},
 		neck="Moonlight Necklace",
-		left_ear="Friomisi Earring",
+		waist="Creed Baudrier",
+		left_ear="Trux Earring",
 		right_ear="Cryptic Earring",
-		left_ring="Petrov Ring",
-		back="Phalangite Mantle",
+		left_ring="Apeile Ring +1",
+		right_ring="Eihwaz Ring",
+		back={ name="Rudianos's Mantle", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','VIT+10','Enmity+10','DEF+50',}},
 	}
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
@@ -70,12 +80,19 @@ function get_sets()
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {
-	    feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}},
-	    left_ear="Mendi. Earring",
-		right_ear="Odnowa Earring +1", -- MAX HP
-		left_ring="Moonlight Ring", -- MAX HP
-		right_ring="Moonlight Ring", -- MAX HP
-	    back="Moonbeam Cape", -- MAX HP
+		ammo="Staunch Tathlum +1", --11
+		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --20
+		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		hands="Macabre Gaunt. +1",
+		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}}, --20
+		feet={ name="Odyssean Greaves", augments={'"Cure" potency +6%','MND+9','"Mag.Atk.Bns."+11',}}, --20
+		neck="Moonlight Necklace", --15
+		waist="Acerbic Sash +1",
+		left_ear="Knightly Earring", --9
+		right_ear="Nourish. Earring +1",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Rudianos's Mantle", augments={'MND+20','"Fast Cast"+10',}},
 	}
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {}
