@@ -1149,9 +1149,9 @@ function check_buff()
 						command_JA = "Provoke"
 					elseif abil_recasts[73] == 0 then
 						command_JA = "Shield Bash"
-					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mpp < 200 then
+					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mp < 100 then
 						command_JA = "Chivalry"
-					elseif spell_recasts[112] == 0 then
+					elseif spell_recasts[112] == 0 and player.mp > 25 then
 						command_SP = "Flash"
 					end
 				end
@@ -1162,6 +1162,9 @@ function check_buff()
 					in_Que = true
 					command_SP_execute()
 				end
+			else
+				Enemy_ID = 0
+				state.AutoBuff:set('OFF')
 			end
 		end
 	end
@@ -1469,7 +1472,7 @@ function command_SP_execute()
 	end
 	send_command('input /ma "'..command_SP..'" '..target..'')
 	if in_Que == true then 
-		coroutine.schedule(reset_state,spell_cast_time + 2.5)
+		coroutine.schedule(reset_state,spell_cast_time + 3)
 	end
 end
 
