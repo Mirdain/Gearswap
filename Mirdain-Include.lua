@@ -28,6 +28,8 @@ command_JA = "None"
 command_SP = "None"
 command_BP = "None"
 
+Enemy_ID = 0
+
 avatar = "None"
 
 is_Busy = false
@@ -1023,6 +1025,9 @@ end
 function check_buff()
 	-- Auto Buff is on and not in a town
 	if state.AutoBuff.value == 'ON' and is_Busy == false and in_Que == false and not areas.Cities:contains(world.area) then
+		command_JA = "None"
+		command_SP = "None"
+		command_JA = "None"
 		-- Gets players recast times
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		local spell_recasts = windower.ffxi.get_spell_recasts()
@@ -1137,24 +1142,26 @@ function check_buff()
 			in_Que = true
 			command_SP_execute()
 		else 
-			if state.AutoTank.value == 'ON' and is_Busy == false and in_Que == false and not areas.Cities:contains(world.area) then
+			if state.AutoTank.value == 'ON' and windower.ffxi.get_mob_by_id(Enemy_ID).valid_target then
 				--PLD Tank
 				if player.main_job == 'PLD' then
 					if abil_recasts[5] == 0 then
 						command_JA = "Provoke"
+					elseif abil_recasts[73] == 0 then
+						command_JA = "Shield Bash"
 					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mpp < 200 then
 						command_JA = "Chivalry"
 					elseif spell_recasts[112] == 0 then
 						command_SP = "Flash"
 					end
 				end
-			end
-			if command_JA ~= "None" then
-				in_Que = true
-				command_JA_execute()
-			elseif command_SP ~= "None" then
-				in_Que = true
-				command_SP_execute()
+				if command_JA ~= "None" then
+					in_Que = true
+					command_JA_execute()
+				elseif command_SP ~= "None" then
+					in_Que = true
+					command_SP_execute()
+				end
 			end
 		end
 	end
@@ -1438,7 +1445,6 @@ end
 -- Functin used to exectue Job Abilities
 function command_JA_execute()
 	local cast_ability = res.job_abilities:with('name', command_JA)
-	log(cast_ability.en)
 	local target = ''
 	if tostring(cast_ability.targets) == "{Self}" then
 		target = '<me>'
@@ -1446,7 +1452,9 @@ function command_JA_execute()
 		target = '<bt>'
 	end
 	send_command('input /ja "'..command_JA..'" '..target..'')
-	coroutine.schedule(reset_state,1.2)
+	if in_Que == true then 
+		coroutine.schedule(reset_state,2.1)
+	end
 end
 
 -- Functin used to exectue Spells
@@ -1460,22 +1468,22 @@ function command_SP_execute()
 		target = '<bt>'
 	end
 	send_command('input /ma "'..command_SP..'" '..target..'')
-	coroutine.schedule(reset_state,spell_cast_time + 1.1)
+	if in_Que == true then 
+		coroutine.schedule(reset_state,spell_cast_time + 2.5)
+	end
 end
 
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
 	send_command('input /pet "'..command_BP..'" <t>')
-	coroutine.schedule(reset_state,2)
+	if in_Que == true then 
+		coroutine.schedule(reset_state,2.1)
+	end
 end
 
 function reset_state()
-	command_JA = "None"
-	command_SP = "None"
-	command_JA = "None"
 	in_Que = false
 end
-
 -- Function to prebuff Dummy Songs
 function dummy_songs()
 	info('Song Buff Begin')
@@ -1894,7 +1902,7 @@ end
 
 windower.raw_register_event('prerender',function()
 	local now = os.clock()
-	if now - AutoBuffTime > .1 then
+	if now - AutoBuffTime > .2 then
 		-- check buff refresh rate
 		check_buff()
 		gs_status:text(display_box())
