@@ -9,12 +9,19 @@ LockStylePallet = "13"
 MacroBook = "5"
 MacroSet = "1"
 
+--Modes for Auto Buff
+state.AutoTank = M{['description']='Auto Tank Mode'}
+state.AutoTank:options('OFF','ON')
+state.AutoTank:set('OFF')
+
+info('[F9] - Auto Tank is ['..state.AutoTank.value..']')
+
+
 function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		main="Burtgang",
 		ammo="Staunch Tathlum +1",
-		right_ring="Moonlight Ring",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 		body="Hjarrandi Breast.",
 		hands={ name="Souv. Handsch. +1", augments={'HP+65','Shield skill +15','Phys. dmg. taken -4',}},
@@ -22,15 +29,16 @@ function get_sets()
 		feet={ name="Souveran Schuhs +1", augments={'Accuracy+13','Attack+12','Enmity+5',}},
 		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
-		left_ear="Odnowa Earring",
-		right_ear="Odnowa Earring +1",
+		left_ear="Tuisto Earring",
+		right_ear="Etiolation Earring",
 		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
 		back={ name="Rudianos's Mantle", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','VIT+10','Enmity+10','DEF+50',}},
     }
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
+	sets.Idle.Physical = {
+	
+	}
 
-    }
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
     }
@@ -231,8 +239,30 @@ function get_sets()
 	sets.WS["Sanguine Blade"] = {}
 	sets.WS["Requiescat"] = {}
 
-	--Custome sets for each jobsetup
+	--Custom sets for each jobsetup
 	sets.Custom = {}
+
+	sets.Custom.Physical = {
+		sub="Ochain",
+    }
+
+	sets.Custom.Magic = {
+		main="Burtgang",
+		sub="Aegis",
+		ammo="Staunch Tathlum +1",
+		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		body="Hjarrandi Breast.",
+		hands={ name="Souv. Handsch. +1", augments={'HP+65','Shield skill +15','Phys. dmg. taken -4',}},
+		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		feet={ name="Souveran Schuhs +1", augments={'Accuracy+13','Attack+12','Enmity+5',}},
+		neck="Warder's Charm +1",
+		waist="Asklepian Belt",
+		left_ear="Sanare Earring",
+		right_ear="Ethereal Earring",
+		left_ring="Fortified Ring",
+		right_ring="Archon Ring",
+		back={ name="Rudianos's Mantle", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','VIT+10','Enmity+10','DEF+50',}},
+    }
 
 	sets.TreasureHunter = {
 	    hands={ name="Valorous Mitts", augments={'MND+8','Pet: Accuracy+15 Pet: Rng. Acc.+15','"Treasure Hunter"+2','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
@@ -294,5 +324,22 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
+	if command == 'custom' then
+		if state.AutoTank.value == 'OFF' then
+			if windower.ffxi.get_mob_by_target( 't' ).valid_target == true then
+				Enemy_ID = windower.ffxi.get_mob_by_target('t').id
+				info('Enemy Set to ['..windower.ffxi.get_mob_by_target('t').name..']')
+				state.AutoTank:set('ON')
+				state.AutoBuff:set('ON')
+			else
+				info('Must target an Enemy')
+			end
+		else
+			state.AutoTank:set('OFF')
+			state.AutoBuff:set('OFF')
+		end
+		info('Auto Tank is ['..state.AutoTank.value..']')
+		info('Auto Buff is ['..state.AutoBuff.value..']')
+	end
 
 end
