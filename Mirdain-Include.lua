@@ -35,6 +35,7 @@ in_Que = false
 is_Pianissimo = false
 is_moving = false
 
+--Variable to monitor during debug mode
 debug_value_1 = 0
 
 ToggleCleave = 'Off'
@@ -50,7 +51,7 @@ state.BurstMode = M{['description']='Burst Mode'}
 state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6')
 state.BurstMode:set('OFF')
 
---Modes for Bursting
+--Modes for Auto Buff
 state.AutoBuff = M{['description']='Auto Buff Mode'}
 state.AutoBuff:options('OFF','ON')
 state.AutoBuff:set('OFF')
@@ -69,6 +70,11 @@ state.WeaponLock:set('OFF')
 state.Charmed = M{['description']='Charmed State'}
 state.Charmed:options('OFF','ON')
 state.Charmed:set('OFF')
+
+--Modes for Auto Tanking
+state.AutoTank = M{['description']='Auto Tank Mode'}
+state.AutoTank:options('OFF','ON')
+state.AutoTank:set('OFF')
 
 if player.main_job == "THF" then
 	state.TreasureMode:set('Tag')
@@ -236,7 +242,6 @@ function pretargetcheck(spell,action)
 	elseif RecastTimers:contains(spell.type) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local spell_time = spell_recasts[spell.recast_id]/100
-		SpellCastTime = spell_time
 		if spell_time > 0 then
 			info(''..spell.name..' ['..spell_time..']')
 			cancel_spell()
@@ -1020,6 +1025,7 @@ function check_buff()
 	if state.AutoBuff.value == 'ON' and is_Busy == false and in_Que == false and not areas.Cities:contains(world.area) then
 		-- Gets players recast times
 		local abil_recasts = windower.ffxi.get_ability_recasts()
+		local spell_recasts = windower.ffxi.get_spell_recasts()
 		--Main MNK buffs
 		if player.main_job == 'MNK' then
 			if player.hpp < 51 and abil_recasts[15] == 0 then
@@ -1036,24 +1042,18 @@ function check_buff()
 				command_JA = "Focus"
 			end
 		end
-		--Sub WAR buffs
-		if player.sub_job == 'WAR' then
-			if player.main_job == "PLD" then
-				-- Don't use -Def abilities while tanking
-				return
-			end
-			if not buffactive['Berserk'] and abil_recasts[1] == 0 then
-				command_JA = "Berserk"
-			elseif not buffactive['Aggressor'] and abil_recasts[4] == 0 then
-				command_JA = "Aggressor"
-			elseif not buffactive['Warcry'] and abil_recasts[2] == 0 then
-				command_JA = "Warcry"
-			end
-		end
-		--sub SAM buffs
-		if player.sub_job == 'SAM' or player.main_job == 'SAM' then
-			if not buffactive['Hasso'] and not buffactive['Seigan'] and abil_recasts[138] == 0 then
-				command_JA = "Hasso"
+		--PLD Main buffs
+		if player.main_job == 'PLD' then
+			if not buffactive['Majesty'] and abil_recasts[150] == 0 then
+				command_JA = "Majesty"
+			elseif not buffactive['Enmity Boost'] and spell_recasts[476] == 0 and player.mp > 100 then
+				command_SP = "Crusade"
+			elseif not buffactive['Phalanx'] and spell_recasts[106] == 0 and player.mp > 100 then
+				command_SP = "Phalanx"
+			elseif not buffactive['Reprisal'] and spell_recasts[97] == 0 and player.mp > 100 then
+				command_SP = "Reprisal"
+			elseif not buffactive['Defender'] and abil_recasts[3] == 0 then
+				command_JA = "Defender"
 			end
 		end
 		--WHM Main buffs
@@ -1074,16 +1074,25 @@ function check_buff()
 				command_JA = "Avatar\'s Favor"
 			end
 		end
-		--PLD Main buffs
-		if player.main_job == 'PLD' then
-			if not buffactive['Defender'] and abil_recasts[3] == 0 then
-				command_JA = "Defender"
-			elseif not buffactive['Majesty'] and abil_recasts[150] == 0 then
-				command_JA = "Majesty"
-			elseif not buffactive['Phalanx'] then
-				command_SP = "Phalanx"
-			elseif not buffactive['Enmity Boost'] then
-				command_SP = "Crusade"
+
+		-- SUB JOBS --
+
+		--Sub WAR buffs
+		if player.sub_job == 'WAR' then
+			if player.main_job == "PLD" then
+				-- Don't use -Def abilities while tanking
+			elseif not buffactive['Berserk'] and abil_recasts[1] == 0 then
+				command_JA = "Berserk"
+			elseif not buffactive['Aggressor'] and abil_recasts[4] == 0 then
+				command_JA = "Aggressor"
+			elseif not buffactive['Warcry'] and abil_recasts[2] == 0 then
+				command_JA = "Warcry"
+			end
+		end
+		--sub SAM buffs
+		if player.sub_job == 'SAM' or player.main_job == 'SAM' then
+			if not buffactive['Hasso'] and not buffactive['Seigan'] and abil_recasts[138] == 0 then
+				command_JA = "Hasso"
 			end
 		end
 
@@ -1097,7 +1106,7 @@ function check_buff()
 			if pet.isvalid == false then
 				command_SP = avatar
 				in_Que = true
-				coroutine.schedule(command_SP_execute,.5)
+				command_SP_execute()
 			else
 				local pet = windower.ffxi.get_mob_by_target('pet')
 				if pet.status == 0 then
@@ -1106,7 +1115,7 @@ function check_buff()
 					command_BP = "Assault"
 					info("Assault")
 					in_Que = true
-					coroutine.schedule(command_BP_execute,.15)
+					command_BP_execute()
 					command_BP = tempcommand
 				elseif pet.status == 1 then
 					local abil_recasts_table = windower.ffxi.get_ability_recasts()
@@ -1117,16 +1126,36 @@ function check_buff()
 					if ability_time == 0 then
 						info("BP Execute")
 						in_Que = true
-						coroutine.schedule(command_BP_execute,.1)
+						command_BP_execute()
 					end
 				end
 			end
 		elseif command_JA ~= "None" then
 			in_Que = true
-			coroutine.schedule(command_JA_execute,.1)
+			command_JA_execute()
 		elseif command_SP ~= "None" then
 			in_Que = true
-			coroutine.schedule(command_SP_execute,1.1)
+			command_SP_execute()
+		else 
+			if state.AutoTank.value == 'ON' and is_Busy == false and in_Que == false and not areas.Cities:contains(world.area) then
+				--PLD Tank
+				if player.main_job == 'PLD' then
+					if abil_recasts[5] == 0 then
+						command_JA = "Provoke"
+					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mpp < 200 then
+						command_JA = "Chivalry"
+					elseif spell_recasts[112] == 0 then
+						command_SP = "Flash"
+					end
+				end
+			end
+			if command_JA ~= "None" then
+				in_Que = true
+				command_JA_execute()
+			elseif command_SP ~= "None" then
+				in_Que = true
+				command_SP_execute()
+			end
 		end
 	end
 end
@@ -1408,22 +1437,42 @@ end
 
 -- Functin used to exectue Job Abilities
 function command_JA_execute()
-	send_command('input /ja "'..command_JA..'" <me>')
-	command_JA = "None"
-	in_Que = false
+	local cast_ability = res.job_abilities:with('name', command_JA)
+	log(cast_ability.en)
+	local target = ''
+	if tostring(cast_ability.targets) == "{Self}" then
+		target = '<me>'
+	elseif tostring(cast_ability.targets) == "{Enemy}" then
+		target = '<bt>'
+	end
+	send_command('input /ja "'..command_JA..'" '..target..'')
+	coroutine.schedule(reset_state,1.2)
 end
 
 -- Functin used to exectue Spells
 function command_SP_execute()
-	send_command('input /ma "'..command_SP..'" <me>')
-	command_JA = "None"
-	in_Que = false
+	local cast_spell = res.spells:with('name', command_SP)
+	local spell_cast_time = cast_spell.cast_time
+	local target = ''
+	if tostring(cast_spell.targets) == "{Self}" then
+		target = '<me>'
+	elseif tostring(cast_spell.targets) == "{Enemy}" then
+		target = '<bt>'
+	end
+	send_command('input /ma "'..command_SP..'" '..target..'')
+	coroutine.schedule(reset_state,spell_cast_time + 1.1)
 end
 
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
 	send_command('input /pet "'..command_BP..'" <t>')
+	coroutine.schedule(reset_state,2)
+end
+
+function reset_state()
+	command_JA = "None"
 	command_SP = "None"
+	command_JA = "None"
 	in_Que = false
 end
 
