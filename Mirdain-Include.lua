@@ -36,6 +36,7 @@ is_Busy = false
 in_Que = false
 is_Pianissimo = false
 is_moving = false
+Time_Out = false
 
 --Variable to monitor during debug mode
 debug_value_1 = 0
@@ -148,6 +149,9 @@ EnfeebleSong = S{
 'Fire Threnody', 'Ice Threnody', 'Wind Threnody', 'Earth Threnody', 'Ltng. Threnody', 'Water Threnody', 'Light Threnody','Dark Threnody','Fire Threnody II',
 'Ice Threnody II', 'Wind Threnody II', 'Earth Threnody II', 'Ltng. Threnody II', 'Water Threnody II', 'Light Threnody II','Dark Threnody II','Magic Finale', 'Pining Nocturne'}
 
+Enfeeble_Acc = S{'Sleep','Sleep II','Sleepga','Sleepga II','Silence','Inundation','Dispel'}
+Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Distract','Distract II','Distract III','Frazzle III'}
+Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire'}
 
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
@@ -158,7 +162,6 @@ Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring 
 Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare','Pavor Nocturnus','Ultimate Terror','Somnolence','Slowga','Tidal Roar','Diamond Storm','Sleepga','Shock Squall'}
 Debuff_Rage_BPs = S{'Moonlit Charge','Tail Whip'}
 Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzard','Baraero','Barstonra','Barthundra','Barwatera'}
-Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire'}
 Magic_BPs_NoTP = S{'Holy Mist','Nether Blast','Aerial Blast','Searing Light','Diamond Dust','Earthen Fury','Zantetsuken','Tidal Wave','Judgment Bolt','Inferno','Howling Moon','Ruinous Omen','Night Terror','Thunderspark'}
 Magic_BPs_TP = S{'Impact','Conflag Strike','Level ? Holy','Lunar Bay'}
 Merit_BPs = S{'Meteor Strike','Geocrush','Grand Fall','Wind Blade','Heavenly Strike','Thunderstorm'}
@@ -195,13 +198,9 @@ TH_default_ma_ids = S{}
 
 function pretargetcheck(spell,action)
 	--Cancel if pet is in middle of move
-    if (pet.isvalid and pet_midaction()) or is_Busy ==true then
-		if pet_midaction() == true then
-			log('Canceled action due to Pet Midcast')
-		elseif is_Busy == true then
-			log('Canceled action due to Character Being Busy')
-		end
+    if (pet.isvalid and pet_midaction()) then
 		cancel_spell()
+		return
 	end
 	-- Check that proper ammo is available if we're using ranged attacks or similar.
     if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" 
@@ -249,6 +248,40 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			return
 		end
+		if spell.target.type ==  null then
+			-- Cancel Spell
+			log('Cancel Spell:[NO TARGET]')
+			cancel_spell()
+			return
+		else
+			local cast_spell = res.spells:with('name', spell.name)
+			--log('['..tostring(cast_spell.targets)..']')
+			if cast_spell.targets == '{Self}' then
+				if spell.target.type ~= 'SELF' then
+					-- Change Target Spell
+					log('Redirect Spell:[SELF TARGET]')
+					change_target('<me>')
+				end
+				log('[SELF TARGET]')
+			elseif tostring(cast_spell.targets) == '{Enemy}' then
+				if spell.target.type ~= 'MONSTER' then
+					-- Cancel Spell
+					log('Cancel Spell:[ENEMY TARGET]')
+					cancel_spell()
+					return
+				end
+				log('[MONSTER TARGET]')
+			elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
+				if spell.target.type == 'MONSTER' then
+					-- Cancel Spell
+					log('Cancel Spell:[PARTY TARGET]')
+					cancel_spell()
+					return
+				end
+				log('[PARTY TARGET]')
+			end
+		end
+
 	end
 	-- Change targets based off song
 	if spell.type == 'BardSong' then
@@ -335,6 +368,7 @@ function precastequip(spell)
 	equipSet = {}
 	--Cancel for SMN if Avatar is mid action and Item use
     if (pet.isvalid and pet_midaction()) or spell.type=="Item" then
+		cancel_spell()
         return
     end
 	-- WeaponSkill
@@ -403,6 +437,8 @@ function precastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
 			info( '['..spell.english..'] Set')
+		elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') then
+			equipSet = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic)
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -613,10 +649,18 @@ function midcastequip(spell)
 			end
 		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
-			info('Enfeebling Magic Set')
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
-		-- No type found and use default Midcast
+			if Enfeeble_Acc:contains(spell.name) then 
+				info('Enfeebling Magic Set - Magic Accuracy')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
+			elseif Enfeeble_Potency:contains(spell.name) then
+				info('Enfeebling Magic Set - Potency')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
+			else
+				info('Enfeebling Magic Set')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+			end
 		else
+			-- No type found and use default Midcast
 			info('Midcast not set')
 		end
 	-- Black Magic
@@ -636,8 +680,16 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.Drain)
 		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
-			info('Enfeebling Magic Set')
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+			if Enfeeble_Acc:contains(spell.name) then 
+				info('Enfeebling Magic Set - Magic Accuracy')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
+			elseif Enfeeble_Potency:contains(spell.name) then
+				info('Enfeebling Magic Set - Potency')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
+			else
+				info('Enfeebling Magic Set')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+			end
 		-- Enhancing Magic
 		elseif spell.skill == 'Enhancing Magic' then
 			info('Enhancing Magic Set')
@@ -770,37 +822,51 @@ function pretarget(spell,action)
 		-- the action is a spell with recast timers
 		if RecastTimers:contains(spell.type) then
 			--Action not timed out yet
-			if os.time() - Spellstart < SpellCastTime*.5 then
+			if os.time() - Spellstart < SpellCastTime then
 				info('Player is Busy')
 				cancel_spell()
 				return
-			-- Action timed out
-			else
+			elseif Time_Out == false then
+				Time_Out = true
+			else 
+				-- Action timed out
+				local cast_spell = res.spells:with('name', spell.name)
+				local spell_cast_time = cast_spell.cast_time *.5 + 3.1
 				is_Busy = false
 				Spellstart = os.time()
 				log('Player action timed out')
+				-- Set Spell Time out
+				SpellCastTime = spell_cast_time
+				Time_Out = false
 			end
 		-- JA's with no recast timers
 		else
-			-- Job Abilities and actions not timed out
-			if os.time() - Spellstart < SpellCastTime*.5 then
+			-- Job Abilities and WS and actions not timed out
+			if os.time() - Spellstart < SpellCastTime then
 				info('Player is Busy')
 				cancel_spell()
 				return
 			--Set time out for JA's to 2 seconds
 			else
 				is_Busy = false
-				SpellCastTime = 2
+				Spellstart = os.time()
+				SpellCastTime = 1.1
 				log('Player action timed out')
 			end
 		end
 	else
 		if RecastTimers:contains(spell.type) then
+			local cast_spell = res.spells:with('name', spell.name)
+			local spell_cast_time = cast_spell.cast_time *.5 + 3.1
 			-- Spell timer counter
 			Spellstart = os.time()
+			-- Get Spell Cast time
+			SpellCastTime = spell_cast_time
 		else
 			-- Spell timer counter
-			SpellCastTime = 2
+			Spellstart = os.time()
+			-- Set duration of JA/WS
+			SpellCastTime = 1.1
 		end
 	end
 	--Calls the function in the include file for basic checks
@@ -850,8 +916,14 @@ function aftercast(spell)
 		TH_for_first_hit()
 	end
 	--action is compete release player unless its a BP
-	is_Busy = false
+	if RecastTimers:contains(spell.type) then
+		coroutine.schedule(reset_action,3.1)
+	else
+		coroutine.schedule(reset_action,1.1)
+	end
 end
+
+
 
 -------------------------------------------------------------------------------------------------------------------
 -- This function is called by gearswap for any buff changes
@@ -960,7 +1032,12 @@ function pet_aftercast(spell)
 	equipSet = {}
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
 	equip(equipSet)
-	is_Busy = false
+	--action is compete release player unless its a BP
+	if RecastTimers:contains(spell.type) then
+		coroutine.schedule(reset_action,3.1)
+	else
+		coroutine.schedule(reset_action,1.1)
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1143,6 +1220,9 @@ function check_buff()
 			command_SP_execute()
 		else 
 			if state.AutoTank.value == 'ON' and windower.ffxi.get_mob_by_id(Enemy_ID).valid_target then
+				local Enemy_Type = windower.ffxi.get_mob_by_id(Enemy_ID).entity_type
+				log(tostring(windower.ffxi.get_mob_by_id(Enemy_ID).entity_type))
+
 				--PLD Tank
 				if player.main_job == 'PLD' then
 					if abil_recasts[5] == 0 then
@@ -1165,6 +1245,7 @@ function check_buff()
 			else
 				Enemy_ID = 0
 				state.AutoBuff:set('OFF')
+				in_Que = false
 			end
 		end
 	end
@@ -1360,8 +1441,8 @@ function self_command(command)
 	elseif command == 'warp club' then
 		is_Busy = true
 		enable('main')
-		Item = "Warp Club"
-		equip({main="Warp Club"})
+		Item = "Warp Cudgel"
+		equip({main="Warp Cudgel"})
 		disable('main')
 		coroutine.schedule(Use_Item,10)
 		coroutine.schedule(Unlock,18)
@@ -1453,10 +1534,15 @@ function command_JA_execute()
 		target = '<me>'
 	elseif tostring(cast_ability.targets) == "{Enemy}" then
 		target = '<bt>'
+	else
+		target = '<me>'
 	end
+	log('input /ja "'..command_JA..'" '..target..'')
 	send_command('input /ja "'..command_JA..'" '..target..'')
-	if in_Que == true then 
+	if in_Que == true and state.AutoTank.value == 'ON' then 
 		coroutine.schedule(reset_state,2.1)
+	elseif in_Que == true then
+		coroutine.schedule(reset_state,1.2)
 	end
 end
 
@@ -1465,11 +1551,14 @@ function command_SP_execute()
 	local cast_spell = res.spells:with('name', command_SP)
 	local spell_cast_time = cast_spell.cast_time
 	local target = ''
-	if tostring(cast_spell.targets) == "{Self}" then
+	if tostring(cast_spell.targets) == '{Self}' then
 		target = '<me>'
-	elseif tostring(cast_spell.targets) == "{Enemy}" then
+	elseif tostring(cast_spell.targets) == '{Enemy}' then
 		target = '<bt>'
+	else
+		target = '<me>'
 	end
+	log('input /ma "'..command_SP..'" '..target..'')
 	send_command('input /ma "'..command_SP..'" '..target..'')
 	if in_Que == true then 
 		coroutine.schedule(reset_state,spell_cast_time + 3)
@@ -1486,6 +1575,11 @@ end
 
 function reset_state()
 	in_Que = false
+end
+
+function reset_action()
+	is_Busy = false
+	Spellstart = os.time()
 end
 -- Function to prebuff Dummy Songs
 function dummy_songs()
@@ -1970,5 +2064,5 @@ function Use_Item()
 end
 
 function Unlock ()
-	enable('ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 end
