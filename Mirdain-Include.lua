@@ -33,7 +33,6 @@ Enemy_ID = 0
 avatar = "None"
 
 is_Busy = false
-in_Que = false
 is_Pianissimo = false
 is_moving = false
 Time_Out = false
@@ -919,7 +918,7 @@ function aftercast(spell)
 	if RecastTimers:contains(spell.type) then
 		coroutine.schedule(reset_action,3.1)
 	else
-		coroutine.schedule(reset_action,1.1)
+		coroutine.schedule(reset_action,.1)
 	end
 end
 
@@ -1101,7 +1100,7 @@ end
 
 function check_buff()
 	-- Auto Buff is on and not in a town
-	if state.AutoBuff.value == 'ON' and is_Busy == false and in_Que == false and not areas.Cities:contains(world.area) then
+	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) then
 		command_JA = "None"
 		command_SP = "None"
 		command_JA = "None"
@@ -1539,11 +1538,6 @@ function command_JA_execute()
 	end
 	log('input /ja "'..command_JA..'" '..target..'')
 	send_command('input /ja "'..command_JA..'" '..target..'')
-	if in_Que == true and state.AutoTank.value == 'ON' then 
-		coroutine.schedule(reset_state,2.1)
-	elseif in_Que == true then
-		coroutine.schedule(reset_state,1.2)
-	end
 end
 
 -- Functin used to exectue Spells
@@ -1560,21 +1554,12 @@ function command_SP_execute()
 	end
 	log('input /ma "'..command_SP..'" '..target..'')
 	send_command('input /ma "'..command_SP..'" '..target..'')
-	if in_Que == true then 
-		coroutine.schedule(reset_state,spell_cast_time + 3)
-	end
 end
 
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
+	log('input /ma "'..command_BP..'" <t>')
 	send_command('input /pet "'..command_BP..'" <t>')
-	if in_Que == true then 
-		coroutine.schedule(reset_state,2.1)
-	end
-end
-
-function reset_state()
-	in_Que = false
 end
 
 function reset_action()
