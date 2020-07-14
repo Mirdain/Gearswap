@@ -247,7 +247,7 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			return
 		end
-		if spell.target.type ==  null then
+		if spell.target.type ==  null and not spell.type == 'BardSong' then
 			-- Cancel Spell
 			log('Cancel Spell:[NO TARGET]')
 			cancel_spell()
@@ -261,15 +261,15 @@ function pretargetcheck(spell,action)
 					log('Redirect Spell:[SELF TARGET]')
 					change_target('<me>')
 				end
-				log('[SELF TARGET]')
+				--log('[SELF TARGET]')
 			elseif tostring(cast_spell.targets) == '{Enemy}' then
-				if spell.target.type ~= 'MONSTER' then
+				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') then
 					-- Cancel Spell
 					log('Cancel Spell:[ENEMY TARGET]')
 					cancel_spell()
 					return
 				end
-				log('[MONSTER TARGET]')
+				--log('[MONSTER TARGET]')
 			elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 				if spell.target.type == 'MONSTER' then
 					-- Cancel Spell
@@ -277,7 +277,7 @@ function pretargetcheck(spell,action)
 					cancel_spell()
 					return
 				end
-				log('[PARTY TARGET]')
+				--log('[PARTY TARGET]')
 			end
 		end
 
@@ -290,7 +290,7 @@ function pretargetcheck(spell,action)
 				-- spell for enemey with enemy selected
 			else
 				if buffactive['pianissimo'] then
-					log('Piassimo Redirect - Select Character')
+					--log('Piassimo Redirect - Select Character')
 					cancel_spell()
 					windower.send_command('input /ma \"'..spell.name..'\" <stpc>')
 					is_Pianissimo = true
@@ -309,7 +309,7 @@ function pretargetcheck(spell,action)
 					if buffactive['pianissimo'] then
 						if is_Pianissimo == false then
 							cancel_spell()
-							info('Piassimo Redirect - Select Character')
+							--log('Piassimo Redirect - Select Character')
 							send_command('input /ma "'..spell.name..'" <stpc>')
 							is_Pianissimo = true
 						else
@@ -367,7 +367,6 @@ function precastequip(spell)
 	equipSet = {}
 	--Cancel for SMN if Avatar is mid action and Item use
     if (pet.isvalid and pet_midaction()) or spell.type=="Item" then
-		cancel_spell()
         return
     end
 	-- WeaponSkill
@@ -418,8 +417,11 @@ function precastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
 			info('['..spell.english..'] Set')
+		elseif spell.id == 123 then
+			equipSet = sets.PhantomRoll
+			info('['..spell.english..'] Set')
 		else
-			info('JA not set')
+			info('JA not set for ['..spell.english..']')
 		end
 	-- CorsairRoll
 	elseif spell.type == 'CorsairRoll' then
@@ -822,7 +824,7 @@ function pretarget(spell,action)
 		if RecastTimers:contains(spell.type) then
 			--Action not timed out yet
 			if os.time() - Spellstart < SpellCastTime then
-				info('Player is Busy')
+				--log('Player is Busy')
 				cancel_spell()
 				return
 			elseif Time_Out == false then
@@ -830,10 +832,10 @@ function pretarget(spell,action)
 			else 
 				-- Action timed out
 				local cast_spell = res.spells:with('name', spell.name)
-				local spell_cast_time = cast_spell.cast_time *.5 + 3.1
+				local spell_cast_time = cast_spell.cast_time *.2 + 3.1
 				is_Busy = false
 				Spellstart = os.time()
-				log('Player action timed out')
+				--log('Player action timed out')
 				-- Set Spell Time out
 				SpellCastTime = spell_cast_time
 				Time_Out = false
@@ -842,7 +844,7 @@ function pretarget(spell,action)
 		else
 			-- Job Abilities and WS and actions not timed out
 			if os.time() - Spellstart < SpellCastTime then
-				info('Player is Busy')
+				--log('Player is Busy')
 				cancel_spell()
 				return
 			--Set time out for JA's to 2 seconds
@@ -850,13 +852,13 @@ function pretarget(spell,action)
 				is_Busy = false
 				Spellstart = os.time()
 				SpellCastTime = 1.1
-				log('Player action timed out')
+				--log('Player action timed out')
 			end
 		end
 	else
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
-			local spell_cast_time = cast_spell.cast_time *.5 + 3.1
+			local spell_cast_time = cast_spell.cast_time *.2 + 2.1
 			-- Spell timer counter
 			Spellstart = os.time()
 			-- Get Spell Cast time
@@ -916,7 +918,7 @@ function aftercast(spell)
 	end
 	--action is compete release player unless its a BP
 	if RecastTimers:contains(spell.type) then
-		coroutine.schedule(reset_action,3.1)
+		coroutine.schedule(reset_action,2.1)
 	else
 		coroutine.schedule(reset_action,.1)
 	end
@@ -1220,18 +1222,18 @@ function check_buff()
 		else 
 			if state.AutoTank.value == 'ON' and windower.ffxi.get_mob_by_id(Enemy_ID).valid_target then
 				local Enemy_Type = windower.ffxi.get_mob_by_id(Enemy_ID).entity_type
-				log(tostring(windower.ffxi.get_mob_by_id(Enemy_ID).entity_type))
+				--log(tostring(windower.ffxi.get_mob_by_id(Enemy_ID).entity_type))
 
 				--PLD Tank
 				if player.main_job == 'PLD' then
 					if abil_recasts[5] == 0 then
 						command_JA = "Provoke"
-					elseif abil_recasts[73] == 0 then
-						command_JA = "Shield Bash"
 					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mp < 100 then
 						command_JA = "Chivalry"
 					elseif spell_recasts[112] == 0 and player.mp > 25 then
 						command_SP = "Flash"
+					--elseif abil_recasts[73] == 0 then
+						--command_JA = "Shield Bash"
 					end
 				end
 				if command_JA ~= "None" then
@@ -1536,7 +1538,7 @@ function command_JA_execute()
 	else
 		target = '<me>'
 	end
-	log('input /ja "'..command_JA..'" '..target..'')
+	--log('input /ja "'..command_JA..'" '..target..'')
 	send_command('input /ja "'..command_JA..'" '..target..'')
 end
 
@@ -1552,13 +1554,13 @@ function command_SP_execute()
 	else
 		target = '<me>'
 	end
-	log('input /ma "'..command_SP..'" '..target..'')
+	--log('input /ma "'..command_SP..'" '..target..'')
 	send_command('input /ma "'..command_SP..'" '..target..'')
 end
 
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
-	log('input /ma "'..command_BP..'" <t>')
+	--log('input /ma "'..command_BP..'" <t>')
 	send_command('input /pet "'..command_BP..'" <t>')
 end
 
