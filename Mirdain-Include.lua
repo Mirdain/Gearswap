@@ -40,8 +40,6 @@ Time_Out = false
 --Variable to monitor during debug mode
 debug_value_1 = 0
 
-ToggleCleave = 'Off'
-
 --Modes for Melee
 state = state or {}
 state.OffenseMode = M{['description']='Melee Mode'}
@@ -57,6 +55,11 @@ state.BurstMode:set('OFF')
 state.AutoBuff = M{['description']='Auto Buff Mode'}
 state.AutoBuff:options('OFF','ON')
 state.AutoBuff:set('OFF')
+
+--Modes for Blue Mage Cleave
+state.CleaveMode = M{['description']='Cleave Mode'}
+state.CleaveMode:options('OFF','ON')
+state.CleaveMode:set('OFF')
 
 -- TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
@@ -90,10 +93,10 @@ state.warned = M(false)
 enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 
 --Ammunition
-ammo = {}
-ammo.bullet = {}
-ammo.arrow = {}
-ammo.bolt = {}
+Ammo = {}
+Ammo.Bullet = {}
+Ammo.Arrow = {}
+Ammo.Bolt = {}
 
 -- UI for displaying the current states
 local display_box = function()
@@ -150,7 +153,7 @@ EnfeebleSong = S{
 
 Enfeeble_Acc = S{'Sleep','Sleep II','Sleepga','Sleepga II','Silence','Inundation','Dispel'}
 Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Distract','Distract II','Distract III','Frazzle III'}
-Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire'}
+Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'}
 
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
@@ -265,9 +268,9 @@ function pretargetcheck(spell,action)
 			elseif tostring(cast_spell.targets) == '{Enemy}' then
 				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') then
 					-- Cancel Spell
-					log('Cancel Spell:[ENEMY TARGET]')
-					cancel_spell()
-					return
+					--log('Cancel Spell:[ENEMY TARGET]')
+					--cancel_spell()
+					--return
 				end
 				--log('[MONSTER TARGET]')
 			elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
@@ -586,12 +589,8 @@ function midcastequip(spell)
 			info('Regen Set')
 		-- Curaga 
 		elseif spell.name:contains('Cura') then
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.CuragaSet)
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Curaga)
 			info('Curaga Set')
-		-- Cursna
-		elseif spell.name == 'Cursna' then
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cursna)
-			info('Cursna Set')
 		-- Raise (Stay in FastCast set for recast timers)
 		elseif spell.name:contains('Raise') or spell.name == "Arise" then
 			equipSet = sets.Precast.FastCast
@@ -609,7 +608,7 @@ function midcastequip(spell)
 			if spell.target.type == 'SELF' then
 				-- Refresh
 				if spell.name:contains('Refresh') then
-					info('Refresh Set - Self')
+					info('Refresh Set')
 					equipSet = set_combine(equipSet, sets.Midcast.Refresh)
 				-- Bar Spells
 				elseif Elemental_Bar:contains(spell.name) then 
@@ -619,33 +618,33 @@ function midcastequip(spell)
 				elseif Enhancing_Skill:contains(spell.name) then 
 					if buffactive['Accession'] then
 						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill, sets.Midcast.Enhancing.Others)
-						info('Enhancing Skill - Others')
+						info('Enhancing Skill')
 					else
 						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
 						info('Enhancing Skill')
 					end
 				-- Enhancing
 				else
-					info('Enhancing Magic Set - Self')
+					info('Enhancing Magic Set')
 				end
 			else
 				-- Refresh
 				if spell.name:contains('Refresh') then
-					info('Refresh Set - Others')
+					info('Refresh Set')
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
 				end
 				-- Bar Spells
 				if Elemental_Bar:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Enhancing.Elemental)
-					info('Elemental Bar Set - Others')
+					info('Elemental Bar Set')
 				-- Enhancing SKill
 				elseif Enhancing_Skill:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
-					info('Enhancing Skill - Others')
+					info('Enhancing Skill')
 				-- Enhancing
 				else
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others)
-					info('Enhancing Magic Set - Others')
+					info('Enhancing Magic Set')
 				end
 			end
 		-- Enfeebling Magic
@@ -731,8 +730,8 @@ function midcastequip(spell)
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Midcast
 		-- Use defined weapons when cleaving on blu
-		if ToggleCleave == "On" then
-			equipSet = set_combine(equipSet, sets.Custom.Cleave.Weapons)
+		if state.CleaveMode.value == "ON" then
+			equipSet = set_combine(equipSet, sets.Custom.Weapons.Cleave)
 		end
 		-- Defined Set
 		if equipSet[spell.english] then
@@ -759,10 +758,17 @@ function midcastequip(spell)
 			info( '['..spell.english..'] Set')
 		-- Indi Equipment
 		elseif indicolure:contains(spell.english) then
-			equipSet = sets.Geomancy.Indi
+			if buffactive["Entrust"] then
+				equipSet = sets.Geomancy.Indi.Entrust
+				info('Indicolure set - Entrust')
+			else
+				equipSet = sets.Geomancy.Indi
+				info('Indicolure set')
+			end
 		-- Bubble Equipment
 		elseif geomancy:contains(spell.english) then
 			equipSet = sets.Geomancy.Geo
+			info('Geomancy set')
 		-- Default set
 		else
 			info('Midcast not set')
@@ -944,11 +950,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function status_change(new,old)
-	if state.WeaponLock.value == 'OFF' and state.Charmed.value == "OFF" then
-		enable('main','sub','range')
-	else
-		disable('main','sub','range')
-	end
 	equipSet = {}
 	--calls the include file and custom on a state change
 	equipSet = set_combine(choose_set(), status_change_custom(new,old))
@@ -1080,8 +1081,8 @@ function choose_set()
 			equipSet = set_combine(equipSet, sets.DT)
 		end
 		-- Special Cleave idle set
-		if ToggleCleave == 'On' then
-			equipSet = set_combine(equipSet, sets.Custom.Cleave.Idle)
+		if state.CleaveMode.value == 'ON' then
+			equipSet = set_combine(equipSet, sets.Custom.Cleave_Idle)
 		end
 	end
 	--Pet specific checks
@@ -1653,11 +1654,12 @@ windower.register_event('chat message', function(message,sender,mode,gm)
 end)
 
 -- Unbind Keys when the file is unloaded
-function file_unload()
+function file_unload(file_name)
 	send_command('unbind f9')
 	send_command('unbind f10')
 	send_command('unbind f11')
 	send_command('unbind f12')
+	user_file_unload()
 end
 
 -- Puts on our fashion set, lockstyle it, then switch to our idle set.
@@ -1667,7 +1669,7 @@ send_command('bind f10 gs c AutoBuff')
 send_command('bind f9 gs c Custom')
 
 -- Called when the player's subjob changes.
-function sub_job_change(newSubjob, oldSubjob)
+function sub_job_change(new, old)
 	send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
 end
 

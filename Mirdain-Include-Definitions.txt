@@ -1,0 +1,148 @@
+Global Functions
+
+	jobsetup
+	user_file_unload
+	pretarget_custom
+	precast_custom
+	midcast_custom
+	aftercast_custom
+	buff_change_custom
+	choose_set_custom
+	status_change_custom
+	self_command_custom
+
+Global Variables
+
+	LockStylePallet
+	MacroBook
+	MacroSet
+	Food
+	Ammo_Warning_Limit
+
+Job Specific Variables
+
+	BlueNuke
+	BlueSkill
+	BlueHealing
+
+Supported Global Sets
+
+	sets.Idle
+	sets.Movement
+	sets.Precast
+	sets.Midcast
+	sets.JA
+	sets.TP
+	sets.WS
+	sets.TreasureHunter
+	sets.Enmity
+	sets.Custom
+	sets.Charm
+
+Supported Job Specific Sets
+
+	Corsair Based Sets
+		Ammo
+			Ammo.Bullet
+				Ammo.Bullet.RA
+				Ammo.Bullet.WS
+				Ammo.Bullet.MAB
+				Ammo.Bullet.MACC
+				Ammo.Bullet.QD
+		Precast
+			Precast.RA
+				Precast.RA.Flurry
+				Precast.RA.Flurry_II
+		Midcast
+			Midcast.RA
+				Midcast.RA.TripleShot
+		PhantomRoll
+		QuickDraw
+			QuickDraw.ACC
+			QuickDraw.DMG
+			QuickDraw.STP
+
+	Magic Based Sets
+		Precast.FastCast
+		Precast.QuickMagic
+		Precast.Divine
+		Midcast.SIRD
+		Midcast.Cure
+		Midcast.Enhancing
+			Midcast.Enhancing.Elemental
+			Midcast.Enhancing.Others
+			Midcast.Enhancing.Skill
+		Midcast.Enfeebling
+			Midcast.Enfeebling.MACC
+			Midcast.Enfeebling.Potency
+		Midcast.Curaga
+		Midcast.Cursna
+		Midcast.Regen
+		Midcast.Refresh
+		Midcast.Nuke
+		Midcast.Burst
+		Midcast.Aspir
+		Midcast.Drain
+
+	Pet Based Sets
+		Idle
+			Idle.Pet
+
+	Monk
+		Custom.Impetus
+
+	Samurai
+		Custom.ThirdEye
+		Custom.Seigan
+
+	Red Mage
+		Custom.Saboteur
+
+	Geomancer
+		Geomancy
+			Geomancy.Indi
+			Geomancy.Geo
+	Bard
+		Song
+			Song.Count
+			Song.Strength
+			Song.Honor
+			Song.AOE_Sleep
+		Precast
+			Precast.Songs
+			Precast.DummySongs
+		Midcast
+			Midcast.Lullaby
+			Midcast.Finale
+			Midcast.Requiem
+			Midcast.Elegy
+			Midcast.Prelude
+			Midcast.Madrigal
+			Midcast.Minuet
+			Midcast.March
+			Midcast.Ballad
+			Midcast.Scherzo
+			Midcast.Mazurka
+			Midcast.Paeon
+			Midcast.Threnody
+			Midcast.Minne
+			Midcast.Mambo
+			Midcast.Carol
+			Midcast.Etude
+			Midcast.Dirge
+			Midcast.Sirvente
+	
+	Blue Mage
+		Custom
+			Custom.Weapons
+				Custom.Weapons.Cleave
+				Custom.Weapons.TP
+			Custom.Idle_Cleave
+
+Supported Job Specific Variables
+
+
+		
+
+
+
