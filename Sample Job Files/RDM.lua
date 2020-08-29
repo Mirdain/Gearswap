@@ -1,5 +1,5 @@
 
---Mirdain
+--Inyana
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -9,51 +9,74 @@ LockStylePallet = "6"
 MacroBook = "3"
 MacroSet = "1"
 
-function get_sets()
+--Command to Lock Style and Set the correct macros
+jobsetup (LockStylePallet,MacroBook,MacroSet)
 
+--Text for the custom keybind
+CustomBind = "Auto Burst Mode"
+--Command to bind to the f9 key
+send_command('bind f9 gs c AutoBurst')
+--Log Message about what the key does
+add_to_chat(8,'[F9] - Auto Burst Mode [OFF]')
+
+--loads the Burst Plugin
+windower.send_command('lua l Burst')
+
+function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-		main="Earth Staff",
-		sub="Clerisy Strap",
-		ammo="Homiliary",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body="Jhakri Robe +2",
-		hands="Aya. Manopolas +2",
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-		feet="Aya. Gambieras +2",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Genmei Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back="Moonbeam Cape",
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Sacro Bulwark", -- 10/10
+		ammo="Staunch Tathlum +1", -- 3/3
+		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy'}, priority=3}, -- +3 Refresh
+		body="Malignance Tabard", -- 9/9
+		hands="Malignance Gloves", -- 5/5
+		legs="Malignance Tights", -- 7/7
+		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
+		neck="Loricate Torque +1", -- 6/6
+		waist="Fucho-no-Obi", -- +1 Refresh
+		left_ear={ name="Eabani Earring", priority=2},
+		right_ear={ name="Etiolation Earring", priority=1}, -- 0/1
+		left_ring={ name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10/0
+		-- 51% PDT, 31% MDT, 10 MP/Tic
     }
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
+	sets.Movement = {
+		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
 	}
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
-		sub="Clerisy Strap",
-		ammo="Impatiens",
-		head="Atro. Chapeau +1",
-		body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}},
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs="Aya. Cosciales +2",
-		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}},
-		neck="Voltsurge Torque",
-		waist="Witful Belt",
-		left_ear="Loquac. Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Prolix Ring",
-		right_ring="Kishar Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+		-- 50% is needed on RDM (Fast Cast V - 30%) + 8 JP from gifts
+		main={ name="Crocea Mors", augments={'Path: C',}}, --20
+		sub="Ammurapi Shield",
+		ammo={ name="Hydrocera", priority=4},
+		head="Malignance Chapeau",
+		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck={ name="Dls. Torque +2", augments={'Path: A',}},
+		waist={ name="Luminary Sash", priority=5},
+		left_ear={ name="Eabani Earring", priority=3},
+		right_ear={ name="Etiolation Earring", priority=2}, --1
+		left_ring="Janniston Ring",
+		right_ring={ name="Etana Ring", priority=1},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
+		-- 46%
 	}
+	-- Used for Raises and Cures
+	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
+		-- Cap is 10%
+	    ammo="Impatiens", -- 2
+	    waist="Witful Belt", -- 3
+		right_ring="Lebeche Ring", -- 2
+	    back="Perimede Cape", -- 4
+	})
 	-- Job Abilities
 	sets.JA = {}
-	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}}}
+	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}}
 	sets.JA["Saboteur"] = {}
 	sets.JA["Spontaneity"] = {}
 	sets.JA["Stymie"] = {}
@@ -79,93 +102,118 @@ function get_sets()
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {
-		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
-		sub="Clerisy Strap",
-		ammo="Hydrocera",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}},
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Sors Shield",
+		ammo={ name="Hydrocera", priority=5},
+		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs="Atrophy Tights +1",
-		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}},
-		neck="Nodens Gorget",
-		waist="Luminary Sash",
-		left_ear="Mendi. Earring",
-		right_ear="Roundel Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		neck="Deviant Necklace",
+		waist={ name="Luminary Sash", priority=3},
+		left_ear="Halasz Earring",
+		right_ear={ name="Tuisto Earring", priority=6},
+		left_ring={ name="Lebeche Ring", priority=2},
+		right_ring={ name="Janniston Ring", priority=1},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
-	-- Enhancing Skill
+	-- Enhancing Duration on SELF
 	sets.Midcast.Enhancing = {
-		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
-	    ammo="Hydrocera",
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Ammurapi Shield", -- 10
+		ammo="Staunch Tathlum +1",
+		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}}, -- 10
+		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
+		hands="Atrophy Gloves +3", -- 20
+		legs={ name="Telchine Braconi", augments={'"Fast Cast"+4','Enh. Mag. eff. dur. +10',}}, --10
+		feet="Leth. Houseaux +1", -- 30
+		neck={ name="Dls. Torque +2", augments={'Path: A',}}, --25
+		waist="Embla Sash", --10
+		left_ear="Mimir Earring",
+		right_ear={ name="Etiolation Earring", priority=2}, -- Used to Keep HP/MP pool
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 20
+		-- 150% Duration
+	}
+	-- Enhancing Duration on OTHERS
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
 		head="Leth. Chappel +1",
 		body="Lethargy Sayon +1",
 		hands="Atrophy Gloves +3",
 		legs="Leth. Fuseau +1",
-		feet="Leth. Houseaux +1",
-		neck="Dls. Torque +2",
-		waist="Siegel Sash",
-		left_ear="Halasz Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
-	}
-	-- High MACC for landing spells
+	})
+	-- Spells that require SKILL
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
+		head="Befouled Crown",
+		hands={ name="Viti. Gloves +3", augments={'Enhancing Magic duration',}},
+		legs="Atrophy Tights +3",
+		waist="Olympus Sash",
+	})
+	-- Enfeebling -- Default Duration
 	sets.Midcast.Enfeebling = {
-		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
-		sub="Enki Strap",
-		ammo="Pemphredo Tathlum",
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Ammurapi Shield",
+		ammo="Regal Gem",
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body="Lethargy Sayon +1",
+		body="Atrophy Tabard +3",
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','Spell interruption rate down -4%','Mag. Acc.+11','"Mag.Atk.Bns."+4',}},
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+25','"Mag.Atk.Bns."+25','Accuracy+5 Attack+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
 		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
-		neck="Dls. Torque +2",
+		neck={ name="Dls. Torque +2", augments={'Path: A',}},
 		waist="Luminary Sash",
-		left_ear="Malignance Earring",
-		right_ear="Digni. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+		left_ear="Regal Earring",
+		right_ear="Snotra Earring",
+		left_ring="Kishar Ring",
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
+		right_ear="Digni. Earring",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+	})
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
+		body="Lethargy Sayon +1",
+	})
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
-		ring1="Stikini Ring +1",
-		ring2="Stikini Ring +1",
-		waist="Siegel Sash",
 		neck="Nodens Gorget",
+		waist="Siegel Sash",
+		left_ear="Earthcry Earring",
 	})
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1"
 	})
+	sets.Midcast["Frazzle"] = sets.Midcast.Enfeebling.MACC
+	sets.Midcast["Frazzle II"] = sets.Midcast.Enfeebling.MACC
+	sets.Midcast["Frazzle III"] = sets.Midcast.Enfeebling.Potency
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		body="Atrophy Tabard +2",
-		hands="Atrophy Gloves +3",
+		head="Amalric Coif +1",
+		body="Atrophy Tabard +3",
 		legs="Leth. Fuseau +1",
-		feet="Leth. Houseaux +1",
-		waist="Gishdubar Sash",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+		right_ear={ name="Tuisto Earring", priority=1},
 	})
 	sets.Midcast.Nuke = {
-		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
-	    sub="Clerisy Strap",
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Ammurapi Shield",
 		ammo="Pemphredo Tathlum",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		body="Jhakri Robe +2",
+		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		legs={ name="Amalric Slops +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		neck="Mizu. Kubikazari",
-		waist="Eschan Stone",
-		left_ear="Friomisi Earring",
+		feet={ name="Amalric Nails +1", augments={'Mag. Acc.+20','"Mag.Atk.Bns."+20','"Conserve MP"+7',}},
+		neck="Sanctity Necklace",
+		waist="Luminary Sash",
+		left_ear="Regal Earring",
 		right_ear="Malignance Earring",
 		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+		right_ring="Freke Ring",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
+	sets.Midcast.Burst = set_combine(sets.Midcast.Enhancing, {
+		neck="Mizu. Kubikazari",
+	})
 
 	-- ===================================================================================================================
 	--		sets.aftercast
@@ -176,7 +224,23 @@ function get_sets()
 	    hands="Leth. Gantherots +1",
 	}
 
-	sets.TP = {}
+	sets.TP = {
+	    main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Genmei Shield",
+		ammo="Ginsen",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
+		neck="Anu Torque",
+		waist="Witful Belt",
+		left_ear="Sherida Earring",
+		right_ear="Digni. Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+	}
 	sets.TP.DW = {}
 	sets.TP.DT = {}
 	sets.TP.ACC = {}
@@ -195,8 +259,6 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}
-	--Command to Lock Style and Set the correct macros
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -259,4 +321,8 @@ end
 --Function is called when a self command is issued
 function self_command_custom(command)
 
+end
+-- This function is called when the job file is unloaded
+function user_file_unload()
+	windower.send_command('lua u Burst')
 end
