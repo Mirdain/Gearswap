@@ -9,6 +9,8 @@ LockStylePallet = "12"
 MacroBook = "12"
 MacroSet = "1"
 
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 function get_sets()
 	-- Standard Idle set
 	-- 50/31
@@ -33,6 +35,24 @@ function get_sets()
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
     }
+	-- Set used for hate generation on Job abilities
+	sets.Enmity = {
+		main="Epeolatry", -- 23
+		sub="Utu Grip",
+		ammo="Sapience Orb", --2
+		head="Turms Cap +1",
+		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
+		hands={ name="Futhark Mitons +3", augments={'Enhances "Sleight of Sword" effect',}}, -- 6
+		legs="Eri. Leg Guards +1", -- 11
+		feet="Erilaz Greaves +1", -- 6
+		neck="Moonlight Necklace", -- 15
+		waist="Eschan Stone",
+		left_ear="Tuisto Earring",
+		right_ear="Odnowa Earring +1",
+		left_ring="Petrov Ring", -- 4
+		right_ring="Moonlight Ring",
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
+	}
 	--Base TP set to build off - Used in [Normal] mode
 	sets.TP = {
 		main="Epeolatry",
@@ -106,24 +126,6 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, --10
 	}
-	-- Set used for hate generation on Job abilities
-	sets.Precast.Enmity = {
-		main="Epeolatry", -- 23
-		sub="Utu Grip",
-		ammo="Sapience Orb", --2
-		head="Turms Cap +1",
-		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
-		hands={ name="Futhark Mitons +3", augments={'Enhances "Sleight of Sword" effect',}}, -- 6
-		legs="Eri. Leg Guards +1", -- 11
-		feet="Erilaz Greaves +1", -- 6
-		neck="Moonlight Necklace", -- 15
-		waist="Eschan Stone",
-		left_ear="Tuisto Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Petrov Ring", -- 4
-		right_ring="Moonlight Ring",
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
-	}
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	-- 92 With Merits - Need Regal
@@ -136,8 +138,6 @@ function get_sets()
 		right_ear="Halasz Earring", -- 5
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
 	}
-	-- Cure Set
-	sets.Midcast.Cure = {}
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
 	
@@ -158,27 +158,27 @@ function get_sets()
 	}
 	-- JOB ABILITIES --
 	sets.JA = {}
-    sets.JA["Elemental Sforzo"] = set_combine(sets.Precast.Enmity, { body="Futhark Coat +3" })
-    sets.JA["Gambit"] = set_combine(sets.Precast.Enmity, { hands="Runeist's Mitons +1" })
-    sets.JA["Rayke"] = set_combine(sets.Precast.Enmity, { feet="Futhark Boots +3" })
-    sets.JA["Liement"] = set_combine(sets.Precast.Enmity, { body="Futhark Coat +3" })
+    sets.JA["Elemental Sforzo"] = set_combine(sets.Enmity, { body="Futhark Coat +3" })
+    sets.JA["Gambit"] = set_combine(sets.Enmity, { hands="Runeist's Mitons +1" })
+    sets.JA["Rayke"] = set_combine(sets.Enmity, { feet="Futhark Boots +3" })
+    sets.JA["Liement"] = set_combine(sets.Enmity, { body="Futhark Coat +3" })
     sets.JA["One For All"] = sets.Idle
-    sets.JA["Valiance"] = set_combine(sets.Precast.Enmity, {
+    sets.JA["Valiance"] = set_combine(sets.Enmity, {
         body="Runeist's Coat +1",
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
         legs="Futhark Trousers +3"
     })
-    sets.JA["Vallation"] = set_combine(sets.Precast.Enmity, {
+    sets.JA["Vallation"] = set_combine(sets.Enmity, {
         body="Runeist's Coat +1",
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
         legs="Futhark Trousers +3"
     })
-    sets.JA["Pflug"] = set_combine(sets.Precast.Enmity, { feet="Runeist Bottes +1" })
-    sets.JA["Battuta"] = set_combine(sets.Precast.Enmity, { head="Futhark Bandeau +3" })
+    sets.JA["Pflug"] = set_combine(sets.Enmity, { feet="Runeist Bottes +1" })
+    sets.JA["Battuta"] = set_combine(sets.Enmity, { head="Futhark Bandeau +3" })
     sets.JA["Vivacious Pulse"] = set_combine(sets.Precast.Divine, { head="Erilaz Galea +1" })
     sets.JA["Embolden"] = { back="Evasionist's Cape" }
-    sets.JA["Swordplay"] = set_combine(sets.Precast.Enmity, { hands="Futhark Mitons +3" })
-	sets.JA["Provoke"] = sets.Precast.Enmity
+    sets.JA["Swordplay"] = set_combine(sets.Enmity, { hands="Futhark Mitons +3" })
+	sets.JA["Provoke"] = sets.Enmity
 
 	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
 	--Leave blank if you dont want to change gear or equip a grip or shield
@@ -267,7 +267,7 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -316,5 +316,9 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
+
+end
+-- This function is called when the job file is unloaded
+function user_file_unload()
 
 end

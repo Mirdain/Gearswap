@@ -9,6 +9,9 @@ LockStylePallet = "1"
 MacroBook = "2"
 MacroSet = "1"
 
+-- Initialize Player
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 --Command to bind to the f9 key
 send_command('bind f9 gs c Weaponlock')
 --Log Message about what the key does
@@ -18,24 +21,22 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen
 	sets.Idle = {
-		sub="Elan Strap +1",
+		main="Malignance Pole",
+		sub="Enki Strap",
 		ammo="Sancus Sachet +1",
 		head="Beckoner's Horn +1",
 		body="Shomonjijoe +1",
 		hands="Convo. Bracers +3",
 		legs="Assid. Pants +1",
-		feet="Baayami Sabots +1",
-		neck="Smn. Collar +2",
+		feet="Baaya. Sabots +1",
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
 		waist="Eschan Stone",
 		left_ear="Genmei Earring",
 		right_ear="Etiolation Earring",
 		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		right_ring="Defending Ring",
 		back="Moonbeam Cape",
     }
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
-	}
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}
@@ -170,7 +171,7 @@ function get_sets()
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
-	-- Note that the Mote library will unlock these gear spots when used.
+
 	sets.Midcast.MAB = {
 		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
@@ -247,10 +248,10 @@ function get_sets()
 		hands={ name="Merlinic Dastanas", augments={'Pet: Mag. Acc.+19 Pet: "Mag.Atk.Bns."+19','Blood Pact Dmg.+10',}},
 		legs={ name="Apogee Slacks +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
 		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
-		neck="Smn. Collar +2",
-		waist="Incarnation Sash",
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
+		waist="Regal Belt",
 		left_ear="Lugalbanda Earring",
-		right_ear="Kyrene's Earring",
+		right_ear="Gelos Earring",
 		left_ring="Varar Ring +1",
 		right_ring="Varar Ring +1",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
@@ -304,8 +305,6 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}
-	--Command to Lock Style and Set the correct macros
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -396,8 +395,11 @@ function pet_midcast_custom(spell)
 
 	return equipSet
 end
-
 --Function is called when a self command is issued
 function self_command_custom(command)
+
+end
+-- This function is called when the job file is unloaded
+function user_file_unload()
 
 end

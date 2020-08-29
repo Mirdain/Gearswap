@@ -9,6 +9,9 @@ LockStylePallet = "3"
 MacroBook = "7"
 MacroSet = "1"
 
+-- Initialize Player
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
@@ -21,10 +24,10 @@ function get_sets()
 		feet="Malignance Boots",
 		neck="Loricate Torque +1",
 		waist="Moonbow Belt +1",
-		left_ear="Odnowa Earring +1",
-		right_ear="Etiolation Earring",
-		right_ring="Regal Ring",
-		left_ring="Ilabrat Ring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ear="Etiolation Earring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		left_ring="Regal Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
@@ -53,24 +56,7 @@ function get_sets()
 	    back="Phalangite Mantle", -- 5
 	}
 	sets.Midcast = {}
-	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {}
-	-- Cure Set
-	sets.Midcast.Cure = {}
-	-- Enhancing Skill
-	sets.Midcast.Enhancing = {}
-	-- High MACC for landing spells
-	sets.Midcast.Enfeebling = {}
-	-- Specific gear for spells
-	-- Misc Sets
-	sets.Midcast.CuragaSet = sets.Midcast.Cure
-	sets.Midcast.Cursna = {}
-	--Used for elemental Bar Magic Spells
-	sets.Midcast.Enhancing.Elemental = {}
 
-	sets.Midcast["Stoneskin"] = {
-		waist="Siegel Sash",
-	}
 	sets.JA = {}
 	sets.JA["Hundred Fists"] = {legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}}}
 	sets.JA["Berserk"] = {}
@@ -92,6 +78,7 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.TP = {
+		main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Ginsen",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
@@ -118,9 +105,9 @@ function get_sets()
 		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
-		right_ring="Defending Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -188,6 +175,34 @@ function get_sets()
 		body="Bhikku Cyclas +1",
 	}
 
+	-- Impetus for the DT stance (need more PDT)
+	sets.Custom.Impetus.DT = {
+	    head="Malignance Chapeau",
+		body="Bhikku Cyclas +1",
+		right_ring="Defending Ring",
+	}
+
+	sets.Custom.Boost = {
+		waist="Ask Sash",
+	}
+
+	sets.Charm = {
+	    main="Ark Scythe",
+		ammo="Staunch Tathlum +1",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Loricate Torque +1",
+		waist="Moonbow Belt +1",
+		left_ear="Odnowa Earring +1",
+		right_ear="Etiolation Earring",
+		left_ring="Ilabrat Ring",
+		right_ring="Regal Ring",
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	}
+
 	sets.TreasureHunter = {
 	    head="Wh. Rarab Cap +1",
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
@@ -199,7 +214,6 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -235,7 +249,19 @@ end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
+
 	equipSet = choose_Impetus()
+
+	if name == "Boost" then
+		if gain == true then
+			equip(sets.Custom.Boost)
+			disable('waist')
+		else
+			enable('waist')
+			choose_set()
+		end
+	end
+
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
@@ -259,8 +285,16 @@ function choose_Impetus()
 	equipSet = {}
 		if player.status == "Engaged" then
 			if buffactive.Impetus then
-				equipSet = sets.Custom.Impetus
+				if state.OffenseMode.value == "DT" then
+					equipSet = sets.Custom.Impetus.DT
+				else
+					equipSet = sets.Custom.Impetus
+				end
 			end	
 		end
 	return equipSet
+end
+-- This function is called when the job file is unloaded
+function user_file_unload()
+
 end

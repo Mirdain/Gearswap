@@ -9,19 +9,21 @@ LockStylePallet = "11"
 MacroBook = "8"
 MacroSet = "2"
 
+--Command to Lock Style and Set the correct macros
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
-BlueSkill = S{'Occultation'}
 BlueHealing = S{'Magic Fruit'}
+BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 
 --Text for the keybind
 CustomBind = "Cleave Mode"
 --Command to bind to the f9 key
 send_command('bind f9 gs c ToggleCleave')
 --Log Message about what the key does
-add_to_chat(8,'[F9] - Cleave Mode')
+add_to_chat(8,'[F9] - Cleave Mode is ['..state.CleaveMode.value..']')
 
 function get_sets()
-
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		main="Earth Staff",
@@ -39,9 +41,6 @@ function get_sets()
 		right_ring="Stikini Ring +1",
 		back="Moonbeam Cape",
     }
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
-	}
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
     }
@@ -153,17 +152,17 @@ function get_sets()
 	-- ===================================================================================================================
 	--Custome sets for each jobsetup
 	sets.Custom = {}
-	sets.Custom.Cleave = {}
-	sets.Custom.Cleave.Idle = {
+	sets.Custom.Cleave_Idle = {
 		main="Earth Staff",
 		left_ring="Defending Ring", --10/10
 		right_ring={ name="Dark Ring", augments={'Magic dmg. taken -4%','Phys. dmg. taken -4%','Spell interruption rate down -4%',}}, --4/4
 	}
-	sets.Custom.Cleave.Weapons = {
+	sets.Custom.Weapons = {}
+	sets.Custom.Weapons.Cleave = {
 		main={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
 		sub={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
 	}
-	sets.Custom.Weapons = {
+	sets.Custom.Weapons.TP = {
 		main="Naegling",
 		sub={ name="Colada", augments={'Phys. dmg. taken -2%','Accuracy+23','Attack+23','DMG:+20',}},
 	}
@@ -190,10 +189,6 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}
-	--Command to Lock Style and Set the correct macros
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
-	send_command('wait 5;gs c ToggleCleave')
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -213,16 +208,16 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if ToggleCleave == "On" and spell.type == "Magic" then
-		equipSet = sets.Custom.Cleave.Weapons
+	if ToggleCleave == "ON" and spell.type == "Magic" then
+		equipSet = sets.Custom.Weapons.Cleave
 	end
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	if ToggleCleave == "On" and player.status == "Idle" then
-		equipSet = sets.Custom.Cleave.Idle
+	if ToggleCleave == "ON" and player.status == "Idle" then
+		equipSet = set_combine(sets.Idle, sets.Custom.Cleave_Idle)
 	end
 	return equipSet
 end
@@ -250,24 +245,27 @@ function status_change_custom(new,old)
 			enable('main')
 			enable('sub')
 		end
-	else
-		equip(sets.Custom.Weapons)
 	end
 	return equipSet
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
-	if command == "ToggleCleave" then
-		if ToggleCleave == "Off" then
-			ToggleCleave = "On"
-			send_command('input //aset spellset magic;input /macro book 8;wait .1; input /macro set 2')
+	if command == "togglecleave" then
+		if state.CleaveMode.value == "OFF" then
+			state.CleaveMode.value = "ON"
+			send_command('input //aset removeall;wait 1;input //aset spellset magic;input /macro book 8;wait .1; input /macro set 2')
 			choose_set()  
+			equip(sets.Custom.Weapons.Cleave)
 		else
-			send_command('input //aset spellset tp;input /macro book 8;wait .1; input /macro set 1')
-			ToggleCleave = "Off"
+			send_command('input //aset removeall;wait 1;input //aset spellset tp;input /macro book 8;wait .1; input /macro set 1')
+			state.CleaveMode.value = "OFF"
 			equip(sets.Idle)
-			equip(sets.Custom.Weapons)
+			equip(sets.Custom.Weapons.TP)
 		end
-		windower.add_to_chat(8,'Cleave mode ['..ToggleCleave..']')
+		windower.add_to_chat(8,'Cleave mode ['..state.CleaveMode.value..']')
 	end
+end
+-- Function is called when the job lua is unloaded
+function user_file_unload()
+
 end

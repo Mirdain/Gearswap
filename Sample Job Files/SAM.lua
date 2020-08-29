@@ -9,22 +9,28 @@ LockStylePallet = "4"
 MacroBook = "10"
 MacroSet = "1"
 
+Food = "Sublime Sushi"
+
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 function get_sets()
 
 	-- Standard Idle set with -DT, Refresh and Regen gear
 	sets.Idle = {
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
 		ammo="Staunch Tathlum +1",
 		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
+		body="Tartarus Platemail",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
 		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
-		right_ear="Genmei Earring",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
-		right_ring={ name="Dark Ring", augments={'Magic dmg. taken -4%','Phys. dmg. taken -4%','Spell interruption rate down -4%',}},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back="Moonbeam Cape",
     }
 	sets.Movement = {
@@ -34,13 +40,15 @@ function get_sets()
 	-- Used for Magic Spells (Fast Cast)
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb",
+		body="Sacro Breastplate",
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs={ name="Founder's Hose", augments={'MND+7','Mag. Acc.+10','Attack+10',}},
 		neck="Voltsurge Torque",
 		waist="Tempus Fugit",
 		left_ear="Etiolation Earring",
 		right_ear="Loquac. Earring",
 		left_ring="Prolix Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Moonbeam Cape",
 	}
 	sets.Precast.Enmity = {
 	    ammo="Sapience Orb", -- 2
@@ -50,18 +58,7 @@ function get_sets()
 	    back="Phalangite Mantle", -- 5
 	}
 	sets.Midcast = {}
-	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {}
-	-- Cure Set
-	sets.Midcast.Cure = {}
-	-- Enhancing Skill
-	sets.Midcast.Enhancing = {}
-	-- High MACC for landing spells
-	sets.Midcast.Enfeebling = {}
-	-- Specific gear for spells
-	sets.Midcast["Stoneskin"] = {
-		waist="Siegel Sash",
-	}
+	
 	--Job Abilities
 	sets.JA = {}
 	sets.JA["Meikyo Shisui"] = {}
@@ -72,12 +69,12 @@ function get_sets()
 	sets.JA["Provoke"] = sets.Precast.Enmity
 	sets.JA["Third Eye"] = {}
 	sets.JA["Meditate"] = {
-	    head="Wakido Kabuto +1",
+	    head="Wakido Kabuto +3",
 		hands={ name="Sakonji Kote +3", augments={'Enhances "Blade Bash" effect',}},
-	    back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.JA["Warding Circle"] = {
-		head="Wakido Kabuto +1",
+		head="Wakido Kabuto +3",
 	}
 	sets.JA["Shikikoyo"] = {
 		legs={ name="Sakonji Haidate +3", augments={'Enhances "Shikikoyo" effect',}},
@@ -92,75 +89,93 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.TP = {
-	    ammo="Ginsen",
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
+		ammo="Ginsen",
 		head="Flam. Zucchetto +2",
 		body="Ken. Samue +1",
 		hands="Wakido Kote +3",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-		neck="Sam. Nodowa +2",
+		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",
-		left_ear="Digni. Earring",
-		right_ear="Cessance Earring",
+		left_ear="Telos Earring",
+		right_ear="Dedition Earring",
 		left_ring="Flamma Ring",
 		right_ring="Niqmaddu Ring",
-		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
-	    ammo="Staunch Tathlum +1",
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
+		ammo="Staunch Tathlum +1",
 		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
+		body="Tartarus Platemail",
 		hands={ name="Sakonji Kote +3", augments={'Enhances "Blade Bash" effect',}},
 		legs={ name="Sakonji Haidate +3", augments={'Enhances "Shikikoyo" effect',}},
 		feet="Ken. Sune-Ate +1",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Odnowa Earring +1",
-		right_ear="Genmei Earring",
+		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
-		right_ring={ name="Dark Ring", augments={'Magic dmg. taken -4%','Phys. dmg. taken -4%','Spell interruption rate down -4%',}},
-		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {
-	    head="Ken. Jinpachi +1",
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
+		ammo="Ginsen",
+		head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
-		hands="Ken. Tekko +1",
+		hands="Wakido Kote +3",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
+		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Telos Earring",
+		right_ear="Digni. Earring",
+		left_ring="Niqmaddu Ring",
+		right_ring="Regal Ring",
+		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.TP.DW = {}
 	--Default Weapon Skill set base
 	sets.WS = {
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head={ name="Valorous Mask", augments={'Accuracy+17 Attack+17','Weapon skill damage +4%','STR+9','Accuracy+8',}},
 		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
 		hands={ name="Valorous Mitts", augments={'Accuracy+21 Attack+21','Weapon skill damage +4%','STR+13',}},
 		legs="Wakido Haidate +3",
 		feet={ name="Valorous Greaves", augments={'Attack+29','Weapon skill damage +4%','STR+9','Accuracy+11',}},
-		neck="Sam. Nodowa +2",
+		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Fotia Belt",
 		left_ear="Thrud Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Karieyh Ring +1",
-		right_ring="Niqmaddu Ring",
+		left_ring="Regal Ring",
+		right_ring="Karieyh Ring +1",
 		back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
 		ammo="Knobkierrie",
-		head={ name="Valorous Mask", augments={'Accuracy+17 Attack+17','Weapon skill damage +4%','STR+9','Accuracy+8',}},
+		head={ name="Sakonji Kabuto +3", augments={'Enhances "Ikishoten" effect',}},
 		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
 		hands="Wakido Kote +3",
 		legs="Wakido Haidate +3",
-		feet={ name="Valorous Greaves", augments={'Attack+29','Weapon skill damage +4%','STR+9','Accuracy+11',}},
+		feet={ name="Sak. Sune-Ate +3", augments={'Enhances "Meikyo Shisui" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
-		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Ishvara Earring",
-		left_ring="Karieyh Ring +1",
-		right_ring="Epaminondas's Ring",
+		left_ear="Telos Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Niqmaddu Ring",
+		right_ring="Regal Ring",
 		back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
 	--WS Sets
@@ -200,7 +215,7 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -265,4 +280,9 @@ function choose_Seigan()
 			end
 		end
 	return equipSet
+end
+
+-- This function is called when the job file is unloaded
+function user_file_unload()
+
 end

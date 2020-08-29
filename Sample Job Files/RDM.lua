@@ -1,5 +1,5 @@
 
---Inyana
+--Mirdain
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -13,50 +13,47 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-		main="Daybreak",
-		sub="Genmei Shield",
-		ammo="Staunch Tathlum +1",
+		main="Earth Staff",
+		sub="Clerisy Strap",
+		ammo="Homiliary",
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		hands="Malignance Gloves",
-		legs={ name="Lengo Pants", augments={'INT+7','Mag. Acc.+7','"Mag.Atk.Bns."+3','"Refresh"+1',}},
-		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
+		body="Jhakri Robe +2",
+		hands="Aya. Manopolas +2",
+		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
+		feet="Aya. Gambieras +2",
 		neck="Loricate Torque +1",
-		waist="Fucho-no-Obi",
-		left_ear="Hearty Earring",
+		waist="Flume Belt +1",
+		left_ear="Genmei Earring",
 		right_ear="Etiolation Earring",
-		left_ring="Defending Ring",
+		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		back="Moonbeam Cape",
     }
 	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
 	sets.DT = {
 	}
-	sets.Movement = {
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-	}
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main="Daybreak",
-		sub="Sors Shield",
+		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+		sub="Clerisy Strap",
 		ammo="Impatiens",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},  --14
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
-		hands="Gende. Gages +1", --7
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, --7
-		feet={ name="Carmine Greaves +1", augments={'Accuracy+12','DEX+12','MND+20',}}, --8
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Witful Belt", --2
-		left_ear="Enchntr. Earring +1", --2
-		right_ear="Etiolation Earring", --1
-		left_ring="Veneficium Ring",
-		right_ring="Lebeche Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
+		head="Atro. Chapeau +1",
+		body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}},
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
+		legs="Aya. Cosciales +2",
+		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}},
+		neck="Voltsurge Torque",
+		waist="Witful Belt",
+		left_ear="Loquac. Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Prolix Ring",
+		right_ring="Kishar Ring",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
 	}
 	-- Job Abilities
 	sets.JA = {}
-	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}}
+	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}}}
 	sets.JA["Saboteur"] = {}
 	sets.JA["Spontaneity"] = {}
 	sets.JA["Stymie"] = {}
@@ -82,106 +79,57 @@ function get_sets()
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {
-		main="Daybreak",
-		sub="Sors Shield",
+		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+		sub="Clerisy Strap",
 		ammo="Hydrocera",
-		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Luminary Sash",
-		left_ear="Beatific Earring",
-		right_ear="Regal Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Janniston Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-    }
-	-- Enhancing Duration on SELF
-	sets.Midcast.Enhancing = {
-		main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Ammurapi Shield",
-		ammo="Pemphredo Tathlum",
-		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
-		hands="Atrophy Gloves +3",
-		legs="Leth. Fuseau +1",
-		feet="Leth. Houseaux +1",
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Embla Sash",
-		left_ear="Andoaa Earring",
-		right_ear="Augment. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
-	-- Enhancing Duration on OTHERS
-	sets.Midcast.Enhancing.Others = {
-	    main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Ammurapi Shield",
-		ammo="Pemphredo Tathlum",
-		head="Leth. Chappel +1",
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
-		hands="Atrophy Gloves +3",
-		legs="Leth. Fuseau +1",
-		feet="Leth. Houseaux +1",
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Embla Sash",
-		left_ear="Andoaa Earring",
-		right_ear="Augment. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
-	-- Spells that require SKILL
-	sets.Midcast.Enhancing.Skill = {
-	    main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Ammurapi Shield",
-		ammo="Staunch Tathlum +1",
-		head="Befouled Crown",
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
-		hands={ name="Viti. Gloves +3", augments={'Enhancing Magic duration',}},
-		legs="Atrophy Tights +2",
-		feet="Leth. Houseaux +1",
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Olympus Sash",
-		left_ear="Andoaa Earring",
-		right_ear="Augment. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
-	-- Spells that require elemental (Barspells)
-	sets.Midcast.Enhancing.Elemental = {
-
-	}
-	sets.Midcast.Enfeebling = {
-		main={ name="Grioavolr", augments={'Mag. Acc.+27','Mag. Acc.+23 "Mag.Atk.Bns."+23','Pet: "Regen"+1',}},
-		sub="Enki Strap",
-		ammo="Regal Gem",
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
+		body={ name="Viti. Tabard +1", augments={'Enhances "Chainspell" effect',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+25','"Mag.Atk.Bns."+25','Accuracy+5 Attack+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
-		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
+		legs="Atrophy Tights +1",
+		feet={ name="Kaykaus Boots +1", augments={'Mag. Acc.+20','"Cure" potency +6%','"Fast Cast"+4',}},
+		neck="Nodens Gorget",
 		waist="Luminary Sash",
-		left_ear="Digni. Earring",
-		right_ear="Regal Earring",
+		left_ear="Mendi. Earring",
+		right_ear="Roundel Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+    }
+	-- Enhancing Skill
+	sets.Midcast.Enhancing = {
+		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+	    ammo="Hydrocera",
+		head="Leth. Chappel +1",
+		body="Lethargy Sayon +1",
+		hands="Atrophy Gloves +3",
+		legs="Leth. Fuseau +1",
+		feet="Leth. Houseaux +1",
+		neck="Dls. Torque +2",
+		waist="Siegel Sash",
+		left_ear="Halasz Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
 	}
-
-	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
+	-- High MACC for landing spells
+	sets.Midcast.Enfeebling = {
+		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+		sub="Enki Strap",
+		ammo="Pemphredo Tathlum",
+		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
+		body="Lethargy Sayon +1",
+		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','Spell interruption rate down -4%','Mag. Acc.+11','"Mag.Atk.Bns."+4',}},
+		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
+		neck="Dls. Torque +2",
+		waist="Luminary Sash",
+		left_ear="Malignance Earring",
+		right_ear="Digni. Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
+	}
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
 		ring1="Stikini Ring +1",
@@ -193,11 +141,17 @@ function get_sets()
 		head="Amalric Coif +1"
 	})
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-		head="Amalric Coif +1",
-		body="Atrophy Tabard +3",
+		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		body="Atrophy Tabard +2",
+		hands="Atrophy Gloves +3",
 		legs="Leth. Fuseau +1",
+		feet="Leth. Houseaux +1",
+		waist="Gishdubar Sash",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
 	})
 	sets.Midcast.Nuke = {
+		main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+	    sub="Clerisy Strap",
 		ammo="Pemphredo Tathlum",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		body="Jhakri Robe +2",
@@ -210,7 +164,7 @@ function get_sets()
 		right_ear="Malignance Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+5','"Fast Cast"+10',}},
 	}
 
 	-- ===================================================================================================================
@@ -222,23 +176,7 @@ function get_sets()
 	    hands="Leth. Gantherots +1",
 	}
 
-	sets.TP = {
-	    main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Genmei Shield",
-		ammo="Ginsen",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
-		neck="Anu Torque",
-		waist="Witful Belt",
-		left_ear="Sherida Earring",
-		right_ear="Digni. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
+	sets.TP = {}
 	sets.TP.DW = {}
 	sets.TP.DT = {}
 	sets.TP.ACC = {}
