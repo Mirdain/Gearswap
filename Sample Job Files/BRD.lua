@@ -9,6 +9,9 @@ LockStylePallet = "9"
 MacroBook = "9"
 MacroSet = "1"
 
+--Command to Lock Style and Set the correct macros
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 --Text for the keybind
 CustomBind = "4 Song Buff"
 --Command to bind to the f9 key
@@ -35,7 +38,6 @@ function get_sets()
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
-	sets.Idle.Pet = {}
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Fili Cothurnes +1",
@@ -90,9 +92,7 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Used to force song override (low duration dummy songs)
-	sets.Precast.DummySongs = sets.Idle
-	-- Enmity Set
-	sets.Precast.Enmity = {}
+	sets.Precast.DummySongs = set_combine(sets.Precast.Songs, sets.Song.Count)
 	-- Default song duration / strength
 	sets.Midcast = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
@@ -110,8 +110,6 @@ function get_sets()
 		right_ring="Patricius Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {}
 	-- Cure Set
 	sets.Midcast.Cure = {
 		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
@@ -133,7 +131,7 @@ function get_sets()
 	-- Base set for duration
 	sets.Midcast.Enhancing = {}
 	-- Curaga Set (different rules than cure)
-	sets.Midcast.CuragaSet = sets.Midcast.Cure
+	sets.Midcast.Curaga = sets.Midcast.Cure
 	-- Cursna Set
 	sets.Midcast.Cursna = {}
 	--Used for elemental Bar Magic Spells
@@ -195,14 +193,44 @@ function get_sets()
 	sets.JA["Pianissimo"] = {}
 	--Base TP set to build off
 	sets.TP = {
-
+		main="Carnwenhan",
+		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		range="Marsyas",
+		head="Brioso Roundlet +3",
+		body="Ayanmo Corazza +2",
+		hands="Brioso Cuffs +3",
+		legs="Brioso Cannions +3",
+		feet="Inyan. Crackows +2",
+		neck="Lissome Necklace",
+		waist="Sarissapho. Belt",
+		left_ear="Brutal Earring",
+		right_ear="Telos Earring",
+		left_ring="Ilabrat Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
 
 	}
 	--The following sets augment the base TP set
-	sets.TP.DW = {}
+	sets.TP.DW = {
+	    main="Carnwenhan",
+		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		range="Marsyas",
+		head="Brioso Roundlet +3",
+		body="Ayanmo Corazza +2",
+		hands="Brioso Cuffs +3",
+		legs="Brioso Cannions +3",
+		feet="Inyan. Crackows +2",
+		neck="Lissome Necklace",
+		waist="Sarissapho. Belt",
+		left_ear="Brutal Earring",
+		right_ear="Telos Earring",
+		left_ring="Ilabrat Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {
 	}
@@ -215,6 +243,26 @@ function get_sets()
 	sets.WS.WSD = {}
 	sets.WS["Savage Blade"] = sets.WS.WSD
 	sets.WS["Mordant Rime"] = {}
+
+	sets.Custom = {}
+
+	sets.Charm = {
+		main="Lament",
+		range="Marsyas",
+		head="Inyanga Tiara +2",
+		body="Inyanga Jubbah +2",
+		hands="Inyan. Dastanas +2",
+		legs="Brioso Cannions +3",
+		feet="Inyan. Crackows +2",
+		neck="Loricate Torque +1",
+		waist="Flume Belt +1",
+		left_ear={ name="Moonshade Earring", augments={'Mag. Acc.+4','Latent effect: "Refresh"+1',}},
+		right_ear="Etiolation Earring",
+		left_ring="Defending Ring",
+		right_ring="Stikini Ring +1",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+    }
+
 	sets.TreasureHunter = {
 		--main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
 		--waist="Chaac Belt",
@@ -274,5 +322,9 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
+
+end
+-- Function is called when the job lua is unloaded
+function user_file_unload()
 
 end
