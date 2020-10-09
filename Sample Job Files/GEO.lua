@@ -28,23 +28,22 @@ windower.send_command('lua l Burst')
 
 function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
-	sets.Idle = {
-		-- 2403/1434
+	sets.Idle = { 	-- 2417/1453
 		main="Idris",
 		sub="Genmei Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 		body="Geomancy Tunic +3",
-		hands={ name="Bagua Mitaines +3", augments={'Enhances "Curative Recantation" effect',}},
+		hands="Geo. Mitaines +3",
 		legs="Geomancy Pants +3",
 		feet={ name="Merlinic Crackows", augments={'Pet: Haste+1','Pet: "Mag.Atk.Bns."+29','"Refresh"+2','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 		neck="Loricate Torque +1",
 		waist="Fucho-no-Obi",
-		left_ear={ name="Tuisto Earring", priority=3},
-		right_ear={ name="Etiolation Earring", priority=2},
+		left_ear="Tuisto Earring",
+		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
     }
 	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = {
