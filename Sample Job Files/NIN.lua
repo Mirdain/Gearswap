@@ -299,3 +299,9 @@ function self_command_custom(command)
 		end
 	end
 end
+--used to register the time change to equip correct feet
+windower.register_event('time change', function(time)
+    if (world.time == 17*60 or world.time == 7*60) and player.status == 'Idle' then
+        windower.send_command('gs c movement')
+    end
+end)

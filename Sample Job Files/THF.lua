@@ -12,30 +12,30 @@ MacroSet = "1"
 function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
+		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Staunch Tathlum +1",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		head="Malignance Chapeau",
 		body="Malignance Tabard",
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		hands="Malignance Gloves",
 		legs="Malignance Tights",
-		feet="Fajin Boots",
+		feet="Malignance Boots",
 		neck="Loricate Torque +1",
 		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
+		left_ear="Tuisto Earring",
 		right_ear="Odnowa Earring +1",
-		left_ring="Defending Ring",
-		right_ring={ name="Dark Ring", augments={'Magic dmg. taken -4%','Phys. dmg. taken -4%','Spell interruption rate down -4%',}},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
 		back="Moonbeam Cape",
     }
-	--Set used for pure -DT when not engaged (no TP considerations and Augments the Idle set)
-	sets.DT = {
-
-    }
 	sets.Movement = {
-
+		feet="Fajin Boots",
     }
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
+		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Sapience Orb",
 		head={ name="Herculean Helm", augments={'Accuracy+15','"Fast Cast"+5','INT+9','Mag. Acc.+9','"Mag.Atk.Bns."+13',}},
 		body={ name="Taeon Tabard", augments={'"Fast Cast"+5',}},
@@ -45,7 +45,7 @@ function get_sets()
 		neck="Voltsurge Torque",
 		waist="Tempus Fugit",
 		left_ear="Etiolation Earring",
-		right_ear="Loquac. Earring",
+		right_ear="Tuisto Earring",
 		left_ring="Prolix Ring",
 		right_ring="Moonlight Ring",
 		back="Moonbeam Cape",
@@ -88,24 +88,29 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.TP = {
-	    ammo="Ginsen",
+		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
+		ammo="Yamarang",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Mummu Kecks +2",
-		feet="Mummu Gamash. +2",
-		neck="Erudit. Necklace",
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		neck="Sanctity Necklace",
 		waist="Windbuffet Belt +1",
 		left_ear="Sherida Earring",
-		right_ear="Suppanomimi",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back="Phalangite Mantle",
+		right_ear="Telos Earring",
+		left_ring="Gere Ring",
+		right_ring="Epona's Ring",
+		back="Moonbeam Cape",
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
+		head="Malignance Chapeau",
 		body="Malignance Tabard",
+		hands="Malignance Gloves",
 		legs="Malignance Tights",
+		feet="Malignance Boots",
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {}
@@ -114,19 +119,21 @@ function get_sets()
 	}
 	--Default WS set base
 	sets.WS = {
+		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Yetshila +1",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Mummu Kecks +2",
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
 		feet="Mummu Gamash. +2",
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear="Sherida Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Karieyh Ring",
-		right_ring="Epaminondas's Ring",
-		back="Phalangite Mantle",
+		left_ring="Gere Ring",
+		right_ring="Regal Ring",
+		back="Moonbeam Cape",
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
