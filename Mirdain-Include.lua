@@ -1,18 +1,17 @@
+res = require 'resources'
+config = require('config')
+
 -- loads gear from Moogle
 include('organizer-lib')
 -- Modes is the include for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
-res = require 'resources'
-config = require('config')
-
-
 default = {
-	visible = false,
-	Display_Box={text={size=10}},
-	Debug_Box={text={size=10}},
+	visible = true,
 	debug = false,
-	info = true
+	info = true,
+	Display_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1647,y=835},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
+	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1483,y=791},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	}
 
 settings = config.load(default)
@@ -20,7 +19,6 @@ settings = config.load(default)
 DualWield = false
 SpellCastTime = 0
 Spellstart = os.time()
-Item = 'None'
 
 AutoBuffTime = os.clock()
 
@@ -32,16 +30,20 @@ Enemy_ID = 0
 
 avatar = "None"
 
+range_multiplier = {[2] = 1.55, [3] = 1.490909, [4] = 1.44, [5] = 1.377778, [6] = 1.30, [7] = 1.15, [8] = 1.25, [9] = 1.377778, [10] = 1.45, [11] = 1.454545454545455, [12] = 1.666666666666667,}
+
 is_Busy = false
+in_Que = false
 is_Pianissimo = false
 is_moving = false
 Time_Out = false
 
 --Variable to monitor during debug mode
-debug_value_1 = 0
+debug_value = 0
+
+state = state or {}
 
 --Modes for Melee
-state = state or {}
 state.OffenseMode = M{['description']='Melee Mode'}
 state.OffenseMode:options('Normal','ACC','DT')
 state.OffenseMode:set('Normal')
@@ -63,8 +65,13 @@ state.CleaveMode:set('OFF')
 
 -- TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
-state.TreasureMode:options('None','Tag')
-state.TreasureMode:set('None')
+if player.main_job == "THF" then
+	state.TreasureMode:options('None','Tag','Fulltime','SATA')
+	state.TreasureMode:set('Tag')
+else
+	state.TreasureMode:options('None','Tag')
+	state.TreasureMode:set('None')
+end
 
 -- Weapon Lock mode handling
 state.WeaponLock = M{['description']='Lock Weapons'}
@@ -81,11 +88,6 @@ state.AutoTank = M{['description']='Auto Tank Mode'}
 state.AutoTank:options('OFF','ON')
 state.AutoTank:set('OFF')
 
-if player.main_job == "THF" then
-	state.TreasureMode:set('Tag')
-	state.TreasureMode:options('None','Tag','Fulltime','SATA')
-end
-
 --State for Ammunition check
 state.warned = M(false)
 
@@ -98,23 +100,34 @@ Ammo.Bullet = {}
 Ammo.Arrow = {}
 Ammo.Bolt = {}
 
--- UI for displaying the current states
-local display_box = function()
-    return 'State [%s]\nAuto Buff [%s]\nTreasure Hunter [%s]\nBurst Mode [%s]'
-	:format(tostring(state.OffenseMode.value),tostring(state.AutoBuff.value),tostring(state.TreasureMode.value),tostring(state.BurstMode.value))
-end
-
--- Used to help debug issues
-local display_box_Debug = function()
-    return 'is_Busy [%s]\nin_Que [%s]\ndebug_value_1 [%s]'
-	:format(tostring(is_Busy),tostring(in_Que),tostring(debug_value_1))
-end
-
 gs_status = {}
-gs_status = texts.new(display_box(),settings.Display_Box)
+gs_status = texts.new("",settings.Display_Box)
+
+-- UI for displaying the current states
+function display_box_update()
+	lines = T{}
+	lines:insert('State' ..string.format('[%s]',state.OffenseMode.value):lpad(' ',14))
+	lines:insert('Auto Buff' ..string.format('[%s]',state.AutoBuff.value):lpad(' ',10))
+	lines:insert('TH Mode' ..string.format('[%s]',state.TreasureMode.value):lpad(' ',12))
+	lines:insert('Burst Mode' ..string.format('[%s]',state.BurstMode.value):lpad(' ',9))
+	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
+	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
+    gs_status:text(lines:concat('\n'))
+end
 
 gs_debug = {}
-gs_debug = texts.new(display_box_Debug(),settings.Debug_Box)
+gs_debug = texts.new("",settings.Debug_Box)
+
+-- Used to help debug issues
+function debug_box_update()
+	lines = T{}
+	lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',10))
+	lines:insert('in_Que' ..string.format('[%s]',tostring(in_Que)):lpad(' ',11))
+	lines:insert('debug_value' ..string.format('[%s]',tostring(debug_value)):lpad(' ',6))
+	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
+	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
+    gs_debug:text(lines:concat('\n'))
+end
 
 if settings.visible == true then
 	gs_status:show()
@@ -145,6 +158,8 @@ watch_buffs = S{"light arts","addendum: white","penury","celerity","accession","
 "dark arts","addendum: black","parsimony","alacrity","manifestation","ebullience","immanence",
 "stun","petrified","silence","stun","sleep","slow","paralyze"}
 
+SlotList = {"main","sub","range","ammo","head","body","hands","legs","feet","neck","waist","lear","rear","left_ring","right_ring","back"}
+
 --Song Sets
 EnfeebleSong = S{
 'Foe Requiem','Foe Requiem II','Foe Requiem III','Foe Requiem IV','Foe Requiem V','Foe Requiem VI','Foe Requiem VII','Battlefield Elegy', 'Carnage Elegy',
@@ -158,7 +173,7 @@ Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
-Mage_Job = S{'BLM','RDM','WHM','BRD','BLU','GEO','SCH','NIN','PLD','RUN'}
+Mage_Job = S{'BLM','RDM','WHM','BRD','BLU','GEO','SCH','NIN','PLD','RUN','DRK','SMN'}
 Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thunder','Crimson Howl','Lightning Armor','Ecliptic Growl','Glittering Ruby','Earthen Ward','Hastega','Noctoshield','Ecliptic Howl','Dream Shroud','Earthen Armor','Fleet Wind','Inferno Howl','Heavenward Howl','Hastega II','Soothing Current','Crystal Blessing'}
 Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water'}
 Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare','Pavor Nocturnus','Ultimate Terror','Somnolence','Slowga','Tidal Roar','Diamond Storm','Sleepga','Shock Squall'}
@@ -204,13 +219,6 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
-	-- Check that proper ammo is available if we're using ranged attacks or similar.
-    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" 
-		or spell.action_type == 'Ranged Attack' and player.equipment.ranged ~= "" 
-		or spell.type == 'WeaponSkill' 
-		or spell.type == 'CorsairShot' then
-        do_bullet_checks(spell, spellMap, eventArgs)
-    end
 	-- Status Ailment Check
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
@@ -220,16 +228,39 @@ function pretargetcheck(spell,action)
 			log('Cancel Spell - Using Items')
 		end
 		if spell.action_type == 'Magic' and buffactive['Silence'] then
-			cancel_spell()
+			cancel_spell()																							
 			send_command('input /item "Remedy" <me>')
 			log('Cancel Spell - Using Items')
-		end
+		end											
 	end
-	--Stop gear swap when can't WS
-	if spell.type == 'WeaponSkill' and player.tp < 1000 then
-		cancel_spell()
-		log('TP:['..player.tp..']')
-		return
+	-- Check that proper ammo is available if we're using ranged attacks or similar.
+    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" 
+		or spell.action_type == 'Ranged Attack' and player.equipment.ranged ~= "" 
+		or spell.type == 'WeaponSkill' 
+		or spell.type == 'CorsairShot' then
+        do_bullet_checks(spell, spellMap, eventArgs)
+    end
+	--Weapon Skill checks
+	if spell.type == 'WeaponSkill' then
+		local ws_used = res.weapon_skills:with('en',spell.english)
+		--Stop gear swap when you can't WS
+		if player.tp < 1000 then
+			cancel_spell()
+			log('TP:['..player.tp..']')
+			return
+		--Stop gear swap when you can't WS
+		elseif buffactive['Amnesia'] then
+			cancel_spell()
+			info('Can\'t Weapon Skill due to amnesia.')
+			return
+		--Stop WS to save TP
+		--[[
+		elseif spell.target.distance > (player.target.model_size + ws_used.range * range_multiplier[tonumber(ws_used.range)] - player.model_size/2) then
+			cancel_spell()
+			log('Target out of range')
+			return
+		]]
+		end
 	--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 		local abil_recasts_table = windower.ffxi.get_ability_recasts()
@@ -241,8 +272,8 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			return
 		end
-	--Cancel certain actions (Defined by RecastTimers) if not ready
 	elseif RecastTimers:contains(spell.type) then
+		--Cancel certain actions (Defined by RecastTimers) if not ready
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local spell_time = spell_recasts[spell.recast_id]/100
 		if spell_time > 0 then
@@ -250,76 +281,74 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			return
 		end
-		if spell.target.type ==  null and not spell.type == 'BardSong' then
-			-- Cancel Spell
-			log('Cancel Spell:[NO TARGET]')
-			cancel_spell()
-			return
+		--Cancel if null target and redirect to self if bard song
+		if spell.target.type ==  null then
+			if spell.type == 'BardSong' then
+				if buffactive['Pianissimo'] then
+					if is_Pianissimo == false then
+						cancel_spell()
+						--log('Piassimo Redirect - Select Character')
+						send_command('input /ma "'..spell.name..'" <stpc>')
+						is_Pianissimo = true
+					else
+						is_Pianissimo = false
+					end
+				else
+					change_target('<me>')
+				end
+			else
+				-- Cancel Spell
+				log('Cancel Spell:[NO TARGET]')
+				cancel_spell()
+				return
+			end
 		else
 			local cast_spell = res.spells:with('name', spell.name)
-			--log('['..tostring(cast_spell.targets)..']')
+			log('['..tostring(cast_spell.targets)..']')
+			-- Self Target spells
 			if cast_spell.targets == '{Self}' then
 				if spell.target.type ~= 'SELF' then
 					-- Change Target Spell
 					log('Redirect Spell:[SELF TARGET]')
 					change_target('<me>')
 				end
-				--log('[SELF TARGET]')
+			-- Enemy Spells
 			elseif tostring(cast_spell.targets) == '{Enemy}' then
-				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') then
-					-- Cancel Spell
-					--log('Cancel Spell:[ENEMY TARGET]')
-					--cancel_spell()
-					--return
+				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
+					--Cancel Spell
+					log('Cancel Spell:[ENEMY TARGET]')
+					cancel_spell()
+					return
 				end
-				--log('[MONSTER TARGET]')
+			-- Party Buffs
 			elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 				if spell.target.type == 'MONSTER' then
-					-- Cancel Spell
-					log('Cancel Spell:[PARTY TARGET]')
-					cancel_spell()
-					return
-				end
-				--log('[PARTY TARGET]')
-			end
-		end
-
-	end
-	-- Change targets based off song
-	if spell.type == 'BardSong' then
-		-- casting a buff song while engaged
-		if spell.target.type == 'MONSTER' then
-			if EnfeebleSong:contains(spell.english) or SleepSongs:contains(spell.english) then
-				-- spell for enemey with enemy selected
-			else
-				if buffactive['pianissimo'] then
-					--log('Piassimo Redirect - Select Character')
-					cancel_spell()
-					windower.send_command('input /ma \"'..spell.name..'\" <stpc>')
-					is_Pianissimo = true
-					return
-				else
-					change_target('<me>')
-				end
-			end
-		else
-			if spell.target.type ==  null then
-				if EnfeebleSong:contains(spell.english) or SleepSongs:contains(spell.english) then
-					--No target selected and should be for enemy
-					cancel_spell()
-					info('No Enemy Selected')
-				else
-					if buffactive['pianissimo'] then
-						if is_Pianissimo == false then
-							cancel_spell()
-							--log('Piassimo Redirect - Select Character')
-							send_command('input /ma "'..spell.name..'" <stpc>')
-							is_Pianissimo = true
+					if spell.type == 'BardSong' then
+						if buffactive['pianissimo'] then
+							if is_Pianissimo == false then
+								cancel_spell()
+								--log('Piassimo Redirect - Select Character')
+								send_command('input /ma "'..spell.name..'" <stpc>')
+								is_Pianissimo = true
+							else
+								is_Pianissimo = false
+							end
 						else
-							is_Pianissimo = false
+							change_target('<me>')
+							log('Redirect Spell:[SELF TARGET]')
 						end
 					else
-						change_target('<me>')
+						-- Cancel Spell
+						log('Cancel Spell:[PARTY TARGET]')
+						cancel_spell()
+						return
+					end
+				else
+					if spell.type == 'BardSong' and spell.target.type == 'SELF' and buffactive['Pianissimo'] then
+						log('Pianissimo Redirect - Select Character')
+						cancel_spell()
+						windower.send_command('input /ma \"'..spell.name..'\" <stpc>')
+						return
 					end
 				end
 			end
@@ -434,6 +463,18 @@ function precastequip(spell)
 			info( '['..spell.english..'] Set')
 		else
 			info('Roll not set')
+		end
+	-- CorsairShot
+	elseif spell.type == 'CorsairShot' then
+		equipSet = sets.Precast.RA
+		if buffactive[265] then
+			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
+			--info('Ranged Attack with Flurry')
+		elseif buffactive[581] then
+			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
+			--info('Ranged Attack with Flurry II')
+		else
+			--info('Ranged Attack with no Flurry')
 		end
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
@@ -749,6 +790,15 @@ function midcastequip(spell)
 		else
 			info('Midcast not set')
 		end
+	-- CorsairShot
+	elseif spell.type == 'CorsairShot' then
+		equipSet = sets.Midcast.QuickDraw
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info( '['..spell.english..'] Set')
+		else
+			info('Quick Draw not set')
+		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Midcast
@@ -838,7 +888,7 @@ function pretarget(spell,action)
 			else 
 				-- Action timed out
 				local cast_spell = res.spells:with('name', spell.name)
-				local spell_cast_time = cast_spell.cast_time *.2 + 3.1
+				local spell_cast_time = cast_spell.cast_time *.2 + 2.1
 				is_Busy = false
 				Spellstart = os.time()
 				--log('Player action timed out')
@@ -938,6 +988,7 @@ end
 
 function buff_change(name,gain)
 	equipSet = {}
+
 	if is_Busy == false then
 		--calls the include file and custom on a buff change
 		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
@@ -1182,7 +1233,7 @@ function check_buff()
 
 		--local abil_recasts_table = windower.ffxi.get_ability_recasts()
 		--ability_time = abil_recasts_table[173] -- Blood Pact is 173
-		--debug_value_1 = ability_time
+		--debug_value = ability_time
 
 		-- Execute the Commands
 		if buffactive["Astral Conduit"] then
@@ -1205,8 +1256,8 @@ function check_buff()
 					local abil_recasts_table = windower.ffxi.get_ability_recasts()
 					ability_time = abil_recasts_table[173] -- Blood Pact is 173
 
-					debug_value_1 = ability_time
-					info("BP Time ["..debug_value_1..']')
+					debug_value = ability_time
+					info("BP Time ["..debug_value..']')
 					if ability_time == 0 then
 						info("BP Execute")
 						in_Que = true
@@ -1328,66 +1379,22 @@ end
 function self_command(command)
 	-- Updates the TH status
 	command = command:lower()
-
 	if command == 'update auto' then
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
 	elseif command == "th" then
-		if 	state.TreasureMode.value == 'Tag' then
-		    state.TreasureMode:set('None')
-			unlock_TH()
-			equip(set_combine(choose_set(),choose_set_custom()))
-		else
-			state.TreasureMode:set('Tag')
-			if player.status == "Engaged" then
-				TH_for_first_hit()
-			end
-		end
+		state.TreasureMode:cycle()
 		info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 	-- Toggles the Auto Buff function off/on
 	elseif command == "autobuff" then
-		if state.AutoBuff.value == 'ON' then
-			state.AutoBuff:set('OFF')
-		else
-			state.AutoBuff:set('ON')
-		end
+		state.AutoBuff:cycle()
 		info('Auto Buff is ['..state.AutoBuff.value..']')
 	-- Toggles the Auto Burst function off/on
 	elseif command == "autoburst" then
-		if state.BurstMode.value == 'Tier 6' then
-			state.BurstMode.value = 'OFF'
-		elseif state.BurstMode.value == 'OFF' then
-			state.BurstMode.value = 'Tier 1'
-		elseif state.BurstMode.value == 'Tier 1' then
-			state.BurstMode.value = 'Tier 2'
-		elseif state.BurstMode.value == 'Tier 2' then
-			state.BurstMode.value = 'Tier 3'
-		elseif state.BurstMode.value == 'Tier 3' then
-			state.BurstMode.value = 'Tier 4'
-		elseif state.BurstMode.value == 'Tier 4' then
-			state.BurstMode.value = 'Tier 5'
-		elseif state.BurstMode.value == 'Tier 5' then
-			if player.main_job == 'BLM' then
-				state.BurstMode.value = 'Tier 6'
-			else
-				state.BurstMode.value = 'OFF'
-			end
-		end
+		state.BurstMode:cycle()
 		info('Auto Burst is ['..state.BurstMode.value..']')
 	elseif command == 'skillchain_burst' then
-		if state.BurstMode.value == 'Tier 1' then
-			send_command('BT cast spell 1')
-		elseif state.BurstMode.value == 'Tier 2' then
-			send_command('BT cast spell 2')
-		elseif state.BurstMode.value == 'Tier 3' then
-			send_command('BT cast spell 3')
-		elseif state.BurstMode.value == 'Tier 4' then
-			send_command('BT cast spell 4')
-		elseif state.BurstMode.value == 'Tier 5' then
-			send_command('BT cast spell 5')
-		elseif state.BurstMode.value == 'Tier 6' then
-			send_command('BT cast spell 6')
-		end
+		state.BurstMode:cycle()
 	-- Calls the Bard Dummy Song function
 	elseif command == 'songbuff' then
 		dummy_songs()
@@ -1432,60 +1439,27 @@ function self_command(command)
 		escha_temps()
 	-- Warp Ring
 	elseif command == 'warp' then
-		is_Busy = true
-		enable('left_Ring')
-		Item = "Warp Ring"
-		equip({left_ring="Warp Ring"})
-		disable('left_Ring')
-		coroutine.schedule(Use_Item,11)
-		coroutine.schedule(Unlock,20)
+		use_enchantment("Warp Ring")
 	-- Warp Club
 	elseif command == 'warp club' then
-		is_Busy = true
-		enable('main')
-		Item = "Warp Cudgel"
-		equip({main="Warp Cudgel"})
-		disable('main')
-		coroutine.schedule(Use_Item,10)
-		coroutine.schedule(Unlock,18)
+		use_enchantment("Warp Cudgel")
 	-- Holla Teleport
 	elseif command == 'holla' then
-		is_Busy = true
-		enable('left_Ring')
-		Item = "Dim. Ring (Holla)"
-		equip({left_ring="Dim. Ring (Holla)"})
-		disable('left_Ring')
-		coroutine.schedule(Use_Item,10)
-		coroutine.schedule(Unlock,18)
+		use_enchantment("Dim. Ring (Holla)")
 	-- Dem Teleport
 	elseif command == 'dem' then
-		is_Busy = true
-		enable('left_Ring')
-		Item = "Dim. Ring (Dem)"
-		equip({left_ring="Dim. Ring (Dem)"})
-		disable('left_Ring')
-		coroutine.schedule(Use_Item,10)
-		coroutine.schedule(Unlock,18)
+		use_enchantment("Dim. Ring (Dem)")
 	-- Mea Teleport
 	elseif command == 'mea' then
-		is_Busy = true
-		enable('left_Ring')
-		Item = "Dim. Ring (Mea)"
-		equip({left_ring="Dim. Ring (Mea)"})
-		disable('left_Ring')
-		coroutine.schedule(Use_Item,10)
-		coroutine.schedule(Unlock,18)
+		use_enchantment("Dim. Ring (Mea)")
 	-- CP Ring
 	elseif command == 'cp' then
-		enable('left_Ring')
-		equip({left_ring="Trizek Ring"})
-		windower.send_command('wait 1;gs disable left_ring;wait 11;input /item \"Trizek Ring\" <me>;wait 6;gs enable left_ring')
+		use_enchantment("Trizek Ring")
 	-- Locks the weapons and is a custom use for SMN AFAC or want to keep AM3
 	elseif command == "weaponlock" then
 		if state.WeaponLock.value == 'ON' then
 			enable('main')
 			enable('sub')
-			state.WeaponLock.value = 'OFF'
 		else
 			enable('main')
 			enable('sub')
@@ -1494,18 +1468,18 @@ function self_command(command)
 			end
 			disable('main')
 			disable('sub')
-			state.WeaponLock.value = 'ON'
 			equip(set_combine(choose_set(),choose_set_custom()))
 		end
+		state.WeaponLock:cycle()
 		info('Weapon Lock is ['..state.WeaponLock.value..']')
 	elseif command == "charmed" then
-			state.Charmed.value = "ON"
+			state.Charmed.set("ON")
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			info('Charm Set Equiped')
 			equip(sets.Charm)
 			disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	elseif command == "reset" then
-			state.Charmed.value = "OFF"
+			state.Charmed.set("OFF")
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			info('Charm Set Unequiped')
 			equip(set_combine(choose_set(),choose_set_custom()))
@@ -1523,6 +1497,9 @@ function self_command(command)
 				return
 			end
 		end
+	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
+	elseif command:startswith('use') then
+		use_enchantment(command:slice(5))
 	end
 	--use below for custom Job commands
 	self_command_custom(command)
@@ -1614,14 +1591,10 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait .1;input /macro set '..MacroSet..';wait .1;gs c update auto;input /echo Change Complete')
 end
 
--- Lock Style on a Sub job change
-function sub_job_change(new,old)
-	send_command('wait 2;input /lockstyleset '..LockStylePallet..';wait 1;gs c update auto')
-end
-
 -- Check if you have a Grip or shield to determinate if it's a Dual Wield build
 function weaponcheck()
-	if player.sub_job == 'NIN' or player.sub_job == 'THF' or player.sub_job == 'DNC'  or player.main_job == 'THF' or player.main_job == 'NIN' or player.main_job == 'DNC' then -- Dual Wield Jobs
+	current_abilities = windower.ffxi.get_abilities()
+	if table.contains(current_abilities.job_traits,18) then -- Dual Wield trait
 		if player.equipment.sub ~= nil then
 			if player.equipment.sub:contains('Grip') or player.equipment.sub:contains('Shield') then
 				DualWield = false
@@ -1632,6 +1605,30 @@ function weaponcheck()
 	else
 		DualWield = false
 	end
+end
+
+function use_enchantment(item)
+    local item_table = res.items:with('enl',item) or res.items:with('en',item)
+    if item_table == nil or not item_table.targets:contains('Self') then
+        info("Invalid item.")
+        return
+    end
+    is_Busy = true
+    local slot =''
+	if item_table.slots:contains(0) then
+        slot = 'main'
+    else
+        for k,v in pairs(item_table.slots) do
+            if v == true then
+                slot = SlotList[k+1]
+                break
+            end
+        end
+    end
+    enable(slot)
+    equip({[slot]=item_table.en})
+    disable(slot)
+    windower.send_command('wait '..item_table.cast_delay+3 ..';input /item "'..item_table.en..'" <me>;wait '..item_table.cast_time-.5 ..';gs enable '..slot)
 end
 
 --Future Hooks for PT chat or tells
@@ -1924,7 +1921,7 @@ end
 -- Register events to allow us to manage TH application.
 windower.register_event('status change', on_status_change_for_th)
 windower.register_event('target change', on_target_change_for_th)
-windower.raw_register_event('action', on_action_for_th)
+windower.register_event('action', on_action_for_th)
 windower.raw_register_event('incoming chunk', on_incoming_chunk_for_th)
 windower.raw_register_event('zone change', on_zone_change_for_th)
 
@@ -1936,13 +1933,26 @@ windower.raw_register_event('zone change', on_zone_change_for_th)
 
 windower.register_event('gain buff', function(id)
     local name = res.buffs[id].english
-    for key,val in pairs(watch_buffs) do
-        if key:lower() == name:lower() then
-            if name:lower() == 'silence' then
-                send_command('input /item "Remedy" '..windower.ffxi.get_player()["name"])
-            end
-        end
-    end
+		if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
+			if player.inventory['Echo Drops'] ~= nil then
+				windower.send_command('input /item "Echo Drops" <me>')
+			else 
+				info('No Echo Drops in inventory.')
+			end
+		elseif id == 4 then
+			if player.inventory['Remedy'] ~= nil then
+				windower.send_command('input /item "Remedy" <me>')
+			else 
+				info('No Remedies in inventory.')
+			end
+		elseif id == 15 then
+			if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
+				info('DOOOOOOM!!!')
+				windower.send_command('input /item "Holy Water" <me>')
+			else 
+				info('No Holy Waters in inventory. Unable to cure DOOM status!')
+			end
+		end
 end)
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1986,19 +1996,19 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
-windower.raw_register_event('prerender',function()
+windower.register_event('prerender',function()
 	local now = os.clock()
 	if now - AutoBuffTime > .2 then
 		-- check buff refresh rate
 		check_buff()
-		gs_status:text(display_box())
-		gs_debug:text(display_box_Debug())
+		gs_status:text(display_box_update())
+		gs_debug:text(debug_box_update())
 		AutoBuffTime = now
 	end
     mov.counter = mov.counter + 1;
-    if mov.counter > 10 then
+    if mov.counter > 3 then
         local pl = windower.ffxi.get_mob_by_index(player.index)
-        if pl and pl.x and mov.x then
+        if pl and pl.x and mov.x and not buffactive['Mounted'] then
             local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.1
             if movement and not is_moving then
 				if player.status ~= "Engaged" then
@@ -2006,7 +2016,7 @@ windower.raw_register_event('prerender',function()
 					if player.main_job == "NIN" then
 						send_command('gs c movement')
 					else
-						send_command('gs equip Movement')
+						equip(sets.Movement)
 					end
 				end
                 is_moving = true
@@ -2014,9 +2024,9 @@ windower.raw_register_event('prerender',function()
 				if player.status ~= "Engaged" then
 					--send_command('input /echo Stopped Moving! Status: '..player.status..'')
 					if pet.isvalid then
-						send_command('gs equip Idle.Pet')
+						equip(sets.Idle.Pet)
 					else
-						send_command('gs equip Idle')
+						equip(sets.Idle)
 					end
 				end
 				is_moving = false
@@ -2046,11 +2056,6 @@ if data.actor_id == windower.ffxi.get_player().id then
   end
 end
 end)
-
-function Use_Item()
-	is_Busy = false
-	windower.send_command('input /item \"'..Item..'\" <me>')
-end
 
 function Unlock ()
 	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
