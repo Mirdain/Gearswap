@@ -194,6 +194,23 @@ function get_sets()
 		legs="Leth. Fuseau +1",
 		right_ear={ name="Tuisto Earring", priority=1},
 	})
+	sets.Midcast["Stun"] = {
+	    main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Ammurapi Shield",
+		ammo="Pemphredo Tathlum",
+		head="C. Palug Crown",
+		body="Atrophy Tabard +3",
+		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+25','"Mag.Atk.Bns."+25','Accuracy+5 Attack+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
+		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
+		neck={ name="Dls. Torque +2", augments={'Path: A',}},
+		waist="Luminary Sash",
+		left_ear="Malignance Earring",
+		right_ear="Regal Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+	}
 	sets.Midcast.Nuke = {
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub="Ammurapi Shield",
