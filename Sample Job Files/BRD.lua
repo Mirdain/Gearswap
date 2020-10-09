@@ -20,28 +20,6 @@ send_command('bind f9 gs c SongBuff')
 add_to_chat(8,'[F9] - 4 Song Pre-Buff')
 
 function get_sets()
-	-- Standard Idle set with -DT,Refresh,Regen and movement gear
-	sets.Idle = {
-		main={ name="Kali", augments={'MP+60','Mag. Acc.+20','"Refresh"+1',}},
-		sub="Genmei Shield",
-		range="Marsyas",
-		head="Inyanga Tiara +2",
-		body="Inyanga Jubbah +2",
-		hands="Inyan. Dastanas +2",
-		legs="Brioso Cannions +3",
-		feet="Inyan. Crackows +2",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear={ name="Moonshade Earring", augments={'Mag. Acc.+4','Latent effect: "Refresh"+1',}},
-		right_ear="Etiolation Earring",
-		left_ring="Defending Ring",
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-    }
-	--Used to swap into movement gear when the player is detected movement when not engaged
-	sets.Movement = {
-		feet="Fili Cothurnes +1",
-	}
 	-- Instruments to use
 	sets.Song ={}
 	sets.Song.Count = {
@@ -56,27 +34,50 @@ function get_sets()
 	sets.Song.AOE_Sleep = {
 	    range="Daurdabla"
 	}
+	-- Standard Idle set with -DT,Refresh,Regen and movement gear
+	sets.Idle = {
+		main="Carnwenhan",
+		sub="Genmei Shield",
+		range="Marsyas",
+		head="Inyanga Tiara +2",
+		body="Inyanga Jubbah +2",
+		hands="Mousai Gages +1",
+		legs="Brioso Cannions +3",
+		feet="Inyan. Crackows +2",
+		neck={ name="Bard's Charm +2", augments={'Path: A',}},
+		waist="Flume Belt +1",
+		left_ear="Sanare Earring",
+		right_ear="Etiolation Earring",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Moonlight Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+    }
+	--Used to swap into movement gear when the player is detected movement when not engaged
+	sets.Movement = {
+		feet="Fili Cothurnes +1",
+	}
 	sets.Precast = {}
 	-- Used to account for -Song Casting Time vs Fast Cast
 	sets.Precast.Songs = {
-		main={ name="Kali", augments={'MP+60','Mag. Acc.+20','"Refresh"+1',}},
+		main="Carnwenhan",
 		sub="Genmei Shield",
+		range="Marsyas",
 		head="Fili Calot +1",
 		body="Inyanga Jubbah +2",
 		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}},
 		legs="Aya. Cosciales +2",
 		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -7%',}},
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
-		right_ear="Thureous Earring",
-		left_ring="Defending Ring",
-		right_ring="Kishar Ring",
+		neck="Voltsurge Torque",
+		waist="Embla Sash",
+		left_ear="Loquac. Earring",
+		right_ear="Etiolation Earring",
+		left_ring={ name="Moonlight Ring", priority = 1},
+		right_ring={ name="Moonlight Ring", priority = 2},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		main={ name="Carnwenhan", augments={'DMG:+3',}},
 		sub="Genmei Shield",
 		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}},
 		body="Inyanga Jubbah +2",
@@ -95,8 +96,9 @@ function get_sets()
 	sets.Precast.DummySongs = set_combine(sets.Precast.Songs, sets.Song.Count)
 	-- Default song duration / strength
 	sets.Midcast = {
-		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		main="Carnwenhan",
 		sub="Genmei Shield",
+		range="Marsyas",
 		head="Fili Calot +1",
 		body="Fili Hongreline +1",
 		hands="Fili Manchettes +1",
@@ -104,10 +106,10 @@ function get_sets()
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
 		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
-		right_ear="Regal Earring",
-		left_ring="Defending Ring",
-		right_ring="Patricius Ring",
+		left_ear="Regal Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Cure Set
@@ -129,7 +131,23 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
 	-- Base set for duration
-	sets.Midcast.Enhancing = {}
+	sets.Midcast.Enhancing = {
+		main={ name="Carnwenhan", augments={'DMG:+3',}},
+		sub="Ammurapi Shield",
+		range="Marsyas",
+		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
+		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
+		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
+		legs={ name="Telchine Braconi", augments={'Enh. Mag. eff. dur. +10',}},
+		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +9',}},
+		neck="Incanter's Torque",
+		waist="Embla Sash",
+		left_ear="Tuisto Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+	}
 	-- Curaga Set (different rules than cure)
 	sets.Midcast.Curaga = sets.Midcast.Cure
 	-- Cursna Set
@@ -138,7 +156,7 @@ function get_sets()
 	sets.Midcast.Enhancing.Elemental = {}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		main={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+		main={ name="Carnwenhan", augments={'DMG:+3',}},
 		sub="Ammurapi Shield",
 		range="Gjallarhorn",
 		head="Brioso Roundlet +3",
@@ -193,7 +211,7 @@ function get_sets()
 	sets.JA["Pianissimo"] = {}
 	--Base TP set to build off
 	sets.TP = {
-		main="Carnwenhan",
+		main={ name="Carnwenhan", augments={'DMG:+3',}},
 		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 		range="Marsyas",
 		head="Brioso Roundlet +3",
@@ -201,12 +219,12 @@ function get_sets()
 		hands="Brioso Cuffs +3",
 		legs="Brioso Cannions +3",
 		feet="Inyan. Crackows +2",
-		neck="Lissome Necklace",
-		waist="Sarissapho. Belt",
-		left_ear="Brutal Earring",
+		neck={ name="Bard's Charm +2", augments={'Path: A',}},
+		waist="Reiki Yotai",
+		left_ear="Suppanomimi",
 		right_ear="Telos Earring",
 		left_ring="Ilabrat Ring",
-		right_ring="Moonlight Ring",
+		right_ring="Petrov Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
@@ -215,21 +233,7 @@ function get_sets()
 	}
 	--The following sets augment the base TP set
 	sets.TP.DW = {
-	    main="Carnwenhan",
-		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
-		range="Marsyas",
-		head="Brioso Roundlet +3",
-		body="Ayanmo Corazza +2",
-		hands="Brioso Cuffs +3",
-		legs="Brioso Cannions +3",
-		feet="Inyan. Crackows +2",
-		neck="Lissome Necklace",
-		waist="Sarissapho. Belt",
-		left_ear="Brutal Earring",
-		right_ear="Telos Earring",
-		left_ring="Ilabrat Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {
@@ -273,7 +277,6 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
