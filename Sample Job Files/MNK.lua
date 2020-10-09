@@ -34,6 +34,24 @@ function get_sets()
 	sets.Movement = {
 		feet="Hermes' Sandals",
 	}
+	-- Used for Encumbered
+	sets.Encumbrance = {
+		main={ name="Verethragna", augments={'Path: A',}},
+		ammo="Staunch Tathlum +1",
+		head="Ken. Jinpachi +1",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Ken. Sune-Ate +1",
+		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
+		waist="Moonbow Belt +1",
+		left_ear="Sherida Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Niqmaddu Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -112,6 +130,7 @@ function get_sets()
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.TP.ACC = {
+		main={ name="Verethragna", augments={'Path: A',}},
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
@@ -121,6 +140,7 @@ function get_sets()
 	sets.TP.DW = {}
 	--Default WS set base
 	sets.WS = { -- VS Base with Impetus Down
+		main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Knobkierrie",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- Need Aug'd
 		body="Ken. Samue +1",
@@ -160,6 +180,7 @@ function get_sets()
 	}
 	sets.WS["Victory Smite"] = {}
 	sets.WS["Shijin Spiral"] = {
+		main={ name="Verethragna", augments={'Path: A',}},
 		head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
@@ -204,8 +225,8 @@ function get_sets()
 	}
 
 	sets.TreasureHunter = {
-	    head="Wh. Rarab Cap +1",
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
+		feet={ name="Herculean Boots", augments={'Pet: INT+3','"Subtle Blow"+4','"Treasure Hunter"+1','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
 		waist="Chaac Belt",
 	}
 
@@ -249,7 +270,6 @@ end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-
 	equipSet = choose_Impetus()
 
 	if name == "Boost" then
@@ -261,7 +281,6 @@ function buff_change_custom(name,gain)
 			choose_set()
 		end
 	end
-
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
