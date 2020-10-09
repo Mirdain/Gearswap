@@ -18,11 +18,8 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 Ammo_Warning_Limit = 50
 
 function get_sets()
-
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
-	    main={ name="Rostam", augments={'Path: C',}},
-		sub={ name="Rostam", augments={'Path: A',}},
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -50,7 +47,7 @@ function get_sets()
 	-- Magic Accuracy
 	Ammo.Bullet.MACC = "Adlivun Bullet"
 	-- Quick Draw
-	Ammo.Bullet.QD = "Adlivun Bullet"
+	Ammo.Bullet.QD = "Animikii Bullet"
 
 	sets.Precast = {}
 	-- 70 snapshot is Cap.  Need 60 due to 10 from gifts
@@ -62,8 +59,6 @@ function get_sets()
 
 	--No flurry - 60 Snapshot needed
 	sets.Precast.RA = {
-		main={ name="Rostam", augments={'Path: A',}},
-		sub="Nusku Shield",
 		ammo=Ammo.Bullet.RA,
 		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
 		body="Oshosi Vest +1", -- 14/0
@@ -72,13 +67,10 @@ function get_sets()
 		feet="Meg. Jam. +2", -- 10/0
 		waist="Yemaya Belt", -- 0/10
 		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 10/0
-		-- Totals 62/24
-    }
+    } -- Totals 62/24
 
 	-- Flurry - 45 Snapshot Needed
 	sets.Precast.RA.Flurry = {
-		main={ name="Rostam", augments={'Path: A',}},
-		sub="Nusku Shield",
 		ammo=Ammo.Bullet.RA,
 	    head="Chass. Tricorne +1", -- 0/14
 		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
@@ -91,8 +83,6 @@ function get_sets()
 
 	-- Flurry II - 30 Snapshot Needed
 	sets.Precast.RA.Flurry_II = {
-		main={ name="Rostam", augments={'Path: A',}},
-		sub="Nusku Shield",
 		ammo=Ammo.Bullet.RA,
 	    head="Chass. Tricorne +1", -- 0/14
 		body="Laksa. Frac +3", -- 0/20
@@ -130,9 +120,40 @@ function get_sets()
         feet="Osh. Leggings +1", --3
     }) --27
 
-	sets.Midcast["Stoneskin"] = {
-		waist="Siegel Sash",
+	-- Quick Draw Gear Sets
+	sets.QuickDraw = {}
+	sets.QuickDraw.ACC = {
+		ammo = Ammo.Bullet.QD,
+		range="Molybdosis",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
+		waist="Eschan Stone",
+		left_ear="Digni. Earring",
+		right_ear="Gwati Earring",
+		left_ring="Sangoma Ring",
+		right_ring="Regal Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
+	sets.QuickDraw.DMG = {
+		ammo=Ammo.Bullet.MAB,
+	    feet="Chass. Bottes +1",
+	}
+	sets.QuickDraw.STP = {}
+
+	-- Quick Draw 
+	sets.Midcast.QuickDraw = {}
+	sets.Midcast.QuickDraw["Fire Shot"] = {}
+	sets.Midcast.QuickDraw["Ice Shot"] = {}
+	sets.Midcast.QuickDraw["Wind Shot"] = {}
+	sets.Midcast.QuickDraw["Earth Shot"] = {}
+	sets.Midcast.QuickDraw["Thunder Shot"] = {}
+	sets.Midcast.QuickDraw["Water Shot"] = {}
+	sets.Midcast.QuickDraw["Light Shot"] = sets.QuickDraw.ACC
+	sets.Midcast.QuickDraw["Dark Shot"] = sets.QuickDraw.ACC
 
 	-- Job Abilities
 	sets.JA = {}
@@ -140,9 +161,6 @@ function get_sets()
 	    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 	}
 	sets.JA["Phantom Roll"] = {}
-	sets.JA["Quick Draw"] = {
-	    feet="Chass. Bottes +1",
-	}
 	sets.JA["Random Deal"] = {
 	    body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 	}
@@ -193,6 +211,8 @@ function get_sets()
 
 	--Base TP set to build off when melee'n
 	sets.TP = {
+		main={ name="Rostam", augments={'Path: A',}},
+		sub={ name="Rostam", augments={'Path: C',}},
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -209,10 +229,8 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.TP.DT = {
-		main={ name="Rostam", augments={'Path: C',}},
-		sub={ name="Rostam", augments={'Path: A',}},
-		range="Compensator",
-		ammo="Eminent Bullet",
+		main={ name="Rostam", augments={'Path: A',}},
+		sub={ name="Rostam", augments={'Path: C',}},
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -231,8 +249,6 @@ function get_sets()
 	sets.TP.DW = {
 		main="Naegling",
 		sub="Blurred Knife +1",
-		range="Compensator",
-		ammo="Eminent Bullet",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -249,6 +265,8 @@ function get_sets()
 
 	--The following sets augment the base TP set
 	sets.TP.RA = {
+		main={ name="Rostam", augments={'Path: A',}},
+		sub={ name="Rostam", augments={'Path: C',}},
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -276,7 +294,6 @@ function get_sets()
 		ammo=Ammo.Bullet.WS,
 	}
 
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 
 	sets.WS.WSD = {}
@@ -320,12 +337,6 @@ function get_sets()
 	}
 	sets.WS["Requiescat"] = {}
 
-	sets.QuickDraw = {
-		ammo=Ammo.Bullet.MAB
-	}
-	sets.QuickDraw.ACC = {}
-	sets.QuickDraw.DMG = {}
-	sets.QuickDraw.STP = {}
 
 	--Custom sets for each jobsetup
 	sets.Custom = {}
