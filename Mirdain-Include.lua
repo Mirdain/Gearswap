@@ -30,8 +30,6 @@ Enemy_ID = 0
 
 avatar = "None"
 
-range_multiplier = {[2] = 1.55, [3] = 1.490909, [4] = 1.44, [5] = 1.377778, [6] = 1.30, [7] = 1.15, [8] = 1.25, [9] = 1.377778, [10] = 1.45, [11] = 1.454545454545455, [12] = 1.666666666666667,}
-
 is_Busy = false
 in_Que = false
 is_Pianissimo = false
@@ -73,11 +71,6 @@ else
 	state.TreasureMode:set('None')
 end
 
--- Weapon Lock mode handling
-state.WeaponLock = M{['description']='Lock Weapons'}
-state.WeaponLock:options('OFF','ON')
-state.WeaponLock:set('OFF')
-
 -- Charm weapon lock
 state.Charmed = M{['description']='Charmed State'}
 state.Charmed:options('OFF','ON')
@@ -109,7 +102,9 @@ function display_box_update()
 	lines:insert('State' ..string.format('[%s]',state.OffenseMode.value):lpad(' ',14))
 	lines:insert('Auto Buff' ..string.format('[%s]',state.AutoBuff.value):lpad(' ',10))
 	lines:insert('TH Mode' ..string.format('[%s]',state.TreasureMode.value):lpad(' ',12))
+
 	lines:insert('Burst Mode' ..string.format('[%s]',state.BurstMode.value):lpad(' ',9))
+
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
     gs_status:text(lines:concat('\n'))
@@ -234,8 +229,7 @@ function pretargetcheck(spell,action)
 		end											
 	end
 	-- Check that proper ammo is available if we're using ranged attacks or similar.
-    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" 
-		or spell.action_type == 'Ranged Attack' and player.equipment.ranged ~= "" 
+    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" and player.equipment.ranged ~= "" 
 		or spell.type == 'WeaponSkill' 
 		or spell.type == 'CorsairShot' then
         do_bullet_checks(spell, spellMap, eventArgs)
@@ -1099,8 +1093,6 @@ end
 
 function choose_set()
 	equipSet = {}
-	--Update Combat stance (Dual Wield or 2H Weapons)
-	weaponcheck()
 	-- Combat Checks
 	if player.status == "Engaged" then
 		-- Base line TP set
@@ -1230,77 +1222,6 @@ function check_buff()
 				command_JA = "Hasso"
 			end
 		end
-
-		--local abil_recasts_table = windower.ffxi.get_ability_recasts()
-		--ability_time = abil_recasts_table[173] -- Blood Pact is 173
-		--debug_value = ability_time
-
-		-- Execute the Commands
-		if buffactive["Astral Conduit"] then
-			-- No avatar so summon
-			if pet.isvalid == false then
-				command_SP = avatar
-				in_Que = true
-				command_SP_execute()
-			else
-				local pet = windower.ffxi.get_mob_by_target('pet')
-				if pet.status == 0 then
-					-- Pet is Idle - Enage if <bt> present
-					local tempcommand = command_BP
-					command_BP = "Assault"
-					info("Assault")
-					in_Que = true
-					command_BP_execute()
-					command_BP = tempcommand
-				elseif pet.status == 1 then
-					local abil_recasts_table = windower.ffxi.get_ability_recasts()
-					ability_time = abil_recasts_table[173] -- Blood Pact is 173
-
-					debug_value = ability_time
-					info("BP Time ["..debug_value..']')
-					if ability_time == 0 then
-						info("BP Execute")
-						in_Que = true
-						command_BP_execute()
-					end
-				end
-			end
-		elseif command_JA ~= "None" then
-			in_Que = true
-			command_JA_execute()
-		elseif command_SP ~= "None" then
-			in_Que = true
-			command_SP_execute()
-		else 
-			if state.AutoTank.value == 'ON' and windower.ffxi.get_mob_by_id(Enemy_ID).valid_target then
-				local Enemy_Type = windower.ffxi.get_mob_by_id(Enemy_ID).entity_type
-				--log(tostring(windower.ffxi.get_mob_by_id(Enemy_ID).entity_type))
-
-				--PLD Tank
-				if player.main_job == 'PLD' then
-					if abil_recasts[5] == 0 then
-						command_JA = "Provoke"
-					elseif abil_recasts[79] == 0 and player.tp > 1000 and player.mp < 100 then
-						command_JA = "Chivalry"
-					elseif spell_recasts[112] == 0 and player.mp > 25 then
-						command_SP = "Flash"
-					--elseif abil_recasts[73] == 0 then
-						--command_JA = "Shield Bash"
-					end
-				end
-				if command_JA ~= "None" then
-					in_Que = true
-					command_JA_execute()
-				elseif command_SP ~= "None" then
-					in_Que = true
-					command_SP_execute()
-				end
-			else
-				Enemy_ID = 0
-				state.AutoBuff:set('OFF')
-				in_Que = false
-			end
-		end
 	end
 end
 
@@ -1315,10 +1236,10 @@ function do_bullet_checks(spell, spellMap, eventArgs)
         if spell.skill == "Marksmanship" then
             if spell.element == 'None' then
                 -- physical weaponskills
-                bullet_name = ammo.bullet.WS
+                bullet_name = Ammo.Bullet.WS
             else
                 -- magical weaponskills
-                bullet_name = ammo.bullet.MA
+                bullet_name = Ammo.Bullet.MAB
             end
         else
             -- Ignore non-ranged weaponskills
@@ -1326,9 +1247,9 @@ function do_bullet_checks(spell, spellMap, eventArgs)
         end
     elseif spell.type == 'CorsairShot' then
 		-- quick draw
-        bullet_name = ammo.bullet.QD
+        bullet_name = Ammo.Bullet.QD
     elseif spell.action_type == 'Ranged Attack' then
-        bullet_name = ammo.bullet.RA
+        bullet_name = Ammo.Bullet.RA
         if buffactive['Triple Shot'] then
             bullet_min_count = 3
         end
@@ -1339,7 +1260,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
         if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
             add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
             return
-        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == ammo.bullet.RA then
+        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == Ammo.Bullet.RA then
             add_to_chat(104, 'No weaponskill ammo left.  Using what\'s currently equipped (standard ranged bullets: '..player.equipment.ammo..').')
             return
         else
@@ -1349,25 +1270,30 @@ function do_bullet_checks(spell, spellMap, eventArgs)
         end
     end
     -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-    if spell.type ~= 'CorsairShot' and bullet_name == ammo.bullet.QD and available_bullets.count <= bullet_min_count then
+    if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
         add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 		cancel_spell()
 		return
     end
     -- Low ammo warning.
     if spell.type ~= 'CorsairShot' and state.warned.value == false
-        and available_bullets.count > 1 and available_bullets.count <= ammo_warning_limit then
-        local msg = '*****  LOW AMMO WARNING: '..bullet_name..' *****'
+        and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
+        local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' on '..player.name..' *****'
         local border = ""
         for i = 1, #msg do
             border = border .. "*"
         end
+
+		send_command('send @others input /echo '..msg..'')
+		
         add_to_chat(167, border)
         add_to_chat(167, msg)
         add_to_chat(167, border)
-		add_to_chat(167, '      Ammo Count ('..tostring(bullet_name)..') is ('..tostring(available_bullets.count)..').')
+
+		--send_command('input /p <call10>')
+
         state.warned:set()
-    elseif available_bullets.count > ammo_warning_limit and state.warned then
+    elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
         state.warned:reset()
     end
 end
@@ -1394,10 +1320,19 @@ function self_command(command)
 		state.BurstMode:cycle()
 		info('Auto Burst is ['..state.BurstMode.value..']')
 	elseif command == 'skillchain_burst' then
-		state.BurstMode:cycle()
-	-- Calls the Bard Dummy Song function
-	elseif command == 'songbuff' then
-		dummy_songs()
+		if state.BurstMode.value == 'Tier 1' then
+			send_command('BT cast spell 1')
+		elseif state.BurstMode.value == 'Tier 2' then
+			send_command('BT cast spell 2')
+		elseif state.BurstMode.value == 'Tier 3' then
+			send_command('BT cast spell 3')
+		elseif state.BurstMode.value == 'Tier 4' then
+			send_command('BT cast spell 4')
+		elseif state.BurstMode.value == 'Tier 5' then
+			send_command('BT cast spell 5')
+		elseif state.BurstMode.value == 'Tier 6' then
+			send_command('BT cast spell 6')
+		end
 	-- Shuts down instnace
 	elseif command == 'shutdown' then
 		send_command('terminate')
@@ -1455,23 +1390,6 @@ function self_command(command)
 	-- CP Ring
 	elseif command == 'cp' then
 		use_enchantment("Trizek Ring")
-	-- Locks the weapons and is a custom use for SMN AFAC or want to keep AM3
-	elseif command == "weaponlock" then
-		if state.WeaponLock.value == 'ON' then
-			enable('main')
-			enable('sub')
-		else
-			enable('main')
-			enable('sub')
-			if player.main_job == 'SMN' then
-				equip({main="Nirvana"},{sub="Elan Strap +1"})
-			end
-			disable('main')
-			disable('sub')
-			equip(set_combine(choose_set(),choose_set_custom()))
-		end
-		state.WeaponLock:cycle()
-		info('Weapon Lock is ['..state.WeaponLock.value..']')
 	elseif command == "charmed" then
 			state.Charmed.set("ON")
 			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
@@ -1546,11 +1464,6 @@ function reset_action()
 	is_Busy = false
 	Spellstart = os.time()
 end
--- Function to prebuff Dummy Songs
-function dummy_songs()
-	info('Song Buff Begin')
-	send_command("input /ma \"Army's Paeon IV\" <me>;wait 5.5;input /ma \"Army's Paeon III\" <me>;wait 5.5;input /ma \"Army's Paeon II\" <me>;wait 5.5;input /ma \"Army's Paeon\" <me>")
-end
 
 -- Used for Escha Temp and Zerg
 function escha_temps()
@@ -1584,27 +1497,6 @@ function equip_song_gear(spell)
 		if string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente end
 	end
 	return equipSet
-end
-
--- Command to Lock Style and Set the correct macros
-function jobsetup(LockStylePallet,MacroBook,MacroSet)
-	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait .1;input /macro set '..MacroSet..';wait .1;gs c update auto;input /echo Change Complete')
-end
-
--- Check if you have a Grip or shield to determinate if it's a Dual Wield build
-function weaponcheck()
-	current_abilities = windower.ffxi.get_abilities()
-	if table.contains(current_abilities.job_traits,18) then -- Dual Wield trait
-		if player.equipment.sub ~= nil then
-			if player.equipment.sub:contains('Grip') or player.equipment.sub:contains('Shield') then
-				DualWield = false
-			else
-				DualWield = true
-			end
-		end
-	else
-		DualWield = false
-	end
 end
 
 function use_enchantment(item)
@@ -1665,10 +1557,34 @@ send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
 send_command('bind f9 gs c Custom')
 
+function job_change_update()
+	--Update Combat stance (Dual Wield or 2H Weapons)
+	weaponcheck()
+	equip(set_combine(choose_set(),choose_set_custom()))
+end
+
+-- Command to Lock Style and Set the correct macros
+function jobsetup(LockStylePallet,MacroBook,MacroSet)
+	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
+	coroutine.schedule(job_change_update,1)
+end
+
 -- Called when the player's subjob changes.
 function sub_job_change(new, old)
 	send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
+	coroutine.schedule(job_change_update,1) 
 end
+
+-- Check if you have a Grip or shield to determinate if it's a Dual Wield build
+function weaponcheck()
+	current_abilities = windower.ffxi.get_abilities()
+	if table.contains(current_abilities.job_traits,18) then -- Dual Wield trait
+		DualWield = true
+	else
+		DualWield = false
+	end
+end
+
 
 -------------------------------------------------------------------------------------------------------------------
 -- BELOW IS FROM MOTE TREASURE HUNTER TRACKER
@@ -2012,24 +1928,16 @@ windower.register_event('prerender',function()
             local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.1
             if movement and not is_moving then
 				if player.status ~= "Engaged" then
+					is_moving = true
 					--send_command('input /echo Moving! Status: '..player.status..'')
-					if player.main_job == "NIN" then
-						send_command('gs c movement')
-					else
-						equip(sets.Movement)
-					end
+					equip(set_combine(choose_set(),choose_set_custom()))
 				end
-                is_moving = true
             elseif not movement and is_moving then
 				if player.status ~= "Engaged" then
+					is_moving = false
 					--send_command('input /echo Stopped Moving! Status: '..player.status..'')
-					if pet.isvalid then
-						equip(sets.Idle.Pet)
-					else
-						equip(sets.Idle)
-					end
+					equip(set_combine(choose_set(),choose_set_custom()))
 				end
-				is_moving = false
             end
         end
         if pl and pl.x then
