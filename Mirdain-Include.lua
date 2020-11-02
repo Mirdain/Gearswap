@@ -26,12 +26,14 @@ command_JA = "None"
 command_SP = "None"
 command_BP = "None"
 
+UI_Name = ''
+UI_State = ''
+
 Enemy_ID = 0
 
 avatar = "None"
 
 is_Busy = false
-in_Que = false
 is_Pianissimo = false
 is_moving = false
 Time_Out = false
@@ -41,27 +43,20 @@ debug_value = 0
 
 state = state or {}
 
+-- Required gear set.  Expand this in the job file when defining sets.
+sets.TreasureHunter = {}
+
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
-state.OffenseMode:options('Normal','ACC','DT')
-state.OffenseMode:set('Normal')
-
---Modes for Bursting
-state.BurstMode = M{['description']='Burst Mode'}
-state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6')
-state.BurstMode:set('OFF')
+state.OffenseMode:options('TP','ACC','DT')
+state.OffenseMode:set('TP')
 
 --Modes for Auto Buff
 state.AutoBuff = M{['description']='Auto Buff Mode'}
 state.AutoBuff:options('OFF','ON')
 state.AutoBuff:set('OFF')
 
---Modes for Blue Mage Cleave
-state.CleaveMode = M{['description']='Cleave Mode'}
-state.CleaveMode:options('OFF','ON')
-state.CleaveMode:set('OFF')
-
--- TH mode handling
+--TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
 if player.main_job == "THF" then
 	state.TreasureMode:options('None','Tag','Fulltime','SATA')
@@ -71,15 +66,11 @@ else
 	state.TreasureMode:set('None')
 end
 
--- Charm weapon lock
-state.Charmed = M{['description']='Charmed State'}
-state.Charmed:options('OFF','ON')
-state.Charmed:set('OFF')
-
---Modes for Auto Tanking
-state.AutoTank = M{['description']='Auto Tank Mode'}
-state.AutoTank:options('OFF','ON')
-state.AutoTank:set('OFF')
+--Job specific modes
+state.JobMode = {}
+state.JobMode = M{['description']='Job Specific Mode'}
+state.JobMode:options('OFF','ON')
+state.JobMode:set('OFF')
 
 --State for Ammunition check
 state.warned = M(false)
@@ -100,11 +91,11 @@ gs_status = texts.new("",settings.Display_Box)
 function display_box_update()
 	lines = T{}
 	lines:insert('State' ..string.format('[%s]',state.OffenseMode.value):lpad(' ',14))
-	lines:insert('Auto Buff' ..string.format('[%s]',state.AutoBuff.value):lpad(' ',10))
 	lines:insert('TH Mode' ..string.format('[%s]',state.TreasureMode.value):lpad(' ',12))
-
-	lines:insert('Burst Mode' ..string.format('[%s]',state.BurstMode.value):lpad(' ',9))
-
+	lines:insert('Auto Buff' ..string.format('[%s]',state.AutoBuff.value):lpad(' ',10))
+	if UI_Name ~= '' then
+		lines:insert(UI_Name ..string.format('[%s]',state.JobMode.value):lpad(' ',19-string.len(UI_Name)))
+	end
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
     gs_status:text(lines:concat('\n'))
@@ -116,9 +107,11 @@ gs_debug = texts.new("",settings.Debug_Box)
 -- Used to help debug issues
 function debug_box_update()
 	lines = T{}
-	lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',10))
-	lines:insert('in_Que' ..string.format('[%s]',tostring(in_Que)):lpad(' ',11))
-	lines:insert('debug_value' ..string.format('[%s]',tostring(debug_value)):lpad(' ',6))
+
+	lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',12))
+	lines:insert('is_Moving' ..string.format('[%s]',tostring(is_moving)):lpad(' ',10))
+	lines:insert('DualWield' ..string.format('[%s]',tostring(DualWield)):lpad(' ',10))
+	lines:insert('debug_value' ..string.format('[%s]',tostring(debug_value)):lpad(' ',8))
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
     gs_debug:text(lines:concat('\n'))
@@ -143,11 +136,6 @@ function info (msg)
 		windower.add_to_chat(8,''..msg..'')
 	end
 end
-
---Notify current states
-info('[F12] - Melee Mode is ['..state.OffenseMode.value..']')
-info('[F11] - Treasure Hunter Mode is ['..state.TreasureMode.value..']')
-info('[F10] - Auto Buff is ['..state.AutoBuff.value..']')
 
 watch_buffs = S{"light arts","addendum: white","penury","celerity","accession","perpetuance","rapture",
 "dark arts","addendum: black","parsimony","alacrity","manifestation","ebullience","immanence",
@@ -196,13 +184,7 @@ areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Por
 	"Mhaura","Rabao","Norg","Kazham","Eastern Adoulin","Western Adoulin","Celennia Memorial Library","Mog Garden","Leafallia"
 }
 
--- For th_action_check():
--- JA IDs for actions that always have TH: Provoke, Animated Flourish
-TH_default_ja_ids = S{35, 204}
--- Unblinkable JA IDs for actions that always have TH: Quick/Box/Stutter Step, Desperate/Violent Flourish
-TH_default_u_ja_ids = S{201, 202, 203, 205, 207}
--- Spells Defined to use TH on
-TH_default_ma_ids = S{}
+TaggingCategories = S{1,2,3,4,6,11,14} -- For TH handling, which event IDs to register for tagging
 
 -------------------------------------------------------------------------------------------------------------------
 -- This function is called from the default GearSwap Function "pretarget" to validate the user action
@@ -228,12 +210,6 @@ function pretargetcheck(spell,action)
 			log('Cancel Spell - Using Items')
 		end											
 	end
-	-- Check that proper ammo is available if we're using ranged attacks or similar.
-    if	spell.action_type == 'Ranged Attack' and player.equipment.ammo ~= "" and player.equipment.ranged ~= "" 
-		or spell.type == 'WeaponSkill' 
-		or spell.type == 'CorsairShot' then
-        do_bullet_checks(spell, spellMap, eventArgs)
-    end
 	--Weapon Skill checks
 	if spell.type == 'WeaponSkill' then
 		local ws_used = res.weapon_skills:with('en',spell.english)
@@ -247,13 +223,6 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			info('Can\'t Weapon Skill due to amnesia.')
 			return
-		--Stop WS to save TP
-		--[[
-		elseif spell.target.distance > (player.target.model_size + ws_used.range * range_multiplier[tonumber(ws_used.range)] - player.model_size/2) then
-			cancel_spell()
-			log('Target out of range')
-			return
-		]]
 		end
 	--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
@@ -416,18 +385,22 @@ function precastequip(spell)
 				info('Using Default WS Set')
 			end
 		end
+		-- Check that proper ammo is available.
+		if spell.skill == "Marksmanship" then
+			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
+				do_bullet_checks(spell, spellMap, eventArgs, equipSet)
+			end
+		end
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
 		if buffactive[265] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
-			--info('Ranged Attack with Flurry')
 		elseif buffactive[581] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
-			--info('Ranged Attack with Flurry II')
-		else
-			--info('Ranged Attack with no Flurry')
 		end
+		-- Check that proper ammo is available.
+		do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast
@@ -460,15 +433,12 @@ function precastequip(spell)
 		end
 	-- CorsairShot
 	elseif spell.type == 'CorsairShot' then
-		equipSet = sets.Precast.RA
-		if buffactive[265] then
-			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
-			--info('Ranged Attack with Flurry')
-		elseif buffactive[581] then
-			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
-			--info('Ranged Attack with Flurry II')
+		equipSet = sets.Midcast.QuickDraw
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info( '['..spell.english..'] Set')
 		else
-			--info('Ranged Attack with no Flurry')
+			info('Quick Draw not set')
 		end
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
@@ -563,9 +533,9 @@ function precastequip(spell)
 			equipSet = sets.Precast.FastCast
 		end
 	end
-	-- If TH mode is on check if new mob and then equip TH gear
-	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' then
-		TH_for_first_hit()
+	-- If TH mode is on - check if new mob and then equip TH gear
+	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
+		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
@@ -578,12 +548,12 @@ end
 function midcastequip(spell)
 	--Default gearset
 	equipSet = {}
-	-- WeaponSkill
-	if spell.type == 'WeaponSkill' then
-		--Do nothing as these are all done precast
-	-- Ranged attack
-	elseif spell.action_type == 'Ranged Attack' then
+	if spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Midcast.RA
+		if state.OffenseMode.value == 'ACC' then
+			--Augments the set built for ACC
+			equipSet = set_combine(equipSet, sets.Midcast.RA.ACC)
+		end
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
 		end
@@ -731,7 +701,7 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 		else
 			-- If Auto Burst mode is turned on it will use the equip set for Bursting
-			if state.BurstMode.value ~= 'OFF' then
+			if state.JobMode.value ~= 'OFF' then
 				info('Burst Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
 			else
@@ -784,15 +754,6 @@ function midcastequip(spell)
 		else
 			info('Midcast not set')
 		end
-	-- CorsairShot
-	elseif spell.type == 'CorsairShot' then
-		equipSet = sets.Midcast.QuickDraw
-		if equipSet[spell.english] then
-			equipSet = set_combine(equipSet, equipSet[spell.english])
-			info( '['..spell.english..'] Set')
-		else
-			info('Quick Draw not set')
-		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Midcast
@@ -843,6 +804,10 @@ function midcastequip(spell)
 		send_command('cancel 71;')
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		send_command('wait 1;cancel 66;')
+	end
+	-- If TH mode is on - check if new mob and then equip TH gear
+	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
+		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
 	-- Built equipset to return
 	return equipSet
@@ -962,19 +927,8 @@ function aftercast(spell)
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- action is complete - release player
-	-- Check if Need to prep for first hit
-	if player.status == "Engaged" and state.TreasureMode.value ~= 'None' then
-		TH_for_first_hit()
-	end
-	--action is compete release player unless its a BP
-	if RecastTimers:contains(spell.type) then
-		coroutine.schedule(reset_action,2.1)
-	else
-		coroutine.schedule(reset_action,.1)
-	end
+	coroutine.schedule(reset_action,.1)
 end
-
-
 
 -------------------------------------------------------------------------------------------------------------------
 -- This function is called by gearswap for any buff changes
@@ -982,7 +936,6 @@ end
 
 function buff_change(name,gain)
 	equipSet = {}
-
 	if is_Busy == false then
 		--calls the include file and custom on a buff change
 		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
@@ -1080,11 +1033,7 @@ function pet_aftercast(spell)
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
 	equip(equipSet)
 	--action is compete release player unless its a BP
-	if RecastTimers:contains(spell.type) then
-		coroutine.schedule(reset_action,3.1)
-	else
-		coroutine.schedule(reset_action,1.1)
-	end
+	coroutine.schedule(reset_action,.1)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1096,38 +1045,29 @@ function choose_set()
 	-- Combat Checks
 	if player.status == "Engaged" then
 		-- Base line TP set
-		equipSet = sets.TP
-		if state.OffenseMode.value == 'Normal' then
-			-- Equip the DW specific gear
-			if DualWield == true then
-				equipSet = set_combine(equipSet, sets.TP.DW)
-			end
-		elseif state.OffenseMode.value == 'ACC' then
-			-- Equip the DW specific gear with ACC
-			if DualWield == true then
-				equipSet = set_combine(equipSet, sets.TP.DW, sets.TP.ACC)
-			else
-				equipSet = set_combine(equipSet, sets.TP.ACC)
-			end
-		-- Augment the base TP with DT set -  Priority is DT over DW
-		elseif state.OffenseMode.value == 'DT' then
-			if DualWield == true then
-				equipSet = set_combine(equipSet, sets.TP.DW, sets.TP.DT)
-			else
-				equipSet = set_combine(equipSet, sets.TP.DT)
+		if DualWield == true then
+			equipSet = set_combine(equipSet,sets.OffenseMode[state.OffenseMode.value],sets.DualWield)
+		else
+			equipSet = set_combine(equipSet,sets.OffenseMode[state.OffenseMode.value])
+		end
+		-- Check if TreasureMode is active
+		if state.TreasureMode.value ~= 'None' then
+			-- Equip TH gear if mob is not marked as tagged
+			if not th_info.tagged_mobs[player.target.id] then
+				equipSet = set_combine(equipSet, sets.TreasureHunter)
+			-- Equip TH gear if TreasureMode is Fulltime
+			elseif state.TreasureMode.value == 'Fulltime' then
+				equipSet = set_combine(equipSet, sets.TreasureHunter)
+			-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
+			elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
+				equipSet = set_combine(equipSet, sets.TreasureHunter)
 			end
 		end
 	-- Idle sets
 	else
 		equipSet = sets.Idle
-		if state.OffenseMode.value == 'DT' then
-			equipSet = set_combine(equipSet, sets.DT)
-		end
-		-- Special Cleave idle set
-		if state.CleaveMode.value == 'ON' then
-			equipSet = set_combine(equipSet, sets.Custom.Cleave_Idle)
-		end
 	end
+
 	--Pet specific checks
 	if pet.isvalid then
 		--Augment built set for Perp cost
@@ -1146,114 +1086,49 @@ end
 
 function check_buff()
 	-- Auto Buff is on and not in a town
-	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) then
-		command_JA = "None"
-		command_SP = "None"
-		command_JA = "None"
-		-- Gets players recast times
-		local abil_recasts = windower.ffxi.get_ability_recasts()
-		local spell_recasts = windower.ffxi.get_spell_recasts()
-		--Main MNK buffs
-		if player.main_job == 'MNK' then
-			if player.hpp < 51 and abil_recasts[15] == 0 then
-				command_JA = "Chakra"
-			elseif not buffactive.Impetus and abil_recasts[31] == 0 then
-				command_JA = "Impetus"
-			elseif not buffactive.Footwork and abil_recasts[21] == 0 then
-				command_JA = "Footwork"
-			elseif not buffactive.Mantra and abil_recasts[19] == 0 then
-				command_JA = "Mantra"
-			elseif not buffactive.Dodge and abil_recasts[14] == 0 then
-				command_JA = "Dodge"
-			elseif not buffactive.Focus and abil_recasts[13] == 0 then
-				command_JA = "Focus"
-			end
+	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
+
+		command_JA = check_buff_JA()
+		command_SP = 'None'
+		if not is_moving then
+			command_SP = check_buff_SP()
 		end
-		--PLD Main buffs
-		if player.main_job == 'PLD' then
-			if not buffactive['Majesty'] and abil_recasts[150] == 0 then
-				command_JA = "Majesty"
-			elseif not buffactive['Enmity Boost'] and spell_recasts[476] == 0 and player.mp > 100 then
-				command_SP = "Crusade"
-			elseif not buffactive['Phalanx'] and spell_recasts[106] == 0 and player.mp > 100 then
-				command_SP = "Phalanx"
-			elseif not buffactive['Reprisal'] and spell_recasts[97] == 0 and player.mp > 100 then
-				command_SP = "Reprisal"
-			elseif not buffactive['Defender'] and abil_recasts[3] == 0 then
-				command_JA = "Defender"
-			end
-		end
-		--WHM Main buffs
-		if player.main_job == 'WHM' then
-			if not buffactive['Afflatus Solace'] and abil_recasts[29] == 0 then
-				command_JA = "Afflatus Solace"
-			end
-		end
-		--RDM Main buffs
-		if player.main_job == 'RDM' then
-			if not buffactive['Composure'] and abil_recasts[50] == 0 then
-				command_JA = "Composure"
-			end
-		end
-		--SMN Main buffs
+		command_BP = 'None'
 		if player.main_job == 'SMN' then
-			if pet.isvalid and not buffactive["Avatar\'s Favor"] and abil_recasts[176] == 0 then
-				command_JA = "Avatar\'s Favor"
-			end
+			command_BP = check_buff_BP()
 		end
 
-		-- SUB JOBS --
-
-		--Sub WAR buffs
-		if player.sub_job == 'WAR' then
-			if player.main_job == "PLD" then
-				-- Don't use -Def abilities while tanking
-			elseif not buffactive['Berserk'] and abil_recasts[1] == 0 then
-				command_JA = "Berserk"
-			elseif not buffactive['Aggressor'] and abil_recasts[4] == 0 then
-				command_JA = "Aggressor"
-			elseif not buffactive['Warcry'] and abil_recasts[2] == 0 then
-				command_JA = "Warcry"
-			end
-		end
-		--sub SAM buffs
-		if player.sub_job == 'SAM' or player.main_job == 'SAM' then
-			if not buffactive['Hasso'] and not buffactive['Seigan'] and abil_recasts[138] == 0 then
-				command_JA = "Hasso"
-			end
+		if command_JA ~= 'None' then
+			command_JA_execute()
+		elseif command_SP ~= 'None' then
+			command_SP_execute()
+		elseif command_BP ~= 'None' then
+			command_BP_execute()
 		end
 	end
+end
+
+function reset_action()
+	is_Busy = false
+	Spellstart = os.time()
 end
 
 -------------------------------------------------------------------------------------------------------------------
 -- Determine whether we have sufficient ammo for the action being attempted.
 -------------------------------------------------------------------------------------------------------------------
 
-function do_bullet_checks(spell, spellMap, eventArgs)
+function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
     local bullet_name
     local bullet_min_count = 1
-    if spell.type == 'WeaponSkill' then
-        if spell.skill == "Marksmanship" then
-            if spell.element == 'None' then
-                -- physical weaponskills
-                bullet_name = Ammo.Bullet.WS
-            else
-                -- magical weaponskills
-                bullet_name = Ammo.Bullet.MAB
-            end
-        else
-            -- Ignore non-ranged weaponskills
-            return
-        end
-    elseif spell.type == 'CorsairShot' then
-		-- quick draw
-        bullet_name = Ammo.Bullet.QD
-    elseif spell.action_type == 'Ranged Attack' then
-        bullet_name = Ammo.Bullet.RA
+
+	bullet_name = equipSet.ammo
+
+    if spell.action_type == 'Ranged Attack' then
         if buffactive['Triple Shot'] then
             bullet_min_count = 3
         end
     end
+
     local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
     -- If no ammo is available, give appropriate warning and end.
     if not available_bullets then
@@ -1311,26 +1186,23 @@ function self_command(command)
 	elseif command == "th" then
 		state.TreasureMode:cycle()
 		info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
+		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the Auto Buff function off/on
 	elseif command == "autobuff" then
 		state.AutoBuff:cycle()
 		info('Auto Buff is ['..state.AutoBuff.value..']')
-	-- Toggles the Auto Burst function off/on
-	elseif command == "autoburst" then
-		state.BurstMode:cycle()
-		info('Auto Burst is ['..state.BurstMode.value..']')
 	elseif command == 'skillchain_burst' then
-		if state.BurstMode.value == 'Tier 1' then
+		if state.JobMode.value == 'Tier 1' then
 			send_command('BT cast spell 1')
-		elseif state.BurstMode.value == 'Tier 2' then
+		elseif state.JobMode.value == 'Tier 2' then
 			send_command('BT cast spell 2')
-		elseif state.BurstMode.value == 'Tier 3' then
+		elseif state.JobMode.value == 'Tier 3' then
 			send_command('BT cast spell 3')
-		elseif state.BurstMode.value == 'Tier 4' then
+		elseif state.JobMode.value == 'Tier 4' then
 			send_command('BT cast spell 4')
-		elseif state.BurstMode.value == 'Tier 5' then
+		elseif state.JobMode.value == 'Tier 5' then
 			send_command('BT cast spell 5')
-		elseif state.BurstMode.value == 'Tier 6' then
+		elseif state.JobMode.value == 'Tier 6' then
 			send_command('BT cast spell 6')
 		end
 	-- Shuts down instnace
@@ -1415,6 +1287,21 @@ function self_command(command)
 				return
 			end
 		end
+	elseif command == 'jobmode' then
+		for i,v in ipairs(state.JobMode) do
+			if state.JobMode.value == v then
+				if state.JobMode.value ~= state.JobMode[#state.JobMode] then
+					state.JobMode:set(state.JobMode[i+1])
+				else
+					state.JobMode:set(state.JobMode[1])
+				end
+				info('Mode: ['..state.JobMode.value..']')
+				equip(set_combine(choose_set(),choose_set_custom()))
+				return
+			end
+		end
+	elseif command == 'food' then
+	    windower.send_command('input /item "'..Food..'" <me>')
 	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
 	elseif command:startswith('use') then
 		use_enchantment(command:slice(5))
@@ -1457,12 +1344,7 @@ end
 -- Functin used to exectue Blood Pacts
 function command_BP_execute()
 	--log('input /ma "'..command_BP..'" <t>')
-	send_command('input /pet "'..command_BP..'" <t>')
-end
-
-function reset_action()
-	is_Busy = false
-	Spellstart = os.time()
+	send_command('input /pet "'..command_BP..'" <bt>')
 end
 
 -- Used for Escha Temp and Zerg
@@ -1555,24 +1437,19 @@ end
 send_command('bind f12 gs c ModeChange')
 send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
-send_command('bind f9 gs c Custom')
-
-function job_change_update()
-	--Update Combat stance (Dual Wield or 2H Weapons)
-	weaponcheck()
-	equip(set_combine(choose_set(),choose_set_custom()))
-end
+send_command('bind f9 gs c JobMode')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
-	coroutine.schedule(job_change_update,1)
+	coroutine.schedule(weaponcheck,5)
 end
 
 -- Called when the player's subjob changes.
 function sub_job_change(new, old)
 	send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
-	coroutine.schedule(job_change_update,1) 
+	coroutine.schedule(weaponcheck,5)
+	sub_job_change_custom()
 end
 
 -- Check if you have a Grip or shield to determinate if it's a Dual Wield build
@@ -1583,6 +1460,7 @@ function weaponcheck()
 	else
 		DualWield = false
 	end
+	equip(set_combine(choose_set(),choose_set_custom()))
 end
 
 
@@ -1592,116 +1470,17 @@ end
 -- CHANGED TO ALLOW ANY ENMITY GENERATING ACTION EQUIPING THE SET AND TRACK THE MOB
 -------------------------------------------------------------------------------------------------------------------
 
-
--- Check for various actions that we've specified in user code as being used with TH gear.
--- This will only ever be called if TreasureMode is not 'None'.
--- Category and Param are as specified in the action event packet.
--- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
-function th_action_check(category, param)
-    if category == 2 or -- any ranged attack
-        (category == 4 and TH_default_ma_ids:contains(param)) or -- any magic action
-        (category == 3 and param == 30) or -- Aeolian Edge
-        (category == 6 and TH_default_ja_ids:contains(param)) or -- Provoke, Animated Flourish
-        (category == 14 and TH_default_u_ja_ids:contains(param)) -- Quick/Box/Stutter Step, Desperate/Violent Flourish
-        then return true
-    end
-end
-
 -------------------------------------------------------------------------------------------------------------------
 -- Setup vars and events when first running the include.
 -------------------------------------------------------------------------------------------------------------------
 
 -- Ensure base tables are defined
-options = options or {}
 th_info = th_info or {}
-
 
 -- Tracking vars for TH.
 th_info.tagged_mobs = T{}
 th_info.last_player_target_index = 0
 state.th_gear_is_locked = false
-
--- Required gear set.  Expand this in the job file when defining sets.
-sets.TreasureHunter = {}
-
--- Event registration is done at the bottom of this file.
-
--------------------------------------------------------------------------------------------------------------------
--- User-callable functions for TH handling utility.
--------------------------------------------------------------------------------------------------------------------
-
--- Can call to force a status refresh.
--- Also displays the current tagged mob table if in debug mode.
-function th_update(cmdParams, eventArgs)
-    if (cmdParams and cmdParams[1] == 'user') or not cmdParams then
-        TH_for_first_hit()
-    end
-end
-
--------------------------------------------------------------------------------------------------------------------
--- Local functions to support TH handling.
--------------------------------------------------------------------------------------------------------------------
-
--- Set locked TH flag to true, and disable relevant gear slots.
-function lock_TH()
-    state.th_gear_is_locked = true
-    local slots = T{}
-    for slot,item in pairs(sets.TreasureHunter) do
-        slots:append(slot)
-    end
-    disable(slots)
-end
-
--- Set locked TH flag to false, and enable relevant gear slots.
-function unlock_TH()
-	if state.TreasureMode.value ~= 'None'then
-		state.th_gear_is_locked = false
-		local slots = T{}
-		for slot,item in pairs(sets.TreasureHunter) do
-			slots:append(slot)
-		end
-		if state.Charmed.value == "OFF" then
-			enable(slots)
-		end
-		send_command('gs c update auto')
-	end
-end
-
--- For any active TH mode, if we haven't already tagged this target, equip TH gear and lock slots until we manage to hit it.
-function TH_for_first_hit()
-    if state.TreasureMode.value ~= 'None' then
-        if not th_info.tagged_mobs[player.target.id] then
-            equip(sets.TreasureHunter)
-            lock_TH()
-        elseif state.th_gear_is_locked then
-            unlock_TH()
-        else
-			-- Waiting for a Hit
-        end
-    elseif state.TreasureMode.value == 'None' and state.th_gear_is_locked then
-        unlock_TH()
-    end
-end
-
--------------------------------------------------------------------------------------------------------------------
--- Event handlers to allow tracking TH application.
--------------------------------------------------------------------------------------------------------------------
-
--- On engaging a mob, attempt to add TH gear.  For any other status change, unlock TH gear slots.
-function on_status_change_for_th(new_status_id, old_status_id)
-    if gearswap.gearswap_disabled or T{2,3,4}:contains(old_status_id) or T{2,3,4}:contains(new_status_id) then return end
-    
-    local new_status = gearswap.res.statuses[new_status_id].english
-    local old_status = gearswap.res.statuses[old_status_id].english
-
-    if new_status == 'Engaged' then
-        th_info.last_player_target_index = player.target.index
-        TH_for_first_hit()
-    elseif old_status == 'Engaged' then
-        th_info.last_player_target_index = 0
-        unlock_TH()
-    end
-end
 
 -- On changing targets, attempt to add TH gear.
 function on_target_change_for_th(new_index, old_index)
@@ -1712,7 +1491,7 @@ function on_target_change_for_th(new_index, old_index)
         -- If it's different than the last known mob, then we've actually changed targets.
         if player.target.index == new_index and new_index ~= th_info.last_player_target_index then
             th_info.last_player_target_index = player.target.index
-            TH_for_first_hit()
+            equip(set_combine(choose_set(),choose_set_custom()))
         end
     end
 end
@@ -1721,43 +1500,26 @@ end
 function on_action_for_th(action)
     --add_to_chat(123,'cat='..action.category..',param='..action.param)
     -- If player takes action, adjust TH tagging information
-    if state.TreasureMode.value ~= 'None' then
-        if action.actor_id == player.id then
-            -- category == 1=melee, 2=ranged, 3=weaponskill, 4=spell, 6=job ability, 14=unblinkable JA
-            if state.TreasureMode.value == 'Fulltime' or
-               (state.TreasureMode.value == 'SATA' and (action.category == 1 or ((state.Buff['Sneak Attack'] or state.Buff['Trick Attack']) and action.category == 3))) or
-               (state.TreasureMode.value == 'Tag' and action.category == 1 and state.th_gear_is_locked) or -- Tagging with a melee hit
-               (th_action_check and th_action_check(action.category, action.param)) -- Any user-specified tagging actions
-               then
-                for index,target in pairs(action.targets) do
-                    if not th_info.tagged_mobs[target.id] and settings.debug then
-                        add_to_chat(123,'Mob '..target.id..' hit. Adding to tagged mobs table.')
-                    end
-                    th_info.tagged_mobs[target.id] = os.time()
-                end
-    
-                if state.th_gear_is_locked then
-                    unlock_TH()
-                end
-            end
-        elseif th_info.tagged_mobs[action.actor_id] then
-            -- If mob acts, keep an update of last action time for TH bookkeeping
-            th_info.tagged_mobs[action.actor_id] = os.time()
-        else
-            -- If anyone else acts, check if any of the targets are our tagged mobs
-            for index,target in pairs(action.targets) do
-                if th_info.tagged_mobs[target.id] then
-                    th_info.tagged_mobs[target.id] = os.time()
-                end
-            end
-        end
-    end
-    cleanup_tagged_mobs()
+	if state.TreasureMode.value ~= 'None' then
+		if action.actor_id == player.id and windower.ffxi.get_mob_by_id(action.targets[1].id).is_npc and TaggingCategories:contains(action.category) then
+			if not th_info.tagged_mobs[action.targets[1].id] and settings.debug then
+				add_to_chat(123,'Mob '..action.targets[1].id..' hit. Adding to tagged mobs table.')
+			end
+			th_info.tagged_mobs[action.targets[1].id] = os.time()
+			if state.TreasureMode.value ~= 'Fulltime' then
+				equip(set_combine(choose_set(),choose_set_custom()))
+			end
+		elseif th_info.tagged_mobs[action.actor_id] then
+			th_info.tagged_mobs[action.actor_id] = os.time()
+		else
+			if th_info.tagged_mobs[action.targets[1].id] then
+				th_info.tagged_mobs[action.targets[1].id] = os.time()
+			end
+		end
+	end
+	cleanup_tagged_mobs()
 end
 
--- Need to use this event handler to listen for deaths in case Battlemod is loaded,
--- because Battlemod blocks the 'action message' event.
---
 -- This function removes mobs from our tracking table when they die.
 function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
     if id == 0x29 then
@@ -1780,27 +1542,6 @@ end
 function on_zone_change_for_th(new_zone, old_zone)
     if settings.debug then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
     th_info.tagged_mobs:clear()
-end
-
--- Save the existing function, if it exists, and call it after our own handling.
-if job_state_change then
-    job_state_change_via_th = job_state_change
-end
-
--- Called if we change any user state fields.
-function job_state_change(stateField, newValue, oldValue)
-    if stateField == 'Treasure Mode' then
-        if newValue == 'None' and state.th_gear_is_locked then
-            if settings.debug then add_to_chat(123,'TH Mode set to None. Unlocking gear.') end
-            unlock_TH()
-        elseif oldValue == 'None' then
-            TH_for_first_hit()
-        end
-    end
-    
-    if job_state_change_via_th then
-        job_state_change_via_th(stateField, newValue, oldValue)
-    end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1835,7 +1576,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 -- Register events to allow us to manage TH application.
-windower.register_event('status change', on_status_change_for_th)
 windower.register_event('target change', on_target_change_for_th)
 windower.register_event('action', on_action_for_th)
 windower.raw_register_event('incoming chunk', on_incoming_chunk_for_th)
@@ -1922,10 +1662,10 @@ windower.register_event('prerender',function()
 		AutoBuffTime = now
 	end
     mov.counter = mov.counter + 1;
-    if mov.counter > 3 then
+    if mov.counter > 5 then
         local pl = windower.ffxi.get_mob_by_index(player.index)
         if pl and pl.x and mov.x and not buffactive['Mounted'] then
-            local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.1
+            local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.5
             if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
@@ -1933,12 +1673,10 @@ windower.register_event('prerender',function()
 					equip(set_combine(choose_set(),choose_set_custom()))
 				end
             elseif not movement and is_moving then
-				if player.status ~= "Engaged" then
-					is_moving = false
-					--send_command('input /echo Stopped Moving! Status: '..player.status..'')
-					equip(set_combine(choose_set(),choose_set_custom()))
-				end
-            end
+				is_moving = false
+				--send_command('input /echo Stopped Moving! Status: '..player.status..'')
+				equip(set_combine(choose_set(),choose_set_custom()))
+			end
         end
         if pl and pl.x then
             mov.x = pl.x
@@ -1951,18 +1689,53 @@ end)
 
 -- Section used to determine if player is performing an action
 windower.register_event('action', function (data)
-if data.actor_id == windower.ffxi.get_player().id then
-  if data.category == 4 then
-	--info('Casting Finished')
-  elseif data.category == 8 then
-    if data.param == 28787 then
-	  --info('Spell Interupt - Choose Set')
-		equip(set_combine(choose_set(),choose_set_custom()))
-    elseif data.param == 24931 then
-		--info('Casting Spell')
-    end
-  end
-end
+	if data ~= nil then
+		local self = windower.ffxi.get_player()
+		local targets = data.targets
+
+		if data.actor_id == windower.ffxi.get_player().id then
+		  if data.category == 4 then
+			--info('Casting Finished')
+		  elseif data.category == 8 then
+			if data.param == 28787 then
+			  --info('Spell Interupt - Choose Set')
+				equip(set_combine(choose_set(),choose_set_custom()))
+			elseif data.param == 24931 then
+				--info('Casting Spell')
+			end
+		  end
+		end
+
+		-- Spell
+		if data.category == 8 then
+			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
+			-- Spell being cast on  you
+			if primarytarget.name == self.name then
+				-- Casting Spell
+				if data.param == 24931 then
+					if targets[1].actions[1].param ~= 0 then
+						-- Get the ability
+						ability = res.spells[targets[1].actions[1].param] -- .en
+						-- Swap in Cursna Gear
+						if ability.en == "Cursna" then
+							equip(sets.Cursna_Recieved)
+						end
+					end
+				-- Spell inturpted
+				elseif data.param == 28787 then 
+					if targets[1].actions[1].param ~= 0 then
+						ability = res.spells[targets[1].actions[1].param] -- .en
+						-- Swap gear back 
+						if ability.en == "Cursna" then
+							equip(set_combine(choose_set(),choose_set_custom()))
+						end
+					end
+				end
+			elseif data.category == 4 then
+  				equip(set_combine(choose_set(),choose_set_custom()))
+			end
+		end
+	end
 end)
 
 function Unlock ()
