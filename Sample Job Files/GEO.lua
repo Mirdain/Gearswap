@@ -9,17 +9,19 @@ LockStylePallet = "11"
 MacroBook = "12"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
 Food = "Tropical Crepe"
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
---Text for the keybind
-CustomBind = "Auto Burst Mode"
---Command to bind to the f9 key
-send_command('bind f9 gs c AutoBurst')
---Log Message about what the key does
-add_to_chat(8,'[F9] - Auto Burst Mode [OFF]')
+--Enable JobMode for UI
+UI_Name = 'Burst'
+
+--Modes for Bursting
+state.JobMode = M{['description']='Burst Mode'}
+state.JobMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5')
+state.JobMode:set('OFF')
 
 --loads the Burst addon
 windower.send_command('lua l Burst')
@@ -62,12 +64,23 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
     }
 	--Used to swap into movement gear when the player is moving and not engaged
 	sets.Movement = {
 		feet="Geo. Sandals +3",
 	}
+
+	sets.OffenseMode = {}
+	-- Base TP set
+	sets.OffenseMode.TP = {}
+	-- Set to use when Dual Wielding
+	sets.OffenseMode.TP.DW = {}
+	-- TP set when in -Damage Taken mode
+	sets.OffenseMode.DT = {}
+	-- TP set to use when mode is in accuracy
+	sets.OffenseMode.ACC = {}
+
 	-- Precast Sets
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -125,21 +138,20 @@ function get_sets()
 	-- Cure Set
 	sets.Midcast.Cure = {
 		-- 2471/1438
-		main="Idris",
-		sub="Genmei Shield",
+		main="Daybreak",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 		body={ name="Vanya Robe", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
-		hands={ name="Vanya Cuffs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
-		legs={ name="Vanya Slops", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
+		hands="Geo. Mitaines +3",
+		legs="Doyen Pants",
 		feet={ name="Vanya Clogs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
 		waist={ name="Luminary Sash", priority=4},
-		left_ear={ name="Tuisto Earring", priority=3},
-		right_ear={ name="Etiolation Earring", priority=2},
+		left_ear={ name="Tuisto Earring", priority=5},
+		right_ear={ name="Etiolation Earring", priority=3},
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
     }
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
@@ -157,7 +169,7 @@ function get_sets()
 		right_ear={ name="Etiolation Earring", priority=2},
 		left_ring={ name="Etana Ring", priority=3},
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
@@ -306,7 +318,7 @@ function get_sets()
 		right_ear={ name="Etiolation Earring", priority=2},
 		left_ring="Stikini Ring +1",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 	sets.Geomancy.Indi.Entrust = set_combine(sets.Geomancy.Indi, {
 		main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}}, -- 15
@@ -327,7 +339,7 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Stikini Ring +1",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 	--Custome sets for each jobsetup
 	sets.Custom = {}
@@ -336,14 +348,7 @@ function get_sets()
 
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 	}
-	-- Base TP set
-	sets.TP = {}
-	-- Set to use when Dual Wielding
-	sets.TP.DW = {}
-	-- TP set when in -Damage Taken mode
-	sets.TP.DT = {}
-	-- TP set to use when mode is in accuracy
-	sets.TP.ACC = {}
+
 	-- Base WS set
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -364,12 +369,12 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
 		right_ring="Stikini Ring +1",
-		back={ name="Nantosuelta's Cape", augments={'VIT+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 	-- Note that the Mote library will unlock these gear spots when used.
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
-	    head="Wh. Rarab Cap +1",
+	    -- head="Wh. Rarab Cap +1",
 	}
 	organizer_items  = {		
 		item1 = "Echo Drops",
@@ -381,6 +386,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
