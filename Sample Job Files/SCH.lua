@@ -9,8 +9,19 @@ LockStylePallet = "12"
 MacroBook = "3"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Tropical Crepe"
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
+
+--Modes for Bursting
+state.JobMode = M{['description']='Burst Mode'}
+state.JobMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5')
+state.JobMode:set('OFF')
+
+--Enable JobMode for UI
+UI_Name = 'Burst'
 
 --loads the Burst Plugin
 windower.send_command('lua l Burst')
@@ -23,12 +34,12 @@ function get_sets()
 		ammo="Staunch Tathlum +1", -- 3/3
 		head="Befouled Crown", -- 0/0 +1
 		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}}, -- 0/0 +3
-		hands="Shrieker's Cuffs",
+		hands={ name="Chironic Gloves", augments={'STR+9','Pet: INT+4','"Refresh"+1','Accuracy+20 Attack+20',}},
 		legs="Assid. Pants +1", -- 0/0 +2
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- 2/0 +2
 		neck="Loricate Torque +1", -- 6/6
 		waist="Fucho-no-Obi", -- 0/0 +1
-		left_ear="Hearty Earring",
+		left_ear="Eabani Earring",
 		right_ear="Etiolation Earring", -- 0/3
 		left_ring="Defending Ring", -- 10/10
 		right_ring="Stikini Ring +1", -- 0/0 +1
@@ -81,11 +92,11 @@ function get_sets()
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck="Henic Torque",
-		waist="Bishop's Sash",
-		left_ear="Etiolation Earring",
-		right_ear="Tuisto Earring",
-		left_ring="Stikini Ring +1",
+		neck="Loricate Torque +1",
+		waist="Witful Belt",
+		left_ear="Tuisto Earring",
+		right_ear="Etiolation Earring",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Janniston Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
@@ -97,14 +108,14 @@ function get_sets()
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
 		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		feet={ name="Telchine Pigaches", augments={'"Regen" potency+3',}},
-		neck="Voltsurge Torque",
+		legs={ name="Telchine Braconi", augments={'"Fast Cast"+4','Enh. Mag. eff. dur. +10',}},
+		feet={ name="Telchine Pigaches", augments={'Evasion+19','"Fast Cast"+5','Enh. Mag. eff. dur. +10',}},
+		neck="Incanter's Torque",
 		waist="Embla Sash",
-		left_ear="Etiolation Earring",
+		left_ear="Mimir Earring",
 		right_ear="Andoaa Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- High MACC for landing spells
@@ -116,14 +127,14 @@ function get_sets()
 		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+25','"Mag.Atk.Bns."+25','Accuracy+5 Attack+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
-		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
-		neck="Debilis Medallion",
+		feet={ name="Medium's Sabots", augments={'MP+50','MND+10','"Conserve MP"+7','"Cure" potency +5%',}},
+		neck="Erra Pendant",
 		waist="Luminary Sash",
 		left_ear="Digni. Earring",
-		right_ear="Gwati Earring",
+		right_ear="Malignance Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back="Kumbira Cape",
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Mag.Atk.Bns."+10',}},
 	}
 	-- Spells that require SKILL
 	sets.Midcast.Enhancing.Skill = {}
@@ -133,7 +144,9 @@ function get_sets()
 	sets.Midcast.Cursna = {}
 
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
-
+	    main="Bolelabunga",
+		head="Arbatel Bonnet +1",
+		hands="Arbatel Bracers +1",
 	})
 
 	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
@@ -203,10 +216,11 @@ function get_sets()
 	--Custome sets for each jobsetup
 	sets.Custom = {}
 
-	sets.TP = {}
-	sets.TP.DW = {}
-	sets.TP.DT = {}
-	sets.TP.ACC = {}
+	sets.OffenseMode = {}
+	sets.OffenseMode.TP = {}
+	sets.OffenseMode.TP.DW = {}
+	sets.OffenseMode.DT = {}
+	sets.OffenseMode.ACC = {}
 
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -227,6 +241,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)

@@ -9,10 +9,13 @@ LockStylePallet = "2"
 MacroBook = "11"
 MacroSet = "1"
 
-Food = ""
+-- Use "gs c food" to use the specified food item 
+Food = "Miso Ramen"
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
+
+-- Balance 2000 HP / 1500 MP
 
 function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
@@ -23,7 +26,7 @@ function get_sets()
 		head="Inyanga Tiara +2",
 		body="Inyanga Jubbah +2",
 		hands="Inyan. Dastanas +2",
-		legs="Inyanga Shalwar +2",
+		legs="Pinga Pants +1",
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
 		neck="Loricate Torque +1",
 		waist="Fucho-no-Obi",
@@ -37,16 +40,24 @@ function get_sets()
 	sets.Movement = {
 		feet="Herald's Gaiters"
 	}
+
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    left_ring="Saida Ring",
+		right_ring="Saida Ring",
+		waist="Gishdubar Sash",
+	}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		main="C. Palug Hammer",
-		sub="Culminus",
+		sub="Ammurapi Shield",
 		ammo="Impatiens",
 		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 		body="Inyanga Jubbah +2",
 		hands="Gende. Gages +1",
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- Pinga
+		legs="Pinga Pants +1",
 		feet="Regal Pumps +1",
 		neck={ name="Clr. Torque +2", augments={'Path: A',}},
 		waist="Witful Belt",
@@ -84,7 +95,7 @@ function get_sets()
 	sets.Midcast.Cure = {
 		main={ name="Queller Rod", augments={'MND+15','Mag. Acc.+15','"Cure" potency +15%',}},
 		sub="Sors Shield",
-		ammo="Hydrocera",
+		ammo="Pemphredo Tathlum",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		body={ name="Ebers Bliaud +1", priority=3},
 		hands={ name="Theophany Mitts +3", priority=5},
@@ -99,7 +110,7 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
     }
 	-- For AoE cure
-	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaud +3"})
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaud +3"}) -- Need to complete
 
 	-- Enhancing Skill
 
@@ -107,7 +118,7 @@ function get_sets()
 	sets.Midcast.Enhancing = {
 		main={ name="Gada", augments={'Enh. Mag. eff. dur. +5','MND+5','Mag. Acc.+3','"Mag.Atk.Bns."+20',}},
 		sub="Ammurapi Shield",
-		ammo="Staunch Tathlum +1",
+		ammo="Hydrocera",
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
 		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
@@ -115,10 +126,10 @@ function get_sets()
 		feet="Theo. Duckbills +3",
 		neck="Incanter's Torque",
 		waist="Embla Sash",
-		left_ear="Etiolation Earring",
+		left_ear={ name="Etiolation Earring", priority=1},
 		right_ear="Mimir Earring",
-		left_ring="Etana Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=3},
+		left_ring="Stikini Ring +1",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
 	}
 
@@ -176,7 +187,7 @@ function get_sets()
 		right_ear="Malignance Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','MND+10','Haste+10','Phys. dmg. taken-10%',}},
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
 	}
 
 	sets.Midcast["Cursna"] = {
@@ -225,12 +236,11 @@ function get_sets()
 		main="Yagrush"
 	})
 
-
 	-- Regen Set
 	sets.Midcast.Regen = {
-	    main="Bolelabunga",
+		main="Bolelabunga",
 		sub="Ammurapi Shield",
-		ammo="Impatiens",
+		ammo="Hydrocera",
 		head="Inyanga Tiara +2",
 		body={ name="Piety Briault +2", augments={'Enhances "Benediction" effect',}},
 		hands="Ebers Mitts +1",
@@ -238,11 +248,11 @@ function get_sets()
 		feet="Theo. Duckbills +3",
 		neck={ name="Clr. Torque +2", augments={'Path: A',}},
 		waist="Embla Sash",
-		left_ear="Hearty Earring",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Etiolation Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','MND+10','Haste+10','Phys. dmg. taken-10%',}},
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
 	}
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
@@ -296,6 +306,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
