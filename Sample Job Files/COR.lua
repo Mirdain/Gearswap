@@ -5,24 +5,25 @@ include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "18"
-MacroBook = "18"
+MacroBook = "18"  -- Sub Job macro pallets can be defined in the sub_job_change_custom function below
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Sublime Sushi"
+
+--Set default mode (TP,ACC,DT)
+state.OffenseMode:set('DT')
+
+--Enable JobMode for UI
+UI_Name = 'DPS'
+
 --Modes for specific to Corsair
-state.CorsairMode = M{['description']='Corsair Damage Mode'}
-state.CorsairMode:options('TP Melee - WS Melee','TP Melee - WS Ranged (Physical)','TP Melee - WS Ranged (Magic)','TP Ranged - WS Ranged (Physical)','TP Ranged - WS Ranged (Magic)')
-state.CorsairMode:set('TP Melee - WS Melee')
+state.JobMode = M{['description']='Corsair Damage Mode'}
+state.JobMode:options('Naegling','Fomalhaut','Death Penalty') -- Can add Crit for Armageddon
+state.JobMode:set('Naegling')
 
 -- load addons
 send_command('lua l autocor')
-
---Command to bind to the f9 key
-send_command('bind f9 gs c dpsmode')
---Log Message about what the key does
-add_to_chat(8,'[F9] - DPS Mode')
-
---Set default mode to DT
-state.OffenseMode:set('DT')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -34,22 +35,30 @@ function get_sets()
 
 	--Set the weapon options.  This is set below in job customization section
 
-	-- Main weapon
-	sets.Main = {}
-	sets.Main.Ranged = {main={ name="Rostam", augments={'Path: A'}}}
-	sets.Main.Dual_Wield_Melee = {main="Naegling"}
-	sets.Main.Dual_Wield_Ranged = {main={ name="Rostam", augments={'Path: A'}}}
+	-- Weapon setup
+	sets.Weapons = {}
 
-	-- Off hand Weapon
-	sets.Sub = {}
-	sets.Sub.Ranged = {sub="Nusku Shield"}
-	sets.Sub.Dual_Wield_Melee = {sub="Blurred Knife +1"}
-	sets.Sub.Dual_Wield_Ranged = {sub={ name="Rostam", augments={'Path: C'}}}
+	sets.Weapons['Naegling'] = {
+	    main={ name="Naegling", priority=2},
+		range="Fomalhaut", -- Need TP Gun
+		sub={ name="Blurred Knife +1", priority=1},
+	}
 
-	-- Ranged Weapon
-	sets.Range = {}
-	sets.Range.Physical = {range="Fomalhaut"}
-	sets.Range.Magical = {range="Death Penalty"}
+	sets.Weapons['Fomalhaut'] = {
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
+		range="Fomalhaut",
+		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
+	}
+
+	sets.Weapons['Death Penalty'] = {
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
+		range="Death Penalty",
+		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
+	}
+
+	sets.Weapons.Shield = {
+		sub={ name="Nusku Shield", priority=1},
+	}
 
 	-- Ammo Selection
 	Ammo.Bullet.RA = "Chrono Bullet"	-- TP Ammo
@@ -60,6 +69,7 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
+		ammo = Ammo.Bullet.RA,
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -77,6 +87,43 @@ function get_sets()
 	sets.Movement = {
 		legs="Carmine Cuisses +1",
 	}
+
+	sets.OffenseMode = {}
+
+	--Base TP set to build off when melee'n
+	sets.OffenseMode.TP = {
+		main="Naegling",
+		sub="Blurred Knife +1",
+		range="Fomalhaut",
+		ammo="Chrono Bullet",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet="Malignance Boots",
+		neck="Iskur Gorget",
+		waist="Yemaya Belt",
+		left_ear="Telos Earring",
+		right_ear="Eabani Earring",
+		left_ring="Petrov Ring",
+		right_ring="Ilabrat Ring",
+		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	}
+
+	--This set is used when OffenseMode is DT and Enaged
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+		neck="Loricate Torque +1",
+		left_ring="Defending Ring",
+	})
+
+	--The following sets augment the base TP set above for Dual Wielding
+	sets.DualWield = {
+		waist="Reiki Yotai",
+		right_ear="Eabani Earring",
+	}
+
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	sets.OffenseMode.ACC = {}
 
 	sets.Precast = {}
 	-- 70 snapshot is Cap.  Need 60 due to 10 from gifts
@@ -102,6 +149,8 @@ function get_sets()
 		waist="Yemaya Belt", -- 0/10
 		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 10/0
     } -- Totals 66/24
+
+	sets.Precast.RA.ACC = {}
 
 	-- Flurry - 45 Snapshot Needed
 	sets.Precast.RA.Flurry = {
@@ -162,7 +211,7 @@ function get_sets()
 	sets.Midcast.RA.TripleShot = set_combine(sets.Midcast.RA, {
         head="Oshosi Mask +1", --5
         body="Chasseur's Frac +1", --12
-        hands="Lanun Gants +3",
+        hands="Lanun Gants +3", -- Tripple shot becomes Quad shot
         legs="Osh. Trousers +1", --6
         feet="Osh. Leggings +1", --3
     }) --27
@@ -228,16 +277,15 @@ function get_sets()
 	sets.JA["Snake Eye"] = {
 	    legs={ name="Lanun Trews +1", augments={'Enhances "Snake Eye" effect',}},
 	}
-	sets.JA["Fold"] = {
-		hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}},
-	}
+	sets.JA["Fold"] = {} -- Use gloves for double bust (below in custom function)
 	sets.JA["Triple Shot"] = {} --Gear to be worn during Midshot
 	sets.JA["Cutting Cards"] = {}
 	sets.JA["Crooked Cards"] = {}
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = set_combine(sets.Idle, {
-		main={ name="Rostam", augments={'Path: C',}}, -- +8 Effect and 60 sec Duration
+		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
+		sub={ name="Nusku Shield", priority=2},
 		range="Compensator", -- 20 sec Duration
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
 		hands="Chasseur's Gants +1", --50 sec Duration
@@ -246,8 +294,12 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'"Snapshot"+10',}}, -- 30 sec Duration
 	})
 	sets.PhantomRoll['Fighter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Healers\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Monk\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Healer\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Wizard\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Warlocks\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Rogue\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Gallant\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Chaos Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Beast Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Choral Roll'] = sets.PhantomRoll
@@ -260,47 +312,17 @@ function get_sets()
 	sets.PhantomRoll['Corsair\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Puppet Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Dancer\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Scholar\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Bolter\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {legs="Chas. Culottes +1"})
+	sets.PhantomRoll["Tactician's Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +1"})
+	sets.PhantomRoll["Allies' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +1"})
+	sets.PhantomRoll['Miser\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Companion\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {legs="Navarch's Culottes +2"})
-    sets.PhantomRoll["Courser's Roll"] = set_combine(sets.PhantomRoll, {feet="Navarch's Bottes +2"})
-    sets.PhantomRoll["Blitzer's Roll"] = set_combine(sets.PhantomRoll, {head="Navarch's Tricorne +2"})
-    sets.PhantomRoll["Tactician's Roll"] = set_combine(sets.PhantomRoll, {body="Navarch's Frac +2"})
-    sets.PhantomRoll["Allies' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +1"})
-
-	--Base TP set to build off when melee'n
-	sets.TP = {
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Iskur Gorget",
-		waist="Yemaya Belt",
-		left_ear="Telos Earring",
-		right_ear="Brutal Earring",
-		left_ring="Petrov Ring",
-		right_ring="Ilabrat Ring",
-		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
-	--The following sets augment the base TP set above
-	sets.TP.DW = {
-		waist="Reiki Yotai",
-		right_ear="Suppanomimi",
-	}
-
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.TP.DT = {
-	    neck="Loricate Torque +1",
-		left_ring="Defending Ring",
-	}
-
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.TP.ACC = {
-	
-	}
+    sets.PhantomRoll["Courser's Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +1"})
+    sets.PhantomRoll["Blitzer's Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +1"})
 
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
@@ -337,7 +359,6 @@ function get_sets()
 	sets.WS["Slug Shot"] = {}
 	sets.WS["Numbing Shot"] = {}
 	sets.WS["Last Stand"] = {
-		range="Fomalhaut",
 		ammo="Chrono Bullet",
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		body="Laksa. Frac +3",
@@ -354,7 +375,6 @@ function get_sets()
 	}
 	sets.WS["Wildfire"] = {}
 	sets.WS["Leaden Salute"] = {
-		range="Fomalhaut",
 		ammo="Chrono Bullet",
 		head="Pixie Hairpin +1",
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
@@ -415,233 +435,99 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
+
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
-	if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
-	end
+
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
+
+	if spell.english == 'Fold' then
+		equipSet = set_combine(equipSet, {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}})
+    end
+
+	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
+		return equipSet
 	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-		if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
+
+	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
+		return equipSet
 	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-		if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
-	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-		if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
-	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-		if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
-	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-		if DualWield == true then
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Melee,sets.Sub.Dual_Wield_Melee,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Dual_Wield_Ranged,sets.Sub.Dual_Wield_Ranged,sets.Range.Magical)
-		end
-	else
-		if state.CorsairMode.value == 'TP Melee - WS Melee' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Melee - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Physical)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Physical)
-		elseif state.CorsairMode.value == 'TP Ranged - WS Ranged (Magic)' then
-			equipSet = set_combine(equipSet,sets.Main.Ranged,sets.Sub.Ranged,sets.Range.Magical)
-		end
-	end
-	return equipSet
+
+	return Weapon_Check(equipSet)
 end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
-	if command == 'dpsmode' then
-		for i,v in ipairs(state.CorsairMode) do
-			if state.CorsairMode.value == v then
-				if state.CorsairMode.value ~= state.CorsairMode[#state.CorsairMode] then
-					state.CorsairMode:set(state.CorsairMode[i+1])
-				else
-					state.CorsairMode:set(state.CorsairMode[1])
-				end
-				info('Mode: ['..state.CorsairMode.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
-				return
-			end
-		end
-	end
+
 end
 
 function user_file_unload()
 	send_command('lua u autocor')
 end
+
+function check_buff_JA()
+	buff = ''
+	local ja_recasts = windower.ffxi.get_ability_recasts()
+	if player.sub_job == 'WAR' then
+		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+			buff = "Berserk"
+		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+			buff = "Aggressor"
+		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+			buff = "Warcry"
+		end
+	end
+
+	return buff
+end
+
+function check_buff_SP()
+	buff = ''
+	--local sp_recasts = windower.ffxi.get_spell_recasts()
+	return buff
+end
+
+ function Weapon_Check(equipSet)
+	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
+	if DualWield == false then
+		equipSet = set_combine(equipSet,sets.Weapons.Shield)
+	end
+	return equipSet
+ end
