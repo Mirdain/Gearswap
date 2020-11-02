@@ -9,7 +9,12 @@ LockStylePallet = "10"
 MacroBook = "1"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Sublime Sushi"
+
 UtsusemiSpell = S{'Utsusemi: San','Utsusemi: San', 'Utsusemi: San'}
+
+jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 	--Custome sets for each jobsetup
@@ -41,9 +46,16 @@ function get_sets()
 		right_ring="Ilabrat Ring",
 		back="Moonbeam Cape",
     }
-	sets.Movement = {feet="Danzo Sune-Ate"}
 
-	sets.Movement.Night = {feet="Hachi. Kyahan +1"}
+	--Defined below based off time of day
+	sets.Movement = {}
+
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    left_ring="Saida Ring",
+		right_ring="Saida Ring",
+		waist="Gishdubar Sash",
+	}
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -133,51 +145,70 @@ function get_sets()
 	sets.JA["Issekigan"] = {}
 	sets.JA["Mikage"] = {}
 
+	sets.OffenseMode = {}
+
 	--Base TP set to build off
-	sets.TP = {
+	sets.OffenseMode.TP = {
+		main={ name="Kannagi", augments={'Path: A',}},
+		sub="Gokotai",
 		ammo="Happo Shuriken +1",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet="Ken. Sune-Ate +1",
-		neck="Ninja Nodowa +2",
+		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
-		left_ear="Brutal Earring",
-		right_ear="Cessance Earring",
-		left_ring="Hetairoi Ring",
-		right_ring="Epona's Ring",
+		left_ear="Telos Earring",
+		right_ear="Dedition Earring",
+		left_ring="Gere Ring",
+		right_ring="Ilabrat Ring",
 		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Parrying rate+5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.TP.DT = {
+	sets.OffenseMode.DT = {
+		main={ name="Kannagi", augments={'Path: A',}},
+		sub="Gokotai",
+		ammo="Happo Shuriken +1",
+		head="Malignance Chapeau",
 		body="Malignance Tabard",
+		hands="Malignance Gloves",
 		legs="Malignance Tights",
+		feet="Hachi. Kyahan +1",
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+		waist="Windbuffet Belt +1",
+		left_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Gere Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Parrying rate+5%',}},
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.TP.ACC = {
+	sets.OffenseMode.TP.ACC = {
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
 	}
-	sets.TP.DW = {}
+	sets.OffenseMode.DW = {}
 	--Default WS set base
-	sets.WS = {
-		ammo="Expeditious Pinion",
+		sets.WS = {
+		main={ name="Kannagi", augments={'Path: A',}},
+		sub="Gokotai",
+		ammo="C. Palug Stone",
 		head="Ken. Jinpachi +1",
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		legs="Mummu Kecks +2",
 		feet="Ken. Sune-Ate +1",
-		neck="Fotia Gorget",
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist="Fotia Belt",
-		left_ear="Ishvara Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Ilabrat Ring",
-		right_ring="Epaminondas's Ring",
-		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Parrying rate+5%',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Odr Earring",
+		left_ring="Regal Ring",
+		right_ring="Gere Ring",
+		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {	    
@@ -186,20 +217,22 @@ function get_sets()
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-		}
+	}
 	sets.WS.CRIT = {
-	    ammo="Yetshila +1",
+		main={ name="Kannagi", augments={'Path: A',}},
+		sub="Gokotai",
+		ammo="Yetshila +1",
 		head="Hachiya Hatsu. +3",
 		body="Ken. Samue +1",
 		hands="Mummu Wrists +2",
 		legs="Mummu Kecks +2",
-		feet="Mummu Gamash. +2",
-		neck="Ninja Nodowa +2",
+		feet="Malignance Boots",
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
 		left_ear="Ishvara Earring",
-		right_ear="Brutal Earring",
-		left_ring="Mummu Ring",
-		right_ring="Epaminondas's Ring",
+		right_ear="Odr Earring",
+		left_ring="Regal Ring",
+		right_ring="Mummu Ring",
 		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%',}},
 	}
 	sets.WS.MAB = {
@@ -243,12 +276,16 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
@@ -282,6 +319,7 @@ end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
+	NIN_Movement()
 	return equipSet
 end
 --Function is called when the player changes states
@@ -291,17 +329,25 @@ function status_change_custom(new,old)
 end
 --Function is called by the gearswap command
 function self_command_custom(command)
-	if command == 'movement' then
-		if world.time >= 17*60 or world.time <= 7*60 then
-			equip(sets.Movement.Night)
-		else
-			equip(sets.Movement)
-		end
-	end
+
 end
+
+-- This function is called when the job file is unloaded
+function user_file_unload()
+
+end
+
 --used to register the time change to equip correct feet
 windower.register_event('time change', function(time)
     if (world.time == 17*60 or world.time == 7*60) and player.status == 'Idle' then
-        windower.send_command('gs c movement')
+        NIN_Movement()
     end
 end)
+
+function NIN_Movement ()
+	if world.time >= 17*60 or world.time <= 7*60 then
+		sets.Movement = {feet="Hachi. Kyahan +1"}
+	else
+		sets.Movement = {feet="Danzo Sune-Ate"}
+	end
+end

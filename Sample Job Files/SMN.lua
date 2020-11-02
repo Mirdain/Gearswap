@@ -30,34 +30,53 @@ function get_sets()
 		legs="Assid. Pants +1",
 		feet="Baaya. Sabots +1",
 		neck={ name="Smn. Collar +2", augments={'Path: A',}},
-		waist="Eschan Stone",
-		left_ear="Genmei Earring",
+		waist="Regal Belt",
+		left_ear="C. Palug Earring",
 		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Defending Ring",
+		left_ring="Defending Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back="Moonbeam Cape",
     }
+	-- Perpetuation and Refresh Set
+	sets.Idle.Pet = {
+		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
+		sub="Elan Strap +1",
+		ammo="Sancus Sachet +1",
+		head="Beckoner's Horn +1",
+		body="Shomonjijoe +1",
+		hands="Baayami Cuffs",
+		legs="Assid. Pants +1",
+		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
+		waist="Lucidity Sash",
+		left_ear="Evans Earring",
+		right_ear="C. Palug Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+	}
+
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
-		sub="Elan Strap +1",
+		main="Malignance Pole",
+		sub="Enki Strap",
 		ammo="Sancus Sachet +1",
-		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}}, --11
-		body="Inyanga Jubbah +2", --14
+		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		body="Inyanga Jubbah +2",
 		hands="Convo. Bracers +3",
-		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}}, --5
-		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}}, --6
-		neck="Voltsurge Torque", --4
-		waist="Witful Belt", --2
-		left_ear="Loquac. Earring", --3
-		right_ear="Etiolation Earring", --1
-		left_ring="Kishar Ring", --4
-		right_ring="Prolix Ring", --2
-		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}}, --10
+		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}},
+		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		neck="Voltsurge Torque",
+		waist="Regal Belt",
+		left_ear="Malignance Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Kishar Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
 
 	-- ===================================================================================================================
@@ -72,20 +91,21 @@ function get_sets()
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {
-	    main={ name="Arka IV", augments={'"Cure" potency +24%',}},
+		main="Malignance Pole",
+		sub="Enki Strap",
 		ammo="Sancus Sachet +1",
-		head={ name="Vanya Hood", augments={'MP+50','"Cure" potency +7%','Enmity-6',}}, --17
+		head={ name="Vanya Hood", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
 		body={ name="Vanya Robe", augments={'HP+50','MP+50','"Refresh"+2',}},
-		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs={ name="Vanya Slops", augments={'MP+50','"Cure" potency +7%','Enmity-6',}}, --7
-		feet={ name="Medium's Sabots", augments={'MP+45','MND+9','"Conserve MP"+5','"Cure" potency +4%',}}, --11
-		neck="Nodens Gorget", --5
-		waist="Gishdubar Sash",
-		left_ear="Mendi. Earring", --5
+		hands={ name="Vanya Cuffs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
+		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}},
+		feet={ name="Vanya Clogs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
+		neck="Nodens Gorget",
+		waist="Regal Belt",
+		left_ear="Mendi. Earring",
 		right_ear="Etiolation Earring",
 		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back="Solemnity Cape", --7
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Solemnity Cape",
     }
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
@@ -142,13 +162,13 @@ function get_sets()
     sets.Midcast.BP = {
 		ammo="Sancus Sachet +1",
 		head="Beckoner's Horn +1",
-		body="Baayami Robe +1",
+		body="Con. Doublet +3",
 		hands="Baayami Cuffs",
 		legs="Baayami Slops",
-		feet="Baayami Sabots +1",
-		neck="Smn. Collar +2",
+		feet="Baaya. Sabots +1",
+		neck="Incanter's Torque",
 		waist="Lucidity Sash",
-		left_ear="Lugalbanda Earring",
+		left_ear="C. Palug Earring",
 		right_ear="Etiolation Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
@@ -163,10 +183,11 @@ function get_sets()
 	--Custome sets for each jobsetup
 	sets.Custom = {}
 
-	sets.TP = {}
-	sets.TP.DW = {}
-	sets.TP.DT = {}
-	sets.TP.ACC = {}
+	sets.OffenseMode = {}
+	sets.OffenseMode.TP = {}
+	sets.OffenseMode.TP.DW = {}
+	sets.OffenseMode.DT = {}
+	sets.OffenseMode.ACC = {}
 
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -204,12 +225,12 @@ function get_sets()
 		hands={ name="Merlinic Dastanas", augments={'Pet: Attack+29 Pet: Rng.Atk.+29','Blood Pact Dmg.+10','Pet: DEX+8','Pet: Mag. Acc.+5',}},
 		legs={ name="Apogee Slacks +1", augments={'Pet: STR+20','Blood Pact Dmg.+14','Pet: "Dbl. Atk."+4',}},
 		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: Attack+35','Blood Pact Dmg.+8',}},
-		neck="Smn. Collar +2",
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
 		waist="Incarnation Sash",
 		left_ear="Lugalbanda Earring",
 		right_ear="Kyrene's Earring",
 		left_ring="Varar Ring +1",
-		right_ring="Varar Ring +1",
+		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	}
 	-- Physical pacts which benefit more from TP than Pet:DA (like single-hit BP)
@@ -226,12 +247,12 @@ function get_sets()
 		hands={ name="Merlinic Dastanas", augments={'Pet: Mag. Acc.+19 Pet: "Mag.Atk.Bns."+19','Blood Pact Dmg.+10',}},
 		legs={ name="Apogee Slacks +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
 		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
-		neck="Smn. Collar +2",
-		waist="Incarnation Sash",
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
+		waist="Regal Belt",
 		left_ear="Lugalbanda Earring",
-		right_ear="Kyrene's Earring",
+		right_ear="Gelos Earring",
 		left_ring="Varar Ring +1",
-		right_ring="Varar Ring +1",
+		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
 	-- Some magic pacts benefit more from TP than others.
@@ -240,10 +261,10 @@ function get_sets()
 	})
 	-- Similar to the Magic Set except Nirvana used
 	sets.Pet_Midcast.FlamingCrush = {
-		main="Nirvana",
+		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
 		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
-		head={ name="Apogee Crown +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
+		head="C. Palug Crown",
 		body="Con. Doublet +3",
 		hands={ name="Merlinic Dastanas", augments={'Pet: Mag. Acc.+19 Pet: "Mag.Atk.Bns."+19','Blood Pact Dmg.+10',}},
 		legs={ name="Apogee Slacks +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
@@ -253,37 +274,24 @@ function get_sets()
 		left_ear="Lugalbanda Earring",
 		right_ear="Gelos Earring",
 		left_ring="Varar Ring +1",
-		right_ring="Varar Ring +1",
+		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
 	-- Pure summoning magic set, mainly used for buffs like Hastega II.
 	sets.Pet_Midcast.SummoningMagic = {
+		ammo="Sancus Sachet +1",
 		head="Baayami Hat",
-		body="Baayami Robe",
+		body="Baayami Robe +1",
 		hands="Baayami Cuffs",
 		legs="Baayami Slops",
-		feet="Baayami Sabots",
-		neck="Smn. Collar +2",
+		feet="Baaya. Sabots +1",
+		neck={ name="Smn. Collar +2", augments={'Path: A',}},
 		waist="Lucidity Sash",
+		left_ear="Lugalbanda Earring",
+		right_ear="C. Palug Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
-	}
-	-- Perpetuation and Refresh Set
-	sets.Idle.Pet = {
-		ammo="Sancus Sachet +1",
-		head="Beckoner's Horn +1",
-		body="Shomonjijoe +1",
-		hands="Convo. Bracers +3",
-		legs="Assid. Pants +1",
-		feet="Baayami Sabots +1",
-		neck="Smn. Collar +2",
-		waist="Lucidity Sash",
-		left_ear="Evans Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	}
 
 	-- Job Abilities
@@ -310,6 +318,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
@@ -402,4 +415,16 @@ end
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
+end
+
+--Function used to automate Job Ability use
+function check_buff_JA()
+	buff = ''
+	return buff
+end
+
+--Function used to automate Spell use
+function check_buff_SP()
+	buff = ''
+	return buff
 end

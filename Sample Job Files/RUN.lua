@@ -9,71 +9,86 @@ LockStylePallet = "12"
 MacroBook = "12"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Miso Ramen"
+
+--Modes for specific to Corsair
+state.OffenseMode = M{['description']='Engaged Mode'}
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them
+state.OffenseMode:options('TP','ACC','DT','PDT','MEVA') -- ACC effects WS and TP modes
+state.OffenseMode:set('DT')
+
+--Enable JobMode for UI.
+UI_Name = 'Runes'
+--Modes for specific to Corsair
+state.JobMode = M{['description']='Rune Mode'}
+state.JobMode:options('None','Fire','Ice','Wind','Earth','Lighting','Water','Light','Dark') -- Modes used to use Rune Enhancement
+state.JobMode:set('None')
+
+
 jobsetup (LockStylePallet,MacroBook,MacroSet)
+
+-- HP balancing: 3000 HP
+-- MP balancing: 850 MP
 
 function get_sets()
 	-- Standard Idle set
 	-- 50/31
-	sets.Idle = { 
-		main="Epeolatry",
+	sets.Idle = {
+		main={ name="Epeolatry", augments={'Path: A',}},  -- 25/0 - PDT II
 		sub="Utu Grip",
-		ammo="Staunch Tathlum +1",
+		ammo="Staunch Tathlum +1", -- 3/3
 		head="Turms Cap +1",
-		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
+		body="Runeist's Coat +3",
 		hands="Turms Mittens +1",
-		legs="Eri. Leg Guards +1",
+		legs="Eri. Leg Guards +1",  -- 7/0 -- Do not count due to movement swap
 		feet="Turms Leggings +1",
-		neck="Futhark Torque +2",
-		waist="Flume Belt +1",
-		left_ear="Tuisto Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Defending Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
-    }
+		neck={ name="Futhark Torque +2", augments={'Path: A',}}, -- 7/7
+		waist="Flume Belt +1", -- 4/0
+		left_ear="Etiolation Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
+		left_ring="Defending Ring", -- 10/10
+		right_ring="Moonlight Ring", -- 5/5
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
+    } -- 74 PDT / 33 MDT		3016 HP/ 949 MP
+
 	-- This gear will be equiped when the player is moving and not engaged
 	sets.Movement = {
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-    }
-	-- Set used for hate generation on Job abilities
-	sets.Enmity = {
-		main="Epeolatry", -- 23
-		sub="Utu Grip",
-		ammo="Sapience Orb", --2
-		head="Turms Cap +1",
-		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
-		hands={ name="Futhark Mitons +3", augments={'Enhances "Sleight of Sword" effect',}}, -- 6
-		legs="Eri. Leg Guards +1", -- 11
-		feet="Erilaz Greaves +1", -- 6
-		neck="Moonlight Necklace", -- 15
-		waist="Eschan Stone",
-		left_ear="Tuisto Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Petrov Ring", -- 4
-		right_ring="Moonlight Ring",
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
+		head={ name="Fu. Bandeau +3", augments={'Enhances "Battuta" effect',}}, -- 6/0
+		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=1},
+    } -- 73 PDT / 33 MDT		3028 HP / 963 MP
+
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    left_ring="Saida Ring",
+		right_ring="Saida Ring",
+		waist="Gishdubar Sash",
 	}
-	--Base TP set to build off - Used in [Normal] mode
-	sets.TP = {
-		main="Epeolatry",
+
+	sets.OffenseMode = {}
+
+	--DPS set for tanking
+	sets.OffenseMode.TP = {
+		main={ name="Epeolatry", augments={'Path: A',}},
 		sub="Utu Grip",
-		ammo="Staunch Tathlum +1",
-		head="Turms Cap +1",
-		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
-		hands="Turms Mittens +1",
-		legs="Eri. Leg Guards +1",
-		feet="Turms Leggings +1",
+		ammo="Yamarang",
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		body="Runeist's Coat +3",
+		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
 		neck={ name="Futhark Torque +2", augments={'Path: A',}},
-		waist="Flume Belt +1",
+		waist="Windbuffet Belt +1",
 		left_ear="Sherida Earring",
 		right_ear="Telos Earring",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
+		left_ring="Niqmaddu Ring",
+		right_ring="Regal Ring",
 		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
-	--This set Augments the TP base set for Damage Reduction - Used in [DT] mode 
-	sets.TP.DT = {
-	    main="Epeolatry",
+	} -- No fucks given
+
+	--Physical Damage Taken set for tanking
+	sets.OffenseMode.PDT = {
+		main={ name="Epeolatry", augments={'Path: A',}},
 		sub="Utu Grip",
 		ammo="Yamarang",
 		head={ name="Fu. Bandeau +3", augments={'Enhances "Battuta" effect',}},
@@ -88,28 +103,55 @@ function get_sets()
 		left_ring="Moonlight Ring",
 		right_ring="Moonlight Ring",
 		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
-	--This set Augments the TP base set for max Accuracy - Used in [ACC] mode 
-	sets.TP.ACC = {
-		main="Epeolatry",
+	} -- Maintains Capped PDT with some DPS mixed in
+
+	--Magic Evasion set for tanking
+	sets.OffenseMode.MEVA = {
+		main={ name="Epeolatry", augments={'Path: A',}},
+		sub="Utu Grip",
+		ammo="Yamarang",
+		head="Turms Cap +1",
+		body="Runeist's Coat +3",
+		hands="Turms Mittens +1",
+		legs="Eri. Leg Guards +1",
+		feet="Turms Leggings +1",
+		neck={ name="Futhark Torque +2", augments={'Path: A',}},
+		waist="Flume Belt +1",
+		left_ear="Etiolation Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring="Purity Ring",
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
+	} -- Maintains Capped PDT with some DPS mixed in
+
+	-- Standard Tanking TP set
+	sets.OffenseMode.DT = {		
+		main={ name="Epeolatry", augments={'Path: A',}},
 		sub="Utu Grip",
 		ammo="Yamarang",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Meg. Chausses +2",
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		legs="Eri. Leg Guards +1",
+		feet="Turms Leggings +1",
 		neck={ name="Futhark Torque +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
+		waist="Windbuffet Belt +1",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Tuisto Earring",
 		left_ring="Moonlight Ring",
 		right_ring="Moonlight Ring",
-		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}}
+	}  -- 71% PDT / 31 MDT			3022 HP / 777 MP
+
+
+	-- Gear to swap in for ACC when TP
+	sets.ACC = set_combine(sets.TP, {
+	
+	})
 
 	sets.Precast = {}
 	-- Used for Magic Spells
+
 	--52% FC
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb", --2
@@ -126,6 +168,7 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, --10
 	}
+
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	-- 92 With Merits - Need Regal
@@ -156,6 +199,26 @@ function get_sets()
 		legs={ name="Taeon Tights", augments={'Phalanx +3',}}, --3
 		feet={ name="Taeon Boots", augments={'Phalanx +2',}}, --2
 	}
+
+	-- Set used for hate generation on Job abilities
+	sets.Enmity = {
+		main="Epeolatry", -- 23
+		sub="Utu Grip",
+		ammo="Sapience Orb", --2
+		head="Turms Cap +1",
+		body="Runeist's Coat +3",
+		hands={ name="Futhark Mitons +3", augments={'Enhances "Sleight of Sword" effect',}}, -- 6
+		legs="Eri. Leg Guards +1", -- 11
+		feet="Erilaz Greaves +1", -- 6
+		neck="Moonlight Necklace", -- 15
+		waist="Eschan Stone",
+		left_ear={ name="Tuisto Earring", priority=2},
+		right_ear="Cryptic Earring", -- 4
+		left_ring="Begrudging Ring", -- 5
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
+	} -- 82 Enmity 2944 HP / 908 MP
+
 	-- JOB ABILITIES --
 	sets.JA = {}
     sets.JA["Elemental Sforzo"] = set_combine(sets.Enmity, { body="Futhark Coat +3" })
@@ -180,11 +243,6 @@ function get_sets()
     sets.JA["Swordplay"] = set_combine(sets.Enmity, { hands="Futhark Mitons +3" })
 	sets.JA["Provoke"] = sets.Enmity
 
-	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
-	--Leave blank if you dont want to change gear or equip a grip or shield
-	sets.TP.DW = {
-
-	}
 	--Default WS set base
 	sets.WS = {
 		main="Epeolatry",
@@ -274,6 +332,11 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
+
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
 
@@ -318,7 +381,39 @@ end
 function self_command_custom(command)
 
 end
+--Function used to automate Job Ability use
+function check_buff_JA()
+	buff = ''
+	local ja_recasts = windower.ffxi.get_ability_recasts()
+
+	if player.sub_job == 'SAM' then
+		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
+			buff = "Hasso"
+		end
+	end
+
+	if player.sub_job == 'WAR' then
+		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+			buff = "Berserk"
+		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+			buff = "Aggressor"
+		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+			buff = "Warcry"
+		end
+	end
+
+
+
+	return buff
+end
+--Function used to automate Spell use
+function check_buff_SP()
+	buff = ''
+	local sp_recasts = windower.ffxi.get_spell_recasts()
+	return buff
+end
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
 end
+

@@ -31,6 +31,42 @@ function get_sets()
 	sets.Movement = {
 		feet="Fajin Boots",
     }
+
+	sets.OffenseMode = {}
+
+	--Base TP set to build off
+	sets.OffenseMode.TP = {
+		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
+		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
+		ammo="Yamarang",
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		neck="Sanctity Necklace",
+		waist="Windbuffet Belt +1",
+		left_ear="Sherida Earring",
+		right_ear="Telos Earring",
+		left_ring="Gere Ring",
+		right_ring="Epona's Ring",
+		back="Moonbeam Cape",
+	}
+	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
+	sets.OffenseMode.DT = {
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+	}
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	sets.OffenseMode.ACC = {}
+	--Dual Wield
+	sets.OffenseMode.DW = {
+
+	}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -86,37 +122,6 @@ function get_sets()
 	sets.JA["Bully"] = {}
 	sets.JA["Larceny"] = {}
 
-	--Base TP set to build off
-	sets.TP = {
-		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
-		ammo="Yamarang",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
-		neck="Sanctity Necklace",
-		waist="Windbuffet Belt +1",
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
-		left_ring="Gere Ring",
-		right_ring="Epona's Ring",
-		back="Moonbeam Cape",
-	}
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.TP.DT = {
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-	}
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.TP.ACC = {}
-	sets.TP.DW = {
-
-	}
 	--Default WS set base
 	sets.WS = {
 		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
@@ -154,9 +159,9 @@ function get_sets()
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
-	    head="Wh. Rarab Cap +1",
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
 		hands={ name="Plun. Armlets +1", augments={'Enhances "Perfect Dodge" effect',}},
+		feet={ name="Herculean Boots", augments={'Pet: INT+3','"Subtle Blow"+4','"Treasure Hunter"+1','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
 		waist="Chaac Belt",
 	}
 
@@ -171,6 +176,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
@@ -214,5 +224,22 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
+
+end
+
+function check_buff_JA()
+	buff = 'None'
+	--local ja_recasts = windower.ffxi.get_ability_recasts()
+	return buff
+end
+
+function check_buff_SP()
+	buff = 'None'
+	--local sp_recasts = windower.ffxi.get_spell_recasts()
+	return buff
+end
+
+-- This function is called when the job file is unloaded
+function user_file_unload()
 
 end
