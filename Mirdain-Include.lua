@@ -734,10 +734,6 @@ function midcastequip(spell)
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Midcast
-		-- Use defined weapons when cleaving on blu
-		if state.CleaveMode.value == "ON" then
-			equipSet = set_combine(equipSet, sets.Custom.Weapons.Cleave)
-		end
 		-- Defined Set
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
@@ -1709,30 +1705,32 @@ windower.register_event('action', function (data)
 		-- Spell
 		if data.category == 8 then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
-			-- Spell being cast on  you
-			if primarytarget.name == self.name then
-				-- Casting Spell
-				if data.param == 24931 then
-					if targets[1].actions[1].param ~= 0 then
-						-- Get the ability
-						ability = res.spells[targets[1].actions[1].param] -- .en
-						-- Swap in Cursna Gear
-						if ability.en == "Cursna" then
-							equip(sets.Cursna_Recieved)
+			if primarytarget ~= nil then 
+				-- Spell being cast on  you
+				if primarytarget.name == self.name then
+					-- Casting Spell
+					if data.param == 24931 then
+						if targets[1].actions[1].param ~= 0 then
+							-- Get the ability
+							ability = res.spells[targets[1].actions[1].param] -- .en
+							-- Swap in Cursna Gear
+							if ability.en == "Cursna" then
+								equip(sets.Cursna_Recieved)
+							end
+						end
+					-- Spell inturpted
+					elseif data.param == 28787 then 
+						if targets[1].actions[1].param ~= 0 then
+							ability = res.spells[targets[1].actions[1].param] -- .en
+							-- Swap gear back 
+							if ability.en == "Cursna" then
+								equip(set_combine(choose_set(),choose_set_custom()))
+							end
 						end
 					end
-				-- Spell inturpted
-				elseif data.param == 28787 then 
-					if targets[1].actions[1].param ~= 0 then
-						ability = res.spells[targets[1].actions[1].param] -- .en
-						-- Swap gear back 
-						if ability.en == "Cursna" then
-							equip(set_combine(choose_set(),choose_set_custom()))
-						end
-					end
+				elseif data.category == 4 then
+  					equip(set_combine(choose_set(),choose_set_custom()))
 				end
-			elseif data.category == 4 then
-  				equip(set_combine(choose_set(),choose_set_custom()))
 			end
 		end
 	end
