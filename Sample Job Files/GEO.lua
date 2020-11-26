@@ -174,20 +174,20 @@ function get_sets()
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		main="Idris",
-		sub={ name="Ammurapi Shield", priority=2},
+		sub="Ammurapi Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-		head="Geo. Galero +3",
+		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 		body="Geomancy Tunic +3",
 		hands="Geo. Mitaines +3",
 		legs="Geomancy Pants +3",
 		feet="Geo. Sandals +3",
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
+		neck="Sanctity Necklace",
 		waist="Luminary Sash",
-		left_ear={ name="Tuisto Earring", priority=3},
+		left_ear="Regal Earring",
 		right_ear="Malignance Earring",
-		left_ring="Kishar Ring",
+		left_ring="Weather. Ring",
 		right_ring="Stikini Ring +1",
-		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Phys. dmg. taken-10%',}},
 	}
 	-- Free Nuke
 	sets.Midcast.Nuke = {
