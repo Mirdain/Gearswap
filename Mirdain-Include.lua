@@ -20,7 +20,7 @@ DualWield = false
 SpellCastTime = 0
 Spellstart = os.time()
 
-AutoBuffTime = os.clock()
+UpdateTime = os.clock()
 
 command_JA = "None"
 command_SP = "None"
@@ -830,61 +830,29 @@ end
 
 function pretarget(spell,action)
 	-- action is started
-	if is_Busy == true then
-		-- the action is a spell with recast timers
-		if RecastTimers:contains(spell.type) then
-			--Action not timed out yet
-			if os.time() - Spellstart < SpellCastTime then
-				--log('Player is Busy')
-				cancel_spell()
-				return
-			elseif Time_Out == false then
-				Time_Out = true
-			else 
-				-- Action timed out
-				local cast_spell = res.spells:with('name', spell.name)
-				local spell_cast_time = cast_spell.cast_time *.2 + 2.1
-				is_Busy = false
-				Spellstart = os.time()
-				--log('Player action timed out')
-				-- Set Spell Time out
-				SpellCastTime = spell_cast_time
-				Time_Out = false
-			end
-		-- JA's with no recast timers
-		else
-			-- Job Abilities and WS and actions not timed out
-			if os.time() - Spellstart < SpellCastTime then
-				--log('Player is Busy')
-				cancel_spell()
-				return
-			--Set time out for JA's to 2 seconds
-			else
-				is_Busy = false
-				Spellstart = os.time()
-				SpellCastTime = 1.1
-				--log('Player action timed out')
-			end
-		end
-	else
+	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
-			local spell_cast_time = cast_spell.cast_time *.2 + 2.1
-			-- Spell timer counter
-			Spellstart = os.time()
+			local spell_cast_time = cast_spell.cast_time * .2 + 3.1
 			-- Get Spell Cast time
 			SpellCastTime = spell_cast_time
 		else
-			-- Spell timer counter
-			Spellstart = os.time()
 			-- Set duration of JA/WS
 			SpellCastTime = 1.1
 		end
+		-- Spell timer counter
+		Spellstart = os.time()
+	else
+		log('Player is Busy')
+		cancel_spell()
+		return
 	end
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
 	pretarget_custom(spell,action)
+	-- You passed the checks - player will begin action
+	is_Busy = true
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -897,7 +865,6 @@ function precast(spell)
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
 	-- here is where gear is actually equipped
 	equip(equipSet)
-	is_Busy = true
  end
 
  -------------------------------------------------------------------------------------------------------------------
@@ -922,8 +889,14 @@ function aftercast(spell)
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
 	-- here is where gear is actually equipped
 	equip(equipSet)
-	-- action is complete - release player
-	coroutine.schedule(reset_action,.1)
+
+	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
+	if RecastTimers:contains(spell.type) then
+		SpellCastTime = 3.1
+	else
+		SpellCastTime = .1
+	end
+	Spellstart = os.time()
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1081,6 +1054,16 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function check_buff()
+
+	if is_Busy == true then
+		--Action not timed out yet
+		if os.time() - Spellstart < SpellCastTime then
+			return
+		else 
+			-- Action timed out
+			is_Busy = false
+		end
+	end
 	-- Auto Buff is on and not in a town
 	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
 
@@ -1105,8 +1088,8 @@ function check_buff()
 end
 
 function reset_action()
-	is_Busy = false
 	Spellstart = os.time()
+	is_Busy = false
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1650,13 +1633,14 @@ end
 
 windower.register_event('prerender',function()
 	local now = os.clock()
-	if now - AutoBuffTime > .2 then
-		-- check buff refresh rate
-		check_buff()
+
+	if now - UpdateTime > .1 then
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
-		AutoBuffTime = now
+		check_buff()
+		UpdateTime = now
 	end
+
     mov.counter = mov.counter + 1;
     if mov.counter > 5 then
         local pl = windower.ffxi.get_mob_by_index(player.index)
