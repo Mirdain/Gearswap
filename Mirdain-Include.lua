@@ -833,7 +833,7 @@ function pretarget(spell,action)
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
-			local spell_cast_time = cast_spell.cast_time * .2 + 3.1
+			local spell_cast_time = cast_spell.cast_time *.2 + 3
 			-- Get Spell Cast time
 			SpellCastTime = spell_cast_time
 		else
@@ -892,7 +892,7 @@ function aftercast(spell)
 
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
-		SpellCastTime = 3.1
+		SpellCastTime = 3
 	else
 		SpellCastTime = .1
 	end
