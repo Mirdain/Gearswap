@@ -12,6 +12,10 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Miso Ramen"
 
+BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
+BlueHealing = S{'Magic Fruit'}
+BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
+
 --Modes for specific to RUN
 state.OffenseMode = M{['description']='Engaged Mode'}
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them
@@ -401,11 +405,19 @@ end
 function choose_set_custom()
 	equipSet = {}
 
+	if state.OffenseMode.value == "AoE" and player.status == "Idle" and is_moving == false then
+		equipSet = sets.Idle.AoE
+	end
+
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
+
+	if state.OffenseMode.value == "AoE" and player.status == "Idle" and is_moving == false then
+		equipSet = sets.Idle.AoE
+	end
 
 	return equipSet
 end
@@ -440,7 +452,6 @@ end
 function check_buff_SP()
 	buff = 'None'
 	local sp_recasts = windower.ffxi.get_spell_recasts()
-
 
 	if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 100 then
 		buff = "Crusade"
