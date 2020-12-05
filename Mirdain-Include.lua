@@ -18,9 +18,10 @@ settings = config.load(default)
 
 DualWield = false
 SpellCastTime = 0
+
 Spellstart = os.time()
 
-UpdateTime = os.clock()
+UpdateTime = os.time()
 
 command_JA = "None"
 command_SP = "None"
@@ -833,6 +834,7 @@ function pretarget(spell,action)
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
+			-- Set for fastest possible time out
 			local spell_cast_time = cast_spell.cast_time *.2 + 3
 			-- Get Spell Cast time
 			SpellCastTime = spell_cast_time
@@ -892,7 +894,7 @@ function aftercast(spell)
 
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
-		SpellCastTime = 3
+		SpellCastTime = 2.1
 	else
 		SpellCastTime = .1
 	end
@@ -1001,8 +1003,6 @@ function pet_aftercast(spell)
 	equipSet = {}
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
 	equip(equipSet)
-	--action is compete release player unless its a BP
-	coroutine.schedule(reset_action,.1)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1054,24 +1054,16 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function check_buff()
-
-	if is_Busy == true then
-		--Action not timed out yet
-		if os.time() - Spellstart < SpellCastTime then
-			return
-		else 
-			-- Action timed out
-			is_Busy = false
-		end
-	end
 	-- Auto Buff is on and not in a town
 	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
 
 		command_JA = check_buff_JA()
 		command_SP = 'None'
+
 		if not is_moving then
 			command_SP = check_buff_SP()
 		end
+
 		command_BP = 'None'
 		if player.main_job == 'SMN' then
 			command_BP = check_buff_BP()
@@ -1085,11 +1077,6 @@ function check_buff()
 			command_BP_execute()
 		end
 	end
-end
-
-function reset_action()
-	Spellstart = os.time()
-	is_Busy = false
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1521,6 +1508,8 @@ end
 function on_zone_change_for_th(new_zone, old_zone)
     if settings.debug then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
     th_info.tagged_mobs:clear()
+	-- Turn off for zones
+	state.AutoBuff:set('OFF')
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1632,7 +1621,14 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
 end
 
 windower.register_event('prerender',function()
-	local now = os.clock()
+	local now = os.time()
+
+	if is_Busy == true then
+		if now - Spellstart > SpellCastTime then
+			-- Action timed out
+			is_Busy = false
+		end
+	end
 
 	if now - UpdateTime > .1 then
 		gs_status:text(display_box_update())
