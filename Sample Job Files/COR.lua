@@ -359,10 +359,11 @@ function get_sets()
 	sets.WS["Slug Shot"] = {}
 	sets.WS["Numbing Shot"] = {}
 	sets.WS["Last Stand"] = {
+		ammo="Chrono Bullet",
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
-		legs="Herculean Trousers",
+		legs={ name="Herculean Trousers", augments={'Rng.Acc.+26','Weapon skill damage +5%','AGI+9',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
@@ -370,7 +371,7 @@ function get_sets()
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
 		right_ring="Regal Ring",
-		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
 	}
 
 	sets.WS["Wildfire"] = {}
