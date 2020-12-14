@@ -1,2 +1,2 @@
 # Gearswap
-FFXI Gearswap Lua for the impared
+FFXI Gearswap Lua for the impaired
