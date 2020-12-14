@@ -29,7 +29,7 @@ send_command('lua l autocor')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 -- Threshold for Ammunition Warning
-Ammo_Warning_Limit = 79
+Ammo_Warning_Limit = 99
 
 function get_sets()
 
@@ -505,7 +505,7 @@ function user_file_unload()
 end
 
 function check_buff_JA()
-	buff = ''
+	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
 	if player.sub_job == 'WAR' then
 		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
@@ -521,7 +521,7 @@ function check_buff_JA()
 end
 
 function check_buff_SP()
-	buff = ''
+	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
