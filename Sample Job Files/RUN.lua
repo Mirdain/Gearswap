@@ -4,11 +4,6 @@
 -- Load and initialize the include file.
 include('Mirdain-Include')
 
---Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "12"
-MacroBook = "12"
-MacroSet = "1"
-
 -- Use "gs c food" to use the specified food item 
 Food = "Miso Ramen"
 
@@ -20,7 +15,26 @@ BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','B
 state.OffenseMode = M{['description']='Engaged Mode'}
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them
 state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS and TP modes
-state.OffenseMode:set('DT')
+
+-- Function used to change pallets based off sub job and modes
+function Macro_Sub_Job()
+	local macro = 1
+	if player.sub_job == "BLU" then
+		state.OffenseMode:set('AoE')
+		macro = 2
+		send_command('wait 2;aset set tanking')
+	else
+		state.OffenseMode:set('DT')
+		macro = 1
+	end
+	return macro
+end
+
+--Set to ingame lockstyle and Macro Book/Set
+LockStylePallet = "12"
+MacroBook = "12"
+MacroSet = Macro_Sub_Job()
+
 
 --Enable JobMode for UI.
 UI_Name = 'Runes'
@@ -28,6 +42,17 @@ UI_Name = 'Runes'
 state.JobMode = M{['description']='Rune Mode'}
 state.JobMode:options('None','Fire','Ice','Wind','Earth','Lighting','Water','Light','Dark') -- Modes used to use Rune Enhancement
 state.JobMode:set('None')
+
+Runes = {
+	Fire = {Name = "Ignis", Description = "[ICE RESISTANCE] and deals [FIRE DAMAGE]"},
+	Ice = {Name = "Gelus", Description = "[WIND RESISTANCE] and deals [ICE DAMAGE]"},
+	Wind = {Name = "Flabra", Description = "[EARTH RESISTANCE] and deals [WIND DAMAGE]"},
+	Earth = {Name = "Tellus", Description = "[LIGHTING RESISTANCE] and deals [EARTH DAMAGE]"},
+	Lighting = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTING DAMAGE]"},
+	Water = {Name = "Unda", Description = "[FIRE RESISTANCE] and deals [WATER DAMAGE]"},
+	Light = {Name = "Lux", Description = "[LUX RESISTANCE] and deals [LIGHT DAMAGE]"},
+	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"}
+}
 
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -405,8 +430,8 @@ end
 function choose_set_custom()
 	equipSet = {}
 
-	if state.OffenseMode.value == "AoE" and player.status == "Idle" and is_moving == false then
-		equipSet = sets.Idle.AoE
+	if player.status == "Idle" and is_moving == false then
+		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
 	end
 
 	return equipSet
@@ -415,8 +440,8 @@ end
 function status_change_custom(new,old)
 	equipSet = {}
 
-	if state.OffenseMode.value == "AoE" and player.status == "Idle" and is_moving == false then
-		equipSet = sets.Idle.AoE
+	if player.status == "Idle" and is_moving == false then
+		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
 	end
 
 	return equipSet
@@ -446,6 +471,15 @@ function check_buff_JA()
 		end
 	end
 
+	--Rune sets
+	if state.JobMode.value ~= "None" then
+		if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode.value].Name] ~= 3 then
+			buff = Runes[state.JobMode.value].Name
+			info(Runes[state.JobMode.value].Description)
+		end
+
+	end
+
 	return buff
 end
 --Function used to automate Spell use
@@ -468,6 +502,7 @@ function user_file_unload()
 
 end
 
+-- Swaps back when embolden buff is active to extend duration
 function Embolden_Check(spell)
 	equipSet = {}
 	if spell.target.name == player.name then
