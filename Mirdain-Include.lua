@@ -444,11 +444,11 @@ function precastequip(spell)
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Precast
-		if equipSet[spell.english] then
+		if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') then
+			equipSet = set_combine(sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
+		elseif equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
 			info( '['..spell.english..'] Set')
-		elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') then
-			equipSet = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic)
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -475,35 +475,35 @@ function precastequip(spell)
 		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
 			-- Song Count for Minne and Paeon
-			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
-				equipSet = set_combine(sets.Precast.Songs, sets.Song.Count)
+			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II"  or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
+				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Count})
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Precast.Songs, sets.Song.Honor)
+				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Honor})
 			else
-				equipSet = set_combine(sets.Precast.Songs, sets.Song.Strength)
+				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Potency})
 			end
 		-- NiTro Songs (Midcast Sets)
 		else 
 			info('Nitro Mode')
 			-- Song Count for Minne and Paeon
-			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
+			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 				info( '['..spell.english..'] Set (Song Count - Daurdabla)')
-				equipSet = set_combine(sets.Precast.DummySongs, sets.Song.Count)
+				equipSet = set_combine(sets.Midcast.DummySongs, {range=sets.Instrument.Count})
 			-- Equip Marsyas
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Midcast, sets.Song.Honor)
+				equipSet = set_combine(sets.Midcast, {range=sets.Instrument.Honor})
 			-- Equip Harp
 			elseif spell.name:contains('Horde') then
 				info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
-				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.AOE_Sleep)
+				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.AOE_Sleep})
 			-- Normal Enfeebles
 			elseif EnfeebleSong:contains(spell.english) then
 				info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
-				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.Strength)
+				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.Potency})
 			-- Augment the buff songs
 			else
 				info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
-				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), sets.Song.Strength)
+				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=sets.Instrument.Potency})
 			end
 		end
 	-- BlueMagic
@@ -713,24 +713,24 @@ function midcastequip(spell)
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
 		-- Song Count for Minne and Paeon
-		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" then
+		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
-			equipSet = set_combine(sets.Precast.DummySongs, sets.Song.Count)
+			equipSet = set_combine(sets.Midcast.DummySongs, {range=sets.Instrument.Count})
 		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
-			equipSet = set_combine(sets.Midcast, sets.Song.Honor)
+			equipSet = set_combine(sets.Midcast, {range=sets.Instrument.Honor})
 		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
 			info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.AOE_Sleep)
+			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.AOE_Sleep})
 		-- Normal Enfeebles
 		elseif EnfeebleSong:contains(spell.english) then
 			info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), sets.Song.Strength)
+			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.Potency})
 		-- Augment the buff songs
 		else
 			info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), sets.Song.Strength)
+			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=sets.Instrument.Potency})
 		end
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
@@ -965,33 +965,7 @@ end
 
 function pet_midcast(spell)
 	equipSet = {}
-	-- This section is for SMN Blood Pact abilities
-	if player.main_job == "SMN" then
-		is_Busy = true
-		if spell.name == "Perfect Defense" then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		elseif Debuff_BPs:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		elseif Buff_BPs_Healing:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		elseif Buff_BPs_Duration:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		elseif spell.name == "Flaming Crush" then
-			equipSet = sets.Pet_Midcast.FlamingCrush
-		elseif ImpactDebuff and (spell.name=="Impact" or spell.name=="Conflag Strike") then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		elseif Magic_BPs_TP:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.Magic_BP_TP
-		elseif Magic_BPs_NoTP:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.Magic_BP
-		elseif Merit_BPs:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.Magic_BP_TP
-		elseif Debuff_Rage_BPs:contains(spell.name) then
-			equipSet = sets.Pet_Midcast.SummoningMagic
-		else
-			equipSet = sets.Pet_Midcast.Physical_BP
-		end
-	end
+		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 	equip(equipSet)
 end
 
@@ -1001,7 +975,7 @@ end
 
 function pet_aftercast(spell)
 	equipSet = {}
-	equipSet = set_combine(choose_set(), pet_aftercast_custom(pet,gain))
+	equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
 	equip(equipSet)
 end
 
@@ -1694,17 +1668,21 @@ windower.register_event('action', function (data)
 							-- Get the ability
 							ability = res.spells[targets[1].actions[1].param] -- .en
 							-- Swap in Cursna Gear
-							if ability.en == "Cursna" then
-								equip(sets.Cursna_Recieved)
+							if ability ~= nil then
+								if ability.en == "Cursna" then
+									equip(sets.Cursna_Recieved)
+								end
 							end
 						end
 					-- Spell inturpted
 					elseif data.param == 28787 then 
 						if targets[1].actions[1].param ~= 0 then
 							ability = res.spells[targets[1].actions[1].param] -- .en
-							-- Swap gear back 
-							if ability.en == "Cursna" then
-								equip(set_combine(choose_set(),choose_set_custom()))
+							if ability ~= nil then
+								-- Swap gear back 
+								if ability.en == "Cursna" then
+									equip(set_combine(choose_set(),choose_set_custom()))
+								end
 							end
 						end
 					end
