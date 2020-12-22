@@ -153,6 +153,7 @@ EnfeebleSong = S{
 Enfeeble_Acc = S{'Sleep','Sleep II','Sleepga','Sleepga II','Silence','Inundation','Dispel'}
 Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Distract','Distract II','Distract III','Frazzle III'}
 Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'}
+Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 'Banish', 'Banish II', 'Banish III', 'Banishga', 'Banishga II',}
 
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
@@ -407,7 +408,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equipSet[spell.english])
-			info('['..spell.english..'] Set')
+			info('['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -448,7 +449,7 @@ function precastequip(spell)
 			equipSet = set_combine(sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
 		elseif equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -457,7 +458,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -466,7 +467,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -511,7 +512,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -520,7 +521,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -529,7 +530,7 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
 		end
@@ -624,10 +625,10 @@ function midcastequip(spell)
 				elseif Enhancing_Skill:contains(spell.name) then 
 					if buffactive['Accession'] then
 						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill, sets.Midcast.Enhancing.Others)
-						info('Enhancing Skill')
+						info('Enhancing Skill Set')
 					else
 						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
-						info('Enhancing Skill')
+						info('Enhancing Skill Set')
 					end
 				-- Enhancing
 				else
@@ -653,6 +654,10 @@ function midcastequip(spell)
 					info('Enhancing Magic Set')
 				end
 			end
+		-- Divine Spells
+		elseif Divine_Skill:contains(spell.name) then 
+			equipSet = set_combine(equipSet, sets.Midcast.Divine)
+			info('Divine Skill Set')
 		-- Enfeebling Magic
 		elseif spell.skill == 'Enfeebling Magic' then
 			if Enfeeble_Acc:contains(spell.name) then 
@@ -834,13 +839,15 @@ function pretarget(spell,action)
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
-			-- Set for fastest possible time out
-			local spell_cast_time = cast_spell.cast_time *.2 + 3
-			-- Get Spell Cast time
-			SpellCastTime = spell_cast_time
+			-- assume 80% FC
+			SpellCastTime = cast_spell.cast_time *.2 + 2
+			-- Spell not delay set to default 2 sec
+			if buffactive["Chainspell"] or buffactive["Nightingale"] then
+				 SpellCastTime = 2
+			end
 		else
 			-- Set duration of JA/WS
-			SpellCastTime = 1.1
+			SpellCastTime = 1
 		end
 		-- Spell timer counter
 		Spellstart = os.time()
@@ -894,7 +901,7 @@ function aftercast(spell)
 
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
-		SpellCastTime = 2.1
+		SpellCastTime = 2
 	else
 		SpellCastTime = .1
 	end
@@ -1008,13 +1015,13 @@ function choose_set()
 		end
 	-- Idle sets
 	else
-		equipSet = sets.Idle
+		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
 	end
 
 	--Pet specific checks
 	if pet.isvalid then
 		--Augment built set for Perp cost
-		equipSet = set_combine(equipSet, sets.Idle.Pet)
+		equipSet = set_combine(equipSet, set_combine(sets.Idle, sets.Idle[state.OffenseMode.value]), sets.Idle.Pet)
 	end
 	-- Equip movement gear
 	if is_moving == true then
