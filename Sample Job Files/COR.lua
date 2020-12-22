@@ -22,6 +22,8 @@ state.JobMode = M{['description']='Corsair Damage Mode'}
 state.JobMode:options('Naegling','Fomalhaut','Death Penalty') -- Can add Crit for Armageddon
 state.JobMode:set('Death Penalty')
 
+elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
+
 -- load addons
 send_command('lua l autocor')
 
@@ -86,6 +88,14 @@ function get_sets()
 
 	sets.Movement = {
 		legs="Carmine Cuisses +1",
+	}
+
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		waist="Gishdubar Sash",
 	}
 
 	sets.OffenseMode = {}
@@ -155,7 +165,7 @@ function get_sets()
 		ammo=Ammo.Bullet.RA,
 		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
 		body="Laksa. Frac +3", -- 0/20
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		hands={ name="Carmine Fin. Ga. +1", augments={'HP+80','STR+12','INT+12',}}, -- 8/11
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
 		feet="Meg. Jam. +2", -- 10/0
 		left_ear={ name="Tuisto Earring", priority=2},
@@ -172,7 +182,7 @@ function get_sets()
 		ammo=Ammo.Bullet.RA,
 		head="Chass. Tricorne +1", -- 0/14
 		body="Laksa. Frac +3", -- 0/20
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		hands={ name="Carmine Fin. Ga. +1", augments={'HP+80','STR+12','INT+12',}}, -- 8/11
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
 		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}}, -- 0/10
 		left_ear={ name="Tuisto Earring", priority=2},
@@ -185,7 +195,20 @@ function get_sets()
     } -- Totals 32/78
 
 	-- Fast Cast for Magic
-	sets.Precast.FastCast = {}
+	sets.Precast.FastCast = {
+	    head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, -- 14
+		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+44',}}, -- 9
+		hands={ name="Leyline Gloves", augments={'Accuracy+14','Mag. Acc.+13','"Mag.Atk.Bns."+13','"Fast Cast"+2',}}, -- 7
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+7','"Fast Cast"+6',}}, -- 6
+		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}}, -- 8
+		neck="Voltsurge Torque", -- 4
+		waist="Sailfi Belt",
+		left_ear="Loquac. Earring", -- 2
+		right_ear="Enchntr. Earring +1", -- 2
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Kishar Ring", -- 4
+		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
+	}
 
 	sets.Midcast = {}
 
@@ -274,7 +297,7 @@ function get_sets()
 	    body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 	}
 	sets.JA["Snake Eye"] = {
-	    legs={ name="Lanun Trews +1", augments={'Enhances "Snake Eye" effect',}},
+	    legs={ name="Lanun Trews +3", augments={'Enhances "Snake Eye" effect',}},
 	}
 	sets.JA["Fold"] = {}			-- Use gloves for bust
 	sets.JA["Triple Shot"] = {}		-- Gear to be worn during Midshot
@@ -314,7 +337,7 @@ function get_sets()
 	sets.PhantomRoll['Dancer\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Scholar\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Bolter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {legs="Chas. Culottes +1"})
+	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {}) -- {legs="Chas. Culottes +1"}
 	sets.PhantomRoll["Tactician's Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +1"})
 	sets.PhantomRoll["Allies' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +1"})
 	sets.PhantomRoll['Miser\'s Roll'] = sets.PhantomRoll
@@ -384,7 +407,7 @@ function get_sets()
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Orpheus's Sash",
-		--waist="Svelt. Gouriz +1",   -- Will need to make variable distance choice
+		waist="Svelt. Gouriz +1",   -- Will need to make variable distance choice
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
 		left_ring="Dingir Ring",
@@ -407,7 +430,7 @@ function get_sets()
 	sets.Charm = {
 	    main="Lament",
 		range="Compensator",
-		ammo="Decimating Bullet",
+		ammo=Ammo.Bullet.RA,
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -456,6 +479,10 @@ function precast_custom(spell)
 
 	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
 		return equipSet
+	end
+
+	if spell.english == 'Wild Fire' or spell.english == 'Leaden Salute' then
+		equipSet = set_combine(equipSet, Elemental_check(equipSet, spell))
 	end
 
 	return Weapon_Check(equipSet)
@@ -516,7 +543,6 @@ function check_buff_JA()
 			buff = "Warcry"
 		end
 	end
-
 	return buff
 end
 
@@ -526,10 +552,43 @@ function check_buff_SP()
 	return buff
 end
 
- function Weapon_Check(equipSet)
+function Weapon_Check(equipSet)
 	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
 	if DualWield == false then
 		equipSet = set_combine(equipSet,sets.Weapons.Shield)
 	end
 	return equipSet
- end
+end
+
+function Elemental_check(equipSet, spell)
+	if elemental_ws:contains(spell.name) then
+		-- Matching double weather (w/o day conflict).
+		if spell.element == world.weather_element and world.weather_intensity == 2 then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+		-- Matching day and weather.
+		elseif spell.element == world.day_element and spell.element == world.weather_element then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			-- Target distance less than 6 yalms
+		elseif spell.target.distance < (6 + spell.target.model_size) then
+			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
+			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
+		-- Match day or weather.
+		elseif spell.element == world.day_element or spell.element == world.weather_element then
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+		else
+			equipSet = set_combine(equipSet, {waist="Svelt. Gouriz +1"})
+			windower.add_to_chat(8,'No matching weather and distance is ['.. round(distance,2) .. '] - using Sveltesse Gouriz +1')
+		end
+	end
+	return equipSet
+end
+
+function round(num, numDecimalPlaces)
+	if num ~= nil then
+	  local mult = 10^(numDecimalPlaces or 0)
+	  return math.floor(num * mult + 0.5) / mult
+	end
+end
