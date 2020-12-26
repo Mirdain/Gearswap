@@ -752,6 +752,9 @@ function midcastequip(spell)
 		elseif BlueSkill:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			info('Blue Skill set')
+		elseif BlueTank:contains(spell.english) then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Enmity)
+			info('Blue Enmity set')
 		-- Default Spell set
 		else
 			info('Midcast not set')
@@ -860,8 +863,6 @@ function pretarget(spell,action)
 	pretargetcheck(spell,action)
 	--Calls the job specific function
 	pretarget_custom(spell,action)
-	-- You passed the checks - player will begin action
-	is_Busy = true
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -886,6 +887,8 @@ function midcast(spell)
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
 	-- here is where gear is actually equipped
 	equip(equipSet)
+	-- You passed the checks - player will begin action
+	is_Busy = true
 end
 
 -------------------------------------------------------------------------------------------------------------------
