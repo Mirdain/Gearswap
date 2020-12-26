@@ -9,22 +9,62 @@ LockStylePallet = "8"
 MacroBook = "4"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Sublime Sushi"
+
+--Set default mode (TP,ACC,DT)
+state.OffenseMode:set('TP')
+
+--Enable JobMode for UI
+UI_Name = 'DPS'
+
+--Modes for specific to Corsair
+state.JobMode = M{['description']='Warrior Damage Mode'}
+state.JobMode:options('Chango','Savage Blade','Decimation', 'Aeolian Edge')
+state.JobMode:set('Chango')
+
+
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Chango'] = {
+		main="Chango",
+		sub="Utu Grip",
+	}
+	sets.Weapons['Savage Blade'] = {
+		main="Naegling",
+		sub="Zantetsuken",
+	}
+	sets.Weapons['Decimation'] = {
+		main="Dolichenus",
+		sub={ name="Digirbalag", augments={'"Dbl.Atk."+4','Accuracy+11','Attack+8',}},
+	}
+	sets.Weapons['Aeolian Edge'] = {
+	    main="Tauret",
+		sub="Naegling",
+	}
+	sets.Weapons.Shield = {
+		sub="Blurred Shield +1",
+	}
+
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
-		head="Hjarrandi Helm",
-		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		ammo="Staunch Tathlum +1",
+		head="Volte Salade",
+		body="Sacro Breastplate",
 		hands="Sulev. Gauntlets +2",
-		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		feet="Hermes' Sandals",
-		neck="Loricate Torque +1",
+		legs="Pumm. Cuisses +3",
+		feet="Sulev. Leggings +2",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Flume Belt +1",
-		left_ear="Odnowa Earring +1",
-		right_ear="Genmei Earring",
-		left_ring="Moonlight ring",
-		right_ring="Moonlight ring",
-		back="Moonbeam Cape",
+		left_ear="Tuisto Earring",
+		right_ear="Tuisto Earring",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -80,7 +120,7 @@ function get_sets()
 	sets.JA["Brazen Rush"] = {}
 
 	--Base TP set to build off
-	sets.TP = {
+	sets.OffenseMode.TP = {
 	    ammo="Ginsen",
 		head="Hjarrandi Helm",
 		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}},
@@ -96,19 +136,18 @@ function get_sets()
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.TP.DT = {
+	sets.OffenseMode.DT = {
 		head="Hjarrandi Helm",
 		body="Hjarrandi Breast.",
 		neck="War. Beads +2",
 		waist="Tempus Fugit",
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.TP.ACC = {
+	sets.OffenseMode.ACC = {
 
 	}
 	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
-	--Leave blank if you dont want to change gear or equip a grip or shield
-	sets.TP.DW = {
+	sets.DualWield = {
 		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}}, --9
 		hands={ name="Emi. Gauntlets +1", augments={'Accuracy+25','"Dual Wield"+6','Pet: Accuracy+25',}},
 		left_ear="Suppanomimi",
@@ -209,6 +248,11 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+-- Called when the player's subjob changes.
+function sub_job_change_custom(new, old)
+	-- Typically used for Macro pallet changing
+end
+
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
 
@@ -217,39 +261,103 @@ end
 function precast_custom(spell)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
 
+end
+
+function user_file_unload()
+	
+end
+
+function check_buff_JA()
+	buff = 'None'
+	local ja_recasts = windower.ffxi.get_ability_recasts()
+	if player.sub_job == 'WAR' then
+		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+			buff = "Berserk"
+		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+			buff = "Aggressor"
+		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+			buff = "Warcry"
+		end
+	end
+	return buff
+end
+
+function check_buff_SP()
+	buff = 'None'
+	--local sp_recasts = windower.ffxi.get_spell_recasts()
+	return buff
+end
+
+function Weapon_Check(equipSet)
+	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
+	if DualWield == false then
+		equipSet = set_combine(equipSet,sets.Weapons.Shield)
+	end
+	return equipSet
+end
+
+function Elemental_check(equipSet, spell)
+	-- This function swaps in the Orpheus or Hachirin as needed
+	if elemental_ws:contains(spell.name) then
+		-- Matching double weather (w/o day conflict).
+		if spell.element == world.weather_element and world.weather_intensity == 2 then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+		-- Matching day and weather.
+		elseif spell.element == world.day_element and spell.element == world.weather_element then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			-- Target distance less than 6 yalms
+		elseif spell.target.distance < (6 + spell.target.model_size) then
+			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
+			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
+		-- Match day or weather.
+		elseif spell.element == world.day_element or spell.element == world.weather_element then
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+		end
+	end
+	return equipSet
+end
+
+function round(num, numDecimalPlaces)
+	if num ~= nil then
+	  local mult = 10^(numDecimalPlaces or 0)
+	  return math.floor(num * mult + 0.5) / mult
+	end
 end
