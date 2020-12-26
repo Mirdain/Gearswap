@@ -19,7 +19,7 @@ UI_Name = 'DPS'
 
 --Modes for specific to Corsair
 state.JobMode = M{['description']='Corsair Damage Mode'}
-state.JobMode:options('Naegling','Fomalhaut','Death Penalty') -- Can add Crit for Armageddon
+state.JobMode:options('Naegling','Fomalhaut','Death Penalty', 'Aeolian Edge') -- Can add Wildfire
 state.JobMode:set('Death Penalty')
 
 elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
@@ -58,16 +58,23 @@ function get_sets()
 		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
 	}
 
+	sets.Weapons['Aeolian Edge'] = {
+	    main="Tauret",
+		range="Fomalhaut", -- Need TP Gun
+		sub="Naegling",
+	}
+
 	sets.Weapons.Shield = {
 		sub={ name="Nusku Shield", priority=1},
 	}
 
 	-- Ammo Selection
-	Ammo.Bullet.RA = "Chrono Bullet"	-- TP Ammo
-	Ammo.Bullet.WS = "Chrono Bullet"	-- Physical Weaponskills
-	Ammo.Bullet.MAB = "Living Bullet"	-- Magical Weaponskills
-	Ammo.Bullet.MACC = "Chrono Bullet"	-- Magic Accuracy
-	Ammo.Bullet.QD = "Chrono Bullet"	-- Quick Draw
+	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
+	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills
+	Ammo.Bullet.MAB = "Living Bullet"		-- Magical Weaponskills
+	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
+	Ammo.Bullet.QD = "Hauksbok Bullet"		-- Quick Draw
+	Ammo.Bullet.MAG_WS = "Hauksbok Bullet"	-- Magic Weapon Skills
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
@@ -77,10 +84,10 @@ function get_sets()
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck={ name="Comm. Charm +2", augments={'Path: A',}}, -- 4/0
-		waist="Liv. Bul. Pouch",
-		left_ear="Sanare Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Sanare Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Shadow Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
@@ -110,7 +117,7 @@ function get_sets()
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
 		feet="Malignance Boots",
 		neck="Iskur Gorget",
-		waist="Yemaya Belt",
+		waist="Grunfeld Rope",
 		left_ear="Telos Earring",
 		right_ear="Eabani Earring",
 		left_ring="Petrov Ring",
@@ -120,8 +127,8 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-	    sub={ name="Rostam", augments={'Path: C',}},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	})
 
 	--The following sets augment the base TP set above for Dual Wielding
@@ -146,7 +153,7 @@ function get_sets()
 		ammo=Ammo.Bullet.RA,
 		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
 		body="Oshosi Vest +1", -- 14/0
-		hands={ name="Carmine Fin. Ga. +1", augments={'HP+80','STR+12','INT+12',}}, -- 8/11
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
 		feet="Meg. Jam. +2", -- 10/0
 		left_ear={ name="Tuisto Earring", priority=2},
@@ -158,41 +165,18 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 10/0
     } -- Totals 66/24
 
-	sets.Precast.RA.ACC = {}
-
 	-- Flurry - 45 Snapshot Needed
-	sets.Precast.RA.Flurry = {
-		ammo=Ammo.Bullet.RA,
-		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
-		body="Laksa. Frac +3", -- 0/20
-		hands={ name="Carmine Fin. Ga. +1", augments={'HP+80','STR+12','INT+12',}}, -- 8/11
-		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
-		feet="Meg. Jam. +2", -- 10/0
-		left_ear={ name="Tuisto Earring", priority=2},
-		right_ear={ name="Etiolation Earring", priority=1},
-		left_ring={ name="Ilabrat Ring", priority=3},
-		right_ring={ name="Regal Ring", priority=4},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}}, -- 4/0
-		waist="Yemaya Belt", -- 0/10
-		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 10/0
-    } -- Totals 52/54
+	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
+		body="Laksa. Frac +3",
+	}) -- Totals 52/54
 
 	-- Flurry II - 30 Snapshot Needed
-	sets.Precast.RA.Flurry_II = {
-		ammo=Ammo.Bullet.RA,
-		head="Chass. Tricorne +1", -- 0/14
-		body="Laksa. Frac +3", -- 0/20
-		hands={ name="Carmine Fin. Ga. +1", augments={'HP+80','STR+12','INT+12',}}, -- 8/11
-		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
-		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}}, -- 0/10
-		left_ear={ name="Tuisto Earring", priority=2},
-		right_ear={ name="Etiolation Earring", priority=1},
-		left_ring={ name="Ilabrat Ring", priority=3},
-		right_ring={ name="Regal Ring", priority=4},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}}, -- 4/0
-		waist="Yemaya Belt", -- 0/10
-		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 10/0
-    } -- Totals 32/78
+	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
+		head="Chass. Tricorne +1", 
+		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}}
+    }) -- Totals 32/78
+
+	sets.Precast.RA.ACC = {}
 
 	-- Fast Cast for Magic
 	sets.Precast.FastCast = {
@@ -382,7 +366,7 @@ function get_sets()
 	sets.WS["Slug Shot"] = {}
 	sets.WS["Numbing Shot"] = {}
 	sets.WS["Last Stand"] = {
-		ammo="Chrono Bullet",
+		ammo=Ammo.Bullet.WS,
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
@@ -402,18 +386,35 @@ function get_sets()
 		ammo=Ammo.Bullet.MAB,
 		head="Pixie Hairpin +1",
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands={ name="Herculean Gloves", augments={'"Mag.Atk.Bns."+18','Weapon skill damage +5%','STR+2','Mag. Acc.+15',}},
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
-		waist="Orpheus's Sash",
-		waist="Svelt. Gouriz +1",   -- Will need to make variable distance choice
+		waist="Svelt. Gouriz +1",   -- Changes based off elemental function
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
 		left_ring="Dingir Ring",
 		right_ring="Archon Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},
 	}
+
+	sets.WS['Aeolian Edge'] = {
+	    --range="Fomalhaut",  NEED to get TP gun
+		Ammo.Bullet.QD
+		head="Malignance Chapeau", -- Need to Aug Herc Helm
+		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
+		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
+		waist="Eschan Stone",
+		left_ear="Friomisi Earring",
+		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		left_ring="Dingir Ring",
+		right_ring="Karieyh Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},  -- INT / DEX
+	}
+
 	sets.WS["Fast Blade"] = {}
 	sets.WS["Burning Blade"] = {}
 	sets.WS["Flat Blade"] = {}
@@ -561,6 +562,7 @@ function Weapon_Check(equipSet)
 end
 
 function Elemental_check(equipSet, spell)
+	-- This function swaps in the Orpheus or Hachirin as needed
 	if elemental_ws:contains(spell.name) then
 		-- Matching double weather (w/o day conflict).
 		if spell.element == world.weather_element and world.weather_intensity == 2 then
@@ -578,9 +580,6 @@ function Elemental_check(equipSet, spell)
 		elseif spell.element == world.day_element or spell.element == world.weather_element then
 			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		else
-			equipSet = set_combine(equipSet, {waist="Svelt. Gouriz +1"})
-			windower.add_to_chat(8,'No matching weather and distance is ['.. round(distance,2) .. '] - using Sveltesse Gouriz +1')
 		end
 	end
 	return equipSet
