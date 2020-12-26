@@ -70,6 +70,43 @@ function get_sets()
 	sets.Movement = {
 		feet="Hermes' Sandals",
 	}
+
+	sets.OffenseMode = {}
+
+	--Base TP set to build off
+	sets.OffenseMode.TP = {
+	    ammo="Ginsen",
+		head="Hjarrandi Helm",
+		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}},
+		hands="Sulev. Gauntlets +2",
+		legs="Pumm. Cuisses +3",
+		feet="Pumm. Calligae +3",
+		neck="War. Beads +2",
+		waist="Ioskeha Belt +1",
+		left_ear="Cessance Earring",
+		right_ear="Digni. Earring",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	}
+	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
+	sets.OffenseMode.DT = {
+		head="Hjarrandi Helm",
+		body="Hjarrandi Breast.",
+		neck="War. Beads +2",
+		waist="Tempus Fugit",
+	}
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	sets.OffenseMode.ACC = {
+
+	}
+	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
+	sets.DualWield = {
+		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}}, --9
+		hands={ name="Emi. Gauntlets +1", augments={'Accuracy+25','"Dual Wield"+6','Pet: Accuracy+25',}},
+		left_ear="Suppanomimi",
+	}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -119,39 +156,6 @@ function get_sets()
 	sets.JA["Blood Rage"] = {}
 	sets.JA["Brazen Rush"] = {}
 
-	--Base TP set to build off
-	sets.OffenseMode.TP = {
-	    ammo="Ginsen",
-		head="Hjarrandi Helm",
-		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}},
-		hands="Sulev. Gauntlets +2",
-		legs="Pumm. Cuisses +3",
-		feet="Pumm. Calligae +3",
-		neck="War. Beads +2",
-		waist="Ioskeha Belt +1",
-		left_ear="Cessance Earring",
-		right_ear="Digni. Earring",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
-		head="Hjarrandi Helm",
-		body="Hjarrandi Breast.",
-		neck="War. Beads +2",
-		waist="Tempus Fugit",
-	}
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
-
-	}
-	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
-	sets.DualWield = {
-		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}}, --9
-		hands={ name="Emi. Gauntlets +1", augments={'Accuracy+25','"Dual Wield"+6','Pet: Accuracy+25',}},
-		left_ear="Suppanomimi",
-	}
 	--Default WS set base
 	sets.WS = {
 		ammo="Knobkierrie",
