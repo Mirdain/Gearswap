@@ -594,10 +594,3 @@ function Elemental_check(equipSet, spell)
 	end
 	return equipSet
 end
-
-function round(num, numDecimalPlaces)
-	if num ~= nil then
-	  local mult = 10^(numDecimalPlaces or 0)
-	  return math.floor(num * mult + 0.5) / mult
-	end
-end
