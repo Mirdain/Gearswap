@@ -19,7 +19,7 @@ UI_Name = 'DPS'
 
 --Modes for specific to Corsair
 state.JobMode = M{['description']='Corsair Damage Mode'}
-state.JobMode:options('Naegling','Fomalhaut','Death Penalty', 'Aeolian Edge') -- Can add Wildfire
+state.JobMode:options('Fomalhaut','Death Penalty', 'Naegling', 'Aeolian Edge') -- Can add Wildfire
 state.JobMode:set('Death Penalty')
 
 elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
@@ -41,14 +41,14 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Naegling'] = {
-	    main={ name="Naegling", priority=2},
-		range="Fomalhaut", -- Need TP Gun
-		sub={ name="Blurred Knife +1", priority=1},
+		main="Naegling",
+		sub="Blurred Knife +1",
+		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
 	sets.Weapons['Fomalhaut'] = {
 		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
-		range="Fomalhaut",
+		range={ name="Fomalhaut", augments={'Path: A',}},
 		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
 	}
 
@@ -60,8 +60,8 @@ function get_sets()
 
 	sets.Weapons['Aeolian Edge'] = {
 	    main="Tauret",
-		range="Fomalhaut", -- Need TP Gun
 		sub="Naegling",
+		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
 	sets.Weapons.Shield = {
@@ -333,11 +333,6 @@ function get_sets()
 
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
-	}
-
-	sets.WS.ACC = {}
-
-	sets.WS.WSD = {
 		head={ name="Herculean Helm", augments={'Accuracy+20 Attack+20','Weapon skill damage +4%',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
@@ -354,23 +349,65 @@ function get_sets()
 
 	sets.WS.MAB = {
 		ammo=Ammo.Bullet.MAB,
+		head={ name="Herculean Helm", augments={'Mag. Acc.+17 "Mag.Atk.Bns."+17','Weapon skill damage +5%','Mag. Acc.+2',}},
+		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
+		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
+		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
+		waist="Eschan Stone",
+		left_ear="Friomisi Earring",
+		right_ear="Crematio Earring",
+		left_ring="Dingir Ring",
+		right_ring="Karieyh Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},
 	}
 
-	sets.WS.MACC = {
+	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
+
+	})
+
+	sets.WS["Leaden Salute"] = set_combine(sets.WS.MAB, {
+		head="Pixie Hairpin +1",
+		right_ring="Archon Ring",
+		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		waist="Svelt. Gouriz +1",   -- Changes based off elemental function
+	})
+
+	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
+		ammo=Ammo.Bullet.MAG_WS,
+		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		waist="Eschan Stone", -- Changes based off elemental function
+	})
+
+	sets.WS.MACC = set_combine(sets.WS.MAB, {
 		ammo=Ammo.Bullet.MACC,
+	})
+
+	sets.WS.WSD = {
+		ammo=Ammo.Bullet.WS,
+		head={ name="Herculean Helm", augments={'Accuracy+20 Attack+20','Weapon skill damage +4%',}},
+		body="Laksa. Frac +3",
+		hands="Meg. Gloves +2",
+		legs={ name="Herculean Trousers", augments={'Attack+21','Weapon skill damage +5%','Accuracy+15',}},
+		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+		neck="Comm. Charm +2",
+		waist="Grunfeld Rope",
+		left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		right_ear="Ishvara Earring",
+		left_ring="Karieyh Ring",
+		right_ring="Regal Ring",
+		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
 
-	sets.WS["Hot Shot"] = {}
-	sets.WS["Split Shot"] = {}
-	sets.WS["Sniper Shot"] = {}
-	sets.WS["Slug Shot"] = {}
-	sets.WS["Numbing Shot"] = {}
+	sets.WS["Savage Blade"] = sets.WS.WSD
+
 	sets.WS["Last Stand"] = {
 		ammo=Ammo.Bullet.WS,
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'Rng.Acc.+26','Weapon skill damage +5%','AGI+9',}},
+		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
@@ -381,49 +418,22 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
 	}
 
-	sets.WS["Wildfire"] = {}
-	sets.WS["Leaden Salute"] = {
-		ammo=Ammo.Bullet.MAB,
-		head="Pixie Hairpin +1",
-		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
-		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}},
-		waist="Svelt. Gouriz +1",   -- Changes based off elemental function
-		left_ear="Friomisi Earring",
-		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
-		left_ring="Dingir Ring",
-		right_ring="Archon Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},
-	}
+	-- Accuracy set used in OffenseMode.ACC
+	sets.WS.ACC = {}
 
-	sets.WS['Aeolian Edge'] = {
-	    --range="Fomalhaut",  NEED to get TP gun
-		Ammo.Bullet.QD
-		head="Malignance Chapeau", -- Need to Aug Herc Helm
-		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
-		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}},
-		waist="Eschan Stone",
-		left_ear="Friomisi Earring",
-		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
-		left_ring="Dingir Ring",
-		right_ring="Karieyh Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},  -- INT / DEX
-	}
-
+	-- Uses Default WS set
+	sets.WS["Hot Shot"] = {}
+	sets.WS["Split Shot"] = {}
+	sets.WS["Sniper Shot"] = {}
+	sets.WS["Slug Shot"] = {}
+	sets.WS["Numbing Shot"] = {}
 	sets.WS["Fast Blade"] = {}
 	sets.WS["Burning Blade"] = {}
 	sets.WS["Flat Blade"] = {}
 	sets.WS["Shining Blade"] = {}
 	sets.WS["Circle Blade"] = {}
 	sets.WS["Spirits Within"] = {}
-	sets.WS["Savage Blade"] = sets.WS.WSD
 	sets.WS["Requiescat"] = {}
-
 
 	--Custom sets for each jobsetup
 	sets.Custom = {}
