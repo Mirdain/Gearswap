@@ -21,7 +21,8 @@ SpellCastTime = 0
 
 Spellstart = os.time()
 
-UpdateTime = os.time()
+UpdateTime1 = os.time()
+UpdateTime2 = os.time()
 
 command_JA = "None"
 command_SP = "None"
@@ -1392,13 +1393,11 @@ send_command('bind f9 gs c JobMode')
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
-	coroutine.schedule(weaponcheck,5)
 end
 
 -- Called when the player's subjob changes.
 function sub_job_change(new, old)
 	send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
-	coroutine.schedule(weaponcheck,5)
 	sub_job_change_custom()
 end
 
@@ -1410,7 +1409,6 @@ function weaponcheck()
 	else
 		DualWield = false
 	end
-	equip(set_combine(choose_set(),choose_set_custom()))
 end
 
 
@@ -1614,11 +1612,16 @@ windower.register_event('prerender',function()
 		end
 	end
 
-	if now - UpdateTime > .1 then
+	if now - UpdateTime1 > 4 then
+		weaponcheck()
+		UpdateTime1 = now
+	end
+
+	if now - UpdateTime2 > .1 then
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
 		check_buff()
-		UpdateTime = now
+		UpdateTime2 = now
 	end
 
     mov.counter = mov.counter + 1;
