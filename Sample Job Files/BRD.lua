@@ -26,55 +26,67 @@ state.OffenseMode:set('DT')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
+send_command('bind f10 gs c songbuff')
+
 
 function get_sets()
 
 	--Set the weapon options.  This is set below in job customization section
-	sets.Weapons = {}
+	Weapons = {}
 
-	sets.Weapons['Mordant Rime'] = {
+	Weapons['Mordant Rime'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
-	sets.Weapons['Savage Blade'] = {
+	Weapons['Savage Blade'] = {
 		main="Naegling",
 		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
-	sets.Weapons['Aeolian Edge'] = {
+	Weapons['Aeolian Edge'] = {
+		main="Tauret",
+		sub="Levante Dagger",
+	}
+
+	Weapons['Rudra\'s Storm'] = {
 	    main="Tauret",
 		sub="Naegling",
 	}
 
-	sets.Weapons['Rudra\'s Storm'] = {
-	    main="Tauret",
-		sub="Naegling",
+	Weapons.Songs = {
+		main={ name="Carnwenhan", augments={'Path: A',}},
+		sub="Genmei Shield",
 	}
 
-	sets.Weapons.Shield = {
+	Weapons.Songs.DualWield = {
+		main={ name="Carnwenhan", augments={'Path: A',}},
+		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+	}
+
+	Weapons.Shield = {
 		sub="Genmei Shield",
 	}
 
 	-- Instruments to use
-	sets.Instrument ={}
-	sets.Instrument.Count = { name="Daurdabla" }
-	sets.Instrument.Potency = { name="Gjallarhorn" }
-	sets.Instrument.Honor = { name="Marsyas" }
-	sets.Instrument.AOE_Sleep = { name="Daurdabla" }
-	sets.Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','Phys. dmg. taken -4%','HP+20',} }
-	sets.Instrument.TP = { name="Linos", augments={'Accuracy+20','"Store TP"+4','Quadruple Attack +3',} }
-	sets.Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
-	sets.Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
-	sets.Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
-
+	Instrument ={}
+	Instrument.Count = { name="Daurdabla" }
+	Instrument.Potency = { name="Gjallarhorn" }
+	Instrument.Honor = { name="Marsyas" }
+	Instrument.AOE_Sleep = { name="Daurdabla" }
+	Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','Phys. dmg. taken -4%','HP+20',} }
+	Instrument.TP = { name="Linos", augments={'Accuracy+20','"Store TP"+4','Quadruple Attack +3',} }
+	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
+	Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
+	Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
+	Instrument.Aeolian = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
 
 	-- HP/MP Balancing Goal
 	-- HP: 2200 MP: 550
 
 	-- Standard Idle set
 	sets.Idle = {
-		range=sets.Instrument.Idle,  -- 4/0
+		range=Instrument.Idle,  -- 4/0
 		head="Inyanga Tiara +2", -- 0/5
 		body="Inyanga Jubbah +2", -- 0/8
 		hands="Mousai Gages +1",
@@ -96,7 +108,7 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		range=sets.Instrument.TP,
+		range=Instrument.TP,
 		head="Aya. Zucchetto +2",
 		body="Ayanmo Corazza +2",
 		hands="Aya. Manopolas +2",
@@ -131,7 +143,7 @@ function get_sets()
 
 	-- Used to Songs
 	sets.Precast.Songs = {
-		range=sets.Instrument.FastCast, -- 6
+		range=Instrument.FastCast, -- 6
 		head="Fili Calot +1", -- 14
 		body="Brioso Justau. +3", -- 15
 		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}, priority=7}, -- 12
@@ -148,7 +160,7 @@ function get_sets()
 
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		range=sets.Instrument.FastCast, -- 6
+		range=Instrument.FastCast, -- 6
 		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}, priority=4}, -- 10
 		body="Inyanga Jubbah +2", -- 14
 		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}}, -- 7
@@ -168,7 +180,7 @@ function get_sets()
 
 	-- Used for Raises and Cure spells
 	sets.Precast.QuickMagic = {
-		range=sets.Instrument.QuickMagic, -- 4
+		range=Instrument.QuickMagic, -- 4
 		waist="Witful Belt", -- 3
 		right_ring="Weather. Ring", -- 3
 	} -- 10% Quick Magic
@@ -194,7 +206,7 @@ function get_sets()
 
 	-- Cure Set
 	sets.Midcast.Cure = {
-		range=sets.Instrument.FastCast, 
+		range=Instrument.FastCast, 
 		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}}, -- 10    UPGRADE
 		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}}, -- 6
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}}, -- 11
@@ -212,7 +224,7 @@ function get_sets()
 	-- Base set for duration
 	sets.Midcast.Enhancing = {
 		sub="Ammurapi Shield",
-		range=sets.Instrument.FastCast,
+		range=Instrument.FastCast,
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
 		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
@@ -244,7 +256,7 @@ function get_sets()
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		sub="Ammurapi Shield",
-		range="Gjallarhorn",
+		range=Instrument.Potency,
 		head="Brioso Roundlet +3",
 		body="Brioso Justau. +3",
 		hands="Inyan. Dastanas +2",
@@ -262,7 +274,7 @@ function get_sets()
 
 	-- Max duration
 	sets.Midcast.Lullaby = set_combine(sets.Midcast.Enfeebling, {
-		range=sets.Instrument.Honor,
+		range=Instrument.Honor,
 		body="Fili Hongreline +1",
 		hands="Brioso Cuffs +3",
 		legs="Inyanga Shalwar +2",
@@ -278,11 +290,11 @@ function get_sets()
     sets.Midcast.Scherzo = {feet="Fili Cothurnes +1"}
     sets.Midcast.Mazurka = {}
     sets.Midcast.Paeon = {head="Brioso Roundlet +3"}
-    sets.Midcast.Threnody = {}
-    sets.Midcast.Minne = {}
+    sets.Midcast.Threnody = {body="Mou. Manteel +1"}
+    sets.Midcast.Minne = {legs="Mou. Seraweels +1"}
     sets.Midcast.Mambo = {}
     sets.Midcast.Carol = {hands="Mousai Gages +1"}
-    sets.Midcast.Etude = {}
+    sets.Midcast.Etude = {head="Mousai Turban +1"}
 	sets.Midcast.Dirge = {}
 	sets.Midcast.Sirvente = {}
 
@@ -310,7 +322,7 @@ function get_sets()
 	sets.WS["Savage Blade"] = {}
 
 	sets.WS["Mordant Rime"] = {
-		range=sets.Instrument.Mordant,
+		range=Instrument.Mordant,
 		head={ name="Bihu Roundlet +3", augments={'Enhances "Con Anima" effect',}},
 		body={ name="Bihu Jstcorps. +3", augments={'Enhances "Troubadour" effect',}},
 		hands={ name="Bihu Cuffs +3", augments={'Enhances "Con Brio" effect',}},
@@ -326,11 +338,20 @@ function get_sets()
 	}
 
 	sets.WS["Aeolian Edge"] = {
-	
-	
+	    range=Instrument.Aeolian,
+		body="Cohort Cloak +1",
+		hands={ name="Chironic Gloves", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','"Drain" and "Aspir" potency +6','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
+		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}},
+		feet={ name="Chironic Slippers", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','INT+7','"Mag.Atk.Bns."+9',}},
+		neck="Sanctity Necklace",
+		waist="Eschan Stone",
+		left_ear="Friomisi Earring",
+		right_ear="Regal Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Shiva Ring +1",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	
-
 	sets.Charm = {
 		main="Lament",
 		range="Marsyas",
@@ -375,7 +396,11 @@ end
 function precast_custom(spell)
 	equipSet = {}
 	if spell.type == 'BardSong' then
-		return set_combine(equipSet, {main={ name="Carnwenhan", augments={'Path: A',}}})
+		if DualWield == false then
+			return set_combine(equipSet, Weapons.Songs)
+		else
+			return set_combine(equipSet, Weapons.Songs.DualWield)
+		end
 	else
 		return Weapon_Check(equipSet)
 	end
@@ -384,7 +409,11 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 	if spell.type == 'BardSong' then
-		return set_combine(equipSet, {main={ name="Carnwenhan", augments={'Path: A',}}})
+		if DualWield == false then
+			return set_combine(equipSet, Weapons.Songs)
+		else
+			return set_combine(equipSet, Weapons.Songs.DualWield)
+		end
 	else
 		return Weapon_Check(equipSet)
 	end
@@ -424,7 +453,7 @@ end
 function check_buff_SP()
 	buff = 'None'
 	local sp_recasts = windower.ffxi.get_spell_recasts()
-		
+
 
 	return buff
 end
@@ -442,27 +471,50 @@ function user_file_unload()
 
 end
 
- function Weapon_Check(equipSet)
-	if DualWield == true then
-		-- Does not allow TP to be lost
-		equipSet = set_combine(equipSet, sets.Weapons.Dual_Wield)
-	else
-		-- Will be overwrote by the gearsets above
-		equipSet = set_combine(sets.Weapons, equipSet)
+function Weapon_Check(equipSet)
+	equipSet = set_combine(equipSet,Weapons[state.JobMode.value])
+	if DualWield == false then
+		equipSet = set_combine(equipSet,Weapons.Shield)
 	end
 	return equipSet
- end
+end
 
 -- Function to prebuff Dummy Songs
 function dummy_songs()
 	info('Song Buff Begin')
-	send_command("input /ma \"Army's Paeon IV\" <me>;wait 5.5;input /ma \"Army's Paeon III\" <me>;wait 5.5;input /ma \"Army's Paeon II\" <me>;wait 5.5;input /ma \"Army's Paeon\" <me>")
+	state.AutoBuff:set('ON')
+	send_command("input /ma \"Army's Paeon IV\" <me>")
+
+	coroutine.schedule(player_buffing,.05)
+	coroutine.schedule(song2,5.5)
+	coroutine.schedule(song3,11)
+	coroutine.schedule(song4,16.5)
 end
 
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
+function song2()
+	is_Buffing = false
+	send_command("input /ma \"Army's Paeon III\" <me>")
+	coroutine.schedule(player_buffing,.05)
+end
+
+function song3()
+	is_Buffing = false
+	send_command("input /ma \"Army's Paeon II\" <me>")
+	coroutine.schedule(player_buffing,.05)
+end
+
+function song4()
+	is_Buffing = false
+	send_command("input /ma \"Army's Paeon\" <me>")
+	coroutine.schedule(player_buffing,.05)
+	coroutine.schedule(songbuff,5.5)
+end
+
+function songbuff()
+	state.AutoBuff:set('OFF')
+	is_Buffing = false
+end
+
+function player_buffing ()
+	is_Buffing = true
 end
