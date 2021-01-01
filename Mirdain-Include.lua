@@ -19,10 +19,9 @@ settings = config.load(default)
 DualWield = false
 SpellCastTime = 0
 
-Spellstart = os.time()
-
-UpdateTime1 = os.time()
-UpdateTime2 = os.time()
+Spellstart = os.clock()
+UpdateTime1 = os.clock()
+UpdateTime2 = os.clock()
 
 command_JA = "None"
 command_SP = "None"
@@ -38,6 +37,8 @@ avatar = "None"
 is_Busy = false
 is_Pianissimo = false
 is_moving = false
+is_Buffing = false
+
 Time_Out = false
 
 --Variable to monitor during debug mode
@@ -478,11 +479,11 @@ function precastequip(spell)
 		if not buffactive['Nightingale'] then
 			-- Song Count for Minne and Paeon
 			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II"  or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
-				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Count})
+				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Count})
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Honor})
+				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Honor})
 			else
-				equipSet = set_combine(sets.Precast.Songs, {range=sets.Instrument.Potency})
+				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Potency})
 			end
 		-- NiTro Songs (Midcast Sets)
 		else 
@@ -490,22 +491,22 @@ function precastequip(spell)
 			-- Song Count for Minne and Paeon
 			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 				info( '['..spell.english..'] Set (Song Count - Daurdabla)')
-				equipSet = set_combine(sets.Midcast.DummySongs, {range=sets.Instrument.Count})
+				equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
 			-- Equip Marsyas
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Midcast, {range=sets.Instrument.Honor})
+				equipSet = set_combine(sets.Midcast, {range=Instrument.Honor})
 			-- Equip Harp
 			elseif spell.name:contains('Horde') then
 				info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
-				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.AOE_Sleep})
+				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 			-- Normal Enfeebles
 			elseif EnfeebleSong:contains(spell.english) then
 				info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
-				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.Potency})
+				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 			-- Augment the buff songs
 			else
 				info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
-				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=sets.Instrument.Potency})
+				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
 			end
 		end
 	-- BlueMagic
@@ -721,22 +722,22 @@ function midcastequip(spell)
 		-- Song Count for Minne and Paeon
 		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
-			equipSet = set_combine(sets.Midcast.DummySongs, {range=sets.Instrument.Count})
+			equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
-			equipSet = set_combine(sets.Midcast, {range=sets.Instrument.Honor})
+			equipSet = set_combine(sets.Midcast, {range=Instrument.Honor})
 		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
 			info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.AOE_Sleep})
+			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 		-- Normal Enfeebles
 		elseif EnfeebleSong:contains(spell.english) then
 			info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=sets.Instrument.Potency})
+			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 		-- Augment the buff songs
 		else
 			info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=sets.Instrument.Potency})
+			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
 		end
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
@@ -839,27 +840,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
-	-- action is started
-	if is_Busy == false then
-		if RecastTimers:contains(spell.type) then
-			local cast_spell = res.spells:with('name', spell.name)
-			-- assume 80% FC
-			SpellCastTime = cast_spell.cast_time *.2 + 2
-			-- Spell not delay set to default 2 sec
-			if buffactive["Chainspell"] or buffactive["Nightingale"] then
-				 SpellCastTime = 2
-			end
-		else
-			-- Set duration of JA/WS
-			SpellCastTime = 1
-		end
-		-- Spell timer counter
-		Spellstart = os.time()
-	else
-		log('Player is Busy')
-		cancel_spell()
-		return
-	end
+
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
@@ -871,6 +852,35 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precast(spell)
+
+	-- action is started
+	if is_Buffing == true then
+		info('Player is Buffing')
+		cancel_spell()
+		return
+	end
+
+	if is_Busy == false then
+		if RecastTimers:contains(spell.type) then
+			local cast_spell = res.spells:with('name', spell.name)
+			-- assume 80% FC
+			SpellCastTime = cast_spell.cast_time *.2 + 2.6
+			-- Spell not delay set to default 2 sec
+			if buffactive["Chainspell"] or buffactive["Nightingale"] then
+				 SpellCastTime = 1
+			end
+		else
+			-- Set duration of JA/WS
+			SpellCastTime = 1
+		end
+		-- Spell timer counter
+		Spellstart = os.clock()
+	else
+		info('Player is Busy')
+		cancel_spell()
+		return
+	end
+
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
@@ -905,11 +915,11 @@ function aftercast(spell)
 
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
-		SpellCastTime = 2
+		SpellCastTime = 2.6
 	else
-		SpellCastTime = .1
+		SpellCastTime = .01
 	end
-	Spellstart = os.time()
+	Spellstart = os.clock()
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1384,7 +1394,6 @@ function file_unload(file_name)
 	user_file_unload()
 end
 
--- Puts on our fashion set, lockstyle it, then switch to our idle set.
 send_command('bind f12 gs c ModeChange')
 send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
@@ -1392,7 +1401,7 @@ send_command('bind f9 gs c JobMode')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
-	send_command('wait 10;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
+	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
 end
 
 -- Called when the player's subjob changes.
@@ -1453,15 +1462,15 @@ function on_action_for_th(action)
 			if not th_info.tagged_mobs[action.targets[1].id] and settings.debug then
 				add_to_chat(123,'Mob '..action.targets[1].id..' hit. Adding to tagged mobs table.')
 			end
-			th_info.tagged_mobs[action.targets[1].id] = os.time()
+			th_info.tagged_mobs[action.targets[1].id] = os.clock()
 			if state.TreasureMode.value ~= 'Fulltime' then
 				equip(set_combine(choose_set(),choose_set_custom()))
 			end
 		elseif th_info.tagged_mobs[action.actor_id] then
-			th_info.tagged_mobs[action.actor_id] = os.time()
+			th_info.tagged_mobs[action.actor_id] = os.clock()
 		else
 			if th_info.tagged_mobs[action.targets[1].id] then
-				th_info.tagged_mobs[action.targets[1].id] = os.time()
+				th_info.tagged_mobs[action.targets[1].id] = os.clock()
 			end
 		end
 	end
@@ -1504,7 +1513,7 @@ end
 function cleanup_tagged_mobs()
     -- If it's been more than 3 minutes since an action on or by a tagged mob,
     -- remove them from the tagged mobs list.
-    local current_time = os.time()
+    local current_time = os.clock()
     local remove_mobs = S{}
     -- Search list and flag old entries.
     for target_id,action_time in pairs(th_info.tagged_mobs) do
@@ -1603,7 +1612,7 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
 end
 
 windower.register_event('prerender',function()
-	local now = os.time()
+	local now = os.clock()
 
 	if is_Busy == true then
 		if now - Spellstart > SpellCastTime then
