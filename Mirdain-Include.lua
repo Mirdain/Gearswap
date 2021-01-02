@@ -871,7 +871,7 @@ function precast(spell)
 			end
 		else
 			-- Set duration of JA/WS
-			SpellCastTime = 1
+			SpellCastTime = 1.01
 		end
 		-- Spell timer counter
 		Spellstart = os.clock()
