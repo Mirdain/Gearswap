@@ -48,6 +48,16 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
+	sets.OffenseMode = {}
+	-- Base TP set
+	sets.OffenseMode.TP = {}
+	-- Set to use when Dual Wielding
+	sets.OffenseMode.TP.DW = {}
+	-- TP set when in -Damage Taken mode
+	sets.OffenseMode.DT = {}
+	-- TP set to use when mode is in accuracy
+	sets.OffenseMode.ACC = {}
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -264,13 +274,6 @@ function get_sets()
 	-- ===================================================================================================================
 	--		sets.aftercast
 	-- ===================================================================================================================
-	--Custome sets for each jobsetup
-	sets.Custom = {}
-
-	sets.TP = {}
-	sets.TP.DW = {}
-	sets.TP.DT = {}
-	sets.TP.ACC = {}
 
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
