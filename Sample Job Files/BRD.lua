@@ -22,7 +22,7 @@ state.JobMode:set('Mordant Rime')
 elemental_ws = S{'Aeolian Edge'}
 
 --Default to DT Mode
-state.OffenseMode:set('DT')
+state.OffenseMode:set('TP')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -79,7 +79,7 @@ function get_sets()
 	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
 	Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
 	Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
-	Instrument.Aeolian = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
+	Instrument.Aeolian = {  name="Linos", augments={'Mag. Acc.+10 "Mag.Atk.Bns."+10','Weapon skill damage +3%','INT+8',} }
 
 	-- HP/MP Balancing Goal
 	-- HP: 2200 MP: 550
@@ -94,12 +94,12 @@ function get_sets()
 		feet="Inyan. Crackows +2", -- 0/3
 		neck="Loricate Torque +1", -- 6/6
 		waist="Flume Belt +1", -- 4/0
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=4}, -- 3/5
-		right_ear={ name="Etiolation Earring", priority=1}, -- 0/3
+		left_ear="Sanare Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=4}, -- 3/5
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
 		right_ring="Defending Ring",-- 10/10
 		back={ name="Intarabus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Phys. dmg. taken-10%',}, priority=3}, -- 10/0
-    } -- PDT 49%, MDT 42%
+    } -- PDT 49%, MDT 39%
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +1"}
@@ -151,10 +151,10 @@ function get_sets()
 		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -7%',}}, -- 13
 		neck={ name="Dualism Collar +1", priority=1},
 		waist="Embla Sash", -- 5
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=6},
-		right_ear={ name="Etiolation Earring", priority=3}, -- 1
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=5}, -- 7/-1
-		right_ring={ name="Moonlight Ring",  bag="wardrobe4", priority=4},
+		left_ear={ name="Etiolation Earring", priority=3}, -- 1
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=6},
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=5},
+		right_ring={ name="Moonlight Ring",  bag="wardrobe3", priority=4},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
 	} -- 82% FC
 
@@ -168,8 +168,8 @@ function get_sets()
 		feet="Volte Gaiters", -- 6
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
 		waist="Embla Sash", -- 5
-		left_ear={ name="Tuisto Earring", priority=5},
-		right_ear={ name="Etiolation Earring", priority=1}, -- 1
+		left_ear={ name="Etiolation Earring", priority=1}, -- 1
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=5},
 		left_ring="Kishar Ring", -- 4
 		right_ring="Weather. Ring", -- 5
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
@@ -212,14 +212,14 @@ function get_sets()
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}}, -- 11
 		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}}, -- 10  UPGRADE
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		neck="Incanter's Torque",
-		waist="Eschan Stone",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
-		right_ear={ name="Tuisto Earring", priority=3},
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
+		waist="Tempus Fugit",
+		left_ear="Mendi. Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-    } -- 48% Cure Potency / 8% Cure Potency II
+    } -- 53% Cure Potency / 8% Cure Potency II
 
 	-- Base set for duration
 	sets.Midcast.Enhancing = {
@@ -229,7 +229,7 @@ function get_sets()
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
 		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
 		legs={ name="Telchine Braconi", augments={'Enh. Mag. eff. dur. +10',}},
-		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +9',}},
+		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +10',}},
 		neck="Incanter's Torque",
 		waist="Embla Sash",
 		left_ear="Tuisto Earring",
@@ -267,7 +267,7 @@ function get_sets()
 		left_ear="Regal Earring",
 		right_ear="Digni. Earring",
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
-		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
+		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Bard Specific Sets
@@ -342,14 +342,14 @@ function get_sets()
 		body="Cohort Cloak +1",
 		hands={ name="Chironic Gloves", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','"Drain" and "Aspir" potency +6','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
 		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}},
-		feet={ name="Chironic Slippers", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','INT+7','"Mag.Atk.Bns."+9',}},
+		feet={ name="Chironic Slippers", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','Enmity-2','INT+8','"Mag.Atk.Bns."+13',}},
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
 		right_ear="Regal Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Shiva Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
+		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	
 	sets.Charm = {
