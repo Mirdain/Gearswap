@@ -1,5 +1,6 @@
 res = require 'resources'
 config = require('config')
+packets = require('packets')
 
 -- loads gear from Moogle
 include('organizer-lib')
@@ -13,6 +14,11 @@ default = {
 	Display_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1647,y=835},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1483,y=791},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	}
+
+Display_Box_Settings = {
+
+
+}
 
 settings = config.load(default)
 
@@ -40,6 +46,8 @@ is_moving = false
 is_Buffing = false
 
 Time_Out = false
+
+Auto_Range = false
 
 --Variable to monitor during debug mode
 debug_value = 0
@@ -92,16 +100,23 @@ gs_status = texts.new("",settings.Display_Box)
 
 -- UI for displaying the current states
 function display_box_update()
+
+	width = 20
+	dialog = {}
+	dialog[1] = {description = 'State', value = state.OffenseMode.value}
+	dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
+	dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
+	dialog[4] = {description = UI_Name, value = state.JobMode.value}
+
 	lines = T{}
-	lines:insert('State' ..string.format('[%s]',state.OffenseMode.value):lpad(' ',14))
-	lines:insert('TH Mode' ..string.format('[%s]',state.TreasureMode.value):lpad(' ',12))
-	lines:insert('Auto Buff' ..string.format('[%s]',state.AutoBuff.value):lpad(' ',10))
-	if UI_Name ~= '' then
-		lines:insert(UI_Name ..string.format('[%s]',state.JobMode.value):lpad(' ',19-string.len(UI_Name)))
-	end
+    for k, v in next, dialog do
+		lines:insert(v.description ..string.format('[%s]',tostring(v.value)):lpad(' ',width-string.len(tostring(v.description))))
+    end
+
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
     gs_status:text(lines:concat('\n'))
+
 end
 
 gs_debug = {}
@@ -986,7 +1001,12 @@ end
 
 function pet_midcast(spell)
 	equipSet = {}
-		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
+	if equipSet[spell.english] then
+		equipSet = set_combine(equipSet, choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
+		info('['..spell.english..'] Set')
+	else
+		equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
+	end
 	equip(equipSet)
 end
 
@@ -1030,16 +1050,15 @@ function choose_set()
 	-- Idle sets
 	else
 		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
-	end
-
-	--Pet specific checks
-	if pet.isvalid then
-		--Augment built set for Perp cost
-		equipSet = set_combine(equipSet, set_combine(sets.Idle, sets.Idle[state.OffenseMode.value]), sets.Idle.Pet)
-	end
-	-- Equip movement gear
-	if is_moving == true then
-		equipSet = set_combine(equipSet, sets.Movement)
+		--Pet specific checks
+		if pet.isvalid then
+			--Augment built set for Perp cost
+			equipSet = set_combine(equipSet, sets.Idle.Pet)
+		end
+		-- Equip movement gear
+		if is_moving == true then
+			equipSet = set_combine(equipSet, sets.Movement)
+		end
 	end
 	return equipSet
 end
@@ -1453,30 +1472,6 @@ function on_target_change_for_th(new_index, old_index)
     end
 end
 
--- On any action event, mark mobs that we tag with TH.  Also, update the last time tagged mobs were acted on.
-function on_action_for_th(action)
-    --add_to_chat(123,'cat='..action.category..',param='..action.param)
-    -- If player takes action, adjust TH tagging information
-	if state.TreasureMode.value ~= 'None' then
-		if action.actor_id == player.id and windower.ffxi.get_mob_by_id(action.targets[1].id).is_npc and TaggingCategories:contains(action.category) then
-			if not th_info.tagged_mobs[action.targets[1].id] and settings.debug then
-				add_to_chat(123,'Mob '..action.targets[1].id..' hit. Adding to tagged mobs table.')
-			end
-			th_info.tagged_mobs[action.targets[1].id] = os.clock()
-			if state.TreasureMode.value ~= 'Fulltime' then
-				equip(set_combine(choose_set(),choose_set_custom()))
-			end
-		elseif th_info.tagged_mobs[action.actor_id] then
-			th_info.tagged_mobs[action.actor_id] = os.clock()
-		else
-			if th_info.tagged_mobs[action.targets[1].id] then
-				th_info.tagged_mobs[action.targets[1].id] = os.clock()
-			end
-		end
-	end
-	cleanup_tagged_mobs()
-end
-
 -- This function removes mobs from our tracking table when they die.
 function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
     if id == 0x29 then
@@ -1492,7 +1487,7 @@ function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
                 th_info.tagged_mobs[target_id] = nil
             end
         end
-    end
+	end
 end
 
 -- Clear out the entire tagged mobs table when zoning.
@@ -1536,7 +1531,6 @@ end
 
 -- Register events to allow us to manage TH application.
 windower.register_event('target change', on_target_change_for_th)
-windower.register_event('action', on_action_for_th)
 windower.raw_register_event('incoming chunk', on_incoming_chunk_for_th)
 windower.raw_register_event('zone change', on_zone_change_for_th)
 
@@ -1548,26 +1542,26 @@ windower.raw_register_event('zone change', on_zone_change_for_th)
 
 windower.register_event('gain buff', function(id)
     local name = res.buffs[id].english
-		if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
-			if player.inventory['Echo Drops'] ~= nil then
-				windower.send_command('input /item "Echo Drops" <me>')
-			else 
-				info('No Echo Drops in inventory.')
-			end
-		elseif id == 4 then
-			if player.inventory['Remedy'] ~= nil then
-				windower.send_command('input /item "Remedy" <me>')
-			else 
-				info('No Remedies in inventory.')
-			end
-		elseif id == 15 then
-			if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
-				info('DOOOOOOM!!!')
-				windower.send_command('input /item "Holy Water" <me>')
-			else 
-				info('No Holy Waters in inventory. Unable to cure DOOM status!')
-			end
+	if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
+		if player.inventory['Echo Drops'] ~= nil then
+			windower.send_command('input /item "Echo Drops" <me>')
+		else 
+			info('No Echo Drops in inventory.')
 		end
+	elseif id == 4 then
+		if player.inventory['Remedy'] ~= nil then
+			windower.send_command('input /item "Remedy" <me>')
+		else 
+			info('No Remedies in inventory.')
+		end
+	elseif id == 15 then
+		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
+			info('DOOOOOOM!!!')
+			windower.send_command('input /item "Holy Water" <me>')
+		else 
+			info('No Holy Waters in inventory. Unable to cure DOOM status!')
+		end
+	end
 end)
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1603,7 +1597,7 @@ end
 -- Movement Detection Section
 -------------------------------------------------------------------------------------------------------------------
 
-mov = {counter=0}
+mov = {counter=0, x=0, y=0, x=0}
 
 if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.x = windower.ffxi.get_mob_by_index(player.index).x
@@ -1662,22 +1656,35 @@ end)
 -- Section used to determine if player is performing an action
 windower.register_event('action', function (data)
 	if data ~= nil then
+		log('cat='..data.category..',param='..data.param)
 		local self = windower.ffxi.get_player()
 		local targets = data.targets
+		if data.actor_id == player.id then
+			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
+			if data.category == 2 then
+				if data.param == 26739 then
+					log('Player finished Shooting')
 
-		if data.actor_id == windower.ffxi.get_player().id then
-		  if data.category == 4 then
+					send_command('wait 1.1;input /shoot <t>')
+
+				end
+			elseif data.category == 4 then
 			--info('Casting Finished')
-		  elseif data.category == 8 then
-			if data.param == 28787 then
-			  --info('Spell Interupt - Choose Set')
-				equip(set_combine(choose_set(),choose_set_custom()))
-			elseif data.param == 24931 then
-				--info('Casting Spell')
+			elseif data.category == 8 then
+				if data.param == 28787 then
+					log('Spell Interupt')
+					equip(set_combine(choose_set(),choose_set_custom()))
+				elseif data.param == 24931 then
+					log('Casting Spell')
+				end
+			elseif data.category == 12 then
+				if data.param == 24931 then
+					log(''..primarytarget.name ..' is Shooting')
+				elseif data.param == 28787 then
+					log('Shooting is interrupted')
+				end
 			end
-		  end
 		end
-
 		-- Spell
 		if data.category == 8 then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
@@ -1713,6 +1720,27 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
+		-- If player takes action, adjust TH tagging information
+		if state.TreasureMode.value ~= 'None' then
+			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
+				if not th_info.tagged_mobs[data.targets[1].id] and settings.debug then
+					add_to_chat(123,'Mob '..data.targets[1].id..' hit. Adding to tagged mobs table.')
+				end
+				th_info.tagged_mobs[data.targets[1].id] = os.clock()
+				if state.TreasureMode.value ~= 'Fulltime' then
+					equip(set_combine(choose_set(),choose_set_custom()))
+				end
+			elseif th_info.tagged_mobs[data.actor_id] then
+				th_info.tagged_mobs[data.actor_id] = os.clock()
+			else
+				if th_info.tagged_mobs[data.targets[1].id] then
+					th_info.tagged_mobs[data.targets[1].id] = os.clock()
+				end
+			end
+		end
+
+		cleanup_tagged_mobs()
+
 	end
 end)
 
