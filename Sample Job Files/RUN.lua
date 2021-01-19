@@ -9,7 +9,8 @@ Food = "Miso Ramen"
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
 BlueHealing = S{'Magic Fruit'}
-BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
+BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Metallic Body','Mighty Guard'}
+BlueTank = S{'Jettatura','Geist Wall','Blank Gaze','Sheep Song','Sandspin','Healing Breeze'}
 
 --Modes for specific to RUN
 state.OffenseMode = M{['description']='Engaged Mode'}
@@ -53,6 +54,8 @@ Runes = {
 	Light = {Name = "Lux", Description = "[LUX RESISTANCE] and deals [LIGHT DAMAGE]"},
 	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"}
 }
+
+JA_Delay = os.clock()
 
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -132,6 +135,12 @@ function get_sets()
 		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	} -- No fucks given
 
+	-- Gear to swap in for ACC when TP
+	sets.OffenseMode.ACC = set_combine(sets.TP, {
+	    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=1},
+	})
+
 	--Physical Damage Taken set for tanking
 	sets.OffenseMode.PDT = {
 		main={ name="Epeolatry", augments={'Path: A',}},
@@ -189,11 +198,21 @@ function get_sets()
 		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}  -- 
 
-	-- Gear to swap in for ACC when TP
-	sets.OffenseMode.ACC = set_combine(sets.TP, {
-	    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=1},
-	})
+	sets.OffenseMode.AoE = {
+	    ammo="Yamarang",
+		head="Turms Cap +1",
+		body="Runeist's Coat +3",
+		hands="Turms Mittens +1",
+		legs="Aya. Cosciales +2",
+		feet="Turms Leggings +1",
+		neck={ name="Futhark Torque +2", augments={'Path: A',}},
+		waist="Windbuffet Belt +1",
+		left_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
+		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
+		back={ name="Ogma's Cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+	}
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -377,8 +396,7 @@ function get_sets()
 
 	sets.TreasureHunter = {
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		feet={ name="Herculean Boots", augments={'Pet: INT+3','"Subtle Blow"+4','"Treasure Hunter"+1','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
-		waist="Chaac Belt",
+		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 	}
 
 	organizer_items  = {		
@@ -454,6 +472,7 @@ end
 function check_buff_JA()
 	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
+	local delay = os.clock() - JA_Delay
 
 	if player.sub_job == 'SAM' then
 		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
@@ -471,13 +490,22 @@ function check_buff_JA()
 		end
 	end
 
+	if buffactive[Runes[state.JobMode.value].Name] == 3 then
+		if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[23] == 0 and delay > 3 then
+			buff = "Vallation" -- Next Single Target DT and FC
+		end
+		if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[113] == 0 then
+			buff = "Valiance" -- AoE DT and FC
+			JA_Delay = os.clock() -- Need to give Valiance a chance to register before Vallation is used
+		end
+	end
+
 	--Rune sets
 	if state.JobMode.value ~= "None" then
 		if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode.value].Name] ~= 3 then
 			buff = Runes[state.JobMode.value].Name
 			info(Runes[state.JobMode.value].Description)
 		end
-
 	end
 
 	return buff
@@ -493,6 +521,16 @@ function check_buff_SP()
 		buff = "Phalanx"
 	elseif not buffactive['Aquaveil'] and sp_recasts[55] == 0 and player.mp > 100 then
 		buff = "Aquaveil"
+	elseif not buffactive['Multi Strikes'] and sp_recasts[493] == 0 and player.mp > 36 then
+		buff = "Temper"
+	elseif not buffactive['Ice Spikes'] and sp_recasts[250] == 0 and player.mp > 16 then
+		buff = "Ice Spikes"
+	end
+
+	if player.sub_job == "BLU" then
+		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
+			buff = "Cocoon"
+		end
 	end
 
 	return buff
