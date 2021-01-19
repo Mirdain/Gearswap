@@ -884,14 +884,16 @@ function precast(spell)
 			if buffactive["Chainspell"] or buffactive["Nightingale"] then
 				 SpellCastTime = 1
 			end
+		elseif spell.action_type == 'Ranged Attack' then
+			SpellCastTime = 1.2
 		else
 			-- Set duration of JA/WS
-			SpellCastTime = 1.01
+			SpellCastTime = 1.05
 		end
 		-- Spell timer counter
 		Spellstart = os.clock()
 	else
-		info('Player is Busy')
+		log('Player is Busy ['..spell.english..']')
 		cancel_spell()
 		return
 	end
@@ -931,8 +933,10 @@ function aftercast(spell)
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
 		SpellCastTime = 2.6
+	elseif spell.action_type == 'Ranged Attack' then
+		SpellCastTime = 1.2
 	else
-		SpellCastTime = .01
+		SpellCastTime = .05
 	end
 	Spellstart = os.clock()
 end
@@ -1280,6 +1284,24 @@ function self_command(command)
 				return
 			end
 		end
+	elseif command == 'wave1' then
+			info('Dynamis Wave 1 Mode')
+			windower.send_command('cpaddon cmd load dynamis_wave1_'..player.main_job..'_'..player.sub_job)
+	elseif command == 'wave2' then
+			info('Dynamis Wave 2 Mode')
+			windower.send_command('cpaddon cmd load dynamis_wave2_'..player.main_job..'_'..player.sub_job)
+	elseif command == 'wave3' then
+			info('Dynamis Wave 3 Mode')
+			windower.send_command('cpaddon cmd load dynamis_wave3_'..player.main_job..'_'..player.sub_job)
+	elseif command == 'aoe' then
+			info('Dynamis AoE Mode')
+			windower.send_command('cpaddon cmd load dynamis_aoe_'..player.main_job..'_'..player.sub_job)
+	elseif command == 'magic' then
+			info('Magic Mode')
+			windower.send_command('cpaddon cmd load modes_magic_'..player.main_job..'_'..player.sub_job)
+	elseif command == 'physical' then
+			info('Physical Mode')
+			windower.send_command('cpaddon cmd load modes_physical_'..player.main_job..'_'..player.sub_job)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
 	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
@@ -1544,20 +1566,20 @@ windower.register_event('gain buff', function(id)
     local name = res.buffs[id].english
 	if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
 		if player.inventory['Echo Drops'] ~= nil then
-			windower.send_command('input /item "Echo Drops" <me>')
+			--windower.send_command('input /item "Echo Drops" <me>')
 		else 
 			info('No Echo Drops in inventory.')
 		end
 	elseif id == 4 then
 		if player.inventory['Remedy'] ~= nil then
-			windower.send_command('input /item "Remedy" <me>')
+			--windower.send_command('input /item "Remedy" <me>')
 		else 
 			info('No Remedies in inventory.')
 		end
 	elseif id == 15 then
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
 			info('DOOOOOOM!!!')
-			windower.send_command('input /item "Holy Water" <me>')
+			--windower.send_command('input /item "Holy Water" <me>')
 		else 
 			info('No Holy Waters in inventory. Unable to cure DOOM status!')
 		end
@@ -1623,7 +1645,13 @@ windower.register_event('prerender',function()
 	if now - UpdateTime2 > .1 then
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
-		check_buff()
+
+		-- Status Ailment Check
+		if not buffactive['Muddle'] then
+			if not buffactive['Paralysis'] and not buffactive['Silence'] and player.status ~= "Dead" and player.status ~= "Engaged dead" then
+				check_buff()
+			end									
+		end
 		UpdateTime2 = now
 	end
 
@@ -1664,9 +1692,7 @@ windower.register_event('action', function (data)
 			if data.category == 2 then
 				if data.param == 26739 then
 					log('Player finished Shooting')
-
-					send_command('wait 1.1;input /shoot <t>')
-
+					--send_command('wait 1.1;input /shoot <t>')
 				end
 			elseif data.category == 4 then
 			--info('Casting Finished')
