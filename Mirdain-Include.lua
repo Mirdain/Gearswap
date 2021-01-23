@@ -423,6 +423,7 @@ function precastequip(spell)
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast
+		do_Utsu_checks(spell)
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Precast Set')
@@ -1154,6 +1155,31 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
         state.warned:set()
     elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
         state.warned:reset()
+    end
+end
+
+-------------------------------------------------------------------------------------------------------------------
+-- Determine whether we have sufficient Shihei for the action being attempted.
+-------------------------------------------------------------------------------------------------------------------
+
+function do_Utsu_checks(spell)
+
+    local available_shihei = player.inventory['Shihei']
+	local shihei_warning_level = 99
+
+    -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
+    if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
+		if available_shihei.count < shihei_warning_level  then
+			local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x on '..player.name..' *****'
+			local border = ""
+			for i = 1, #msg do
+				border = border .. "*"
+			end
+			send_command('send @others input /echo '..msg..'')
+			add_to_chat(167, border)
+			add_to_chat(167, msg)
+			add_to_chat(167, border)
+		end
     end
 end
 
