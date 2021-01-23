@@ -12,7 +12,7 @@ MacroSet = "1"
 Food = "Sublime Sushi"
 
 --Set default mode (TP,ACC,DT)
-state.OffenseMode:set('DT')
+state.OffenseMode:set('TP')
 
 --Enable JobMode for UI
 UI_Name = 'DPS'
@@ -59,8 +59,9 @@ function get_sets()
 	}
 
 	sets.Weapons['Aeolian Edge'] = {
-	    main="Tauret",
-		sub="Naegling",
+		ammo=Ammo.Bullet.MAG_WS,
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
+	    sub="Tauret",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
@@ -109,8 +110,6 @@ function get_sets()
 
 	--Base TP set to build off when melee'n
 	sets.OffenseMode.TP = {
-		ammo = Ammo.Bullet.RA,
-		range="Fomalhaut",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -192,7 +191,7 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Kishar Ring", -- 4
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
-	}
+	} -- 66 FC
 
 	sets.Midcast = {}
 
@@ -340,7 +339,7 @@ function get_sets()
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Comm. Charm +2",
 		waist="Grunfeld Rope",
-		left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
 		right_ring="Regal Ring",
@@ -352,7 +351,7 @@ function get_sets()
 		head={ name="Herculean Helm", augments={'Mag. Acc.+17 "Mag.Atk.Bns."+17','Weapon skill damage +5%','Mag. Acc.+2',}},
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
-		legs={ name="Herculean Trousers", augments={'Mag. Acc.+14 "Mag.Atk.Bns."+14','Weapon skill damage +4%','Mag. Acc.+4','"Mag.Atk.Bns."+15',}},
+		legs={ name="Herculean Trousers", augments={'Attack+12','"Mag.Atk.Bns."+27','Accuracy+3 Attack+3','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Eschan Stone",
@@ -370,13 +369,13 @@ function get_sets()
 	sets.WS["Leaden Salute"] = set_combine(sets.WS.MAB, {
 		head="Pixie Hairpin +1",
 		right_ring="Archon Ring",
-		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		waist="Svelt. Gouriz +1",   -- Changes based off elemental function
 	})
 
 	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
 		ammo=Ammo.Bullet.MAG_WS,
-		right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		waist="Eschan Stone", -- Changes based off elemental function
 	})
 
@@ -386,37 +385,30 @@ function get_sets()
 
 	sets.WS.WSD = {
 		ammo=Ammo.Bullet.WS,
-		head={ name="Herculean Helm", augments={'Accuracy+20 Attack+20','Weapon skill damage +4%',}},
+		head={ name="Herculean Helm", augments={'Accuracy+25','Weapon skill damage +4%','AGI+10','Attack+14',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'Attack+21','Weapon skill damage +5%','Accuracy+15',}},
+		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Comm. Charm +2",
 		waist="Grunfeld Rope",
-		left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
 		right_ring="Regal Ring",
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
 
-	sets.WS["Savage Blade"] = sets.WS.WSD
+	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
 
-	sets.WS["Last Stand"] = {
-		ammo=Ammo.Bullet.WS,
+	})
+
+	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
-		body="Laksa. Frac +3",
-		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
-		left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
-		right_ear="Ishvara Earring",
-		left_ring="Karieyh Ring",
-		right_ring="Regal Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
-	}
+	})
 
 	-- Accuracy set used in OffenseMode.ACC
 	sets.WS.ACC = {}
@@ -492,9 +484,7 @@ function precast_custom(spell)
 		return equipSet
 	end
 
-	if spell.english == 'Wild Fire' or spell.english == 'Leaden Salute' then
-		equipSet = set_combine(equipSet, Elemental_check(equipSet, spell))
-	end
+	equipSet = Elemental_check(equipSet, spell)
 
 	return Weapon_Check(equipSet)
 end
@@ -535,7 +525,23 @@ end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
-
+	if command == "wave1" then
+		windower.send_command("cor roll 1 blm;wait 2;cor roll 2 rdm")
+		state.JobMode:set('Death Penalty')
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "wave2" then
+		windower.send_command("cor roll 1 chaos;wait 2;cor roll 2 sam")
+		state.JobMode:set('Naegling')
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "wave3" then
+		windower.send_command("cor roll 1 chaos;wait 2;cor roll 2 sam")
+		state.JobMode:set('Death Penalty')
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "aoe" then
+		windower.send_command("cor roll 1 blm;wait 2;cor roll 2 rdm")
+		state.JobMode:set('Aeolian Edge')
+		equip(set_combine(choose_set(),choose_set_custom()))
+	end
 end
 
 function user_file_unload()
