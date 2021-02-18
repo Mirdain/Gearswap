@@ -116,7 +116,7 @@ function get_sets()
 		right_ear={ name="Tuisto Earring", priority=4},
 		left_ear={ name="Etiolation Earring", priority=1},
 		left_ring={ name="Lebeche Ring", priority=2},
-		right_ring={ name="Janniston Ring", priority=6},
+		right_ring='Defending Ring',
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
     }
 	-- For AoE cure
