@@ -97,17 +97,21 @@ function get_sets()
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb",
-		head={ name="Herculean Helm", augments={'Accuracy+15','"Fast Cast"+5','INT+9','Mag. Acc.+9','"Mag.Atk.Bns."+13',}},
-		body={ name="Taeon Tabard", augments={'"Fast Cast"+5',}},
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs={ name="Herculean Trousers", augments={'"Fast Cast"+5','MND+10','Mag. Acc.+12','"Mag.Atk.Bns."+9',}},
-		feet={ name="Herculean Boots", augments={'Mag. Acc.+23','"Fast Cast"+6','VIT+4','"Mag.Atk.Bns."+1',}},
-		neck="Voltsurge Torque",
-		left_ear="Etiolation Earring",
-		right_ear="Loquac. Earring",
-		left_ring="Prolix Ring",
-	}
+		ammo="Sapience Orb", -- 2
+		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}}, --13
+		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}}, --9
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, --6
+		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}}, --6
+		neck="Voltsurge Torque", --4
+		waist="Kasiri Belt",
+		left_ear="Etiolation Earring", --1
+		right_ear="Loquac. Earring", --2
+		left_ring="Prolix Ring", --3
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+		back={ name="Segomo's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, --10
+	} -- FC 64
+
 	sets.Precast.Enmity = {
 	    ammo="Sapience Orb", -- 2
 	    left_ear="Cryptic Earring", -- 4
@@ -151,7 +155,7 @@ function get_sets()
 		right_ear="Odr Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10',}},
+		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
@@ -223,9 +227,9 @@ function get_sets()
 	}
 
 	sets.TreasureHunter = {
+		head="Malignance Chapeau",
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		feet={ name="Herculean Boots", augments={'Pet: INT+3','"Subtle Blow"+4','"Treasure Hunter"+1','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
-		waist="Chaac Belt",
+		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 	}
 
 	organizer_items  = {		
@@ -270,6 +274,25 @@ function aftercast_custom(spell)
 	equipSet = choose_Impetus()
 	return equipSet
 end
+
+-- Called when the pet dies or is summoned
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	return equipSet
+end
+
+-- Called during a pet midcast
+function pet_midcast_custom(spell)
+	equipSet = {}
+	return equipSet
+end
+
+-- Called after the performs an action
+function pet_aftercast_custom(spell)
+	equipSet = {}
+	return equipSet
+end
+
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
@@ -321,6 +344,18 @@ function check_buff_JA()
 	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
 
+	-- Sub job has least priority
+	if player.sub_job == 'WAR' then
+		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+			buff = "Berserk"
+		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+			buff = "Aggressor"
+		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+			buff = "Warcry"
+		end
+	end
+
+	-- Mantra Max priority
 	if player.hpp < 51 and ja_recasts[15] == 0 then
 		buff = "Chakra"
 	elseif not buffactive.Impetus and ja_recasts[31] == 0 then
@@ -333,16 +368,6 @@ function check_buff_JA()
 		buff = "Dodge"
 	elseif not buffactive.Focus and ja_recasts[13] == 0 then
 		buff = "Focus"
-	end
-
-	if player.sub_job == 'WAR' then
-		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
-			buff = "Berserk"
-		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
-			buff = "Aggressor"
-		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
-			buff = "Warcry"
-		end
 	end
 
 	return buff

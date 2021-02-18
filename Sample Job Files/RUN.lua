@@ -51,7 +51,7 @@ Runes = {
 	Earth = {Name = "Tellus", Description = "[LIGHTING RESISTANCE] and deals [EARTH DAMAGE]"},
 	Lighting = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTING DAMAGE]"},
 	Water = {Name = "Unda", Description = "[FIRE RESISTANCE] and deals [WATER DAMAGE]"},
-	Light = {Name = "Lux", Description = "[LUX RESISTANCE] and deals [LIGHT DAMAGE]"},
+	Light = {Name = "Lux", Description = "[DARK RESISTANCE] and deals [LIGHT DAMAGE]"},
 	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"}
 }
 
@@ -466,7 +466,23 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
-
+	if command == "wave1" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "wave2" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "wave3" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "aoe" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "magic" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "physical" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "ranged" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif command == "ambu" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	end
 end
 --Function used to automate Job Ability use
 function check_buff_JA()
