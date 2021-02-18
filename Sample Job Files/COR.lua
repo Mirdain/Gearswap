@@ -19,7 +19,7 @@ UI_Name = 'DPS'
 
 --Modes for specific to Corsair
 state.JobMode = M{['description']='Corsair Damage Mode'}
-state.JobMode:options('Fomalhaut','Death Penalty', 'Naegling', 'Aeolian Edge') -- Can add Wildfire
+state.JobMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
 state.JobMode:set('Death Penalty')
 
 elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
@@ -40,28 +40,28 @@ function get_sets()
 	-- Weapon setup
 	sets.Weapons = {}
 
-	sets.Weapons['Naegling'] = {
+	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
 		sub="Blurred Knife +1",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
 	sets.Weapons['Fomalhaut'] = {
-		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4"},
+		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2"},
 		range={ name="Fomalhaut", augments={'Path: A',}},
-		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
 	}
 
 	sets.Weapons['Death Penalty'] = {
-		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4"},
+		sub="Tauret",
 		range={ name="Death Penalty", augments={'Path: A',}},
-		sub={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1},
 	}
 
 	sets.Weapons['Aeolian Edge'] = {
 		ammo=Ammo.Bullet.MAG_WS,
-		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4", priority=2},
-	    sub="Tauret",
+		main="Tauret",
+		sub="Naegling",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
@@ -332,10 +332,10 @@ function get_sets()
 
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
-		head={ name="Herculean Helm", augments={'Accuracy+20 Attack+20','Weapon skill damage +4%',}},
+		head={ name="Herculean Helm", augments={'Accuracy+25','Weapon skill damage +4%','AGI+10','Attack+14',}},
 		body="Laksa. Frac +3",
 		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'Attack+21','Weapon skill damage +5%','Accuracy+15',}},
+		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck="Comm. Charm +2",
 		waist="Grunfeld Rope",
@@ -376,7 +376,6 @@ function get_sets()
 	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
 		ammo=Ammo.Bullet.MAG_WS,
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		waist="Eschan Stone", -- Changes based off elemental function
 	})
 
 	sets.WS.MACC = set_combine(sets.WS.MAB, {
@@ -426,9 +425,6 @@ function get_sets()
 	sets.WS["Circle Blade"] = {}
 	sets.WS["Spirits Within"] = {}
 	sets.WS["Requiescat"] = {}
-
-	--Custom sets for each jobsetup
-	sets.Custom = {}
 
 	sets.Charm = {
 	    main="Lament",
@@ -525,23 +521,7 @@ end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
-	if command == "wave1" then
-		windower.send_command("cor roll 1 blm;wait 2;cor roll 2 rdm")
-		state.JobMode:set('Death Penalty')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave2" then
-		windower.send_command("cor roll 1 chaos;wait 2;cor roll 2 sam")
-		state.JobMode:set('Naegling')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave3" then
-		windower.send_command("cor roll 1 chaos;wait 2;cor roll 2 sam")
-		state.JobMode:set('Death Penalty')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "aoe" then
-		windower.send_command("cor roll 1 blm;wait 2;cor roll 2 rdm")
-		state.JobMode:set('Aeolian Edge')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	end
+
 end
 
 function user_file_unload()
