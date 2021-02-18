@@ -15,10 +15,7 @@ default = {
 	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1483,y=791},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	}
 
-Display_Box_Settings = {
-
-
-}
+Display_Box_Settings = {}
 
 settings = config.load(default)
 
@@ -27,6 +24,7 @@ SpellCastTime = 0
 
 Spellstart = os.clock()
 UpdateTime1 = os.clock()
+
 UpdateTime2 = os.clock()
 
 command_JA = "None"
@@ -47,7 +45,7 @@ is_Buffing = false
 
 Time_Out = false
 
-Auto_Range = false
+Enable_Burst_Mode = false
 
 --Variable to monitor during debug mode
 debug_value = 0
@@ -83,6 +81,12 @@ state.JobMode = M{['description']='Job Specific Mode'}
 state.JobMode:options('OFF','ON')
 state.JobMode:set('OFF')
 
+--Burst specific mode
+state.BurstMode = {}
+state.BurstMode = M{['description']='Burst Specific Mode'}
+state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5')
+state.BurstMode:set('OFF')
+
 --State for Ammunition check
 state.warned = M(false)
 
@@ -106,7 +110,12 @@ function display_box_update()
 	dialog[1] = {description = 'State', value = state.OffenseMode.value}
 	dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
 	dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
-	dialog[4] = {description = UI_Name, value = state.JobMode.value}
+	if UI_Name ~= "" then
+		dialog[4] = {description = UI_Name, value = state.JobMode.value}
+	end
+	if Enable_Burst_Mode ==  true then
+		dialog[5] = {description = 'Burst Mode', value = state.BurstMode.value}
+	end
 
 	lines = T{}
     for k, v in next, dialog do
@@ -125,7 +134,6 @@ gs_debug = texts.new("",settings.Debug_Box)
 -- Used to help debug issues
 function debug_box_update()
 	lines = T{}
-
 	lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',12))
 	lines:insert('is_Moving' ..string.format('[%s]',tostring(is_moving)):lpad(' ',10))
 	lines:insert('DualWield' ..string.format('[%s]',tostring(DualWield)):lpad(' ',10))
@@ -433,7 +441,10 @@ function precastequip(spell)
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
-		if equipSet[spell.english] then
+		if spell.id == 123 then
+			equipSet = sets.PhantomRoll
+			info('['..spell.english..'] Set')
+		elseif equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
 			info('['..spell.english..'] Set')
 		elseif spell.id == 123 then
@@ -441,6 +452,10 @@ function precastequip(spell)
 			info('['..spell.english..'] Set')
 		else
 			info('JA not set for ['..spell.english..']')
+		end
+		if state.TreasureMode.value ~= 'None' and spell.english == "Provoke" then
+			equipSet = set_combine(equipSet, sets.TreasureHunter)
+			info('['..spell.english..'] Set with Treasure Hunter')
 		end
 	-- CorsairRoll
 	elseif spell.type == 'CorsairRoll' then
@@ -634,7 +649,11 @@ function midcastequip(spell)
 				-- Refresh
 				if spell.name:contains('Refresh') then
 					info('Refresh Set')
-					equipSet = set_combine(equipSet, sets.Midcast.Refresh)
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing, sets.Midcast.Refresh)
+				-- Gain SPells
+				elseif spell.name:contains('Gain') then
+					info('Gain Set')
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing, sets.Midcast.Enhancing.Gain)
 				-- Bar Spells
 				elseif Elemental_Bar:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
@@ -725,7 +744,7 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 		else
 			-- If Auto Burst mode is turned on it will use the equip set for Bursting
-			if state.JobMode.value ~= 'OFF' then
+			if state.BurstMode.value ~= 'OFF' then
 				info('Burst Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
 			else
@@ -1165,7 +1184,7 @@ end
 function do_Utsu_checks(spell)
 
     local available_shihei = player.inventory['Shihei']
-	local shihei_warning_level = 99
+	local shihei_warning_level = 50
 
     -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
     if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
@@ -1187,9 +1206,9 @@ end
 -- This function is called by the user via the self command - "gs c XXXX"
 -------------------------------------------------------------------------------------------------------------------
 
-function self_command(command)
+function self_command(cmd)
 	-- Updates the TH status
-	command = command:lower()
+	command = cmd:lower()
 	if command == 'update auto' then
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the TH state
@@ -1202,17 +1221,17 @@ function self_command(command)
 		state.AutoBuff:cycle()
 		info('Auto Buff is ['..state.AutoBuff.value..']')
 	elseif command == 'skillchain_burst' then
-		if state.JobMode.value == 'Tier 1' then
+		if state.BurstMode.value == 'Tier 1' then
 			send_command('BT cast spell 1')
-		elseif state.JobMode.value == 'Tier 2' then
+		elseif state.BurstMode.value == 'Tier 2' then
 			send_command('BT cast spell 2')
-		elseif state.JobMode.value == 'Tier 3' then
+		elseif state.BurstMode.value == 'Tier 3' then
 			send_command('BT cast spell 3')
-		elseif state.JobMode.value == 'Tier 4' then
+		elseif state.BurstMode.value == 'Tier 4' then
 			send_command('BT cast spell 4')
-		elseif state.JobMode.value == 'Tier 5' then
+		elseif state.BurstMode.value == 'Tier 5' then
 			send_command('BT cast spell 5')
-		elseif state.JobMode.value == 'Tier 6' then
+		elseif state.BurstMode.value == 'Tier 6' then
 			send_command('BT cast spell 6')
 		end
 	-- Shuts down instnace
@@ -1273,61 +1292,90 @@ function self_command(command)
 	elseif command == 'cp' then
 		use_enchantment("Trizek Ring")
 	elseif command == "charmed" then
-			state.Charmed.set("ON")
-			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-			info('Charm Set Equiped')
-			equip(sets.Charm)
-			disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+		state.Charmed.set("ON")
+		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+		info('Charm Set Equiped')
+		equip(sets.Charm)
+		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	elseif command == "reset" then
-			state.Charmed.set("OFF")
-			enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-			info('Charm Set Unequiped')
-			equip(set_combine(choose_set(),choose_set_custom()))
+		state.Charmed.set("OFF")
+		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+		info('Charm Set Unequiped')
+		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the current player stances
-	elseif command == 'modechange' then
-		for i,v in ipairs(state.OffenseMode) do
-			if state.OffenseMode.value == v then
-				if state.OffenseMode.value ~= state.OffenseMode[#state.OffenseMode] then
-					state.OffenseMode:set(state.OffenseMode[i+1])
-				else
-					state.OffenseMode:set(state.OffenseMode[1])
+	elseif command:contains('modechange') then
+		if command == 'modechange' then
+			for i,v in ipairs(state.OffenseMode) do
+				if state.OffenseMode.value == v then
+					if state.OffenseMode.value ~= state.OffenseMode[#state.OffenseMode] then
+						state.OffenseMode:set(state.OffenseMode[i+1])
+					else
+						state.OffenseMode:set(state.OffenseMode[1])
+					end
+					info('Mode: ['..state.OffenseMode.value..']')
+					equip(set_combine(choose_set(),choose_set_custom()))
+					return
 				end
-				info('Mode: ['..state.OffenseMode.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
-				return
 			end
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.OffenseMode:set(mode[2])
+			info('Mode: ['..state.OffenseMode.value..']')
+			equip(set_combine(choose_set(),choose_set_custom()))
+			return
 		end
-	elseif command == 'jobmode' then
-		for i,v in ipairs(state.JobMode) do
-			if state.JobMode.value == v then
-				if state.JobMode.value ~= state.JobMode[#state.JobMode] then
-					state.JobMode:set(state.JobMode[i+1])
-				else
-					state.JobMode:set(state.JobMode[1])
+	elseif command:contains('jobmode') then
+		if command == 'jobmode' then
+			for i,v in ipairs(state.JobMode) do
+				if state.JobMode.value == v then
+					if state.JobMode.value ~= state.JobMode[#state.JobMode] then
+						state.JobMode:set(state.JobMode[i+1])
+					else
+						state.JobMode:set(state.JobMode[1])
+					end
+					info('Mode: ['..state.JobMode.value..']')
+					equip(set_combine(choose_set(),choose_set_custom()))
+					return
 				end
-				info('Mode: ['..state.JobMode.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
-				return
 			end
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.JobMode:set(mode[2])
+			info('Mode: ['..state.JobMode.value..']')
+			equip(set_combine(choose_set(),choose_set_custom()))
+			return
 		end
-	elseif command == 'wave1' then
-			info('Dynamis Wave 1 Mode')
-			windower.send_command('cpaddon cmd load dynamis_wave1_'..player.main_job..'_'..player.sub_job)
-	elseif command == 'wave2' then
-			info('Dynamis Wave 2 Mode')
-			windower.send_command('cpaddon cmd load dynamis_wave2_'..player.main_job..'_'..player.sub_job)
-	elseif command == 'wave3' then
-			info('Dynamis Wave 3 Mode')
-			windower.send_command('cpaddon cmd load dynamis_wave3_'..player.main_job..'_'..player.sub_job)
-	elseif command == 'aoe' then
-			info('Dynamis AoE Mode')
-			windower.send_command('cpaddon cmd load dynamis_aoe_'..player.main_job..'_'..player.sub_job)
-	elseif command == 'magic' then
-			info('Magic Mode')
-			windower.send_command('cpaddon cmd load modes_magic_'..player.main_job..'_'..player.sub_job)
-	elseif command == 'physical' then
-			info('Physical Mode')
-			windower.send_command('cpaddon cmd load modes_physical_'..player.main_job..'_'..player.sub_job)
+	elseif command:contains('burstmode') then
+		if command == 'burstmode' then
+			for i,v in ipairs(state.BurstMode) do
+				if state.BurstMode.value == v then
+					if state.BurstMode.value ~= state.BurstMode[#state.BurstMode] then
+						state.BurstMode:set(state.BurstMode[i+1])
+					else
+						state.BurstMode:set(state.BurstMode[1])
+					end
+					info('Mode: ['..state.BurstMode.value..']')
+					equip(set_combine(choose_set(),choose_set_custom()))
+					return
+				end
+			end
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.BurstMode:set(mode[2])
+			info('Mode: ['..state.BurstMode.value..']')
+			equip(set_combine(choose_set(),choose_set_custom()))
+			return
+		end
+	-- This profile mode is used to load a Cureplease profile and at same time fire a script to set correct modes in your job file.  The file structure needs to be same for both.
+	elseif command:contains('profile') then
+		local mode = {}
+		mode = string.split(cmd," ",3)
+		info('['..tostring(mode[3])..'] Mode')
+		windower.send_command('cpaddon cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job)
+		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
 	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
