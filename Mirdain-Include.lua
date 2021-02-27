@@ -233,8 +233,8 @@ function pretargetcheck(spell,action)
 		end
 		if spell.action_type == 'Magic' and buffactive['Silence'] then
 			cancel_spell()																							
-			send_command('input /item "Remedy" <me>')
-			log('Cancel Spell - Using Items')
+			--send_command('input /item "Remedy" <me>')
+			--log('Cancel Spell - Using Items')
 		end											
 	end
 	--Weapon Skill checks
@@ -441,13 +441,10 @@ function precastequip(spell)
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
-		if spell.id == 123 then
-			equipSet = sets.PhantomRoll
-			info('['..spell.english..'] Set')
-		elseif equipSet[spell.english] then
+		if equipSet[spell.english] then
 			equipSet = equipSet[spell.english]
 			info('['..spell.english..'] Set')
-		elseif spell.id == 123 then
+		elseif spell.id == 123 then -- Double Up
 			equipSet = sets.PhantomRoll
 			info('['..spell.english..'] Set')
 		else
@@ -462,7 +459,7 @@ function precastequip(spell)
 		equipSet = sets.PhantomRoll
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equipSet[spell.english])
-			info( '['..spell.english..'] Set')
+			info( '['..spell.english..'] Set ')
 		else
 			info('Roll not set')
 		end
