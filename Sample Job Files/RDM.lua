@@ -18,7 +18,7 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
 state.JobMode = M{['description']='Burst Mode'}
-state.JobMode:options('Seraph Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge')
+state.JobMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge')
 state.JobMode:set('Seraph Blade')
 
 --Enable JobMode for UI
@@ -44,21 +44,27 @@ function get_sets()
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub="Daybreak"
 	}
+	Weapons['Sanguine Blade'] ={
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub="Tauret"
+	}
 	Weapons['Chant du Cygne'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub="Tauret"
 	}
 	Weapons['Savage Blade'] ={
 		main='Naegling',
-		sub={ name="Machaera +2", augments={'TP Bonus +1000',}},
+		sub="Tauret"
+		--sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 	Weapons['Eviceration'] ={
 		main="Tauret",
-		sub={ name="Crocea Mors", augments={'Path: C',}},
+		sub='Naegling',
+		--sub={ name="Crocea Mors", augments={'Path: C',}},
 	}
 	Weapons['Aeolian Edge'] ={
 		main="Tauret",
-		sub={ name="Machaera +2", augments={'TP Bonus +1000',}},
+		sub='Naegling',
 	}
 	Weapons.Spells = {
 		sub="Ammurapi Shield",
@@ -76,21 +82,35 @@ function get_sets()
 		legs="Malignance Tights", -- 7/7
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
 		neck="Loricate Torque +1", -- 6/6
-		waist="Fucho-no-Obi", -- +1 Refresh
-		left_ear={ name="Eabani Earring", priority=2},
+		waist="Slipor Sash", -- 0/3
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 		right_ear={ name="Etiolation Earring", priority=1}, -- 0/1
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
+		right_ring='Defending Ring', -- 10/10
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10/0
-		-- 51% PDT, 31% MDT, 10 MP/Tic
+		-- 50% PDT, 44% MDT, 6 MP/Tic
     }
 	-- Gear to swap out for Movement
 	sets.Movement = {legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}}}
 
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		waist="Gishdubar Sash",
+	}
+
+	sets.TreasureHunter = {
+	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
+		legs={ name="Chironic Hose", augments={'Pet: Accuracy+4 Pet: Rng. Acc.+4','Magic Damage +15','"Treasure Hunter"+1','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
+		waist="Chaac Belt",
+	}
+
 	sets.OffenseMode = {}
 
 	sets.OffenseMode.TP = {
-		ammo="Ginsen",
+		ammo="Paeapua",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -115,12 +135,10 @@ function get_sets()
 
 	-- 50% Fast Cast is needed on RDM (Fast Cast V - 30%)
 	sets.Precast.FastCast = {
-		sub="Ammurapi Shield",
-		ammo={ name="Hydrocera", priority=4},
-		head="Malignance Chapeau",
+	    head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, --14
 		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
 		hands="Malignance Gloves",
-		legs="Malignance Tights",
+		legs="Aya. Cosciales +2", -- 6
 		feet="Malignance Boots",
 		neck="Sanctity Necklace",
 		waist="Embla Sash", -- 5
@@ -161,19 +179,18 @@ function get_sets()
 
 	-- Cure Set
 	sets.Midcast.Cure = {
-		sub="Ammurapi Shield",
 		ammo="Hydrocera",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck="Nodens Gorget",
-		waist="Sacro Cord",
-		left_ear={ name="Tuisto Earring", priority=3},
-		right_ear={ name="Etiolation Earring", priority=2},
-		left_ring={ name="Lebeche Ring", priority=1},
-		right_ring='Defending Ring',
+		neck="Loricate Torque +1",
+		waist="Flume Belt +1",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Mendi. Earring",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Defending Ring",
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
 
@@ -262,6 +279,8 @@ function get_sets()
 		back="Perimede Cape",
 	}) -- Max Enhancing 613
 
+	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
+	sets.Midcast["Dispelga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
 	sets.Midcast["Frazzle"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle II"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle III"] = sets.Midcast.Enfeebling.Potency
@@ -327,7 +346,7 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Stikini Ring +1", -- Upgrade to Rufescent Ring
 		right_ring="Epaminondas's Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%',}},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	sets.WS.MAB = {
@@ -343,7 +362,23 @@ function get_sets()
 	    right_ear="Regal Earring",
 		left_ring="Epaminondas's Ring",
 		right_ring="Freke Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%',}},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
+	sets.WS.CRIT = { -- Setup for Capped Attack
+		ammo="Yetshila +1",
+		head={ name="Blistering Sallet +1", augments={'Path: A',}},
+		body="Ayanmo Corazza +2",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Thereoid Greaves",
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Sherida Earring",
+		left_ring="Hetairoi Ring",
+		right_ring="Ilabrat Ring",
+		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
 
 	sets.WS["Seraph Blade"] =  set_combine(sets.WS.MAB, {
@@ -360,38 +395,9 @@ function get_sets()
 
 	sets.WS["Aeolian Edge"] = sets.WS.MAB
 
-	sets.WS["Chant du Cygne"] = {
-	    ammo="Staunch Tathlum +1",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- Upgrade to frenzy
-		body="Ayanmo Corazza +2",
-		hands="Jhakri Cuffs +2",
-		legs={ name="Viti. Tights +3", augments={'Enspell Damage','Accuracy',}},
-		feet="Thereoid Greaves",
-		neck="Sanctity Necklace",
-		waist="Grunfeld Rope",
-		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Sherida Earring",
-		left_ring="Epaminondas's Ring",
-		right_ring="Ilabrat Ring",
-		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Crit.hit rate+10',}},
-	}
+	sets.WS["Chant du Cygne"] = sets.WS.CRIT
 
 	sets.WS["Savage Blade"] = sets.WS.WSD
-
-	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
-	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
-		waist="Gishdubar Sash",
-	}
-
-	sets.TreasureHunter = {
-	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
-		waist="Chaac Belt",
-	}
-
-	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
 
 	organizer_items  = {		
 		item1 = "Echo Drops",
