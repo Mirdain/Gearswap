@@ -434,7 +434,7 @@ function midcast_custom(spell)
 	if buffactive['Saboteur'] and spell.skill == 'Enfeebling Magic' then
 		equipSet = sets.Saboteur
 	end
-	equipSet = Weapon_Check(equipSet)
+	equipSet = Weapon_Check(equipSet, spell)
 
 	return equipSet
 end
@@ -485,7 +485,15 @@ end
 function Weapon_Check(equipSet, spell)
 	equipSet = set_combine(equipSet,Weapons[state.JobMode.value])
 	if DualWield == false then
-		equipSet = set_combine(equipSet,Weapons.Shield)
+		if spell ~= nil then
+			if spell.type == "WhiteMagic" or spell.type == "BlackMagic" or spell.type == "Enfeebling Magic" then
+				equipSet = set_combine(equipSet,Weapons.Spells)
+			else
+				equipSet = set_combine(equipSet,Weapons.Shield)
+			end
+		else
+			equipSet = set_combine(equipSet,Weapons.Shield)
+		end
 	end
 	return equipSet
 end
