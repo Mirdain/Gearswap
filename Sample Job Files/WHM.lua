@@ -144,42 +144,20 @@ function get_sets()
 	}
 
 	--Used for elemental Bar Magic Spells
-	sets.Midcast.Enhancing.Elemental = {
-		main={ name="Gada", augments={'Enh. Mag. eff. dur. +5','MND+5','Mag. Acc.+3','"Mag.Atk.Bns."+20',}},
-		sub="Ammurapi Shield",
-		ammo="Hydrocera",
+	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 		head="Ebers Cap +1",
 		body="Ebers Bliaud +1",
 		hands="Ebers Mitts +1",
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
 		feet="Ebers Duckbills +1",
-		neck="Incanter's Torque",
-		waist="Embla Sash",
-		left_ear="Mimir Earring",
-		right_ear="Tuisto Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
-	}
+	})
 
 	--Used for elemental Bar Magic Spells
-	sets.Midcast.Enhancing.Skill = {
-		main={ name="Gada", augments={'Enh. Mag. eff. dur. +5','MND+5','Mag. Acc.+3','"Mag.Atk.Bns."+20',}},
-		sub="Ammurapi Shield",
-		ammo="Hydrocera",
-		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
-		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
-		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
-		legs={ name="Telchine Braconi", augments={'"Fast Cast"+4','Enh. Mag. eff. dur. +10',}},
-		feet="Theo. Duckbills +3",
-		neck="Incanter's Torque",
-		waist="Embla Sash",
-		left_ear={ name="Etiolation Earring", priority=3},	
-		right_ear="Mimir Earring",
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		right_ring={ name="Etana Ring", priority=2},
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
+	    hands="Inyan. Dastanas +2",
+		left_ring="Stikini Ring +1",
 		back="Perimede Cape", -- UNM Cape
-	}
+	})
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
