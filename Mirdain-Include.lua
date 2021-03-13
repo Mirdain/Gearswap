@@ -1737,7 +1737,7 @@ windower.register_event('prerender',function()
 	end
 
     mov.counter = mov.counter + 1;
-    if mov.counter > 5 then
+    if mov.counter > 10 then
         local pl = windower.ffxi.get_mob_by_index(player.index)
         if pl and pl.x and mov.x and not buffactive['Mounted'] then
             local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.5
