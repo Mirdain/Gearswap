@@ -1745,9 +1745,7 @@ windower.register_event('prerender',function()
 				if player.status ~= "Engaged" then
 					is_moving = true
 					--send_command('input /echo Moving! Status: '..player.status..'')
-					if player.main_job ~= "NIN" then
-						equip(set_combine(choose_set(),choose_set_custom()))
-					end
+					equip(set_combine(choose_set(),choose_set_custom()))
 				end
             elseif not movement and is_moving then
 				is_moving = false
