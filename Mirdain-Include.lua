@@ -378,6 +378,7 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -492,6 +493,10 @@ function precastequip(spell)
 		else
 			equipSet = sets.Precast.FastCast
 		end
+		--Equip on main hand
+		if spell.name == "Dispelga" then
+			equipSet = set_combine(equipSet, {main="Daybreak"})
+		end
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
 		equipSet = sets.Precast
@@ -569,6 +574,7 @@ function precastequip(spell)
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
+
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
 end
@@ -749,6 +755,10 @@ function midcastequip(spell)
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			end
 		end
+		--Equip on main hand
+		if spell.name == "Dispelga" then
+			equipSet = set_combine(equipSet, {main="Daybreak"})
+		end
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
 		-- Song Count for Minne and Paeon
@@ -896,13 +906,13 @@ function precast(spell)
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
 			-- assume 80% FC
-			SpellCastTime = cast_spell.cast_time *.2 + 2.6
+			SpellCastTime = cast_spell.cast_time *.2 + 2.5
 			-- Spell not delay set to default 2 sec
 			if buffactive["Chainspell"] or buffactive["Nightingale"] then
 				 SpellCastTime = 1
 			end
 		elseif spell.action_type == 'Ranged Attack' then
-			SpellCastTime = 1.2
+			SpellCastTime = 1.1
 		else
 			-- Set duration of JA/WS
 			SpellCastTime = 1.05
@@ -949,9 +959,9 @@ function aftercast(spell)
 
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
-		SpellCastTime = 2.6
+		SpellCastTime = 2.5
 	elseif spell.action_type == 'Ranged Attack' then
-		SpellCastTime = 1.2
+		SpellCastTime = 1.1
 	else
 		SpellCastTime = .05
 	end
@@ -1309,7 +1319,7 @@ function self_command(cmd)
 					else
 						state.OffenseMode:set(state.OffenseMode[1])
 					end
-					info('Mode: ['..state.OffenseMode.value..']')
+					info('Offense Mode: ['..state.OffenseMode.value..']')
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
 				end
@@ -1318,7 +1328,7 @@ function self_command(cmd)
 			local mode = {}
 			mode = string.split(cmd," ",2)
 			state.OffenseMode:set(mode[2])
-			info('Mode: ['..state.OffenseMode.value..']')
+			info('Offense Mode: ['..state.OffenseMode.value..']')
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
@@ -1331,7 +1341,7 @@ function self_command(cmd)
 					else
 						state.JobMode:set(state.JobMode[1])
 					end
-					info('Mode: ['..state.JobMode.value..']')
+					info('Job Mode: ['..state.JobMode.value..']')
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
 				end
@@ -1340,7 +1350,7 @@ function self_command(cmd)
 			local mode = {}
 			mode = string.split(cmd," ",2)
 			state.JobMode:set(mode[2])
-			info('Mode: ['..state.JobMode.value..']')
+			info('Job Mode: ['..state.JobMode.value..']')
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
@@ -1362,7 +1372,7 @@ function self_command(cmd)
 			local mode = {}
 			mode = string.split(cmd," ",2)
 			state.BurstMode:set(mode[2])
-			info('Mode: ['..state.BurstMode.value..']')
+			info('Burst Mode: ['..state.BurstMode.value..']')
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
@@ -1370,7 +1380,7 @@ function self_command(cmd)
 	elseif command:contains('profile') then
 		local mode = {}
 		mode = string.split(cmd," ",3)
-		info('['..tostring(mode[3])..'] Mode')
+		info('Profile: ['..tostring(mode[3])..']')
 		windower.send_command('cpaddon cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job)
 		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job)
 	elseif command == 'food' then
@@ -1735,7 +1745,9 @@ windower.register_event('prerender',function()
 				if player.status ~= "Engaged" then
 					is_moving = true
 					--send_command('input /echo Moving! Status: '..player.status..'')
-					equip(set_combine(choose_set(),choose_set_custom()))
+					if player.main_job ~= "NIN" then
+						equip(set_combine(choose_set(),choose_set_custom()))
+					end
 				end
             elseif not movement and is_moving then
 				is_moving = false
