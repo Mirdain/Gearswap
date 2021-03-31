@@ -272,25 +272,18 @@ function pretargetcheck(spell,action)
 			return
 		end
 		--Cancel if null target and redirect to self if bard song
-		if spell.target.type ==  null then
-			if spell.type == 'BardSong' then
-				if buffactive['Pianissimo'] then
-					if is_Pianissimo == false then
-						cancel_spell()
-						--log('Piassimo Redirect - Select Character')
-						send_command('input /ma "'..spell.name..'" <stpc>')
-						is_Pianissimo = true
-					else
-						is_Pianissimo = false
-					end
+		if spell.target.type == null and spell.type == 'BardSong' then
+			if buffactive['Pianissimo'] then
+				if is_Pianissimo == false then
+					cancel_spell()
+					--log('Piassimo Redirect - Select Character')
+					send_command('input /ma "'..spell.name..'" <stpc>')
+					is_Pianissimo = true
 				else
-					change_target('<me>')
+					is_Pianissimo = false
 				end
 			else
-				-- Cancel Spell
-				log('Cancel Spell:[NO TARGET]')
-				cancel_spell()
-				return
+				change_target('<me>')
 			end
 		else
 			local cast_spell = res.spells:with('name', spell.name)
@@ -852,7 +845,7 @@ function midcastequip(spell)
 	elseif spell.name=="Sneak" and buffactive["Sneak"] and spell.target.type=="SELF" then
 		send_command('cancel 71;')
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
-		send_command('wait 1;cancel 66;')
+		send_command('wait .5;cancel 66;')
 	end
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
