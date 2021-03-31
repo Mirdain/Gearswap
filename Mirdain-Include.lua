@@ -285,7 +285,7 @@ function pretargetcheck(spell,action)
 			else
 				change_target('<me>')
 			end
-		else
+		elseif spell.target.type ~= null then
 			local cast_spell = res.spells:with('name', spell.name)
 			log('['..tostring(cast_spell.targets)..']')
 			-- Self Target spells
@@ -299,6 +299,7 @@ function pretargetcheck(spell,action)
 			elseif tostring(cast_spell.targets) == '{Enemy}' then
 				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
 					--Cancel Spell
+					log('Cancel Spell:['..tostring(spell.target.type)..']')
 					log('Cancel Spell:[ENEMY TARGET]')
 					cancel_spell()
 					return
