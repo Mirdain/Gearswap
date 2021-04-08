@@ -230,17 +230,21 @@ function pretargetcheck(spell,action)
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
-			cancel_spell()
-			if AutoItem == true then
-				send_command('input /item "Remedy" <me>')
-				log('Cancel Spell - Using Items')
+			if player.inventory['Remedy'] ~= nil then
+				cancel_spell()
+				if AutoItem == true then
+					send_command('input /item "Remedy" <me>')
+					log('Cancel Spell - Using Items')
+				end
 			end
 		end
 		if spell.action_type == 'Magic' and buffactive['Silence'] then
-			cancel_spell()			
-			if AutoItem == true then
-				send_command('input /item "Remedy" <me>')
-				log('Cancel Spell - Using Items')
+			if player.inventory['Remedy'] ~= nil then
+				cancel_spell()			
+				if AutoItem == true then
+					send_command('input /item "Remedy" <me>')
+					log('Cancel Spell - Using Items')
+				end
 			end
 		end											
 	end
