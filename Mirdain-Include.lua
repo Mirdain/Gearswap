@@ -1653,7 +1653,7 @@ windower.register_event('gain buff', function(id)
 				windower.send_command('input /item "Remedy" <me>')
 			end
 		else 
-			info('No Remedy Drops in inventory.')
+			info('No Remedies in inventory.')
 		end
 	elseif id == 4 then
 		if player.inventory['Remedy'] ~= nil then
