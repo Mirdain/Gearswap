@@ -231,13 +231,17 @@ function pretargetcheck(spell,action)
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
 			cancel_spell()
-			send_command('input /item "Remedy" <me>')
-			log('Cancel Spell - Using Items')
+			if AutoItem == true then
+				send_command('input /item "Remedy" <me>')
+				log('Cancel Spell - Using Items')
+			end
 		end
 		if spell.action_type == 'Magic' and buffactive['Silence'] then
-			cancel_spell()																							
-			--send_command('input /item "Remedy" <me>')
-			--log('Cancel Spell - Using Items')
+			cancel_spell()			
+			if AutoItem == true then
+				send_command('input /item "Remedy" <me>')
+				log('Cancel Spell - Using Items')
+			end
 		end											
 	end
 	--Weapon Skill checks
