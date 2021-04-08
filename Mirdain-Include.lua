@@ -24,12 +24,15 @@ SpellCastTime = 0
 
 Spellstart = os.clock()
 UpdateTime1 = os.clock()
-
 UpdateTime2 = os.clock()
 
 command_JA = "None"
 command_SP = "None"
 command_BP = "None"
+
+AutoItem = false
+Random_Lockstyle = false
+Lockstyle_List = {}
 
 UI_Name = ''
 UI_State = ''
@@ -1375,8 +1378,8 @@ function self_command(cmd)
 		local mode = {}
 		mode = string.split(cmd," ",3)
 		info('Profile: ['..tostring(mode[3])..']')
-		windower.send_command('cpaddon cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job)
-		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job)
+		windower.send_command('cpaddon cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
 	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
@@ -1517,6 +1520,11 @@ send_command('bind f9 gs c JobMode')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
+
+	if Random_Lockstyle == true then
+		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
+	end
+
 	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
 end
 
@@ -1641,20 +1649,26 @@ windower.register_event('gain buff', function(id)
     local name = res.buffs[id].english
 	if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
 		if player.inventory['Echo Drops'] ~= nil then
-			--windower.send_command('input /item "Echo Drops" <me>')
+			if AutoItem == true then
+				windower.send_command('input /item "Remedy" <me>')
+			end
 		else 
 			info('No Echo Drops in inventory.')
 		end
 	elseif id == 4 then
 		if player.inventory['Remedy'] ~= nil then
-			--windower.send_command('input /item "Remedy" <me>')
+			if AutoItem == true then
+				windower.send_command('input /item "Remedy" <me>')
+			end
 		else 
 			info('No Remedies in inventory.')
 		end
 	elseif id == 15 then
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
 			info('DOOOOOOM!!!')
-			--windower.send_command('input /item "Holy Water" <me>')
+			if AutoItem == true then
+				windower.send_command('input /item "Holy Water" <me>')
+			end
 		else 
 			info('No Holy Waters in inventory. Unable to cure DOOM status!')
 		end
