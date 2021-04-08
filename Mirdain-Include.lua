@@ -1648,12 +1648,12 @@ windower.raw_register_event('zone change', on_zone_change_for_th)
 windower.register_event('gain buff', function(id)
     local name = res.buffs[id].english
 	if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
-		if player.inventory['Echo Drops'] ~= nil then
+		if player.inventory['Remedy'] ~= nil then
 			if AutoItem == true then
 				windower.send_command('input /item "Remedy" <me>')
 			end
 		else 
-			info('No Echo Drops in inventory.')
+			info('No Remedy Drops in inventory.')
 		end
 	elseif id == 4 then
 		if player.inventory['Remedy'] ~= nil then
