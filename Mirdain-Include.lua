@@ -1198,7 +1198,6 @@ function do_Utsu_checks(spell)
     local available_shihei = player.inventory['Shihei']
 	local shihei_warning_level = 50
 
-    -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
     if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
 		if available_shihei.count < shihei_warning_level  then
 			local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x on '..player.name..' *****'
@@ -1672,8 +1671,8 @@ windower.register_event('gain buff', function(id)
 			info('No Remedies in inventory.')
 		end
 	elseif id == 15 then
+		info('DOOOOOOM!!!')
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
-			info('DOOOOOOM!!!')
 			if AutoItem == true then
 				windower.send_command('input /item "Holy Water" <me>')
 			end
