@@ -14,12 +14,12 @@ Food = "Tropical Crepe"
 
 UI_Name = 'DPS'
 
---Modes for specific to Corsair
-state.JobMode = M{['description']='Corsair Damage Mode'}
-state.JobMode:options('Mordant Rime','Savage Blade', 'Aeolian Edge', 'Rudra\'s Storm', 'Eviceration')
+--Modes for specific to bard
+state.JobMode = M{['description']='Bard Damage Mode'}
+state.JobMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm')
 state.JobMode:set('Mordant Rime')
 
-elemental_ws = S{'Aeolian Edge'}
+elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
 
 --Default to DT Mode
 state.OffenseMode:set('TP')
@@ -39,19 +39,34 @@ function get_sets()
 		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
+	Weapons['Aeolian Edge'] = {
+		main={ name="Carnwenhan", augments={'Path: A',}},
+		sub="Tauret",
+	}
+
+	Weapons['Shining Strike'] = {
+		main="Daybreak",
+		sub="Tauret",
+	}
+
+	Weapons['Shining Blade'] = {
+		main="Naegling",
+		sub="Tauret",
+	}
+
 	Weapons['Savage Blade'] = {
 		main="Naegling",
+		sub={ name="Fusetto +2", augments={'TP Bonus +1000',}},
+	}
+
+	Weapons['Eviceration'] = {
+		main='Tauret',
 		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
-	Weapons['Aeolian Edge'] = {
-		main="Tauret",
-		sub="Levante Dagger",
-	}
-
 	Weapons['Rudra\'s Storm'] = {
-	    main="Tauret",
-		sub="Naegling",
+		main={ name="Carnwenhan", augments={'Path: A',}},
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
 	Weapons.Songs = {
@@ -79,7 +94,7 @@ function get_sets()
 	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
 	Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
 	Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
-	Instrument.Aeolian = {  name="Linos", augments={'Mag. Acc.+10 "Mag.Atk.Bns."+10','Weapon skill damage +3%','INT+8',} }
+	Instrument.MAB = {  name="Linos", augments={'Mag. Acc.+10 "Mag.Atk.Bns."+10','Weapon skill damage +3%','INT+8',} }
 
 	-- HP/MP Balancing Goal
 	-- HP: 2200 MP: 550
@@ -87,22 +102,30 @@ function get_sets()
 	-- Standard Idle set
 	sets.Idle = {
 		range=Instrument.Idle,  -- 4/0
-		head="Inyanga Tiara +2", -- 0/5
-		body="Inyanga Jubbah +2", -- 0/8
-		hands="Mousai Gages +1",
-		legs="Brioso Cannions +3", -- 8/8
-		feet="Inyan. Crackows +2", -- 0/3
+		head="Bunzi's Hat", -- 7/7
+		body="Bunzi's Robe", -- 10/10
+		hands="Bunzi's Gloves", -- 8/8 
+		legs="Bunzi's Pants", -- 9/9
+		feet="Bunzi's Sabots", -- 6/6
 		neck="Loricate Torque +1", -- 6/6
-		waist="Flume Belt +1", -- 4/0
-		left_ear="Sanare Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=4}, -- 3/5
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
-		right_ring="Defending Ring",-- 10/10
-		back={ name="Intarabus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Phys. dmg. taken-10%',}, priority=3}, -- 10/0
-    } -- PDT 49%, MDT 39%
+		waist="Carrier's Sash",
+		left_ear="Eabani Earring",
+		right_ear="Sanare Earring",
+		left_ring="Defending Ring", -- 10/10 (over capped due to movement gear)
+		right_ring="Shadow Ring",
+		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Mag. Evasion+15',}},
+    } -- PDT 60%%, MDT 56%
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +1"}
+
+    -- Set to be used if you get cursna casted on you
+	sets.Cursna_Recieved = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		waist="Gishdubar Sash",
+	}
 
 	sets.OffenseMode = {}
 
@@ -110,22 +133,22 @@ function get_sets()
 	sets.OffenseMode.TP = {
 		range=Instrument.TP,
 		head="Aya. Zucchetto +2",
-		body="Ayanmo Corazza +2",
-		hands="Aya. Manopolas +2",
+		body="Nyame Mail",
+		hands="Bunzi's Gloves",
 		legs="Aya. Cosciales +2",
-		feet="Aya. Gambieras +2",
+		feet="Nyame Sollerets",
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
 		left_ear="Brutal Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
-		left_ring={ name="Moonlight Ring",  bag="wardrobe1", priority=2},
-		right_ring={ name="Moonlight Ring",  bag="wardrobe3", priority=1},
-		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+		left_ring={ name="Chirich Ring +1",  bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1",  bag="wardrobe3", priority=1},
+		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1}, -- 3/5
+
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -314,15 +337,7 @@ function get_sets()
 	sets.JA["Pianissimo"] = {}
 	
 	--Default WS set base
-	sets.WS = {}
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {}
-	--The following sets augment the WS base set
-	sets.WS.WSD = {}
-	sets.WS["Savage Blade"] = {}
-
-	sets.WS["Mordant Rime"] = {
-		range=Instrument.Mordant,
+	sets.WS = {
 		head={ name="Bihu Roundlet +3", augments={'Enhances "Con Anima" effect',}},
 		body={ name="Bihu Jstcorps. +3", augments={'Enhances "Troubadour" effect',}},
 		hands={ name="Bihu Cuffs +3", augments={'Enhances "Con Brio" effect',}},
@@ -333,45 +348,56 @@ function get_sets()
 		left_ear="Regal Earring",
 		right_ear="Ishvara Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring={ name="Moonlight Ring",  bag="wardrobe4", priority=1},
+		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	sets.WS["Aeolian Edge"] = {
-	    range=Instrument.Aeolian,
-		body="Cohort Cloak +1",
+	--The following sets augment the WS base set
+	sets.WS.WSD = set_combine(sets.WS, {
+	
+	})
+
+	sets.WS.MAB = {
+		range=Instrument.MAB,
+		body={ name="Cohort Cloak +1", augments={'Path: A',}},
 		hands={ name="Chironic Gloves", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','"Drain" and "Aspir" potency +6','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}},
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','Haste+1','INT+10','"Mag.Atk.Bns."+13',}},
 		feet={ name="Chironic Slippers", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','Enmity-2','INT+8','"Mag.Atk.Bns."+13',}},
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
-		left_ear="Friomisi Earring",
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Regal Earring",
-		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring="Shiva Ring +1",
+		left_ring="Shiva Ring +1",
+		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
-	
-	sets.Charm = {
+
+	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
+	sets.WS.ACC = {}
+
+	sets.WS["Savage Blade"] = sets.WS.WSD
+
+	sets.WS["Mordant Rime"] = set_combine(sets.WS, {
+		range=Instrument.Mordant,
+	})
+
+	sets.WS["Aeolian Edge"] = sets.WS.MAB
+	sets.WS["Burning Blade"] = sets.WS.MAB
+	sets.WS["Shining Blade"] = set_combine( sets.WS.MAB, {
+		right_ring="Weather. Ring",
+	})
+	sets.WS["Shining Strike"] = set_combine( sets.WS.MAB, {
+		right_ring="Weather. Ring",
+	})
+
+	sets.Charm = set_combine( sets.Idle, {
 		main="Lament",
-		range="Marsyas",
-		head="Inyanga Tiara +2",
-		body="Inyanga Jubbah +2",
-		hands="Inyan. Dastanas +2",
-		legs="Brioso Cannions +3",
-		feet="Inyan. Crackows +2",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear={ name="Moonshade Earring", augments={'Mag. Acc.+4','Latent effect: "Refresh"+1',}},
-		right_ear="Etiolation Earring",
-		left_ring="Defending Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-    }
+    })
 
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
 	}
+
 	organizer_items  = {		
 		item1 = "Echo Drops",
 		item2 = "Remedy",
@@ -395,28 +421,32 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if spell.type == 'BardSong' then
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 		if DualWield == false then
-			return set_combine(equipSet, Weapons.Songs)
+			equipSet = set_combine(equipSet, Weapons.Songs)
 		else
-			return set_combine(equipSet, Weapons.Songs.DualWield)
+			equipSet = set_combine(equipSet, Weapons.Songs.DualWield)
 		end
 	else
-		return Weapon_Check(equipSet)
+		equipSet = Weapon_Check(equipSet)
+		equipSet = Elemental_check(equipSet, spell)
 	end
+
+	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if spell.type == 'BardSong' then
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 		if DualWield == false then
-			return set_combine(equipSet, Weapons.Songs)
+			equipSet = set_combine(equipSet, Weapons.Songs)
 		else
-			return set_combine(equipSet, Weapons.Songs.DualWield)
+			equipSet = set_combine(equipSet, Weapons.Songs.DualWield)
 		end
 	else
-		return Weapon_Check(equipSet)
+		equipSet = Weapon_Check(equipSet)
 	end
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
@@ -484,7 +514,6 @@ function dummy_songs()
 	info('Song Buff Begin')
 	state.AutoBuff:set('ON')
 	send_command("input /ma \"Army's Paeon IV\" <me>")
-
 	coroutine.schedule(player_buffing,.05)
 	coroutine.schedule(song2,5.5)
 	coroutine.schedule(song3,11)
@@ -517,4 +546,28 @@ end
 
 function player_buffing ()
 	is_Buffing = true
+end
+
+function Elemental_check(equipSet, spell)
+	-- This function swaps in the Orpheus or Hachirin as needed
+	if elemental_ws:contains(spell.name) then
+		-- Matching double weather (w/o day conflict).
+		if spell.element == world.weather_element and world.weather_intensity == 2 then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+		-- Matching day and weather.
+		elseif spell.element == world.day_element and spell.element == world.weather_element then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			-- Target distance less than 6 yalms
+		elseif spell.target.distance < (6 + spell.target.model_size) then
+			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
+			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
+		-- Match day or weather.
+		elseif spell.element == world.day_element or spell.element == world.weather_element then
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+		end
+	end
+	return equipSet
 end
