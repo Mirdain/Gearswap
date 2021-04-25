@@ -10,6 +10,15 @@ LockStylePallet = "6"
 MacroBook = "3"
 MacroSet = "1"
 
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
 -- Use "gs c food" to use the specified food item 
 Food = "Tropical Crepe"
 
@@ -17,9 +26,9 @@ Food = "Tropical Crepe"
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
-state.JobMode = M{['description']='Burst Mode'}
-state.JobMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge')
-state.JobMode:set('Seraph Blade')
+state.JobMode = M{['description']='Weapon Mode'}
+state.JobMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo')
+state.JobMode:set('Sanguine Blade')
 
 --Enable JobMode for UI
 UI_Name = 'DPS'
@@ -46,25 +55,27 @@ function get_sets()
 	}
 	Weapons['Sanguine Blade'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Tauret"
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons['Chant du Cygne'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
-		sub="Tauret"
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons['Savage Blade'] ={
-		main='Naegling',
-		sub="Tauret"
-		--sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		main="Naegling",
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 	Weapons['Eviceration'] ={
 		main="Tauret",
-		sub='Naegling',
-		--sub={ name="Crocea Mors", augments={'Path: C',}},
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 	Weapons['Aeolian Edge'] ={
 		main="Tauret",
-		sub='Naegling',
+		sub="Daybreak"
+	}
+	Weapons['Black Halo'] ={
+		main="Maxentius",
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 	Weapons.Spells = {
 		sub="Ammurapi Shield",
@@ -350,7 +361,7 @@ function get_sets()
 	}
 
 	sets.WS.MAB = {
-		ammo="Pemphredo Tathlum",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="C. Palug Crown",
 		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		hands="Jhakri Cuffs +2",
