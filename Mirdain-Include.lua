@@ -1228,9 +1228,17 @@ function self_command(cmd)
 		info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the Auto Buff function off/on
-	elseif command == "autobuff" then
-		state.AutoBuff:cycle()
-		info('Auto Buff is ['..state.AutoBuff.value..']')
+	elseif command:contains('autobuff') then
+		if command == 'autobuff' then
+			state.AutoBuff:cycle()
+			info('Auto Buff is ['..state.AutoBuff.value..']')
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.AutoBuff:set(mode[2])
+			info('Auto Buff is ['..state.AutoBuff.value..']')
+			equip(set_combine(choose_set(),choose_set_custom()))
+		end
 	elseif command == 'skillchain_burst' then
 		if state.BurstMode.value == 'Tier 1' then
 			send_command('BT cast spell 1')
