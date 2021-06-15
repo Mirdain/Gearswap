@@ -633,7 +633,7 @@ function midcastequip(spell)
 			info('Cure Set')
 		-- Regen
 		elseif spell.name:contains('Regen') then
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Regen)
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing, sets.Midcast.Regen)
 			info('Regen Set')
 		-- Curaga 
 		elseif spell.name:contains('Cura') then
@@ -1597,7 +1597,6 @@ function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
     if id == 0x29 then
         local target_id = data:unpack('I',0x09)
         local message_id = data:unpack('H',0x19)%32768
-
         -- Remove mobs that die from our tagged mobs list.
         if th_info.tagged_mobs[target_id] then
             -- 6 == actor defeats target
@@ -1787,26 +1786,50 @@ end)
 
 -- Section used to determine if player is performing an action
 windower.register_event('action', function (data)
+
+	-- category
+
+	-- [1] = 'Melee attack',
+	-- [2] = 'Ranged attack finish',
+	-- [3] = 'Weapon Skill finish',
+	-- [4] = 'Casting finish',
+	-- [5] = 'Item finish',
+	-- [6] = 'Job Ability',
+	-- [7] = 'Weapon Skill start',
+	-- [8] = 'Casting start',
+	-- [9] = 'Item start',
+	-- [11] = 'NPC TP finish',
+	-- [12] = 'Ranged attack start',
+	-- [13] = 'Avatar TP finish',
+	-- [14] = 'Job Ability DNC',
+	-- [15] = 'Job Ability RUN',
+
 	if data ~= nil then
 		log('cat='..data.category..',param='..data.param)
 		local self = windower.ffxi.get_player()
 		local targets = data.targets
+		local ability = {}
+
 		if data.actor_id == player.id then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
+			-- Ranged attack finish
 			if data.category == 2 then
 				if data.param == 26739 then
 					log('Player finished Shooting')
-					--send_command('wait 1.1;input /shoot <t>')
 				end
+			--Casting finish
 			elseif data.category == 4 then
-			--info('Casting Finished')
+				log('Casting Finished')
+			-- Casting Start
 			elseif data.category == 8 then
 				if data.param == 28787 then
 					log('Spell Interupt')
 					equip(set_combine(choose_set(),choose_set_custom()))
+					is_Busy = false
 				elseif data.param == 24931 then
 					log('Casting Spell')
 				end
+			-- Ranged attack start
 			elseif data.category == 12 then
 				if data.param == 24931 then
 					log(''..primarytarget.name ..' is Shooting')
@@ -1815,7 +1838,8 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
-		-- Spell
+
+		-- Any Spells
 		if data.category == 8 then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
 			if primarytarget ~= nil then 
@@ -1850,6 +1874,7 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
+
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
@@ -1868,9 +1893,7 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
-
 		cleanup_tagged_mobs()
-
 	end
 end)
 
