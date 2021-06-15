@@ -24,35 +24,44 @@ state.JobMode:set('OFF')
 UI_Name = 'Burst'
 
 --loads the Burst Plugin
-windower.send_command('lua l Burst')
+--windower.send_command('lua l Burst')
 
 function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-		main="Malignance Pole", -- 20/20
+		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
 		ammo="Staunch Tathlum +1", -- 3/3
-		head="Befouled Crown", -- 0/0 +1
+		head="Nyame Helm",
 		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}}, -- 0/0 +3
-		hands={ name="Chironic Gloves", augments={'STR+9','Pet: INT+4','"Refresh"+1','Accuracy+20 Attack+20',}},
-		legs="Assid. Pants +1", -- 0/0 +2
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- 2/0 +2
 		neck="Loricate Torque +1", -- 6/6
-		waist="Fucho-no-Obi", -- 0/0 +1
+		waist="Carrier's Sash",
 		left_ear="Eabani Earring",
 		right_ear="Etiolation Earring", -- 0/3
-		left_ring="Defending Ring", -- 10/10
-		right_ring="Stikini Ring +1", -- 0/0 +1
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10/0
     }
 	-- Set PDF = 51 MDT = 39 Refresh = 10
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}
+	sets.OffenseMode = {}
+	-- Base TP set
+	sets.OffenseMode.TP = {}
+	-- Set to use when Dual Wielding
+	sets.OffenseMode.TP.DW = {}
+	-- TP set when in -Damage Taken mode
+	sets.OffenseMode.DT = {}
+	-- TP set to use when mode is in accuracy
+	sets.OffenseMode.ACC = {}
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main={ name="Grioavolr", augments={'"Fast Cast"+7','INT+5','Mag. Acc.+2','Magic Damage +5',}},
+		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
 		ammo="Hydrocera",
 		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+14','Attack+22','"Fast Cast"+6','Mag. Acc.+15 "Mag.Atk.Bns."+15',}},
@@ -61,10 +70,10 @@ function get_sets()
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Merlinic Crackows", augments={'"Mag.Atk.Bns."+29','"Fast Cast"+6','DEX+7','Mag. Acc.+14',}},
 		neck="Voltsurge Torque",
-		waist="Luminary Sash",
+		waist="Embla Sash",
 		left_ear="Tuisto Earring",
 		right_ear="Etiolation Earring",
-		left_ring="Etana Ring",
+		left_ring="Weather. Ring",
 		right_ring="Kishar Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
@@ -84,7 +93,7 @@ function get_sets()
 	sets.Midcast = {}
 	-- Cure Set
 	sets.Midcast.Cure = {
-		main="Chatoyant Staff",
+		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
 		ammo="Hydrocera",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
@@ -97,12 +106,12 @@ function get_sets()
 		left_ear="Tuisto Earring",
 		right_ear="Etiolation Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		right_ring="Janniston Ring",
+		right_ring="Defending Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     }
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
-		main={ name="Gada", augments={'Enh. Mag. eff. dur. +5','MND+5','Mag. Acc.+3','"Mag.Atk.Bns."+20',}},
+		main={ name="Musa", augments={'Path: C',}},
 		sub="Ammurapi Shield",
 		ammo="Hydrocera",
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
@@ -120,7 +129,7 @@ function get_sets()
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		main={ name="Grioavolr", augments={'Mag. Acc.+27','Mag. Acc.+23 "Mag.Atk.Bns."+23','Pet: "Regen"+1',}},
+		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
 		ammo="Pemphredo Tathlum",
 		head={ name="Chironic Hat", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','"Resist Silence"+1','Mag. Acc.+13','"Mag.Atk.Bns."+4',}},
@@ -213,14 +222,6 @@ function get_sets()
 	-- ===================================================================================================================
 	--		sets.aftercast
 	-- ===================================================================================================================
-	--Custome sets for each jobsetup
-	sets.Custom = {}
-
-	sets.OffenseMode = {}
-	sets.OffenseMode.TP = {}
-	sets.OffenseMode.TP.DW = {}
-	sets.OffenseMode.DT = {}
-	sets.OffenseMode.ACC = {}
 
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -293,5 +294,5 @@ function self_command_custom(command)
 end
 -- This function is called when the job file is unloaded
 function user_file_unload()
-	windower.send_command('lua u Burst')
+	--windower.send_command('lua u Burst')
 end
