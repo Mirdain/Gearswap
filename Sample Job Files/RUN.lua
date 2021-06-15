@@ -52,7 +52,8 @@ Runes = {
 	Lighting = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTING DAMAGE]"},
 	Water = {Name = "Unda", Description = "[FIRE RESISTANCE] and deals [WATER DAMAGE]"},
 	Light = {Name = "Lux", Description = "[DARK RESISTANCE] and deals [LIGHT DAMAGE]"},
-	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"}
+	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"},
+	None = {Name = 'None', Description = "None"}
 }
 
 JA_Delay = os.clock()
@@ -348,6 +349,22 @@ function get_sets()
 	sets.WS.ACC = {}
 	sets.WS.WSD = {}
 	sets.WS.CRIT = {}
+	sets.WS.DT = {
+	    sub="Utu Grip",
+		ammo="Knobkierrie",
+		head="Turms Cap +1",
+		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
+		hands="Turms Mittens +1",
+		legs="Eri. Leg Guards +1",
+		feet="Erilaz Greaves +1",
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear="Sherida Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Niqmaddu Ring",
+		right_ring="Defending Ring",
+		back={ name="Ogma's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
+	}
 
 	--Great Sword WS
 	sets.WS["Hard Slash"] = {}
@@ -423,13 +440,22 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-
+	if spell.type == 'WeaponSkill' then
+		if state.OffenseMode.value == 'DT' then
+			equipSet = 	set_combine(equipSet, sets.WS.DT)
+		end
+	end
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	set_combine(equipSet, Embolden_Check(spell))
+	equipSet = set_combine(equipSet, Embolden_Check(spell))
+	if spell.type == 'WeaponSkill' then
+		if state.OffenseMode.value == 'DT' then
+			--equipSet = 	set_combine(equipSet, sets.WS.DT)
+		end
+	end
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -466,23 +492,7 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
-	if command == "wave1" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave2" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave3" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "aoe" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "magic" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "physical" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "ranged" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "ambu" then
-		equip(set_combine(choose_set(),choose_set_custom()))
-	end
+
 end
 --Function used to automate Job Ability use
 function check_buff_JA()
@@ -517,11 +527,12 @@ function check_buff_JA()
 	end
 
 	--Rune sets
-	if state.JobMode.value ~= "None" then
+	if Runes[state.JobMode.value].Name ~= "None" then
 		if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode.value].Name] ~= 3 then
 			buff = Runes[state.JobMode.value].Name
 			info(Runes[state.JobMode.value].Description)
 		end
+
 	end
 
 	return buff
@@ -543,7 +554,7 @@ function check_buff_SP()
 		buff = "Ice Spikes"
 	end
 
-	if player.sub_job == "BLU" then
+	if player.sub_job == "BLU" and player.sub_job_level == 49 then 
 		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
 			buff = "Cocoon"
 		end
