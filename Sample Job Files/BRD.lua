@@ -56,7 +56,7 @@ function get_sets()
 
 	Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub={ name="Fusetto +2", augments={'TP Bonus +1000',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 
 	Weapons['Eviceration'] = {
@@ -132,8 +132,8 @@ function get_sets()
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
 		range=Instrument.TP,
-		head="Aya. Zucchetto +2",
-		body="Nyame Mail",
+		head="Volte Tiara",
+		body="Volte Harness",
 		hands="Bunzi's Gloves",
 		legs="Aya. Cosciales +2",
 		feet="Nyame Sollerets",
@@ -141,8 +141,8 @@ function get_sets()
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
 		left_ear="Brutal Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
-		left_ring={ name="Chirich Ring +1",  bag="wardrobe1", priority=2},
-		right_ring={ name="Chirich Ring +1",  bag="wardrobe3", priority=1},
+		left_ring={ name="Moonlight ring +1",  bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring +1",  bag="wardrobe3", priority=1},
 		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
@@ -354,7 +354,7 @@ function get_sets()
 
 	--The following sets augment the WS base set
 	sets.WS.WSD = set_combine(sets.WS, {
-	
+		range=Instrument.Mordant,
 	})
 
 	sets.WS.MAB = {
