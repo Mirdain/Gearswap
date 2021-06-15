@@ -21,7 +21,7 @@ state.JobMode:set('OFF')
 function Macro_Sub_Job()
 	local macro = 1
 	if player.sub_job == "BLU" then
-		state.OffenseMode:set('AoE')
+		state.OffenseMode:set('DT')
 		macro = 3
 		send_command('wait 2;aset set tanking')
 	else
@@ -64,8 +64,8 @@ MacroSet = Macro_Sub_Job()
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --
--- HP balancing: 2900 HP
--- MP balancing: 800 MP
+-- HP balancing: 2800 HP
+-- MP balancing: 900 MP
 --
 
 function get_sets()
@@ -74,43 +74,43 @@ function get_sets()
 	sets.Idle = {
 		main="Burtgang", -- 18/0
 		sub="Ochain",
-		ammo="Staunch Tathlum +1", -- 3/3
-		head="Volte Salade", -- 3/7
-		body="Sacro Breastplate",
-		hands="Volte Moufles", -- 6/4
-		legs="Volte Brayettes", -- 7/3
-		feet="Volte Sollerets", -- 4/6
+		ammo="Homiliary", -- Refresh
+		head="Sakpata's Helm", -- 7/7
+		body="Sakpata's Plate", -- 10/10
+		hands={ name="Regal Gauntlets", priority=2}, -- Refresh
+		legs="Sakpata's Cuisses", -- 9/9
+		feet="Sakpata's Leggings", -- 6/6
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
-		waist="Flume Belt +1", -- 4/0
-		left_ear={ name="Tuisto Earring", priority=4},
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2}, -- 3/5
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=3}, -- 7/-1
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=4}, -- 5/5
+		waist="Carrier's Sash",
+		left_ear="Ethereal Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3}, -- 3/5
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=4}, -- 7/-1
+		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5}, -- 5/5
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
-	} -- 68 PDT 32 MDT
+	}
 
 	sets.Idle.DT = set_combine( sets.Idle, {
-	
+
 	})
 
 	sets.Idle.PDT = set_combine( sets.Idle, {
-	
+	    waist="Flume Belt +1",
+		left_ear="Thureous Earring",
 	})
 
 	sets.Idle.MEVA = set_combine( sets.Idle, {
 		sub="Aegis", 
 		neck="Moonlight Necklace",
-		left_ear="Eabani Earring",
-		waist="Asklepian Belt",
+		hands="Sakpata's Gauntlets",
+	    left_ear="Sanare Earring",
 	})
 
 	sets.Idle.AoE = set_combine( sets.Idle, {
-
+		waist="Flume Belt +1",
 	})
 
 	sets.Movement = {
-		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=1},
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=2},
+		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=1},
     }
 
 	-- Set to be used if you get cursna casted on you
@@ -121,24 +121,23 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
+	sets.OffenseMode = set_combine( sets.Idle, {
+		ammo="Egoist's Tathlum",
+		hands="Sakpata's Gauntlets",
+		waist="Tempus Fugit",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=5}, -- 5/5
+		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5}, -- 5/5
+		back={ name="Rudianos's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	})
 
 	--Base TP set to build off
-	sets.OffenseMode.TP = {
-		ammo="Ginsen", --  UPGRADE TO SEETHING BOMBLET
-		head={ name="Hjarrandi Helm", priority=3},
-		body={ name="Hjarrandi Breast.", priority=4},
-		hands="Volte Moufles",
-		legs="Volte Brayettes",
-		feet="Volte Sollerets",
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-		waist="Sarissapho. Belt",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
-		right_ear="Digni. Earring",
-		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
-		back={ name="Rudianos's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
+	sets.OffenseMode.TP = set_combine( sets.OffenseMode, {
+	    head="Hjarrandi Helm",
+		left_ear="Telos Earring",
+	})
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {
 
@@ -166,7 +165,7 @@ function get_sets()
 
 	sets.Enmity = { -- Goal is 200 total -Crusaade is 30
 	    ammo="Sapience Orb", --2
-		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=1}, --9
+		head={ name="Loess Barbuta +1", augments={'Path: A',}},
 		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=2}, --20
 		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=3}, --9
 		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=4}, --9
@@ -187,9 +186,9 @@ function get_sets()
 		ammo="Sapience Orb", --2
 		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, --14
 		body="Rev. Surcoat +3", --10
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=1},
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
 		legs={ name="Odyssean Cuisses", augments={'"Fast Cast"+6','Accuracy+13','Attack+2',}}, -- 6
-		feet={ name="Odyssean Greaves", augments={'Mag. Acc.+5','"Fast Cast"+6','CHR+8',}}, -- 13
+		feet={ name="Odyssean Greaves", augments={'Rng.Acc.+14','MND+8','"Fast Cast"+6','Accuracy+19 Attack+19',}}, -- 13
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
 		waist= {name="Creed Baudrier", priority=3},
 		left_ear={ name="Tuisto Earring", priority=4},
@@ -198,6 +197,13 @@ function get_sets()
 		right_ring="Weather. Ring", --5
 		back={ name="Rudianos's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, --10
 	}
+
+	-- Augments the base Fast Cast set when a cure spell is used
+	sets.Precast.Cure = {
+	    waist="Acerbic Sash +1",
+	}
+	-- Augments the base Fast Cast set when a cure or raise is used.
+	sets.Precast.QuickMagic = {}
 
 	sets.Midcast = {}
 
@@ -233,11 +239,11 @@ function get_sets()
 	    ammo="Staunch Tathlum +1",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=1},
 		body="Shab. Cuirass +1",
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=2},
+		hands={ name="Regal Gauntlets", priority=2},
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=4},
 		feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=3},
 		neck="Incanter's Torque",
-		waist="Flume Belt +1",
+		waist="Olympus Sash",
 		left_ear={ name="Tuisto Earring", priority=5},
 		right_ear="Mimir Earring",
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
@@ -249,9 +255,9 @@ function get_sets()
 		ammo="Staunch Tathlum +1",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 		body="Rev. Surcoat +3", -- 17
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		hands={ name="Regal Gauntlets", priority=2},
 		legs={ name="Founder's Hose", augments={'MND+8','Mag. Acc.+14','Attack+13','Breath dmg. taken -3%',}},
-		feet={ name="Odyssean Greaves", augments={'Mag. Acc.+5','"Fast Cast"+6','CHR+8',}},
+		feet={ name="Odyssean Greaves", augments={'Rng.Acc.+14','MND+8','"Fast Cast"+6','Accuracy+19 Attack+19',}}, -- 13
 		neck="Incanter's Torque", -- 10
 		waist="Asklepian Belt", --10
 		left_ear="Tuisto Earring",
@@ -270,14 +276,14 @@ function get_sets()
 	}
 	sets.Midcast["Phalanx"] = { -- For +  Phalanx Gear
 		ammo="Staunch Tathlum +1",
-		head={ name="Odyssean Helm", augments={'Pet: "Dbl. Atk."+1','CHR+4','Phalanx +3','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
+		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 		body="Shab. Cuirass +1",
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
-		feet={ name="Odyssean Greaves", augments={'"Cure" potency +6%','MND+9','"Mag.Atk.Bns."+11',}},
-		neck="Incanter's Torque",
-		waist="Olympus Sash",
-		left_ear={ name="Etiolation Earring", priority=4},
+		hands="Regal Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet={ name="Odyssean Greaves", augments={'Rng.Acc.+14','MND+8','"Fast Cast"+6','Accuracy+19 Attack+19',}},
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Audumbla Sash",
+		left_ear="Knightly Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
 		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=3},
@@ -287,9 +293,9 @@ function get_sets()
 		ammo="Staunch Tathlum +1",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 		body="Shab. Cuirass +1",
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+		hands={ name="Regal Gauntlets", priority=2},
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
-		feet={ name="Odyssean Greaves", augments={'Mag. Acc.+5','"Fast Cast"+6','CHR+8',}},
+		feet={ name="Odyssean Greaves", augments={'Rng.Acc.+14','MND+8','"Fast Cast"+6','Accuracy+19 Attack+19',}},
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
 		waist="Audumbla Sash",
 		left_ear="Tuisto Earring",
@@ -435,6 +441,10 @@ function check_buff_JA()
 
 	if not buffactive['Majesty'] and ja_recasts[150] == 0 then
 		buff = "Majesty"
+	elseif ja_recasts[46] == 0 and player.status == "Engaged" and state.JobMode.value == "ON" then
+		buff = "Shield Bash"
+	elseif ja_recasts[159] == 0 and player.status == "Engaged" and player.mp < 150 and player.tp > 2000 and state.JobMode.value == "ON" then
+		buff = "Chivary"
 	end
 
 	return buff
@@ -444,16 +454,20 @@ end
 function check_buff_SP()
 	buff = 'None'
 	local sp_recasts = windower.ffxi.get_spell_recasts()
-
 	if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 18 then
 		buff = "Crusade"
 	elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 21 then
 		buff = "Phalanx"
 	elseif not buffactive['Reprisal'] and sp_recasts[97] == 0 and player.mp > 25 then
 		buff = "Reprisal"
+	elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 then
+		buff = "Enlight II"
+	end
+	if player.status == "Engaged" and sp_recasts[112] == 0 and player.mp > 25 and state.JobMode.value == "ON" then
+		buff = "Flash"
 	end
 
-	if player.sub_job == "BLU" then
+	if player.sub_job == "BLU" and player.sub_job_level == 49 then
 		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
 			buff = "Cocoon"
 		end
