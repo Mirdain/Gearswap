@@ -60,8 +60,8 @@ function get_sets()
 
 	sets.Weapons['Aeolian Edge'] = {
 		ammo=Ammo.Bullet.MAG_WS,
-		main="Tauret",
-		sub="Naegling",
+		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4"},
+		sub="Tauret",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
@@ -73,9 +73,9 @@ function get_sets()
 	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills
 	Ammo.Bullet.MAB = "Living Bullet"		-- Magical Weaponskills
-	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
+	Ammo.Bullet.MACC = "Living Bullet"		-- Magic Accuracy
 	Ammo.Bullet.QD = "Hauksbok Bullet"		-- Quick Draw
-	Ammo.Bullet.MAG_WS = "Hauksbok Bullet"	-- Magic Weapon Skills
+	Ammo.Bullet.MAG_WS = "Living Bullet"	-- Magic Weaponskills
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
@@ -85,7 +85,7 @@ function get_sets()
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck="Warder's Charm +1",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Sanare Earring",
@@ -95,7 +95,7 @@ function get_sets()
     }
 
 	sets.Movement = {
-		legs="Carmine Cuisses +1",
+		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
 	}
 
 	-- Set to be used if you get 
@@ -120,7 +120,7 @@ function get_sets()
 		left_ear="Telos Earring",
 		right_ear="Eabani Earring",
 		left_ring="Petrov Ring",
-		right_ring="Ilabrat Ring",
+		right_ring="Epona's Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 
@@ -150,9 +150,9 @@ function get_sets()
 	--No flurry - 60 Snapshot needed
 	sets.Precast.RA = {
 		ammo=Ammo.Bullet.RA,
-		head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10/0
+		head="Chass. Tricorne +1", -- 0/14
 		body="Oshosi Vest +1", -- 14/0
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}, -- 13/0
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
 		feet="Meg. Jam. +2", -- 10/0
 		left_ear={ name="Tuisto Earring", priority=2},
@@ -160,20 +160,20 @@ function get_sets()
 		left_ring={ name="Ilabrat Ring", priority=3},
 		right_ring={ name="Regal Ring", priority=4},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}}, -- 4/0
-		waist="Yemaya Belt", -- 0/10
+		waist="Yemaya Belt", -- 0/5
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 10/0
-    } -- Totals 66/24
+    } -- Totals 61/32
 
 	-- Flurry - 45 Snapshot Needed
 	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
-		body="Laksa. Frac +3",
-	}) -- Totals 52/54
+		body="Laksa. Frac +3", -- 0/20
+	}) -- Totals 52/52
 
 	-- Flurry II - 30 Snapshot Needed
 	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
-		head="Chass. Tricorne +1", 
-		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}}
-    }) -- Totals 32/78
+	    hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
+		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}} -- 0/10
+    }) -- Totals 32/73
 
 	sets.Precast.RA.ACC = {}
 
@@ -187,11 +187,11 @@ function get_sets()
 		neck="Voltsurge Torque", -- 4
 		waist="Sailfi Belt",
 		left_ear="Loquac. Earring", -- 2
-		right_ear="Enchntr. Earring +1", -- 2
+		right_ear="Etiolation Earring", -- 1
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Kishar Ring", -- 4
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
-	} -- 66 FC
+	} -- 65 FC
 
 	sets.Midcast = {}
 
@@ -343,14 +343,14 @@ function get_sets()
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
 		right_ring="Regal Ring",
-		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	sets.WS.MAB = {
 		ammo=Ammo.Bullet.MAB,
-		head={ name="Herculean Helm", augments={'Mag. Acc.+17 "Mag.Atk.Bns."+17','Weapon skill damage +5%','Mag. Acc.+2',}},
+		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
+		hands={ name="Herculean Gloves", augments={'Mag. Acc.+19 "Mag.Atk.Bns."+19','Mag. Acc.+14','"Mag.Atk.Bns."+13',}},
 		legs={ name="Herculean Trousers", augments={'Attack+12','"Mag.Atk.Bns."+27','Accuracy+3 Attack+3','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
@@ -359,7 +359,7 @@ function get_sets()
 		right_ear="Crematio Earring",
 		left_ring="Dingir Ring",
 		right_ring="Karieyh Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%',}},
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
@@ -374,7 +374,7 @@ function get_sets()
 	})
 
 	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
-		ammo=Ammo.Bullet.MAG_WS,
+		Ammo.Bullet.MAB,
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	})
 
@@ -389,13 +389,13 @@ function get_sets()
 		hands="Meg. Gloves +2",
 		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck="Comm. Charm +2",
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Grunfeld Rope",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
 		right_ring="Regal Ring",
-		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
@@ -406,7 +406,7 @@ function get_sets()
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	-- Accuracy set used in OffenseMode.ACC
@@ -445,7 +445,10 @@ function get_sets()
 	}
 
 	sets.TreasureHunter = {
-
+	    body={ name="Herculean Vest", augments={'Accuracy+5 Attack+5','Pet: INT+8','"Treasure Hunter"+1','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
+		hands={ name="Herculean Gloves", augments={'Weapon Skill Acc.+18','Pet: "Store TP"+10','"Treasure Hunter"+1','Accuracy+14 Attack+14','Mag. Acc.+7 "Mag.Atk.Bns."+7',}},
+	    feet={ name="Herculean Boots", augments={'"Dbl.Atk."+1','Pet: Accuracy+20 Pet: Rng. Acc.+20','"Treasure Hunter"+1','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
+		waist="Chaac Belt",
 	}
 
 	organizer_items  = {		
@@ -576,6 +579,8 @@ function Elemental_check(equipSet, spell)
 		elseif spell.element == world.day_element or spell.element == world.weather_element then
 			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+		else
+			windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
 		end
 	end
 	return equipSet
