@@ -124,10 +124,15 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 
-	--This set is used when OffenseMode is DT and Enaged
+	--This set is used when OffenseMode is set to DT and enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	})
+
+	--This set is used when OffenseMode is set to PDL and enaged
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+
 	})
 
 	--The following sets augment the base TP set above for Dual Wielding
@@ -176,6 +181,8 @@ function get_sets()
     }) -- Totals 32/73
 
 	sets.Precast.RA.ACC = {}
+
+	sets.Precast.RA.PDL = {}
 
 	-- Fast Cast for Magic
 	sets.Precast.FastCast = {
@@ -346,6 +353,12 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	-- Accuracy set used in OffenseMode.PDL
+	sets.WS.PDL = {}
+
+	-- Accuracy set used in OffenseMode.ACC
+	sets.WS.ACC = {}
+
 	sets.WS.MAB = {
 		ammo=Ammo.Bullet.MAB,
 		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
@@ -408,9 +421,6 @@ function get_sets()
 		waist="Fotia Belt",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
-
-	-- Accuracy set used in OffenseMode.ACC
-	sets.WS.ACC = {}
 
 	-- Uses Default WS set
 	sets.WS["Hot Shot"] = {}
