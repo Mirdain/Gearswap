@@ -60,7 +60,7 @@ sets.TreasureHunter = {}
 
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
-state.OffenseMode:options('TP','ACC','DT')
+state.OffenseMode:options('TP','ACC','DT','PDL')
 state.OffenseMode:set('TP')
 
 --Modes for Auto Buff
@@ -406,6 +406,10 @@ function precastequip(spell)
 				--Augments the set built for ACC
 				info( '['..spell.english..'] Set with Accuracy')
 				equipSet = set_combine(equipSet, sets.WS.ACC)
+			elseif state.OffenseMode.value == 'PDL' then
+				--Augments the set built TP set for PDL
+				info( '['..spell.english..'] Set with Physical Damage Limit')
+				equipSet = set_combine(equipSet, sets.WS.PDL)
 			else
 				info( '['..spell.english..'] Set')
 			end
@@ -414,6 +418,10 @@ function precastequip(spell)
 				--Augments the set built for ACC
 				info('Using Default WS Set with Accuracy')
 				equipSet = set_combine(equipSet, sets.WS.ACC)
+			elseif state.OffenseMode.value == 'PDL' then
+				--Augments the set built TP set for PDL
+				info( 'Using Default WS Set with Physical Damage Limit')
+				equipSet = set_combine(equipSet, sets.WS.PDL)
 			else
 				info('Using Default WS Set')
 			end
@@ -579,7 +587,6 @@ function precastequip(spell)
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
-
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
 end
@@ -596,6 +603,9 @@ function midcastequip(spell)
 		if state.OffenseMode.value == 'ACC' then
 			--Augments the set built for ACC
 			equipSet = set_combine(equipSet, sets.Midcast.RA.ACC)
+		elseif state.OffenseMode.value == 'PDL' then
+			--Augments the set built for PDL
+			equipSet = set_combine(equipSet, sets.Midcast.RA.PDL)
 		end
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
@@ -1070,6 +1080,7 @@ function choose_set()
 		else
 			equipSet = set_combine(equipSet,sets.OffenseMode[state.OffenseMode.value])
 		end
+
 		-- Check if TreasureMode is active
 		if state.TreasureMode.value ~= 'None' then
 			-- Equip TH gear if mob is not marked as tagged
