@@ -127,8 +127,8 @@ function get_sets()
 		waist="Tempus Fugit",
 		left_ear="Tuisto Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=5}, -- 5/5
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5}, -- 5/5
+		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=5},
+		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5},
 		back={ name="Rudianos's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	})
 
