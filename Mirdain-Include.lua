@@ -1106,6 +1106,11 @@ function choose_set()
 		if is_moving == true then
 			equipSet = set_combine(equipSet, sets.Movement)
 		end
+
+		if buffactive[187] then
+			equipSet = set_combine(equipSet, sets.Idle.Sublimation)
+		end
+
 	end
 	return equipSet
 end
