@@ -37,6 +37,11 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}, priority=2}, -- 10/0
     }
 
+	-- Set is only applied when sublimation is charging
+	sets.Idle.Sublimation = set_combine(sets.Idle, {
+	    waist="Embla Sash", -- +3 Submlimation when active
+	})
+
 	-- Set to swap out when MP is low
 	sets.Idle.Refresh = {
 	    waist="Fucho-no-Obi",
@@ -98,7 +103,7 @@ function get_sets()
 	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Benediction"] = {
-	    body={ name="Piety Briault +2", augments={'Enhances "Benediction" effect',}},
+		body={ name="Piety Bliaut +2", augments={'Enhances "Benediction" effect',}},
 	}
 	sets.JA["Divine Seal"] = {}
 	sets.JA["Convert"] = {}
@@ -125,7 +130,7 @@ function get_sets()
 		sub="Genmei Shield",
 		ammo="Impatiens",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		body={ name="Ebers Bliaud +1", priority=2},
+		body={ body="Ebers Bliaut +1", priority=2},
 		hands="Theophany Mitts +3",
 		legs="Ebers Pant. +1",
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
@@ -138,7 +143,7 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
     }
 	-- For AoE cure
-	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaud +3"}) -- Need to complete
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",}) -- Need to complete
 
 	-- Enhancing Skill
 
@@ -165,7 +170,7 @@ function get_sets()
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 	    main="Beneficus",
 		head="Ebers Cap +1",
-		body="Ebers Bliaud +1",
+		body={ body="Ebers Bliaut +1",},
 		hands="Ebers Mitts +1",
 		left_ear="Andoaa Earring",
 		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
@@ -186,10 +191,10 @@ function get_sets()
 		main="Daybreak",
 		sub="Ammurapi Shield",
 		ammo="Pemphredo Tathlum",
-		head="Theo. Cap +3",
-		body="Theo. Briault +1", -- Upgrade
+		head="Theophany Cap +3",
+		body="Theo. Bliaut +3",
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+25','"Mag.Atk.Bns."+25','Accuracy+5 Attack+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
 		feet="Theo. Duckbills +3",
 		neck="Erra Pendant",
 		waist="Luminary Sash",
@@ -205,7 +210,7 @@ function get_sets()
 		sub="Sors Shield",
 		ammo="Hasty Pinion +1",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body="Ebers Bliaud +1",
+		body={ body="Ebers Bliaut +1",},
 		hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
 		legs="Th. Pant. +3",
 		feet="Gende. Galosh. +1",
@@ -258,7 +263,7 @@ function get_sets()
 		sub="Ammurapi Shield",
 		ammo="Hydrocera",
 		head="Inyanga Tiara +2",
-		body={ name="Piety Briault +2", augments={'Enhances "Benediction" effect',}},
+		body={ name="Piety Bliaut +2", augments={'Enhances "Benediction" effect',}},
 		hands="Ebers Mitts +1",
 		legs="Th. Pant. +3",
 		feet="Theo. Duckbills +3",
