@@ -250,7 +250,7 @@ function get_sets()
 		hands="Geo. Mitaines +3",
 		legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
 		feet="Azimuth Gaiters +1",
-		neck={ name="Bagua Charm", augments={'Path: A',}},
+		neck={ name="Bagua Charm +2", augments={'Path: A',}},
 		waist="Luminary Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Etiolation Earring",
@@ -276,9 +276,8 @@ function get_sets()
 	-- Note that the Mote library will unlock these gear spots when used.
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
-		hands={ name="Merlinic Dastanas", augments={'Attack+24','STR+10','"Treasure Hunter"+1','Accuracy+7 Attack+7','Mag. Acc.+6 "Mag.Atk.Bns."+6',}},
+		hands={ name="Merlinic Dastanas", augments={'Accuracy+20','"Conserve MP"+4','"Treasure Hunter"+2','Accuracy+18 Attack+18','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
 		feet={ name="Merlinic Crackows", augments={'Pet: "Dbl.Atk."+1 Pet: Crit.hit rate +1','Attack+2','"Treasure Hunter"+1','Accuracy+19 Attack+19','Mag. Acc.+8 "Mag.Atk.Bns."+8',}},
-		head={ name="Merlinic Hood", augments={'Crit.hit rate+3','CHR+1','"Treasure Hunter"+1','Accuracy+17 Attack+17','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
 	}
 
 	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
