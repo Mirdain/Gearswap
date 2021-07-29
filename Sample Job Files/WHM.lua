@@ -29,7 +29,7 @@ function get_sets()
 		legs="Nyame Flanchard", -- 8/8
 		feet="Nyame Sollerets", -- 7/7
 		neck={ name="Loricate Torque +1", augments={'Path: A',}}, -- 6/6
-		waist="Slipor Sash", -- 0/3
+		waist="Carrier's Sash",
 		left_ear={ name="Etiolation Earring", priority=1}, -- 0/3
 		right_ear="Hearty Earring",
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
@@ -130,7 +130,7 @@ function get_sets()
 		sub="Genmei Shield",
 		ammo="Impatiens",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		body={ body="Ebers Bliaut +1", priority=2},
+		body={ name="Ebers Bliaut +1", priority=2},
 		hands="Theophany Mitts +3",
 		legs="Ebers Pant. +1",
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
@@ -170,7 +170,7 @@ function get_sets()
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 	    main="Beneficus",
 		head="Ebers Cap +1",
-		body={ body="Ebers Bliaut +1",},
+		body="Ebers Bliaut +1",
 		hands="Ebers Mitts +1",
 		left_ear="Andoaa Earring",
 		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
@@ -210,7 +210,7 @@ function get_sets()
 		sub="Sors Shield",
 		ammo="Hasty Pinion +1",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body={ body="Ebers Bliaut +1",},
+		body="Ebers Bliaut +1",
 		hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
 		legs="Th. Pant. +3",
 		feet="Gende. Galosh. +1",
