@@ -82,7 +82,7 @@ function get_sets()
 		feet="Sakpata's Leggings", -- 6/6
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
 		waist="Carrier's Sash",
-		left_ear="Ethereal Earring",
+		left_ear="Sanare Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3}, -- 3/5
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=4}, -- 7/-1
 		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5}, -- 5/5
@@ -139,45 +139,45 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
+	sets.OffenseMode.ACC = set_combine( sets.OffenseMode, {
 
-	}
+	})
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
+	sets.OffenseMode.DT = set_combine( sets.OffenseMode, {
 
-	}
+	})
 
 	--This set is used when OffenseMode is PDT and Enaged (Augments the TP base set)
-	sets.OffenseMode.PDT = {
+	sets.OffenseMode.PDT = set_combine( sets.OffenseMode, {
 
-	}
+	})
 
 	--This set is used when OffenseMode is MEVA and Enaged (Augments the TP base set)
-	sets.OffenseMode.MEVA = {
+	sets.OffenseMode.MEVA = set_combine( sets.OffenseMode, {
 
-	}
+	})
 
 	--This set is used when OffenseMode is AoE and Enaged (Augments the TP base set)
-	sets.OffenseMode.AoE = {
+	sets.OffenseMode.AoE = set_combine( sets.OffenseMode, {
 
-	}
+	})
 
-	sets.Enmity = { -- Goal is 200 total -Crusaade is 30
+	sets.Enmity = { -- Goal is 200 total -Crusade is 30 and Burtang is 23
 	    ammo="Sapience Orb", --2
-		head={ name="Loess Barbuta +1", augments={'Path: A',}},
+		head={ name="Loess Barbuta +1", augments={'Path: A',}}, -- 19
 		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=2}, --20
 		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=3}, --9
 		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=4}, --9
 		feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}, priority=5}, --9
-		neck="Moonlight Necklace", --15
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}}, -- 10
 		waist="Creed Baudrier", --5
 		left_ear="Trux Earring", --5
 		right_ear="Cryptic Earring", --4
 		left_ring="Apeile Ring +1", -- ~5-9
-		right_ring="Apeile Ring", -- ~5-9
+		right_ring="Eihwaz Ring", -- 5
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10','Phys. dmg. taken-10%',}}, --10
-	} -- 136 in gear with Burtang (166 with Crusade)
+	} -- 133 in gear with Burtang (163 with Crusade)
 
 	sets.Precast = {}
 
@@ -215,7 +215,7 @@ function get_sets()
 		neck="Moonlight Necklace", -- 15
 		waist="Audumbla Sash", -- 10
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Cure" potency +10%','Spell interruption rate down-10%',}}, -- 10
-	}
+	} -- 96 +10 merits = 106
 
 	-- Cure Set (special SIRD set)
 	sets.Midcast.Cure = {
@@ -307,17 +307,20 @@ function get_sets()
 	sets.Midcast["Flash"] = sets.Enmity
 
 	sets.JA = {}
-	sets.JA["Invincible"] = set_combine( sets.Enmity, { })
-	sets.JA["Shield Bash"] = set_combine( sets.Enmity, { })
+	sets.JA["Invincible"] = set_combine( sets.Enmity, { legs={ name="Cab. Breeches +3", augments={'Enhances "Invincible" effect',}} })
+	sets.JA["Shield Bash"] = set_combine( sets.Enmity, { hands={ name="Cab. Gauntlets +3", augments={'Enhances "Chivalry" effect',}} })
 	sets.JA["Holy Circle"] = set_combine( sets.Enmity, { })
-	sets.JA["Sentinel"] = set_combine( sets.Enmity, { })
-	sets.JA["Cover"] = set_combine( sets.Enmity, { })
+	sets.JA["Sentinel"] = set_combine( sets.Enmity, { feet={ name="Cab. Leggings +3", augments={'Enhances "Guardian" effect',}} })
+	sets.JA["Cover"] = set_combine( sets.Enmity, { feet={ name="Cab. Leggings +3", augments={'Enhances "Guardian" effect',}} })
 	sets.JA["Provoke"] = set_combine( sets.Enmity, { })
-	sets.JA["Rampart"] = set_combine( sets.Enmity, { })
+	sets.JA["Rampart"] = set_combine( sets.Enmity, { head={ name="Cab. Coronet +3", augments={'Enhances "Iron Will" effect',}} })
 	sets.JA["Divine Emblem"] = set_combine( sets.Enmity, { })
 	sets.JA["Sepulcher"] = set_combine( sets.Enmity, { })
 	sets.JA["Palisade"] = set_combine( sets.Enmity, { })
 	sets.JA["Intervene"] = set_combine( sets.Enmity, { })
+	sets.JA["Iron Will"] = set_combine( sets.Enmity, { head={ name="Cab. Coronet +3", augments={'Enhances "Iron Will" effect',}} })
+	sets.JA["Fealty"] = set_combine( sets.Enmity, { body={ name="Cab. Surcoat +3", augments={'Enhances "Fealty" effect',}} })
+	sets.JA["Chivalry"] = set_combine( sets.Enmity, { hands={ name="Cab. Gauntlets +3", augments={'Enhances "Chivalry" effect',}} })
 	sets.JA["Majesty"] = set_combine( sets.Enmity, { })
 	sets.JA["Berserk"] = set_combine( sets.Enmity, { })
 	sets.JA["Defender"] = set_combine( sets.Enmity, { })
@@ -353,6 +356,7 @@ function get_sets()
 
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
+		feet={ name="Odyssean Greaves", augments={'Pet: DEX+13','"Counter"+1','"Treasure Hunter"+2',}},
 	}
 
 	organizer_items  = {		

@@ -141,14 +141,15 @@ function get_sets()
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
 		left_ear="Brutal Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
-		left_ring={ name="Moonlight ring +1",  bag="wardrobe1", priority=2},
-		right_ring={ name="Moonlight Ring +1",  bag="wardrobe3", priority=1},
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe3", priority=1},
 		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-
+		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -172,10 +173,10 @@ function get_sets()
 		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}, priority=7}, -- 12
 		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}, priority=2}, -- 6
 		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -7%',}}, -- 13
-		neck={ name="Dualism Collar +1", priority=1},
+		neck="Voltsurge Torque", -- 4
 		waist="Embla Sash", -- 5
 		left_ear={ name="Etiolation Earring", priority=3}, -- 1
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=6},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=5},
 		right_ring={ name="Moonlight Ring",  bag="wardrobe3", priority=4},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
@@ -184,29 +185,29 @@ function get_sets()
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		range=Instrument.FastCast, -- 6
-		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}, priority=4}, -- 10
+		head="Bunzi's Hat", -- 10
 		body="Inyanga Jubbah +2", -- 14
 		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}}, -- 7
 		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}, priority=3}, -- 6
 		feet="Volte Gaiters", -- 6
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
+		neck="Voltsurge Torque", -- 4
 		waist="Embla Sash", -- 5
 		left_ear={ name="Etiolation Earring", priority=1}, -- 1
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=5},
 		left_ring="Kishar Ring", -- 4
 		right_ring="Weather. Ring", -- 5
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 74 FC
+	} -- 78 FC
 
 	-- Used for "-Cure casting time"
 	sets.Precast.Cure = {}
 
 	-- Used for Raises and Cure spells
-	sets.Precast.QuickMagic = {
+	sets.Precast.QuickMagic = set_combine( sets.Precast.FastCast, {
 		range=Instrument.QuickMagic, -- 4
 		waist="Witful Belt", -- 3
 		right_ring="Weather. Ring", -- 3
-	} -- 10% Quick Magic
+	}) -- 10% Quick Magic
 
 	-- Default song duration / strength
 	sets.Midcast = {
@@ -288,7 +289,7 @@ function get_sets()
 		neck="Mnbw. Whistle +1",
 		waist="Luminary Sash",
 		left_ear="Regal Earring",
-		right_ear="Digni. Earring",
+		right_ear="Crep. Earring",
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
@@ -391,7 +392,7 @@ function get_sets()
 	})
 
 	sets.Charm = set_combine( sets.Idle, {
-		main="Lament",
+
     })
 
 	sets.TreasureHunter = {
