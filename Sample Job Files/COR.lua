@@ -3,6 +3,15 @@
 -- Load and initialize the include file.
 include('Mirdain-Include')
 
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "18"
 MacroBook = "18"  -- Sub Job macro pallets can be defined in the sub_job_change_custom function below
@@ -11,7 +20,7 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
---Set default mode (TP,ACC,DT)
+--Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('TP')
 
 --Enable JobMode for UI
@@ -26,6 +35,9 @@ elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice S
 
 -- load addons
 send_command('lua l autocor')
+
+--Uses Items Automatically
+AutoItem = true
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -247,11 +259,23 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.QuickDraw.DMG = {
-		ammo=Ammo.Bullet.MAB,
-	    feet="Chass. Bottes +1",
+		ammo = Ammo.Bullet.QD,
+		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
+		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
+		hands={ name="Herculean Gloves", augments={'Mag. Acc.+19 "Mag.Atk.Bns."+19','Mag. Acc.+14','"Mag.Atk.Bns."+13',}},
+		legs={ name="Herculean Trousers", augments={'"Mag.Atk.Bns."+28','CHR+2','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
+		feet="Chass. Bottes +1",
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
+		waist="Orpheus's Sash",
+		left_ear="Friomisi Earring",
+		right_ear="Crematio Earring",
+		left_ring="Dingir Ring",
+		right_ring="Crepuscular Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
+
 	sets.QuickDraw.STP = {
-		ammo=Ammo.Bullet.QD,
+		ammo = Ammo.Bullet.QD,
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -266,16 +290,17 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 
-	-- Quick Draw 
-	sets.Midcast.QuickDraw = {}
-	sets.Midcast.QuickDraw["Fire Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Ice Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Wind Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Earth Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Thunder Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Water Shot"] = sets.QuickDraw.STP
-	sets.Midcast.QuickDraw["Light Shot"] = sets.QuickDraw.ACC
-	sets.Midcast.QuickDraw["Dark Shot"] = sets.QuickDraw.ACC
+	sets.QuickDraw["Fire Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Ice Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Wind Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Earth Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Thunder Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Water Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Light Shot"] = set_combine( sets.QuickDraw.DMG, {})
+	sets.QuickDraw["Dark Shot"] = set_combine( sets.QuickDraw.DMG, {
+	    right_ring="Archon Ring",
+	    head="Pixie Hairpin +1",
+	})
 
 	-- Job Abilities
 	sets.JA = {}
@@ -310,13 +335,13 @@ function get_sets()
 	sets.PhantomRoll['Monk\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Healer\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Wizard\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Warlocks\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Warlock\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Rogue\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Gallant\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Chaos Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Beast Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Choral Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Hunters\'s Roll'] = sets.PhantomRoll
+	sets.PhantomRoll['Hunter\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Samurai Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Ninja Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Drachen Roll'] = sets.PhantomRoll
@@ -327,15 +352,15 @@ function get_sets()
 	sets.PhantomRoll['Dancer\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Scholar\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Bolter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {}) -- {legs="Chas. Culottes +1"}
-	sets.PhantomRoll["Tactician's Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +1"})
-	sets.PhantomRoll["Allies' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +1"})
+	sets.PhantomRoll["Caster\'s Roll"] = set_combine(sets.PhantomRoll, {}) -- {legs="Chas. Culottes +1"}
+	sets.PhantomRoll["Tactician\'s Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +1"})
+	sets.PhantomRoll["Allies\' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +1"})
 	sets.PhantomRoll['Miser\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Companion\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
-    sets.PhantomRoll["Courser's Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +1"})
-    sets.PhantomRoll["Blitzer's Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +1"})
+    sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +1"})
+    sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +1"})
 
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
@@ -364,7 +389,7 @@ function get_sets()
 		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 		hands={ name="Herculean Gloves", augments={'Mag. Acc.+19 "Mag.Atk.Bns."+19','Mag. Acc.+14','"Mag.Atk.Bns."+13',}},
-		legs={ name="Herculean Trousers", augments={'Attack+12','"Mag.Atk.Bns."+27','Accuracy+3 Attack+3','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
+		legs={ name="Herculean Trousers", augments={'"Mag.Atk.Bns."+28','CHR+2','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Eschan Stone",
