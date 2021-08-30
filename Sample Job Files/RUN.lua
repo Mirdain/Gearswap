@@ -31,6 +31,9 @@ function Macro_Sub_Job()
 	return macro
 end
 
+Buff_Delay = 5 -- Used this to slow down auto buffing
+Tank_Delay = 10 -- delays between tanking actions (only used when auto-buffing enabled)
+
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "12"
 MacroBook = "12"
@@ -55,8 +58,6 @@ Runes = {
 	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"},
 	None = {Name = 'None', Description = "None"}
 }
-
-JA_Delay = os.clock()
 
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -234,7 +235,7 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=3},
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
-	} --44 FC
+	} --62 FC
 
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
@@ -428,6 +429,13 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+
+buff_time = os.clock()
+tank_time = os.clock()
+
+JA_Delay = os.clock()
+
+
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
@@ -494,74 +502,109 @@ end
 function self_command_custom(command)
 
 end
---Function used to automate Job Ability use
+
+--Function used to automate Job Ability use - Checked first
 function check_buff_JA()
 	buff = 'None'
-	local ja_recasts = windower.ffxi.get_ability_recasts()
-	local delay = os.clock() - JA_Delay
+	if os.clock() - buff_time > Buff_Delay then
+		local ja_recasts = windower.ffxi.get_ability_recasts()
+		local delay = os.clock() - JA_Delay
 
-	if player.sub_job == 'SAM' then
-		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
-			buff = "Hasso"
+		if player.sub_job == 'SAM' then
+			if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
+				buff = "Hasso"
+			end
+		end
+
+		if player.sub_job == 'WAR' then
+			if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+				buff = "Berserk"
+			elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+				buff = "Aggressor"
+			elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+				buff = "Warcry"
+			end
+		end
+
+		if buffactive[Runes[state.JobMode.value].Name] == 3 then
+			if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[23] == 0 and delay > 3 then
+				buff = "Vallation" -- Next Single Target DT and FC
+			end
+			if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[113] == 0 then
+				buff = "Valiance" -- AoE DT and FC
+				JA_Delay = os.clock() -- Need to give Valiance a chance to register before Vallation is used
+			end
+		end
+
+		--Rune sets
+		if Runes[state.JobMode.value].Name ~= "None" then
+			if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode.value].Name] ~= 3 then
+				buff = Runes[state.JobMode.value].Name
+				info(Runes[state.JobMode.value].Description)
+			end
+
+		end
+
+		if buff ~= 'None' then
+			buff_time = os.clock()
 		end
 	end
-
-	if player.sub_job == 'WAR' then
-		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
-			buff = "Berserk"
-		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
-			buff = "Aggressor"
-		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
-			buff = "Warcry"
-		end
-	end
-
-	if buffactive[Runes[state.JobMode.value].Name] == 3 then
-		if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[23] == 0 and delay > 3 then
-			buff = "Vallation" -- Next Single Target DT and FC
-		end
-		if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[113] == 0 then
-			buff = "Valiance" -- AoE DT and FC
-			JA_Delay = os.clock() -- Need to give Valiance a chance to register before Vallation is used
-		end
-	end
-
-	--Rune sets
-	if Runes[state.JobMode.value].Name ~= "None" then
-		if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode.value].Name] ~= 3 then
-			buff = Runes[state.JobMode.value].Name
-			info(Runes[state.JobMode.value].Description)
-		end
-
-	end
-
 	return buff
 end
 --Function used to automate Spell use
 function check_buff_SP()
 	buff = 'None'
-	local sp_recasts = windower.ffxi.get_spell_recasts()
+	if os.clock() - buff_time > Buff_Delay then
+		local sp_recasts = windower.ffxi.get_spell_recasts()
 
-	if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 100 then
-		buff = "Crusade"
-	elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 100 then
-		buff = "Phalanx"
-	elseif not buffactive['Aquaveil'] and sp_recasts[55] == 0 and player.mp > 100 then
-		buff = "Aquaveil"
-	elseif not buffactive['Multi Strikes'] and sp_recasts[493] == 0 and player.mp > 36 then
-		buff = "Temper"
-	elseif not buffactive['Ice Spikes'] and sp_recasts[250] == 0 and player.mp > 16 then
-		buff = "Ice Spikes"
+		if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 100 then
+			buff = "Crusade"
+		elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 100 then
+			buff = "Phalanx"
+		elseif not buffactive['Aquaveil'] and sp_recasts[55] == 0 and player.mp > 100 then
+			buff = "Aquaveil"
+		elseif not buffactive['Multi Strikes'] and sp_recasts[493] == 0 and player.mp > 36 then
+			buff = "Temper"
+		elseif not buffactive['Ice Spikes'] and sp_recasts[250] == 0 and player.mp > 16 then
+			buff = "Ice Spikes"
+		end
+
+		if player.sub_job == "BLU" and player.sub_job_level == 49 then 
+			if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
+				buff = "Cocoon"
+			end
+		end
+
+		if buff ~= 'None' then
+			buff_time = os.clock()
+		else
+			buff = check_tank()
+		end
 	end
+	return buff
+end
 
-	if player.sub_job == "BLU" and player.sub_job_level == 49 then 
-		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
-			buff = "Cocoon"
+
+function check_tank()
+	buff = 'None'
+	if os.clock() - tank_time > Tank_Delay then
+		local sp_recasts = windower.ffxi.get_spell_recasts()
+		if player.status == "Engaged" and sp_recasts[112] == 0 and player.mp > 25 then
+			buff = "Flash"
+		end
+		if player.status == "Engaged" and sp_recasts[840] == 0 and player.mp > 48 then
+			buff = "Foil"
 		end
 	end
 
+	if buff ~= 'None' then
+		tank_time = os.clock()
+	end
 	return buff
 end
+
+
+
 -- This function is called when the job file is unloaded
 function user_file_unload()
 

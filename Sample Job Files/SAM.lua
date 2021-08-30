@@ -73,7 +73,7 @@ function get_sets()
 		head="Ken. Jinpachi +1",
 		body="Tartarus Platemail",
 		hands={ name="Sakonji Kote +3", augments={'Enhances "Blade Bash" effect',}},
-		legs={ name="Sakonji Haidate +3", augments={'Enhances "Shikikoyo" effect',}},
+		legs="Nyame Flanchard",
 		feet="Ken. Sune-Ate +1",
 		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",

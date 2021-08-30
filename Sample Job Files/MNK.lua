@@ -9,11 +9,20 @@ LockStylePallet = "3"
 MacroBook = "7"
 MacroSet = "1"
 
---Set Mode to Damage Taken as Default
-state.OffenseMode:set('DT')
+--Uses Items Automatically
+AutoItem = false
 
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
+--Set Mode to Damage Taken as Default
+state.OffenseMode:set('DT')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -68,8 +77,7 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
-		main={ name="Verethragna", augments={'Path: A',}},
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
 		ammo="Staunch Tathlum +1",
 		head="Ken. Jinpachi +1",
 		body="Malignance Tabard",
@@ -83,16 +91,22 @@ function get_sets()
 		left_ring="Niqmaddu Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
+	})
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
-		main={ name="Verethragna", augments={'Path: A',}},
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-	}
+	})
+
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP,{
+	    ammo="Crepuscular Pebble",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+	})
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -117,7 +131,6 @@ function get_sets()
 	    left_ear="Cryptic Earring", -- 4
 		right_ear="Friomisi Earring", --2
 		left_ring="Petrov Ring", -- 4
-	    back="Phalangite Mantle", -- 5
 	}
 	sets.Midcast = {}
 
@@ -142,7 +155,6 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = { -- VS Base with Impetus Down
-		main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Knobkierrie",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- Need Aug'd
 		body="Ken. Samue +1",
@@ -158,38 +170,40 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {}
+	sets.WS.ACC = set_combine(sets.WS,{})
+
+	sets.WS.PDL = set_combine(sets.WS,{})
+
 	--WS Sets
-	sets.WS["Combo"] = {}
-	sets.WS["Shoulder Tackle"] = {}
-	sets.WS["One Inch Punch"] = {}
-	sets.WS["Backhand Blow"] = {}
-	sets.WS["Raging Fists"] = {
+	sets.WS["Combo"] = set_combine(sets.WS,{})
+	sets.WS["Shoulder Tackle"] = set_combine(sets.WS,{})
+	sets.WS["One Inch Punch"] = set_combine(sets.WS,{})
+	sets.WS["Backhand Blow"] = set_combine(sets.WS,{})
+	sets.WS["Raging Fists"] = set_combine(sets.WS,{
 		neck="Mnk. Nodowa +2",
 		feet="Ken. Sune-Ate +1",
-	}
-	sets.WS["Spinning Attack"] = {}
-	sets.WS["Howling Fist"] = {
+	})
+	sets.WS["Spinning Attack"] = set_combine(sets.WS,{})
+	sets.WS["Howling Fist"] = set_combine(sets.WS,{
 		neck="Mnk. Nodowa +2",
 		feet="Ken. Sune-Ate +1",
-	}
-	sets.WS["Dragon Kick"] = {
+	})
+	sets.WS["Dragon Kick"] = set_combine(sets.WS,{
 		feet="Anch. Gaiters +3",
-	}
-	sets.WS["Asuran Fists"] = {}
-	sets.WS["Tornado Kick"] = {
+	})
+	sets.WS["Asuran Fists"] = set_combine(sets.WS,{})
+	sets.WS["Tornado Kick"] = set_combine(sets.WS,{
 		feet="Anch. Gaiters +3",
-	}
-	sets.WS["Victory Smite"] = {}
-	sets.WS["Shijin Spiral"] = {
-		main={ name="Verethragna", augments={'Path: A',}},
+	})
+	sets.WS["Victory Smite"] = set_combine(sets.WS,{})
+	sets.WS["Shijin Spiral"] = set_combine(sets.WS,{
 		head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}}
-	}
+	})
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
@@ -209,22 +223,9 @@ function get_sets()
 		waist="Ask Sash",
 	}
 
-	sets.Charm = {
-	    main="Ark Scythe",
-		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Loricate Torque +1",
-		waist="Moonbow Belt +1",
-		left_ear="Odnowa Earring +1",
-		right_ear="Etiolation Earring",
-		left_ring="Ilabrat Ring",
-		right_ring="Regal Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
+	sets.Charm =  set_combine(sets.OffenseMode.DT, {
+	    main="Ark Tabar",
+	})
 
 	sets.TreasureHunter = {
 		head="Malignance Chapeau",

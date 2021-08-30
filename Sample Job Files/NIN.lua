@@ -425,9 +425,7 @@ end
 
 --used to register the time change to equip correct feet
 windower.register_event('time change', function(time)
-    if (world.time == 17*60 or world.time == 7*60) and player.status == 'Idle' then
-        NIN_Movement()
-    end
+     NIN_Movement()
 end)
 
 function NIN_Movement ()
