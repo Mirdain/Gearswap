@@ -36,9 +36,6 @@ UI_Name = 'DPS'
 -- Add to UI to display Tier
 Enable_Burst_Mode = true
 
---loads the Burst Plugin
-windower.send_command('lua l Burst')
-
 Enspell_Buff = false
 
 elemental_ws = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blade', 'Burning Blade', 'Sanguine Blade', 'Energy Drain','Energy Steal','Cyclone','Gust Slash'}
@@ -63,7 +60,7 @@ function get_sets()
 	}
 	Weapons['Savage Blade'] ={
 		main="Naegling",
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons['Eviceration'] ={
 		main="Tauret",
@@ -71,7 +68,7 @@ function get_sets()
 	}
 	Weapons['Aeolian Edge'] ={
 		main="Tauret",
-		sub="Daybreak"
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 	Weapons['Black Halo'] ={
 		main="Maxentius",
@@ -93,7 +90,7 @@ function get_sets()
 		legs="Malignance Tights", -- 7/7
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
 		neck="Loricate Torque +1", -- 6/6
-		waist="Slipor Sash", -- 0/3
+		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 		right_ear={ name="Etiolation Earring", priority=1}, -- 0/1
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
@@ -209,10 +206,10 @@ function get_sets()
 	sets.Midcast.Enhancing = {
 		sub="Ammurapi Shield",
 		ammo="Staunch Tathlum +1",
-		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}}, -- 10
+		head={ name="Telchine Cap", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
 		hands="Atrophy Gloves +3", -- 20
-		legs={ name="Telchine Braconi", augments={'"Fast Cast"+4','Enh. Mag. eff. dur. +10',}}, --10
+		legs={ name="Telchine Braconi", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		feet="Leth. Houseaux +1", -- 30
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, --25
 		waist="Embla Sash", --10

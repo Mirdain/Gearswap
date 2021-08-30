@@ -6,7 +6,7 @@ include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "12"
-MacroBook = "3"
+MacroBook = "19"
 MacroSet = "1"
 
 --Uses Items Automatically
@@ -182,10 +182,10 @@ function get_sets()
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
 		waist="Luminary Sash",
 		left_ear="Regal Earring",
-		right_ear="Crep. Earring",
+		right_ear="Regal Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Mag.Atk.Bns."+10',}},
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
 	}
 
 	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
@@ -227,6 +227,11 @@ function get_sets()
 
 	sets.Midcast["Klimaform"] = set_combine(sets.Midcast.Enhancing, {})
 
+	sets.Midcast["Impact"] = set_combine(sets.Midcast.Enfeebling, {
+		main={ name="Marin Staff +1", augments={'Path: A',}},
+		body="Twilight Cloak",	
+	})
+
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 	})
 
@@ -239,12 +244,12 @@ function get_sets()
 		legs="Agwu's Slops",
 		feet="Agwu's Pigaches",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
-		waist="Sacro Cord",
+		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
 		right_ear="Regal Earring",
 		left_ring="Freke Ring",
 		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Mag.Atk.Bns."+10',}},
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
 	}
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
@@ -273,7 +278,6 @@ function get_sets()
 	-- Set used to tag treasure hunger
 	sets.TreasureHunter = {
 	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
-		legs={ name="Chironic Hose", augments={'Pet: Accuracy+4 Pet: Rng. Acc.+4','Magic Damage +15','"Treasure Hunter"+1','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
 		waist="Chaac Belt",
 	}
 
