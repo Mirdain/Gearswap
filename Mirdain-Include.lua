@@ -432,6 +432,12 @@ function precastequip(spell)
 				do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 			end
 		end
+		-- Check that proper ammo is available.
+		if spell.skill == "Archery" then
+			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
+				do_bullet_checks(spell, spellMap, eventArgs, equipSet)
+			end
+		end
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
@@ -479,7 +485,7 @@ function precastequip(spell)
 		end
 	-- CorsairShot
 	elseif spell.type == 'CorsairShot' then
-		equipSet = sets.Midcast.QuickDraw
+		equipSet = sets.QuickDraw
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info( '['..spell.english..'] Set')
@@ -606,9 +612,16 @@ function midcastequip(spell)
 		elseif state.OffenseMode.value == 'PDL' then
 			--Augments the set built for PDL
 			equipSet = set_combine(equipSet, sets.Midcast.RA.PDL)
+		elseif state.OffenseMode.value == 'CRIT' then
+			--Augments the set built for PDL
+			equipSet = set_combine(equipSet, sets.Midcast.RA.CRIT)
 		end
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
+		elseif buffactive['Double Shot'] then 
+			equipSet = set_combine(equipSet, sets.Midcast.RA.DoubleShot)
+		elseif buffactive['Barrage'] then 
+			equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
 		end
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
@@ -1106,11 +1119,10 @@ function choose_set()
 		if is_moving == true then
 			equipSet = set_combine(equipSet, sets.Movement)
 		end
-
+		-- Equip Sublimation gear
 		if buffactive[187] then
 			equipSet = set_combine(equipSet, sets.Idle.Sublimation)
 		end
-
 	end
 	return equipSet
 end
@@ -1158,7 +1170,11 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
     if spell.action_type == 'Ranged Attack' then
         if buffactive['Triple Shot'] then
             bullet_min_count = 3
-        end
+        elseif buffactive['Double Shot'] then
+		    bullet_min_count = 2
+		elseif buffactive['Barrage'] then
+			bullet_min_count = 8
+		end
     end
 
     local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
@@ -1693,6 +1709,34 @@ windower.register_event('gain buff', function(id)
 		else 
 			info('No Remedies in inventory.')
 		end
+	elseif id == 121 then
+		windower.add_to_chat('Encumbrance - Main and Sub')
+	elseif id == 122 then
+		windower.add_to_chat('Encumbrance - Head and Neck')	
+	elseif id == 123 then
+		windower.add_to_chat('Encumbrance - Body')
+	elseif id == 124 then
+		windower.add_to_chat('Encumbrance - Hands')
+	elseif id == 125 then
+		windower.add_to_chat('Encumbrance - Legs and Feet')
+	elseif id == 126 then
+		windower.add_to_chat('Encumbrance - Back and Waist')
+	elseif id == 127 then
+		windower.add_to_chat('Encumbrance - Range and Ammo')
+	elseif id == 128 then
+		windower.add_to_chat('Encumbrance - Rings and Earrings')
+	elseif id == 2 then
+		log("Sleep - Checking Gear")
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif id == 7 then
+		log("Petrification - Checking Gear")
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif id == 10 then
+		log("Stunned - Checking Gear")
+		equip(set_combine(choose_set(),choose_set_custom()))
+	elseif id == 17 then
+		log("Charmed - Checking Gear")
+		equip(set_combine(choose_set(),choose_set_custom(),sets.Charm))
 	elseif id == 15 then
 		info('DOOOOOOM!!!')
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
