@@ -95,7 +95,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Shield = {
-		sub={ name="Nusku Shield", priority=1},
+		sub={ name="Nusku Shield",},
 	}
 
 	-- Ammo Selection
@@ -117,10 +117,12 @@ function get_sets()
 	Ammo.Bolt.MACC = "Quelling Bolt"		-- Magic Accuracy
 	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic Weaponskills
 
+	-- These are set based off the Ranged Weapon Type so do not set
 	Ammo.RA = ""
 	Ammo.WS = ""
 	Ammo.MAB = ""
 	Ammo.MACC = ""
+	Ammo.MAG_WS = ""
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
@@ -345,17 +347,29 @@ function get_sets()
 
 	-- Base Weapon Skill set
 	sets.WS = {
-
+		ammo = Ammo.WS,
+	    head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		left_ring="Epaminondas's Ring",
 	}
 
 	-- Weapon Skill Damage
 	sets.WS.WSD = set_combine(sets.WS, {
-
+		ammo = Ammo.WSD,
 	})
 
 	-- Magic Attack Bonus
 	sets.WS.MAB = set_combine(sets.WS, {
-
+		ammo = Ammo.MAB,
+		waist="Eschan Stone", -- Orpheus/Obi Swap
+		left_ear="Friomisi Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ring="Dingir Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%',}}, -- Finish Cape
 	})
 
 	-- Physical Damage Limit set used in OffenseMode.PDL
@@ -365,70 +379,63 @@ function get_sets()
 
 	-- Accuracy set used in OffenseMode.ACC
 	sets.WS.ACC = set_combine(sets.WS, {
-	
+		ammo = Ammo.ACC,
 	})
 
 	-- Gun Weaponskills
-	sets.WS["Hot Shot"] = {}
-	sets.WS["Split Shot"] = {}
-	sets.WS["Sniper Shot"] = {}
-	sets.WS["Slug Shot"] = {}
-	sets.WS["Blast Shot"] = {}
-	sets.WS["Heavy Shot"] = {}
-	sets.WS["Detonator"] = {}
-	sets.WS["Numbing Shot"] = {}
+	sets.WS["Hot Shot"] = set_combine(sets.WS.MAB, {})
+	sets.WS["Split Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Sniper Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Slug Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Blast Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Heavy Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Detonator"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Numbing Shot"] = set_combine(sets.WS.WSD, {})
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
-	
+		-- Get Cremation Earring since doesn't scale with TP
 	})
-	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {
-
-	})
+	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {})
 
 	-- Archery Weaponskills
-	sets.WS["Flaming Arrow"] = {}
-	sets.WS["Piercing Arrow"] = {}
-	sets.WS["Dulling Arrow"] = {}
-	sets.WS["Sidewinder"] = {}
-	sets.WS["Blast Arrow"] = {}
-	sets.WS["Arching Arrow"] = {}
-	sets.WS["Refulgent Arrow"] = {}
-	sets.WS["Jishnu's Radiance"] = {}
-	sets.WS["Apex Arrow"] = {}
+	sets.WS["Flaming Arrow"] = set_combine(sets.WS.MAB, {})
+	sets.WS["Piercing Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Dulling Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Sidewinder"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Blast Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Arching Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Refulgent Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Jishnu's Radiance"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Apex Arrow"] = set_combine(sets.WS.WSD, {})
 
 	-- Sword Weaponskills
-	sets.WS["Fast Blade"] = {}
-	sets.WS["Burning Blade"] = {}
-	sets.WS["Flat Blade"] = {}
-	sets.WS["Shining Blade"] = {}
-	sets.WS["Circle Blade"] = {}
-	sets.WS["Spirits Within"] = {}
-	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
-
-	})
+	sets.WS["Fast Blade"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Burning Blade"] = set_combine(sets.WS.MAB, {})
+	sets.WS["Flat Blade"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Shining Blade"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Circle Blade"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Spirits Within"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {})
 
 	-- Dagger Weaponskills
-	sets.WS["Wasp Sting"] = {}
-	sets.WS["Viper Bite"] = {}
-	sets.WS["Shadowstitch"] = {}
-	sets.WS["Gust Slash"] = {}
-	sets.WS["Cyclone"] = {}
-	sets.WS["Energy Steal"] = {}
-	sets.WS["Energy Drain"] = {}
-	sets.WS["Evisceration"] = {}
-	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
-		Ammo.Bullet.MAB,
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-	})
+	sets.WS["Wasp Sting"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Viper Bite"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Shadowstitch"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Gust Slash"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Cyclone"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Energy Steal"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Energy Drain"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Evisceration"] = set_combine(sets.WS.WSD, {})
+	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {})
 
 	-- Crossbow Weaponskills
 	sets.WS["Trueflight"] = set_combine(sets.WS.MAB, {
-
+		right_ring="Weather. Ring",
 	})
-
 
 	sets.Charm = {}
 
 	sets.TreasureHunter = {
+	    legs={ name="Herculean Trousers", augments={'Attack+8','Mag. Acc.+13 "Mag.Atk.Bns."+13','"Treasure Hunter"+2','Accuracy+16 Attack+16',}},
 		waist="Chaac Belt",
 	}
 
