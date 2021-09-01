@@ -90,6 +90,12 @@ state.BurstMode = M{['description']='Burst Specific Mode'}
 state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5')
 state.BurstMode:set('OFF')
 
+--Ranged Attack mode
+state.RAMode = {}
+state.RAMode = M{['description']='Ranged Attack Mode'}
+state.RAMode:options('Bullet','Arrow','Bolt')
+state.RAMode:set('Bullet')
+
 --State for Ammunition check
 state.warned = M(false)
 
@@ -383,7 +389,6 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -426,18 +431,6 @@ function precastequip(spell)
 				info('Using Default WS Set')
 			end
 		end
-		-- Check that proper ammo is available.
-		if spell.skill == "Marksmanship" then
-			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
-				do_bullet_checks(spell, spellMap, eventArgs, equipSet)
-			end
-		end
-		-- Check that proper ammo is available.
-		if spell.skill == "Archery" then
-			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
-				do_bullet_checks(spell, spellMap, eventArgs, equipSet)
-			end
-		end
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
@@ -446,8 +439,10 @@ function precastequip(spell)
 		elseif buffactive[581] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
 		end
-		-- Check that proper ammo is available.
-		do_bullet_checks(spell, spellMap, eventArgs, equipSet)
+		if state.OffenseMode.value == 'ACC' then
+			--Augments the set built for ACC
+			equipSet = set_combine(equipSet, sets.Precast.RA.ACC)
+		end
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast
@@ -956,6 +951,14 @@ function precast(spell)
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
+
+	-- Check that proper ammo is available if the action requires it
+	if spell.skill == "Marksmanship" or spell.skill == "Archery" or spell.action_type == 'Ranged Attack' then
+		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
+			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
+		end
+	end
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
  end
@@ -972,6 +975,7 @@ function midcast(spell)
 	equip(equipSet)
 	-- You passed the checks - player will begin action
 	is_Busy = true
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1167,6 +1171,8 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 
 	bullet_name = equipSet.ammo
 
+	--windower.add_to_chat(8,'['..bullet_name..']')
+
     if spell.action_type == 'Ranged Attack' then
         if buffactive['Triple Shot'] then
             bullet_min_count = 3
@@ -1203,7 +1209,7 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
         and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
         local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' on '..player.name..' *****'
         local border = ""
-        for i = 1, #msg do
+        for i = 2, #msg do
             border = border .. "*"
         end
 
@@ -1212,8 +1218,6 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
         add_to_chat(167, border)
         add_to_chat(167, msg)
         add_to_chat(167, border)
-
-		--send_command('input /p <call10>')
 
         state.warned:set()
     elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
