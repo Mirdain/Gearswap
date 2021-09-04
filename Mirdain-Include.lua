@@ -613,10 +613,13 @@ function midcastequip(spell)
 		end
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
+			info('[Tripple Shot] Set')
 		elseif buffactive['Double Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.DoubleShot)
+			info('[Double Shot] Set')
 		elseif buffactive['Barrage'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
+			info('[Barrage] Set')
 		end
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
@@ -1368,6 +1371,7 @@ function self_command(cmd)
 						state.OffenseMode:set(state.OffenseMode[1])
 					end
 					info('Offense Mode: ['..state.OffenseMode.value..']')
+					self_command_custom(command)
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
 				end
@@ -1377,9 +1381,11 @@ function self_command(cmd)
 			mode = string.split(cmd," ",2)
 			state.OffenseMode:set(mode[2])
 			info('Offense Mode: ['..state.OffenseMode.value..']')
+			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
+
 	elseif command:contains('jobmode') then
 		if command == 'jobmode' then
 			for i,v in ipairs(state.JobMode) do
@@ -1390,6 +1396,7 @@ function self_command(cmd)
 						state.JobMode:set(state.JobMode[1])
 					end
 					info('Job Mode: ['..state.JobMode.value..']')
+					self_command_custom(command)
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
 				end
@@ -1399,6 +1406,7 @@ function self_command(cmd)
 			mode = string.split(cmd," ",2)
 			state.JobMode:set(mode[2])
 			info('Job Mode: ['..state.JobMode.value..']')
+			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
@@ -1412,6 +1420,7 @@ function self_command(cmd)
 						state.BurstMode:set(state.BurstMode[1])
 					end
 					info('Mode: ['..state.BurstMode.value..']')
+					self_command_custom(command)
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
 				end
@@ -1421,6 +1430,7 @@ function self_command(cmd)
 			mode = string.split(cmd," ",2)
 			state.BurstMode:set(mode[2])
 			info('Burst Mode: ['..state.BurstMode.value..']')
+			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
