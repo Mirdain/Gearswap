@@ -40,15 +40,15 @@ state.JobMode = M{['description']='Ranger Damage Mode'}
 state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge','Gastraphetes')
 state.JobMode:set('Fomalhaut')
 
---Set Equipment name and Ammunition Type for "Smart Ammo" Selection
+--Set the ammo type for each JobMode (above) and Types: Bullet, Arrow, Bolt
 --This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
 Ranged_Weapons = {
-	{Name = "Fomalhaut", Type = "Bullet"},
-	{Name = "Annihilator", Type = "Bullet"},
-	{Name = "Armageddon", Type = "Bullet"},
-	{Name = "Anarchy +2", Type = "Bullet"},
-	{Name = "Fail-Not", Type = "Arrow"},
-	{Name = "Gastraphetes", Type = "Bolt"},
+	{JobMode = "Savage Blade", Type = "Bullet"},
+	{JobMode = "Fomalhaut", Type = "Bullet"},
+	{JobMode = "Annihilator", Type = "Bullet"},
+	{JobMode = "Fail-Not", Type = "Arrow"},
+	{JobMode = "Gastraphetes", Type = "Bolt"},
+	{JobMode = "Aeolian Edge", Type = "Bullet"},
 }
 
 -- Used to determine if Obi is used or Orpheus Sash - if either is not present it will not change the waist slot
@@ -105,35 +105,44 @@ function get_sets()
 	-- Ammo Selection - will choose based off equiped weapon
 	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.ACC = "Eradicating Bullet"	-- Accuracy Ammo
-	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills (Not consumed)
+	Ammo.Bullet.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills (consumed)
 	Ammo.Bullet.MAB = "Chrono Bullet"		-- Magical Weaponskills
 	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
-	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed
+	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
+	Ammo.Bullet.PHY_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
 
 	Ammo.Arrow.RA = "Chrono Arrow"			-- TP Ammo
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
-	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (Not consumed)
+	Ammo.Arrow.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
+	Ammo.Arrow.PHY_WS = "Chrono Bullet"		-- Magic Weaponskills (Not Consumed)
 
 	Ammo.Bolt.RA = "Quelling Bolt"			-- TP Ammo
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
-	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (Not consumed)
+	Ammo.Bolt.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (consumed)
 	Ammo.Bolt.MAB = "Quelling Bolt"			-- Magical Weaponskills
 	Ammo.Bolt.MACC = "Quelling Bolt"		-- Magic Accuracy
 	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic  (Not consumed)
+	Ammo.Bolt.PHY_WS = "Chrono Bullet"		-- Magic Weaponskills (Not Consumed)
 
 	--Modes to select correct ammo based off weapon type
 	Ammo.RA = Ammo[state.RAMode.value].RA
 	Ammo.ACC = Ammo[state.RAMode.value].ACC
+	Ammo.CRIT = Ammo[state.RAMode.value].CRIT
 	Ammo.WSD = Ammo[state.RAMode.value].WSD
 	Ammo.MAB = Ammo[state.RAMode.value].MAB
 	Ammo.MACC = Ammo[state.RAMode.value].MACC
 	Ammo.MAG_WS = Ammo[state.RAMode.value].MAG_WS
+	Ammo.PHY_WS = Ammo[state.RAMode.value].PHY_WS
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
+		ammo=Ammo.RA, -- Smart_Ammo() will select from your XXXX.RA type
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -161,7 +170,7 @@ function get_sets()
 	}
 
 	--Base TP set to build off when melee'n
-	sets.OffenseMode = {}
+	sets.OffenseMode = {ammo=Ammo.RA,}
 
 	--Set focuses on maximum TP gain
 	sets.OffenseMode.TP = {
@@ -221,7 +230,7 @@ function get_sets()
 		-- Add DW 10% cape
 	}
 
-	sets.Precast = {}
+	sets.Precast = {ammo=Ammo.RA,}
 	-- 70 snapshot is Cap
 	-- Velocity Shot is seperate term - JA of Ranger
 	-- Rapid shot is like quick magic
@@ -241,8 +250,7 @@ function get_sets()
 
 	--No flurry - 60 Snapshot needed (Assuming 10% from Merits)
 	-- Snapshot / Rapidshot
-	sets.Precast.RA = { -- 5 Snapshot on Perun +1 Augment if used
-		ammo=Ammo.RA, -- Smart_Ammo() will select from your XXXX.RA type
+	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
 	    head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10
 		body="Amini Caban +1", -- 7% Velocity Shot
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8 / 11
@@ -255,11 +263,11 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 		right_ring="Crepuscular Ring", -- 3
 		back={ name="Belenus's Cape", augments={'"Snapshot"+10',}, priority=5}, -- 10 with 2% Velocity Shot
-    }	--60 Snapshot / 29 Rapidshot / 9% Velocity Shot
+    })	--60 Snapshot / 29 Rapidshot / 9% Velocity Shot
 
 	-- Only the bullet needs to be set for ACC sets (so that it will match the sets.Midcast.RA.ACC)
     sets.Precast.RA.ACC = set_combine(sets.Precast.RA, {
-		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
+		ammo=Ammo.ACC,
     })
 
 	-- Flurry - 45 Snapshot Needed
@@ -289,11 +297,10 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}}, -- Need to upgrade Cape with 10% FC
 	} -- 77 FC for Utsusemi (80 is cap)
 	 
-	sets.Midcast = {}
+	sets.Midcast = {ammo=Ammo.RA,}
 
 	-- Ranged Attack Gear (Normal Midshot)
-    sets.Midcast.RA = {
-		ammo=Ammo.RA, -- Smart_Ammo() will select from your XXXX.RA type
+    sets.Midcast.RA = set_combine(sets.Midcast.RA, {
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body="Ikenga's Vest",
 		hands="Ikenga's Gloves",
@@ -306,11 +313,11 @@ function get_sets()
 		left_ring="Crepuscular Ring",
 		right_ring="Regal Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}},
-    } -- With Recycle Merits 101 Recycle for TP bonus and Ammo Save
+    }) -- With Recycle Merits 101 Recycle for TP bonus and Ammo Save
 
 	-- Ranged Attack Gear (High Accuracy Midshot)
     sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
-		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
+		ammo=Ammo.ACC,
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		feet="Malignance Boots",
@@ -324,6 +331,7 @@ function get_sets()
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
+
 		head="Meghanada Visor +2",
 		body="Nisroch Jerkin",
 		hands="Mummu Wrists +2",
@@ -346,16 +354,16 @@ function get_sets()
 
 	-- Job Abilities
 	sets.JA = {}
-	sets.JA["Eagle Eye Shot"] = {}
+	sets.JA["Eagle Eye Shot"] = {legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},}
 	sets.JA["Scavenge"] = {}
 	sets.JA["Shadowbind"] = { hands="Orion Bracers +3",}
 	sets.JA["Camouflage"] = { body={ name="Arc. Jerkin +1", augments={'Enhances "Snapshot" effect',}},} -- Need Upgrade
 	sets.JA["Sharpshot"] = { legs="Orion Braccae +3",} -- Used for rules below
-	sets.JA["Barrage"] = {} -- Midcast.RA.Barrage set is used for rules below
+	sets.JA["Barrage"] = {} -- Midcast.RA.Barrage set
 	sets.JA["Unlimited Shot"] = {}
 	sets.JA["Velocity Shot"] = {}
-	sets.JA["Double Shot"] = {} -- Uses Rules from Include
-	sets.JA["Bounty Shot"] = { hands="Amini Glove. +1",} -- Upgrade to TH4
+	sets.JA["Double Shot"] = {} -- Midcast.RA.Double Shot set
+	sets.JA["Bounty Shot"] = { ammo= Ammo.RA, hands="Amini Glove. +1",} -- Upgrade to TH4
 	sets.JA["Decoy Shot"] = {}
 	sets.JA["Overkill"] = {}
 	sets.JA["Hover Shot"] = {}
@@ -374,12 +382,26 @@ function get_sets()
 
 	-- Weapon Skill Damage
 	sets.WS.WSD = set_combine(sets.WS, {
-		ammo=Ammo.WSD, -- Smart_Ammo() will select from your XXXX.RA type
+		ammo=Ammo.WSD,
+		head="Orion Beret +3",
+		body="Nyame Mail", -- Place holder
+		hands="Meg. Gloves +2",
+		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
+		feet="Nyame Sollerets", -- Place holder
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Epaminondas's Ring",
+		right_ring="Regal Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
 	})
 
 	-- Magic Attack Bonus
 	sets.WS.MAB = set_combine(sets.WS, {
-		ammo=Ammo.MAB, -- Smart_Ammo() will select from your XXXX.RA type
+		ammo=Ammo.MAB,
+		body={ name="Cohort Cloak +1", augments={'Path: A',}},
+		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
 		waist="Eschan Stone", -- Orpheus/Obi Swap
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -472,9 +494,7 @@ end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
-	if spell.action_type == 'Ranged Attack' or spell.skill == "Marksmanship" or spell.skill == "Archery" then
-		Smart_Ammo()
-	end
+
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
@@ -517,7 +537,7 @@ end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
-
+	Smart_Ammo()
 end
 
 -- Function is called whn lua is unloaded
@@ -582,13 +602,14 @@ end
 
 function Smart_Ammo ()
 	for i = 1, #Ranged_Weapons do
-		if player.equipment.ranged == Ranged_Weapons[i].Name then
+		if state.JobMode.value == Ranged_Weapons[i].JobMode then
 			if state.RAMode.value ~= Ranged_Weapons[i].Type then
 				state.RAMode:set(Ranged_Weapons[i].Type)
 				windower.add_to_chat(8,'Ammo Mode is ['..state.RAMode.value..']')
 				get_sets()
 			end
+			log('Ammo Mode is ['..state.RAMode.value..']')
+			return
 		end
 	end
-	log('Ammo Mode is ['..state.RAMode.value..']')
 end
