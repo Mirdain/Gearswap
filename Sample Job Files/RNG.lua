@@ -35,6 +35,9 @@ state.OffenseMode:set('TP')
 --Enable JobMode for UI
 UI_Name = 'DPS'
 
+-- Set to true to run organizer on job changes
+Organizer = true
+
 --Modes for specific to Ranger
 state.JobMode = M{['description']='Ranger Damage Mode'}
 state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge','Gastraphetes')

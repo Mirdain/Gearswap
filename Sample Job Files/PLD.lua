@@ -60,6 +60,9 @@ LockStylePallet = "13"
 MacroBook = "5"
 MacroSet = Macro_Sub_Job()
 
+-- Set to true to run organizer on job changes
+Organizer = true
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 

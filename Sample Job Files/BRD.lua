@@ -24,6 +24,9 @@ elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade
 --Default to DT Mode
 state.OffenseMode:set('TP')
 
+-- Set to true to run organizer on job changes
+Organizer = true
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 send_command('bind f10 gs c songbuff')
@@ -122,7 +125,7 @@ function get_sets()
     -- Set to be used if you get cursna casted on you
 	sets.Cursna_Recieved = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
 		waist="Gishdubar Sash",
 	}
@@ -141,14 +144,14 @@ function get_sets()
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
 		left_ear="Brutal Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
-		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		left_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=2},
 		right_ring={ name="Chirich Ring +1", bag="wardrobe3", priority=1},
 		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2},
+		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
 	})
 
@@ -241,7 +244,7 @@ function get_sets()
 		left_ear="Mendi. Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
-		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     } -- 53% Cure Potency / 8% Cure Potency II
 
@@ -290,7 +293,7 @@ function get_sets()
 		waist="Luminary Sash",
 		left_ear="Regal Earring",
 		right_ear="Crep. Earring",
-		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
+		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
