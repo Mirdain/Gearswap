@@ -4,6 +4,7 @@ packets = require('packets')
 
 -- loads gear from Moogle
 include('organizer-lib')
+
 -- Modes is the include for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
@@ -25,6 +26,9 @@ SpellCastTime = 0
 Spellstart = os.clock()
 UpdateTime1 = os.clock()
 UpdateTime2 = os.clock()
+
+Organizer = false
+
 
 command_JA = "None"
 command_SP = "None"
@@ -1571,6 +1575,10 @@ function file_unload(file_name)
 	send_command('unbind f10')
 	send_command('unbind f11')
 	send_command('unbind f12')
+	if Organizer == true then
+		windower.add_to_chat(8,'Clearing Gear from Wardrobe - Do not move or take action')
+		windower.send_command('wait 1;gs equip naked;wait 1;org o '..player.name..'_Naked;wait 8;org o '..player.name..'_'..player.main_job..';wait 12;gs validate;wait 3;input /echo Change Complete')
+	end
 	user_file_unload()
 end
 
@@ -1586,7 +1594,7 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 	end
 
-	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';wait 1;input /echo Change Complete')
+	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..'')
 end
 
 -- Called when the player's subjob changes.
