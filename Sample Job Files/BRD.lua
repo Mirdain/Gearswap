@@ -16,7 +16,7 @@ UI_Name = 'DPS'
 
 --Modes for specific to bard
 state.JobMode = M{['description']='Bard Damage Mode'}
-state.JobMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm')
+state.JobMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm', 'Kraken Mode')
 state.JobMode:set('Mordant Rime')
 
 elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
@@ -50,6 +50,11 @@ function get_sets()
 	Weapons['Shining Strike'] = {
 		main="Daybreak",
 		sub="Tauret",
+	}
+
+	Weapons['Kraken Mode'] = {
+		main={ name="Carnwenhan", augments={'Path: A',}},
+		sub="Kraken Club",
 	}
 
 	Weapons['Shining Blade'] = {
@@ -151,8 +156,14 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+	    head="Nyame Helm",
+		body="Nyame Mail",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		waist="Sarissapho. Belt",
 		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -406,6 +417,45 @@ function get_sets()
 		item1 = "Echo Drops",
 		item2 = "Remedy",
 		item3 = "Holy Water",
+		item4 = "Lustreless Wing",
+		item5 = "Tropical Crepe",
+		item6 = "Sublime Sushi",
+		item7 = "Abdhaljs Seal",
+		item8 = "Pluton Case",
+		item9 = "Beitetsu Parcel",
+		item10 = "Boulder Case",
+		item11 = "Pluton Box",
+		item12 = "S. Kindred Crest",
+		item13 = "Copper Voucher",
+		item14 = "Silver Voucher",
+		item15 = "Beastmen's Medal",
+		item16 = "Rusted I. Card",
+		item17 = "Black I. Card",
+		item18 = "Kindred's Medal",
+		item19 = "Old I. Card",
+		item20 = "Demon's Medal",
+		item21 = "S. Astral Detritus",
+		item22 = "Herosim Crystal",
+		item23 = "Herosim Aggregate",
+		item24 = "Silent Oil",
+		item25 = "Hi-Reraiser",
+		item26 = "Reraiser",
+		item27 = "Toolbag (Shihe)",
+		item28 = "Smoldering Lamp",
+		item29 = "Super Reraiser",
+		item30 = "Red Curry Bun",
+		item31 = "Miso Ramen",
+		item32 = "Beitetsu Box",
+		item33 = "Boulder Box",
+		item34 = "L. Wing Box",
+		item35 = "Antacid",
+		item36 = "Chrono Bullet",
+		item37 = "Prism Powder",
+		item38 = "L. Lu. Wing Box",
+		item39 = "Shihei",
+		item40 = "H. Kindred Crest",
+		item41 = "Damascus Ingot",
+		item42 = "Raxa",
 	}	
 end
 

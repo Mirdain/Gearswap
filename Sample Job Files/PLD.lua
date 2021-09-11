@@ -103,9 +103,10 @@ function get_sets()
 
 	sets.Idle.MEVA = set_combine( sets.Idle, {
 		sub="Aegis", 
-		neck="Moonlight Necklace",
+		ammo="Staunch Tathlum +1",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
 		hands="Sakpata's Gauntlets",
-	    left_ear="Sanare Earring",
+		left_ear="Tuisto Earring",
 	})
 
 	sets.Idle.AoE = set_combine( sets.Idle, {
@@ -404,6 +405,14 @@ end
 function buff_change_custom(name,gain)
 	equipSet = {}
 
+	if name == "Rampart" and gain == false then
+		send_command('input /p Rampart [OFF]')
+	elseif name == "Sentinel" and gain == false then
+		send_command('input /p Sentinel [OFF]')
+	elseif name == "Invincible" and gain == false then
+		send_command('input /p Invincible [OFF]')
+	end
+
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
@@ -470,7 +479,8 @@ function check_buff_SP()
 	elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 then
 		buff = "Enlight II"
 	end
-	if player.status == "Engaged" and sp_recasts[112] == 0 and player.mp > 25 and state.JobMode.value == "ON" then
+
+	if (player.status == "Engaged" or windower.ffxi.get_player().target_locked) and sp_recasts[112] == 0 and player.mp > 25 and state.JobMode.value == "ON" then
 		buff = "Flash"
 	end
 
@@ -482,9 +492,6 @@ function check_buff_SP()
 
 	return buff
 end
-
-
-
 
 -- Function is called when the job lua is unloaded
 function user_file_unload()
