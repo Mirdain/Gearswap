@@ -15,6 +15,9 @@ AutoItem = false
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP modes
+
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
 
@@ -108,6 +111,25 @@ function get_sets()
 		hands="Malignance Gloves",
 	})
 
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	-- MNK gets 35 Native Subtle Blow
+	-- Cap is 75% - 50% in either I or II
+	sets.OffenseMode.SB = {
+		ammo="Ginsen",
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		body="Ken. Samue +1",
+		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 12% SB I
+		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}}, -- 10% SB I
+		feet="Anch. Gaiters +3",
+		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
+		waist="Moonbow Belt +1", -- 15% SB II
+		left_ear="Sherida Earring", -- 5% SB II
+		right_ear="Telos Earring",
+		left_ring="Niqmaddu Ring", -- 5%  SB II
+		right_ring="Gere Ring",
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	} -- 57% SB I + 25% SB II = Cap
+
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
@@ -169,6 +191,12 @@ function get_sets()
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
 	}
+
+	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
+		-- Belt SB II - 25%
+		-- Legs and Feet over cap 
+	})
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = set_combine(sets.WS,{})
 
@@ -205,21 +233,19 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}}
 	})
 
-	--Custome sets for each jobsetup
-	sets.Custom = {}
 	--Impetus set has priority over any other modes
-	sets.Custom.Impetus = {
+	sets.Impetus = {
 		body="Bhikku Cyclas +1",
 	}
 
 	-- Impetus for the DT stance (need more PDT)
-	sets.Custom.Impetus.DT = {
+	sets.Impetus.DT = {
 	    head="Malignance Chapeau",
 		body="Bhikku Cyclas +1",
 		right_ring="Defending Ring",
 	}
 
-	sets.Custom.Boost = {
+	sets.Boost = {
 		waist="Ask Sash",
 	}
 
@@ -258,7 +284,7 @@ function precast_custom(spell)
 	equipSet = {}
 	if spell.type == 'WeaponSkill' then
 		if buffactive.Impetus then
-			equipSet = sets.Custom.Impetus
+			equipSet = sets.Impetus
 		end	
 	end
 	return equipSet
@@ -272,72 +298,68 @@ end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	equipSet = choose_Impetus()
-	return equipSet
+
+	return choose_gear()
 end
 
 -- Called when the pet dies or is summoned
 function pet_change_custom(pet,gain)
 	equipSet = {}
+
 	return equipSet
 end
 
 -- Called during a pet midcast
 function pet_midcast_custom(spell)
 	equipSet = {}
+
 	return equipSet
 end
 
 -- Called after the performs an action
 function pet_aftercast_custom(spell)
 	equipSet = {}
+
 	return equipSet
 end
 
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-	equipSet = choose_Impetus()
 
-	if name == "Boost" then
-		if gain == true then
-			equip(sets.Custom.Boost)
-			disable('waist')
-		else
-			enable('waist')
-			choose_set()
-		end
-	end
-	return equipSet
+	return choose_gear()
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-	equipSet = choose_Impetus()
-	return equipSet
+
+	return choose_gear()
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	equipSet = choose_Impetus()
-	return equipSet
+
+	return choose_gear()
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
 
 end
 --Custom Function
-function choose_Impetus()
+function choose_gear()
 	equipSet = {}
-		if player.status == "Engaged" then
-			if buffactive.Impetus then
-				if state.OffenseMode.value == "DT" then
-					equipSet = sets.Custom.Impetus.DT
-				else
-					equipSet = sets.Custom.Impetus
-				end
-			end	
-		end
+	if player.status == "Engaged" then
+		if buffactive['Impetus'] then
+			if state.OffenseMode.value == "DT" then
+				equipSet = sets.Impetus.DT
+			else
+				equipSet = sets.Impetus
+			end
+		end	
+	end
+	if buffactive['Boost'] then
+		equipSet = set_combine(equipSet, sets.Boost)
+	end
 	return equipSet
 end
 
