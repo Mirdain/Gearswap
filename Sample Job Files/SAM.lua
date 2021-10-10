@@ -12,9 +12,38 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','SB','PDL') -- ACC effects WS and TP modes
+
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
+--Enable JobMode for UI
+UI_Name = 'DPS'
+
+--Modes for specific to Samurai
+state.JobMode = M{['description']='Weapon Mode'}
+state.JobMode:options('Masamune', 'Dojikiri', 'Shining One')
+state.JobMode:set('Masamune')
+
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Dojikiri'] = {
+		main={ name="Dojikiri Yasutsuna", augments={'Path: A',}},
+		sub="Utu Grip",
+	}
+
+	sets.Weapons['Masamune'] = {
+		main={ name="Masamune", augments={'Path: A',}},
+		sub="Utu Grip",
+	}
+
+	sets.Weapons['Shining One'] = {
+		main="Shining One",
+		sub="Utu Grip",
+	}
 
 	-- Standard Idle set with -DT, Refresh and Regen gear
 	sets.Idle = {
@@ -101,6 +130,22 @@ function get_sets()
 		right_ring="Regal Ring",
 		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	sets.OffenseMode.SB = {
+		ammo="Staunch Tathlum +1",
+		head="Ken. Jinpachi +1",
+		body="Ken. Samue +1",
+		hands="Ken. Tekko +1",
+		legs="Ken. Hakama +1",
+		feet="Ken. Sune-Ate +1",
+		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
+		waist="Windbuffet Belt +1",
+		left_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Niqmaddu Ring",
+		right_ring="Chirich Ring +1",
+		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+	}
 
 	--Default Weapon Skill set base
 	sets.WS = {
@@ -138,6 +183,10 @@ function get_sets()
 		right_ring="Regal Ring",
 		back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
+
+	sets.WS.SB = set_combine (sets.WS, {
+
+	})
 
 	sets.Precast = {}
 	-- Used for Magic Spells (Fast Cast)
@@ -263,37 +312,37 @@ end
 function precast_custom(spell)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return equipSet
+	return Weapon_Check(equipSet)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
@@ -316,14 +365,14 @@ function choose_Seigan()
 end
 --Function used to automate Job Ability use
 function check_buff_JA()
-	buff = ''
+	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
 
 	if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
 		buff = "Hasso"
 	end
 
-	if player.sub_job == 'WAR' then
+	if player.sub_job == 'WAR' and player.sub_job_level == 49 then
 		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
 			buff = "Berserk"
 		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
@@ -337,7 +386,7 @@ function check_buff_JA()
 end
 --Function used to automate Spell use
 function check_buff_SP()
-	buff = ''
+	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
@@ -346,4 +395,12 @@ end
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
+end
+
+function Weapon_Check(equipSet)
+	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
+	if DualWield == false then
+		equipSet = set_combine(equipSet,sets.Weapons.Shield)
+	end
+	return equipSet
 end
