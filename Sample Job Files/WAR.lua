@@ -12,15 +12,15 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
---Set default mode (TP,ACC,DT)
-state.OffenseMode:set('TP')
+--Set default mode (TP,ACC,DT,PDL)
+state.OffenseMode:set('DT')
 
 --Enable JobMode for UI
 UI_Name = 'DPS'
 
 --Modes for specific to Corsair
 state.JobMode = M{['description']='Warrior Damage Mode'}
-state.JobMode:options('Chango','Savage Blade','Decimation', 'Aeolian Edge')
+state.JobMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge')
 state.JobMode:set('Chango')
 
 
@@ -31,6 +31,10 @@ function get_sets()
 
 	sets.Weapons['Chango'] = {
 		main="Chango",
+		sub="Utu Grip",
+	}
+	sets.Weapons['Shining One'] = {
+		main="Shining One",
 		sub="Utu Grip",
 	}
 	sets.Weapons['Savage Blade'] = {
@@ -51,20 +55,20 @@ function get_sets()
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
-		ammo="Staunch Tathlum +1",
-		ammo="Staunch Tathlum +1",
-		head="Volte Salade",
-		body="Sacro Breastplate",
-		hands="Sulev. Gauntlets +2",
-		legs="Pumm. Cuisses +3",
-		feet="Sulev. Leggings +2",
+		sub="Utu Grip",
+		ammo="Staunch Tathlum +1", -- 3
+		head="Sakpata's Helm",
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
-		waist="Flume Belt +1",
-		left_ear="Tuisto Earring",
-		right_ear="Tuisto Earring",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		waist="Carrier's Sash",
+		left_ear="Eabani Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring={ name="Moonlight Ring", bag="wardrobe1"},
+		right_ring={ name="Moonlight Ring", bag="wardrobe3"},
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -87,15 +91,42 @@ function get_sets()
 		right_ear="Digni. Earring",
 		left_ring="Moonlight Ring",
 		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = {
-		head="Hjarrandi Helm",
-		body="Hjarrandi Breast.",
-		neck="War. Beads +2",
-		waist="Tempus Fugit",
+		sub="Utu Grip",
+		ammo="Coiste Bodhar",
+		head="Sakpata's Helm",
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Telos Earring",
+		right_ear="Schere Earring",
+		left_ring="Petrov Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
+	sets.OffenseMode.PDL = { -- Need Legs and work
+		sub="Utu Grip",
+		ammo="Coiste Bodhar",
+		head="Sakpata's Helm",
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Telos Earring",
+		right_ear="Schere Earring",
+		left_ring="Petrov Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	}
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {
 
@@ -170,7 +201,7 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Epaminondas's Ring",
 		right_ring="Karieyh Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
@@ -187,7 +218,7 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Epaminondas's Ring",
 		right_ring="Karieyh Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	sets.WS.CRIT = {
 	    ammo="Yetshila +1",
@@ -202,7 +233,7 @@ function get_sets()
 		right_ear="Cessance Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Hetairoi Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}
@@ -230,6 +261,23 @@ function get_sets()
 	sets.WS["Savage Blade"] = sets.WS.WSD
 	sets.WS["Sanguine Blade"] = {}
 	sets.WS["Requiescat"] = {}
+
+	sets.WS["Impulse Drive"] = {
+		sub="Utu Grip",
+		ammo="Yetshila +1",
+		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
+		body="Hjarrandi Breast.",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sulev. Leggings +2",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Thrud Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Karieyh Ring +1",
+		right_ring="Epaminondas's Ring",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
