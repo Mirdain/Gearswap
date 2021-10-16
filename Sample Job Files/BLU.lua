@@ -334,13 +334,13 @@ function user_file_unload()
 end
 
 function check_buff_JA()
-	buff = ''
+	buff = 'None'
 	--local ja_recasts = windower.ffxi.get_ability_recasts()
 	return buff
 end
 
 function check_buff_SP()
-	buff = ''
+	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end

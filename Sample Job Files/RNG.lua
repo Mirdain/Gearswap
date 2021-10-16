@@ -40,7 +40,7 @@ Organizer = true
 
 --Modes for specific to Ranger
 state.JobMode = M{['description']='Ranger Damage Mode'}
-state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge','Gastraphetes')
+state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge')
 state.JobMode:set('Fomalhaut')
 
 --Set the ammo type for each JobMode (above) and Types: Bullet, Arrow, Bolt
@@ -67,32 +67,26 @@ function get_sets()
 
 	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub="Ternion Dagger +1",
+		sub="Kraken Club",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
 	sets.Weapons['Fomalhaut'] = {
-		main="Tauret",
-		sub="Ternion Dagger +1",
-		range={ name="Fomalhaut"},
+		main={ name="Perun +1", augments={'Path: A',}},
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+		range={ name="Fomalhaut", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Annihilator'] = {
-		main="Tauret",
-		sub="Ternion Dagger +1",
-		range={ name="Annihilator"},
+		main={ name="Perun +1", augments={'Path: A',}},
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+		range={ name="Annihilator", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Fail-Not'] = {
-		main="Tauret",
-		sub="Ternion Dagger +1",
-		range={ name="Fail-Not"},
-	}
-
-	sets.Weapons['Gastraphetes'] = {
-		main="Tauret",
-		sub="Ternion Dagger +1",
-		range={ name="Gastraphetes"},
+		main={ name="Perun +1", augments={'Path: A',}},
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+		range={ name="Fail-Not", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Aeolian Edge'] = {
@@ -146,18 +140,18 @@ function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
 		ammo=Ammo.RA, -- Smart_Ammo() will select from your XXXX.RA type
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
+		head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
 		legs="Malignance Tights",
-		feet="Malignance Boots",
+		feet="Nyame Sollerets",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Sanare Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Defending Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}}, -- Add DT
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Add DT
     }
 
 	sets.Movement = {
@@ -184,11 +178,11 @@ function get_sets()
 		feet="Malignance Boots",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
+		left_ear="Telos Earring",
+		right_ear="Sherida Earring",
 		left_ring={ name="Chirich Ring +1", bag="wardrobe1",},
 		right_ring="Epona's Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}}, -- Need to update Cape
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Need to update Cape
 	}
 
 	--This set is used when OffenseMode is set to DT and enaged
@@ -198,7 +192,7 @@ function get_sets()
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 	})
 
@@ -297,13 +291,13 @@ function get_sets()
 		right_ear="Etiolation Earring", -- 1
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Weather. Ring", -- 5
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}}, -- Need to upgrade Cape with 10% FC
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Need to upgrade Cape with 10% FC
 	} -- 77 FC for Utsusemi (80 is cap)
 	 
 	sets.Midcast = {ammo=Ammo.RA,}
 
 	-- Ranged Attack Gear (Normal Midshot)
-    sets.Midcast.RA = set_combine(sets.Midcast.RA, {
+    sets.Midcast.RA = set_combine(sets.Midcast, {
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body="Ikenga's Vest",
 		hands="Ikenga's Gloves",
@@ -314,16 +308,13 @@ function get_sets()
 		left_ear="Telos Earring",
 		right_ear="Enervating Earring",
 		left_ring="Crepuscular Ring",
-		right_ring="Regal Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10',}},
+		right_ring="Ilabrat Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}},
     }) -- With Recycle Merits 101 Recycle for TP bonus and Ammo Save
 
 	-- Ranged Attack Gear (High Accuracy Midshot)
     sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
 		ammo=Ammo.ACC,
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		feet="Malignance Boots",
     })
 
 	-- Ranged Attack Gear (Physical Damage Limit)
@@ -334,20 +325,20 @@ function get_sets()
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-
 		head="Meghanada Visor +2",
 		body="Nisroch Jerkin",
-		hands="Mummu Wrists +2",
-		legs="Mummu Kecks +2",
-		feet={ name="Adhe. Gamashes +1", augments={'HP+65','"Store TP"+7','"Snapshot"+10',}},
-		-- Need to make Crit Cape
+		legs="Ikenga's Trousers",
+		feet="Osh. Leggings +1",
+		right_ring="Ilabrat Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
     })
 
 	-- Ranged Attack Gear (Double Shot Midshot)
 	sets.Midcast.RA.DoubleShot = set_combine(sets.Midcast.RA, {
 	    head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
-		body={ name="Arc. Jerkin +1", augments={'Enhances "Snapshot" effect',}}, -- Need Upgrade
-		-- Add Oshi Gear
+		hands="Oshosi Gloves +1",
+		body={ name="Arc. Jerkin +3", augments={'Enhances "Snapshot" effect',}},
+		feet="Osh. Leggings +1",
     })
 
 	-- Ranged Attack Gear (Barrage active)
@@ -360,7 +351,7 @@ function get_sets()
 	sets.JA["Eagle Eye Shot"] = {legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},}
 	sets.JA["Scavenge"] = {}
 	sets.JA["Shadowbind"] = { hands="Orion Bracers +3",}
-	sets.JA["Camouflage"] = { body={ name="Arc. Jerkin +1", augments={'Enhances "Snapshot" effect',}},} -- Need Upgrade
+	sets.JA["Camouflage"] = {body={ name="Arc. Jerkin +3", augments={'Enhances "Snapshot" effect',}},}
 	sets.JA["Sharpshot"] = { legs="Orion Braccae +3",} -- Used for rules below
 	sets.JA["Barrage"] = {} -- Midcast.RA.Barrage set
 	sets.JA["Unlimited Shot"] = {}
@@ -387,17 +378,17 @@ function get_sets()
 	sets.WS.WSD = set_combine(sets.WS, {
 		ammo=Ammo.WSD,
 		head="Orion Beret +3",
-		body="Nyame Mail", -- Place holder
+		body="Ikenga's Vest",
 		hands="Meg. Gloves +2",
 		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
-		feet="Nyame Sollerets", -- Place holder
+		feet="Ikenga's Clogs",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Fotia Belt",
 		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Epaminondas's Ring",
 		right_ring="Regal Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%',}},
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	-- Magic Attack Bonus
@@ -409,7 +400,7 @@ function get_sets()
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ring="Dingir Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%',}}, -- Finish Cape
+		back={ name="Belenus's Cape", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%','Damage taken-5%',}}, -- Finish Cape
 	})
 
 	-- Physical Damage Limit set used in OffenseMode.PDL
@@ -478,12 +469,6 @@ function get_sets()
 	    legs={ name="Herculean Trousers", augments={'Attack+8','Mag. Acc.+13 "Mag.Atk.Bns."+13','"Treasure Hunter"+2','Accuracy+16 Attack+16',}},
 		waist="Chaac Belt",
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
 end
 
 -------------------------------------------------------------------------------------------------------------------
