@@ -157,6 +157,21 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
 	} -- 51% total Fast Cast
 
+	sets.Precast["Impact"] = {
+	    ammo="Staunch Tathlum +1",
+		body="Twilight Cloak",
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
+		legs="Aya. Cosciales +2", -- 6
+		feet={ name="Carmine Greaves +1", augments={'Accuracy+12','DEX+12','MND+20',}}, -- 8
+		neck="Voltsurge Torque", -- 4
+		waist="Embla Sash", -- 5
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Etiolation Earring", -- 1
+		left_ring="Weather. Ring", -- 5
+		right_ring="Kishar Ring", -- 4
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
+	}
+
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
 		-- Cap is 10%
@@ -292,6 +307,7 @@ function get_sets()
 	sets.Midcast["Frazzle"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle II"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle III"] = sets.Midcast.Enfeebling.Potency
+	sets.Midcast["Impact"] = set_combine (sets.Midcast.Enfeebling, {body="Twilight Cloak",})
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
 		body="Atrophy Tabard +3",
@@ -432,7 +448,6 @@ function precast_custom(spell)
 	equipSet = {}
 
 	equipSet = Weapon_Check(equipSet, spell)
-	equipSet = Elemental_check(equipSet, spell)
 		
 	return equipSet
 end
@@ -518,28 +533,4 @@ function Enspell_Check()
 	else
 		Enspell_Buff = false
 	end
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		end
-	end
-	return equipSet
 end

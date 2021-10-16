@@ -137,6 +137,10 @@ function get_sets()
 	-- Default song duration / strength
 	sets.Midcast = {}
 
+	sets.Midcast.Earth_Staff ={
+		main = "Earth Staff";
+	}
+
 	-- Cure Set
 	sets.Midcast.Cure = {
 		-- Staff 20% Cure Potency

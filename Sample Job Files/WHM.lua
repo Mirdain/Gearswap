@@ -50,7 +50,7 @@ function get_sets()
 
 	-- Movement Gear
 	sets.Movement = {
-		feet="Herald's Gaiters"
+		feet="Herald's Gaiters",
 	}
 
 	-- Set to be used if you get 
