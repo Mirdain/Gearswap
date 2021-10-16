@@ -518,8 +518,6 @@ function precast_custom(spell)
 		return equipSet
 	end
 
-	equipSet = Elemental_check(equipSet, spell)
-
 	return Weapon_Check(equipSet)
 end
 -- Augment basic equipment sets
@@ -591,32 +589,6 @@ function Weapon_Check(equipSet)
 	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
 	if DualWield == false then
 		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		else
-			windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
-		end
 	end
 	return equipSet
 end
