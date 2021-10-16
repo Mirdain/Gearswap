@@ -21,8 +21,8 @@ state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS 
 function Macro_Sub_Job()
 	local macro = 1
 	if player.sub_job == "BLU" then
-		state.OffenseMode:set('AoE')
-		macro = 2
+		state.OffenseMode:set('DT')
+		macro = 1
 		send_command('wait 2;aset set tanking')
 	else
 		state.OffenseMode:set('DT')
@@ -70,21 +70,21 @@ function get_sets()
 		main={ name="Epeolatry", augments={'Path: A',}},  -- 25/0 - PDT II
 		sub="Utu Grip",
 		ammo="Staunch Tathlum +1", -- 3/3
-		head="Turms Cap +1",
+		head="Nyame Helm", -- 7/7
 		body="Runeist's Coat +3",
-		hands="Turms Mittens +1",
-		legs="Eri. Leg Guards +1",  -- 7/0 -- Do not count due to movement swap
-		feet="Turms Leggings +1",
-		neck={ name="Futhark Torque +2", augments={'Path: A',}, priority=4}, -- 7/7
-		waist="Flume Belt +1", -- 4/0
-		left_ear={ name="Etiolation Earring", priority=3},
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2}, -- 3/5
-		left_ring="Defending Ring", -- 10/10
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=1},
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
-    } -- 74 PDT / 33 MDT		3016 HP/ 949 MP
+		hands="Nyame Gauntlets", -- 7/7
+		legs="Nyame Flanchard", -- 8/8
+		feet="Nyame Sollerets", -- 7/7
+		neck={ name="Futhark Torque +2", augments={'Path: A',}}, -- 7/7
+		waist="Carrier's Sash",
+		left_ear="Sanare Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
+		left_ring="Moonlight Ring", -- 5/5
+		right_ring="Moonlight Ring", -- 5/5
+		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
+    } -- 75 PDT / 50 MDT		3161 HP/ 1095 MP
 
-	sets.Idle.AoE = {
+	sets.Idle.AoE = set_combine( sets.Idle, {
 	    main={ name="Epeolatry", augments={'Path: A',}},
 		sub="Utu Grip",
 		ammo="Staunch Tathlum +1",
@@ -100,11 +100,10 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=4}, -- 7/-1
 		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=1}, -- 5/5
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
-	}
+	})
 
 	-- This gear will be equiped when the player is moving and not engaged
 	sets.Movement = {
-		head={ name="Fu. Bandeau +3", augments={'Enhances "Battuta" effect',}}, -- 6/0
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=1},
     } -- 73 PDT / 33 MDT		3028 HP / 963 MP
 
@@ -186,18 +185,18 @@ function get_sets()
 		main={ name="Epeolatry", augments={'Path: A',}},
 		sub="Utu Grip",
 		ammo="Yamarang",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Futhark Coat +3", augments={'Enhances "Elemental Sforzo" effect',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Aya. Cosciales +2",
-		feet="Turms Leggings +1",
-		neck={ name="Futhark Torque +2", augments={'Path: A',}, priority=3},
-		waist="Windbuffet Belt +1",
-		left_ear="Sherida Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=4},
-		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
-		back={ name="Ogma's cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+		head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		neck={ name="Futhark Torque +2", augments={'Path: A',}},
+		waist="Ioskeha Belt +1",
+		left_ear="Crep. Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+		back={ name="Ogma's Cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}  -- 
 
 	sets.OffenseMode.AoE = {
