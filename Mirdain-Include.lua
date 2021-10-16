@@ -217,6 +217,7 @@ indicolure = M('Indi-Acumen', 'Indi-Attunement', 'Indi-Barrier', 'Indi-STR', 'In
              'Indi-Poison', 'Indi-Precision', 'Indi-Refresh', 'Indi-Regen', 'Indi-Slip', 'Indi-Slow', 'Indi-Torpor', 'Indi-Vex', 'Indi-Voidance', 'Indi-Wilt')
 
 areas = {}
+elemental_ws = S{}
 
 -- City areas for town gear and behavior.
 areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Port Windurst","Windurst Waters","Windurst Woods","Windurst Walls","Heavens Tower","Port San d'Oria","Northern San d'Oria",
@@ -439,6 +440,8 @@ function precastequip(spell)
 				info('Using Default WS Set')
 			end
 		end
+		-- Check if an Obi or Orpheus is to be Equiped
+		equipSet = Elemental_check(equipSet, spell)
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
@@ -514,10 +517,6 @@ function precastequip(spell)
 			info( '['..spell.english..'] Precast Set')
 		else
 			equipSet = sets.Precast.FastCast
-		end
-		--Equip on main hand
-		if spell.name == "Dispelga" then
-			equipSet = set_combine(equipSet, {main="Daybreak"})
 		end
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
@@ -711,21 +710,21 @@ function midcastequip(spell)
 			else
 				-- Refresh
 				if spell.name:contains('Refresh') then
-					info('Refresh Set')
+					info('Refresh Set - Others')
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
 				end
 				-- Bar Spells
 				if Elemental_Bar:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Enhancing.Elemental)
-					info('Elemental Bar Set')
+					info('Elemental Bar Set - Others')
 				-- Enhancing SKill
 				elseif Enhancing_Skill:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
-					info('Enhancing Skill')
+					info('Enhancing Skill - Others')
 				-- Enhancing
 				else
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others)
-					info('Enhancing Magic Set')
+					info('Enhancing Magic Set - Others')
 				end
 			end
 		-- Divine Spells
@@ -788,10 +787,7 @@ function midcastequip(spell)
 				info('Nuke Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			end
-		end
-		--Equip on main hand
-		if spell.name == "Dispelga" then
-			equipSet = set_combine(equipSet, {main="Daybreak"})
+			equipSet = Elemental_check(equipSet, spell)
 		end
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
@@ -970,6 +966,16 @@ function precast(spell)
 		end
 	end
 
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+
+	--Equip body
+	if spell.name == "Impact" then
+		equipSet = set_combine(equipSet, {head="empty", headbody="Twilight Cloak",})
+	end
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
  end
@@ -982,6 +988,17 @@ function midcast(spell)
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
+
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+
+	--Equip body
+	if spell.name == "Impact" then
+		equipSet = set_combine(equipSet, {head="empty", headbody="Twilight Cloak",})
+	end
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- You passed the checks - player will begin action
@@ -1130,13 +1147,16 @@ function choose_set()
 			--Augment built set for Perp cost
 			equipSet = set_combine(equipSet, sets.Idle.Pet)
 		end
-		-- Equip movement gear
-		if is_moving == true then
-			equipSet = set_combine(equipSet, sets.Movement)
-		end
 		-- Equip Sublimation gear
 		if buffactive[187] then
 			equipSet = set_combine(equipSet, sets.Idle.Sublimation)
+		end
+		if player.mpp < 75 and state.OffenseMode.value ~= 'DT' then
+			equipSet = set_combine(equipSet, sets.Idle.Refresh)
+		end
+		-- Equip movement gear
+		if is_moving == true then
+			equipSet = set_combine(equipSet, sets.Movement)
 		end
 	end
 	return equipSet
@@ -1581,7 +1601,7 @@ function file_unload(file_name)
 	send_command('unbind f12')
 	if Organizer == true then
 		windower.add_to_chat(8,'Clearing Gear from Wardrobe - Do not move or take action')
-		windower.send_command('wait 1;gs equip naked;wait 1;org o '..player.name..'_Naked;wait 8;org get wardrobe '..player.name..'_'..player.main_job..';wait 12;gs validate;wait 3;input /echo Change Complete')
+		windower.send_command('wait 1;gs equip naked;wait 1;org o '..player.name..'_Naked;wait 15;org get wardrobe '..player.name..'_'..player.main_job..';wait 10;gs validate;wait 3;input /echo Change Complete')
 	end
 	user_file_unload()
 end
@@ -1985,6 +2005,32 @@ end)
 
 function Unlock ()
 	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+end
+
+function Elemental_check(equipSet, spell)
+	-- This function swaps in the Orpheus or Hachirin as needed
+	if elemental_ws:contains(spell.name) and spell.type == 'WeaponSkill' or spell.type == 'BlackMagic' then
+		-- Matching double weather (w/o day conflict).
+		if spell.element == world.weather_element and world.weather_intensity == 2 then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+		-- Matching day and weather.
+		elseif spell.element == world.day_element and spell.element == world.weather_element then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+		-- Target distance less than 6 yalms
+		elseif spell.target.distance < (6 + spell.target.model_size) then
+			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
+			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
+		-- Match day or weather.
+		elseif spell.element == world.day_element or spell.element == world.weather_element then
+			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+		else
+			windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
+		end
+	end
+	return equipSet
 end
 
 function round(num, numDecimalPlaces)
