@@ -1,5 +1,5 @@
 
---Inyana
+--Mirdain
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -217,12 +217,12 @@ function get_sets()
 
 	-- Main physical pact set (Volt Strike, Pred Claws, etc.)
 	sets.Pet_Midcast.Physical_BP = {
-		main={ name="Gridarvor", augments={'Pet: Accuracy+70','Pet: Attack+70','Pet: "Dbl. Atk."+15',}},
+		main="Nirvana",
 		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
-		head="C. Palug Crown",
+		head={ name="Apogee Crown +1", augments={'MP+80','Pet: Attack+35','Blood Pact Dmg.+8',}},
 		body="Con. Doublet +3",
-		hands={ name="Merlinic Dastanas", augments={'Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+10','Pet: STR+2','Pet: Mag. Acc.+4',}},
+		hands={ name="Merlinic Dastanas", augments={'Pet: Attack+29 Pet: Rng.Atk.+29','Blood Pact Dmg.+10','Pet: DEX+8','Pet: Mag. Acc.+5',}},
 		legs={ name="Apogee Slacks +1", augments={'Pet: STR+20','Blood Pact Dmg.+14','Pet: "Dbl. Atk."+4',}},
 		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: Attack+35','Blood Pact Dmg.+8',}},
 		neck={ name="Smn. Collar +2", augments={'Path: A',}},
@@ -231,7 +231,7 @@ function get_sets()
 		right_ear="Kyrene's Earring",
 		left_ring="Varar Ring +1",
 		right_ring="C. Palug Ring",
-		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Eva.+20 /Mag. Eva.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	}
 	-- Physical pacts which benefit more from TP than Pet:DA (like single-hit BP)
 	sets.Pet_Midcast.Physical_BP_TP = set_combine(sets.Pet_Midcast.Physical_BP, {
@@ -324,7 +324,6 @@ function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
 end
 
-
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
 
@@ -398,17 +397,44 @@ function pet_change_custom(pet,gain)
 	return equipSet
 end
 
+function pet_midcast_custom(spell)
+	equipSet = {}
+		-- This section is for SMN Blood Pact abilities
+		if player.main_job == "SMN" then
+			is_Busy = true
+			if spell.name == "Perfect Defense" then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			elseif Debuff_BPs:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			elseif Buff_BPs_Healing:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			elseif Buff_BPs_Duration:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			elseif spell.name == "Flaming Crush" then
+				equipSet = sets.Pet_Midcast.FlamingCrush
+			elseif ImpactDebuff and (spell.name=="Impact" or spell.name=="Conflag Strike") then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			elseif Magic_BPs_TP:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.Magic_BP_TP
+			elseif Magic_BPs_NoTP:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.Magic_BP
+			elseif Merit_BPs:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.Magic_BP_TP
+			elseif Debuff_Rage_BPs:contains(spell.name) then
+				equipSet = sets.Pet_Midcast.SummoningMagic
+			else
+				equipSet = sets.Pet_Midcast.Physical_BP
+			end
+		end
+	return equipSet
+end
+
 function pet_aftercast_custom(spell)
 	equipSet = {}
 
 	return equipSet
 end
 
-function pet_midcast_custom(spell)
-	equipSet = {}
-
-	return equipSet
-end
 --Function is called when a self command is issued
 function self_command_custom(command)
 
