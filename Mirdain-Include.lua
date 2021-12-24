@@ -193,6 +193,11 @@ Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Distract
 Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'}
 Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 'Banish', 'Banish II', 'Banish III', 'Banishga', 'Banishga II',}
 
+BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
+BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'}
+BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
+BlueTank = S{}
+
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
@@ -459,19 +464,22 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		do_Utsu_checks(spell)
 		if equipSet[spell.english] then
-			equipSet = set_combine(equipSet, equipSet[spell.english])
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info('['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		elseif spell.id == 123 then -- Double Up
-			equipSet = sets.PhantomRoll
+			equipSet = set_combine(equipSet, sets.PhantomRoll)
 			info('['..spell.english..'] Set')
 		else
 			info('JA not set for ['..spell.english..']')
@@ -501,43 +509,53 @@ function precastequip(spell)
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Precast
-		if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') then
-			equipSet = set_combine(sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
+		if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') or spell.name:contains('Reraise') then
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
 		elseif equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- BlackMagic
 	elseif spell.type == 'BlackMagic' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- BardSong
 	elseif spell.type == 'BardSong' then
+		equipSet = sets.Precast
 		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
 			-- Song Count for Minne and Paeon
 			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II"  or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
-				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Count})
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Count})
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Honor})
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Honor})
 			else
-				equipSet = set_combine(sets.Precast.Songs, {range=Instrument.Potency})
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Potency})
 			end
 		-- NiTro Songs (Midcast Sets)
 		else 
@@ -567,28 +585,37 @@ function precastequip(spell)
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- Trust
 	elseif spell.type == 'Trust' then
 		equipSet = sets.Precast
 		if equipSet[spell.english] then
-			equipSet = equipSet[spell.english]
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info( '['..spell.english..'] Precast Set')
 		else
-			equipSet = sets.Precast.FastCast
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	end
 	-- If TH mode is on - check if new mob and then equip TH gear
@@ -620,10 +647,10 @@ function midcastequip(spell)
 		end
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
-			info('[Tripple Shot] Set')
+			info('Using Triple Shot Set')
 		elseif buffactive['Double Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.DoubleShot)
-			info('[Double Shot] Set')
+			info('Using Double Shot Set')
 		elseif buffactive['Barrage'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
 			info('[Barrage] Set')
@@ -668,9 +695,9 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Curaga)
 			info('Curaga Set')
 		-- Raise (Stay in FastCast set for recast timers)
-		elseif spell.name:contains('Raise') or spell.name == "Arise" then
+		elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
 			equipSet = sets.Precast.FastCast
-			info('Raise Set')
+			info('Raise Set (Fast Cast)')
 		-- Enhancing
 		elseif spell.skill == 'Enhancing Magic' then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
@@ -821,7 +848,7 @@ function midcastequip(spell)
 		-- Defined Blue Nukes
 		elseif BlueNuke:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
-			info('Nuke set')
+			info('Blue Nuke set')
 		-- Spells that benifit from Blue Magic Skill
 		elseif BlueSkill:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
@@ -829,9 +856,16 @@ function midcastequip(spell)
 		elseif BlueTank:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Enmity)
 			info('Blue Enmity set')
+		elseif BlueHealing:contains(spell.english) then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cure)
+			info('Blue Cure set')
 		-- Default Spell set
 		else
 			info('Midcast not set')
+		end
+		if buffactive["Diffusion"] then
+			equipSet = set_combine(equipSet, sets.Diffusion)
+			info('Diffusion Augment')
 		end
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
@@ -973,7 +1007,7 @@ function precast(spell)
 
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", headbody="Twilight Cloak",})
+		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
 	end
 
 	-- here is where gear is actually equipped
@@ -996,7 +1030,7 @@ function midcast(spell)
 
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", headbody="Twilight Cloak",})
+		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
 	end
 
 	-- here is where gear is actually equipped
@@ -1755,22 +1789,6 @@ windower.register_event('gain buff', function(id)
 		else 
 			info('No Remedies in inventory.')
 		end
-	elseif id == 121 then
-		windower.add_to_chat('Encumbrance - Main and Sub')
-	elseif id == 122 then
-		windower.add_to_chat('Encumbrance - Head and Neck')	
-	elseif id == 123 then
-		windower.add_to_chat('Encumbrance - Body')
-	elseif id == 124 then
-		windower.add_to_chat('Encumbrance - Hands')
-	elseif id == 125 then
-		windower.add_to_chat('Encumbrance - Legs and Feet')
-	elseif id == 126 then
-		windower.add_to_chat('Encumbrance - Back and Waist')
-	elseif id == 127 then
-		windower.add_to_chat('Encumbrance - Range and Ammo')
-	elseif id == 128 then
-		windower.add_to_chat('Encumbrance - Rings and Earrings')
 	elseif id == 2 then
 		log("Sleep - Checking Gear")
 		equip(set_combine(choose_set(),choose_set_custom()))
