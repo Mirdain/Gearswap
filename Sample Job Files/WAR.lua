@@ -15,6 +15,9 @@ Food = "Sublime Sushi"
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
+-- Set to true to run organizer on job changes
+Organizer = true
+
 --Enable JobMode for UI
 UI_Name = 'DPS'
 
@@ -30,7 +33,7 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Chango'] = {
-		main="Chango",
+		main={ name="Chango", augments={'Path: A',}},
 		sub="Utu Grip",
 	}
 	sets.Weapons['Shining One'] = {
@@ -55,8 +58,7 @@ function get_sets()
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
-		sub="Utu Grip",
-		ammo="Staunch Tathlum +1", -- 3
+		ammo="Staunch Tathlum +1",
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets",
@@ -66,8 +68,8 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear="Eabani Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring={ name="Moonlight Ring", bag="wardrobe1"},
-		right_ring={ name="Moonlight Ring", bag="wardrobe3"},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
@@ -77,25 +79,27 @@ function get_sets()
 
 	sets.OffenseMode = {}
 
+	--28% Job Trait
+	--5% Merits
+
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-	    ammo="Ginsen",
-		head="Hjarrandi Helm",
-		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}},
-		hands="Sulev. Gauntlets +2",
+		ammo="Coiste Bodhar",
+		head="Flam. Zucchetto +2",
+		body="Dagon Breast.",
+		hands="Sakpata's Gauntlets",
 		legs="Pumm. Cuisses +3",
 		feet="Pumm. Calligae +3",
-		neck="War. Beads +2",
-		waist="Ioskeha Belt +1",
-		left_ear="Cessance Earring",
-		right_ear="Digni. Earring",
-		left_ring="Moonlight Ring",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Schere Earring",
+		right_ear="Telos Earring",
+		left_ring="Niqmaddu Ring",
 		right_ring="Moonlight Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = {
-		sub="Utu Grip",
 		ammo="Coiste Bodhar",
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
@@ -103,29 +107,17 @@ function get_sets()
 		legs="Sakpata's Cuisses",
 		feet="Sakpata's Leggings",
 		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Telos Earring",
-		right_ear="Schere Earring",
-		left_ring="Petrov Ring",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Schere Earring",
+		right_ear="Telos Earring",
+		left_ring="Niqmaddu Ring",
 		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
-	sets.OffenseMode.PDL = { -- Need Legs and work
-		sub="Utu Grip",
-		ammo="Coiste Bodhar",
-		head="Sakpata's Helm",
-		body="Sakpata's Plate",
-		hands="Sakpata's Gauntlets",
-		legs="Sakpata's Cuisses",
-		feet="Sakpata's Leggings",
-		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Telos Earring",
-		right_ear="Schere Earring",
-		left_ring="Petrov Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	}
+
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT, {
+		ammo="Crepuscular Pebble",
+	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {
@@ -133,36 +125,52 @@ function get_sets()
 	}
 	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
 	sets.DualWield = {
-		body={ name="Emicho Haubert +1", augments={'HP+65','DEX+12','Accuracy+20',}}, --9
-		hands={ name="Emi. Gauntlets +1", augments={'Accuracy+25','"Dual Wield"+6','Pet: Accuracy+25',}},
-		left_ear="Suppanomimi",
+		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+		waist="Reiki Yotai",
+		right_ear="Eabani Earring",
 	}
 
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb",
-		neck="Voltsurge Torque",
-		left_ring="Prolix Ring",
-	}
+		ammo="Sapience Orb", --2
+		head="Sakpata's Helm", --8
+		body="Sacro Breastplate", --10
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
+		feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}}, -- 6
+		neck="Voltsurge Torque", -- 4
+		left_ear="Etiolation Earring", --1
+		right_ear="Loquac. Earring", -- 3
+		left_ring="Prolix Ring", -- 2
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+	} --44%
+
 	sets.Precast.Enmity = {
-	    ammo="Sapience Orb", -- 2
-	    left_ear="Cryptic Earring", -- 4
-		right_ear="Friomisi Earring", --2
-		left_ring="Petrov Ring", -- 4
-	    back="Phalangite Mantle", -- 5
-	}
-	sets.Midcast = {}
+		ammo="Sapience Orb", -- 2
+		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --9
+		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --20
+		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --9
+		legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --9
+		feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, --9
+		neck="Moonlight Necklace", --15
+		left_ear="Cryptic Earring", --4
+		right_ear="Trux Earring", --5
+		left_ring="Petrov Ring", --4
+		right_ring="Eihwaz Ring", --5
+	} --91
+
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
+
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
 	    ammo="Staunch Tathlum +1", --11
-		legs={ name="Founder's Hose", augments={'MND+7','Mag. Acc.+10','Attack+10',}}, --30
 		feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}}, --20
-		neck="Moonbeam Necklace", --10
+		neck="Moonlight Necklace", --15
 		left_ear="Magnetic Earring", --8
-		right_ear="Halasz Earring", --5
-		left_ring="Evanescence Ring", --5
-		right_ring={ name="Dark Ring", augments={'Magic dmg. taken -4%','Phys. dmg. taken -4%','Spell interruption rate down -4%',}}, --4
+		waist="Audumbla Sash", --10
 	}
 	-- Cure Set
 	sets.Midcast.Cure = {}
@@ -191,46 +199,37 @@ function get_sets()
 	sets.WS = {
 		ammo="Knobkierrie",
 		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
-		body="Hjarrandi Breast.",
-		hands={ name="Valorous Mitts", augments={'Accuracy+21 Attack+21','Weapon skill damage +4%','STR+13',}},
-		legs={ name="Odyssean Cuisses", augments={'Attack+30','"Avatar perpetuation cost" -4','Weapon skill damage +7%',}},
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
 		feet="Sulev. Leggings +2",
-		neck="War. Beads +2",
-		waist="Ioskeha Belt +1",
-		left_ear="Ishvara Earring",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Thrud Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Epaminondas's Ring",
-		right_ring="Karieyh Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+		right_ring="Karieyh Ring +1",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}}
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {}
-	sets.WS.WSD = {
-		ammo="Knobkierrie",
-		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
-		body="Hjarrandi Breast.",
-		hands={ name="Valorous Mitts", augments={'Accuracy+21 Attack+21','Weapon skill damage +4%','STR+13',}},
-		legs={ name="Odyssean Cuisses", augments={'Attack+30','"Avatar perpetuation cost" -4','Weapon skill damage +7%',}},
-		feet="Sulev. Leggings +2",
-		neck="War. Beads +2",
-		waist="Ioskeha Belt +1",
-		left_ear="Ishvara Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Epaminondas's Ring",
-		right_ring="Karieyh Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	sets.WS.ACC = set_combine(sets.WS, {
+
+	})
+
+	sets.WS.WSD = set_combine(sets.WS, {
+
+	})
 	sets.WS.CRIT = {
-	    ammo="Yetshila +1",
-		head={ name="Valorous Mask", augments={'Accuracy+17 Attack+17','Weapon skill damage +4%','STR+9','Accuracy+8',}},
+		ammo="Yetshila +1",
+		head={ name="Blistering Sallet +1", augments={'Path: A',}},
 		body="Hjarrandi Breast.",
-		hands="Sulev. Gauntlets +2",
-		legs="Pumm. Cuisses +3",
-		feet="Pumm. Calligae +3",
-		neck="War. Beads +2",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
+		neck={ name="War. Beads +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",
-		left_ear="Brutal Earring",
-		right_ear="Cessance Earring",
+		left_ear="Schere Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Hetairoi Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
@@ -269,9 +268,9 @@ function get_sets()
 		body="Hjarrandi Breast.",
 		hands="Sakpata's Gauntlets",
 		legs="Sakpata's Cuisses",
-		feet="Sulev. Leggings +2",
+		feet="Sakpata's Leggings",
 		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Thrud Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Karieyh Ring +1",
@@ -283,8 +282,8 @@ function get_sets()
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
+	    head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},
 	    hands={ name="Valorous Mitts", augments={'MND+8','Pet: Accuracy+15 Pet: Rng. Acc.+15','"Treasure Hunter"+2','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
-	    feet={ name="Valorous Greaves", augments={'Pet: STR+14','AGI+5','"Treasure Hunter"+1','Mag. Acc.+5 "Mag.Atk.Bns."+5',}},
 		waist="Chaac Belt",
 	}
 

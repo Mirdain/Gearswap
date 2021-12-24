@@ -74,7 +74,7 @@ function get_sets()
 		ammo=Ammo.Bullet.MAG_WS,
 		main={ name="Rostam", augments={'Path: A'}, bag="Wardrobe 4"},
 		sub="Tauret",
-		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
+		range={ name="Death Penalty", augments={'Path: A',}},
 	}
 
 	sets.Weapons.Shield = {
@@ -87,7 +87,7 @@ function get_sets()
 	Ammo.Bullet.MAB = "Living Bullet"		-- Magical Weaponskills
 	Ammo.Bullet.MACC = "Living Bullet"		-- Magic Accuracy
 	Ammo.Bullet.QD = "Hauksbok Bullet"		-- Quick Draw
-	Ammo.Bullet.MAG_WS = "Living Bullet"	-- Magic Weaponskills
+	Ammo.Bullet.MAG_WS = "Living Bullet"	-- Magic Weaponskills that do not consume Ammunition
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
@@ -175,7 +175,7 @@ function get_sets()
 		left_ear={ name="Tuisto Earring", priority=2},
 		right_ear={ name="Etiolation Earring", priority=1},
 		left_ring={ name="Ilabrat Ring", priority=3},
-		right_ring={ name="Regal Ring", priority=4},
+		right_ring="Crepuscular Ring",
 		neck={ name="Comm. Charm +2", augments={'Path: A',}}, -- 4/0
 		waist="Yemaya Belt", -- 0/5
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 10/0
@@ -212,7 +212,10 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
 	} -- 65 FC
 
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = {
@@ -225,9 +228,9 @@ function get_sets()
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
-		right_ear="Enervating Earring",
-		left_ring="Dingir Ring",
-		right_ring="Ilabrat Ring",
+		right_ear="Dedition Earring",
+		left_ring="Ilabrat Ring",
+		right_ring="Crepuscular Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     }
 
@@ -240,10 +243,15 @@ function get_sets()
         feet="Osh. Leggings +1", --3
     }) --27
 
-	-- Quick Draw Gear Sets
-	sets.QuickDraw = {}
+	sets.Utsusemi = set_combine(sets.Idle, {
+	
+	})
 
-	sets.QuickDraw.ACC = {
+	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
+	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
+
+	-- Quick Draw Gear Sets
+	sets.QuickDraw = {
 		ammo = Ammo.Bullet.QD,
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -252,43 +260,33 @@ function get_sets()
 		feet="Malignance Boots",
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Eschan Stone",
-		left_ear="Digni. Earring",
-		right_ear="Gwati Earring",
-		left_ring="Sangoma Ring",
-		right_ring="Regal Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+		left_ear="Crep. Earring",
+		right_ear="Dedition Earring",
+		left_ring="Crepuscular Ring",
+		right_ring="Dingir Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
-	sets.QuickDraw.DMG = {
-		ammo = Ammo.Bullet.QD,
+
+	sets.QuickDraw.ACC = set_combine (sets.QuickDraw, {
+
+	})
+
+	sets.QuickDraw.DMG = set_combine (sets.QuickDraw, {
 		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 		hands={ name="Herculean Gloves", augments={'Mag. Acc.+19 "Mag.Atk.Bns."+19','Mag. Acc.+14','"Mag.Atk.Bns."+13',}},
 		legs={ name="Herculean Trousers", augments={'"Mag.Atk.Bns."+28','CHR+2','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
 		feet="Chass. Bottes +1",
-		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Orpheus's Sash",
 		left_ear="Friomisi Earring",
 		right_ear="Crematio Earring",
-		left_ring="Dingir Ring",
-		right_ring="Crepuscular Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	})
 
-	sets.QuickDraw.STP = {
-		ammo = Ammo.Bullet.QD,
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+	sets.QuickDraw.STP = set_combine (sets.QuickDraw, {
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
-		left_ear="Telos Earring",
-		right_ear="Enervating Earring",
-		left_ring="Dingir Ring",
 		right_ring="Ilabrat Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+	})
 
 	sets.QuickDraw["Fire Shot"] = set_combine( sets.QuickDraw.DMG, {})
 	sets.QuickDraw["Ice Shot"] = set_combine( sets.QuickDraw.DMG, {})

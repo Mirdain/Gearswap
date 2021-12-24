@@ -39,17 +39,17 @@ function get_sets()
 
 	Weapons['Mordant Rime'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Aeolian Edge'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Tauret",
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Shining Strike'] = {
 		main="Daybreak",
-		sub="Tauret",
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Kraken Mode'] = {
@@ -59,22 +59,22 @@ function get_sets()
 
 	Weapons['Shining Blade'] = {
 		main="Naegling",
-		sub="Tauret",
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub={ name="Demers. Degen +1", augments={'Path: A',}},
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Eviceration'] = {
 		main='Tauret',
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub="Crepuscular Knife",
 	}
 
 	Weapons['Rudra\'s Storm'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub="Crepuscular Knife",
 	}
 
 	Weapons.Songs = {
@@ -336,6 +336,14 @@ function get_sets()
 	sets.Midcast.Dirge = {}
 	sets.Midcast.Sirvente = {}
 
+
+	sets.Utsusemi = set_combine(sets.Idle, {
+	
+	})
+
+	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
+	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
+
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
@@ -359,7 +367,7 @@ function get_sets()
 		legs={ name="Bihu Cannions +3", augments={'Enhances "Soul Voice" effect',}},
 		feet={ name="Bihu Slippers +3", augments={'Enhances "Nightingale" effect',}},
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
-		waist="Grunfeld Rope",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Regal Earring",
 		right_ear="Ishvara Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -370,6 +378,10 @@ function get_sets()
 	--The following sets augment the WS base set
 	sets.WS.WSD = set_combine(sets.WS, {
 		range=Instrument.Mordant,
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Rufescent Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	sets.WS.MAB = {
@@ -390,7 +402,7 @@ function get_sets()
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 
-	sets.WS["Savage Blade"] = sets.WS.WSD
+	sets.WS["Savage Blade"] =  sets.WS.WSD
 
 	sets.WS["Mordant Rime"] = set_combine(sets.WS, {
 		range=Instrument.Mordant,
@@ -411,51 +423,6 @@ function get_sets()
 
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
-	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-		item4 = "Lustreless Wing",
-		item5 = "Tropical Crepe",
-		item6 = "Sublime Sushi",
-		item7 = "Abdhaljs Seal",
-		item8 = "Pluton Case",
-		item9 = "Beitetsu Parcel",
-		item10 = "Boulder Case",
-		item11 = "Pluton Box",
-		item12 = "S. Kindred Crest",
-		item13 = "Copper Voucher",
-		item14 = "Silver Voucher",
-		item15 = "Beastmen's Medal",
-		item16 = "Rusted I. Card",
-		item17 = "Black I. Card",
-		item18 = "Kindred's Medal",
-		item19 = "Old I. Card",
-		item20 = "Demon's Medal",
-		item21 = "S. Astral Detritus",
-		item22 = "Herosim Crystal",
-		item23 = "Herosim Aggregate",
-		item24 = "Silent Oil",
-		item25 = "Hi-Reraiser",
-		item26 = "Reraiser",
-		item27 = "Toolbag (Shihe)",
-		item28 = "Smoldering Lamp",
-		item29 = "Super Reraiser",
-		item30 = "Red Curry Bun",
-		item31 = "Miso Ramen",
-		item32 = "Beitetsu Box",
-		item33 = "Boulder Box",
-		item34 = "L. Wing Box",
-		item35 = "Antacid",
-		item36 = "Chrono Bullet",
-		item37 = "Prism Powder",
-		item38 = "L. Lu. Wing Box",
-		item39 = "Shihei",
-		item40 = "H. Kindred Crest",
-		item41 = "Damascus Ingot",
-		item42 = "Raxa",
 	}	
 end
 

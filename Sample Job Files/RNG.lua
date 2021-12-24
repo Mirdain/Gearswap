@@ -20,9 +20,6 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
---Uses Items Automatically
-AutoItem = true
-
 -- Threshold for Ammunition Warning
 Ammo_Warning_Limit = 99
 
@@ -42,6 +39,9 @@ Organizer = true
 state.JobMode = M{['description']='Ranger Damage Mode'}
 state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge')
 state.JobMode:set('Fomalhaut')
+
+-- load addons
+send_command('lua l hovershot')
 
 --Set the ammo type for each JobMode (above) and Types: Bullet, Arrow, Bolt
 --This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
@@ -248,6 +248,7 @@ function get_sets()
 	--No flurry - 60 Snapshot needed (Assuming 10% from Merits)
 	-- Snapshot / Rapidshot
 	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
+		ammo=Ammo.RA,
 	    head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10
 		body="Amini Caban +1", -- 7% Velocity Shot
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8 / 11
@@ -294,7 +295,10 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Need to upgrade Cape with 10% FC
 	} -- 77 FC for Utsusemi (80 is cap)
 	 
-	sets.Midcast = {ammo=Ammo.RA,}
+		--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+		ammo=Ammo.RA,
+	})
 
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = set_combine(sets.Midcast, {
@@ -426,6 +430,9 @@ function get_sets()
 		-- Get Cremation Earring since doesn't scale with TP
 	})
 	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Coronach"] = set_combine(sets.WS.WSD, {
+		right_ear="Sherida Earring",
+	})
 
 	-- Archery Weaponskills
 	sets.WS["Flaming Arrow"] = set_combine(sets.WS.MAB, {})
@@ -530,7 +537,7 @@ end
 
 -- Function is called whn lua is unloaded
 function user_file_unload()
-
+	send_command('lua u hovershot')
 end
 
 function check_buff_JA()

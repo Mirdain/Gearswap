@@ -209,7 +209,10 @@ function get_sets()
 	-- Augments the base Fast Cast set when a cure or raise is used.
 	sets.Precast.QuickMagic = {}
 
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 
 	--This set is used in conjuction with set_combine
 	sets.Midcast.SIRD = {
@@ -273,6 +276,10 @@ function get_sets()
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {}
+
+	sets.Midcast.Rampart ={
+
+	}
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
@@ -392,7 +399,9 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-
+		if buffactive['Rampart'] and (spell.type == 'WhiteMagic' or spell.type == 'BlueMagic') then
+			equipSet = sets.Midcast.Rampart
+		end
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -484,7 +493,7 @@ function check_buff_SP()
 		buff = "Flash"
 	end
 
-	if player.sub_job == "BLU" and player.sub_job_level == 49 then
+	if player.sub_job == "BLU" and player.sub_job_level > 8 then
 		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
 			buff = "Cocoon"
 		end

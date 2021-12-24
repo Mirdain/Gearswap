@@ -120,8 +120,11 @@ function get_sets()
 	--		sets.midcast
 	-- ===================================================================================================================
 
-	-- Default song duration / strength
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
+
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
 	-- Cure Set

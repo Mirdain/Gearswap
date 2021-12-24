@@ -111,6 +111,11 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
 	} -- 80+ Fastcast
 
+	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
+		neck="Voltsurge Torque",
+		body="Twilight Cloak",
+	})
+
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
 	    ammo="Impatiens", -- 2
@@ -134,8 +139,10 @@ function get_sets()
 	--		sets.midcast
 	-- ===================================================================================================================
 
-	-- Default song duration / strength
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 
 	sets.Midcast.Earth_Staff ={
 		main = "Earth Staff";
@@ -232,7 +239,6 @@ function get_sets()
 	sets.Midcast["Klimaform"] = set_combine(sets.Midcast.Enhancing, {})
 
 	sets.Midcast["Impact"] = set_combine(sets.Midcast.Enfeebling, {
-		main={ name="Marin Staff +1", augments={'Path: A',}},
 		body="Twilight Cloak",	
 	})
 
@@ -244,7 +250,7 @@ function get_sets()
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
 		body="Acad. Gown +3",
-		hands="Agwu's Gages",
+		hands={ name="Agwu's Gages", augments={'Path: A',}},
 		legs="Agwu's Slops",
 		feet="Agwu's Pigaches",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},

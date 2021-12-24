@@ -64,15 +64,15 @@ function get_sets()
 	}
 	Weapons['Eviceration'] ={
 		main="Tauret",
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons['Aeolian Edge'] ={
 		main="Tauret",
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons['Black Halo'] ={
 		main="Maxentius",
-		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 	Weapons.Spells = {
 		sub="Ammurapi Shield",
@@ -157,20 +157,9 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
 	} -- 51% total Fast Cast
 
-	sets.Precast["Impact"] = {
-	    ammo="Staunch Tathlum +1",
-		body="Twilight Cloak",
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
-		legs="Aya. Cosciales +2", -- 6
-		feet={ name="Carmine Greaves +1", augments={'Accuracy+12','DEX+12','MND+20',}}, -- 8
-		neck="Voltsurge Torque", -- 4
-		waist="Embla Sash", -- 5
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear="Etiolation Earring", -- 1
-		left_ring="Weather. Ring", -- 5
-		right_ring="Kishar Ring", -- 4
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
-	}
+	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
+		body="Crep. Cloak"
+	})
 
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
@@ -194,8 +183,10 @@ function get_sets()
 	--		sets.midcast
 	-- ===================================================================================================================
 
-	-- Default song duration / strength
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
@@ -307,7 +298,7 @@ function get_sets()
 	sets.Midcast["Frazzle"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle II"] = sets.Midcast.Enfeebling.MACC
 	sets.Midcast["Frazzle III"] = sets.Midcast.Enfeebling.Potency
-	sets.Midcast["Impact"] = set_combine (sets.Midcast.Enfeebling, {body="Twilight Cloak",})
+	sets.Midcast["Impact"] = set_combine (sets.Midcast.Enfeebling, {body="Crep. Cloak",})
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
 		body="Atrophy Tabard +3",
@@ -349,9 +340,20 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast["Impact"] = set_combine(sets.Midcast.Nuke,{
+		body="Twilight Cloak",
+	})
+
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
 		neck="Mizu. Kubikazari",
 	})
+
+	sets.Utsusemi = set_combine(sets.Idle, {
+	
+	})
+
+	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
+	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
 
 	sets.WS = {}
 
@@ -533,4 +535,19 @@ function Enspell_Check()
 	else
 		Enspell_Buff = false
 	end
+end
+
+--Function used to automate Job Ability use
+function check_buff_JA()
+	buff = 'None'
+	local ja_recasts = windower.ffxi.get_ability_recasts()
+
+	return buff
+end
+
+--Function used to automate Spell use
+function check_buff_SP()
+	buff = 'None'
+
+	return buff
 end

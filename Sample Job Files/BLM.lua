@@ -9,6 +9,31 @@ LockStylePallet = "12"
 MacroBook = "20"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Tropical Crepe"
+
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
+--Set default mode (TP,ACC,DT)
+state.OffenseMode:set('TP')
+
+--Enable JobMode for UI
+UI_Name = 'DPS'
+
+--WS to check for Obi or Orpheus Check
+elemental_ws = S{'Aeolian Edge','Cyclone'}
+
+--Command to Lock Style and Set the correct macros
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
+
 function get_sets()
 	--Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
@@ -66,6 +91,12 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
 	} -- 80% FC
 
+	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
+	    ammo="Sapience Orb",
+		neck="Voltsurge Torque",
+		body="Twilight Cloak",
+	})
+
 	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Collimated Fervor"] = {}
@@ -88,8 +119,10 @@ function get_sets()
 	--		sets.midcast
 	-- ===================================================================================================================
 
-	-- Default song duration / strength
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
 
@@ -137,9 +170,9 @@ function get_sets()
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="Ea Hat +1",
 		body="Ea Houppe. +1",
-		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		hands="Agwu's Gages",
 		legs="Ea Slops +1",
-		feet={ name="Amalric Nails +1", augments={'INT+12','Elem. magic skill +20','Dark magic skill +20',}},
+		feet={ name="Agwu's Pigaches", augments={'Path: A',}},
 		neck={ name="Src. Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
@@ -151,6 +184,10 @@ function get_sets()
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
 		left_ring="Mujin Band",
+	})
+
+	sets.Midcast["Impact"] = set_combine(sets.Midcast.Nuke,{
+		body="Twilight Cloak",
 	})
 
 	-- Misc Sets
@@ -224,8 +261,7 @@ function get_sets()
 		item2 = "Remedy",
 		item3 = "Holy Water",
 	}
-	--Command to Lock Style and Set the correct macros
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -274,9 +310,7 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	if T{'Idle','Resting'}:contains(new) then
 
-	end
 	return equipSet
 end
 
@@ -305,5 +339,17 @@ end
 
 -- Function is called when the job lua is unloaded
 function user_file_unload()
-	windower.send_command('lua u Burst')
+
+end
+
+function check_buff_JA()
+	buff = 'None'
+	--local ja_recasts = windower.ffxi.get_ability_recasts()
+	return buff
+end
+
+function check_buff_SP()
+	buff = 'None'
+	--local sp_recasts = windower.ffxi.get_spell_recasts()
+	return buff
 end

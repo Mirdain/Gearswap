@@ -21,6 +21,9 @@ state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP m
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
 
+-- Set to true to run organizer on job changes
+Organizer = true
+
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
@@ -55,8 +58,9 @@ function get_sets()
 
 	-- Set to be used if you get 
 	sets.Cursna_Recieved = {
-	    left_ring="Saida Ring",
-		right_ring="Saida Ring",
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -65,7 +69,7 @@ function get_sets()
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
 		main={ name="Verethragna", augments={'Path: A',}},
-		ammo="Ginsen",
+		ammo="Coiste Bodhar",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -81,7 +85,7 @@ function get_sets()
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-		ammo="Staunch Tathlum +1",
+		ammo="Crepuscular Pebble",
 		head="Ken. Jinpachi +1",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -115,7 +119,7 @@ function get_sets()
 	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 50% in either I or II
 	sets.OffenseMode.SB = {
-		ammo="Ginsen",
+		ammo="Coiste Bodhar",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 12% SB I
@@ -154,7 +158,11 @@ function get_sets()
 		right_ear="Friomisi Earring", --2
 		left_ring="Petrov Ring", -- 4
 	}
-	sets.Midcast = {}
+
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 
 	sets.JA = {}
 	sets.JA["Hundred Fists"] = {legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}}}
@@ -250,7 +258,7 @@ function get_sets()
 	}
 
 	sets.Charm =  set_combine(sets.OffenseMode.DT, {
-	    main="Ark Tabar",
+
 	})
 
 	sets.TreasureHunter = {
