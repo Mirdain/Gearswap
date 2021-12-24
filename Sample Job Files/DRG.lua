@@ -159,7 +159,7 @@ function get_sets()
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
 	
-	}
+	})
 	
 	--Job Abilities
 	sets.JA = {}

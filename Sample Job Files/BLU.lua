@@ -148,6 +148,7 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
+
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
 
