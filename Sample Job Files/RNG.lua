@@ -29,29 +29,25 @@ state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
 --Set default modes are (TP,ACC,DT,PDL)
 state.OffenseMode:set('TP')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
-
 -- Set to true to run organizer on job changes
 Organizer = true
 
 --Modes for specific to Ranger
-state.JobMode = M{['description']='Ranger Damage Mode'}
-state.JobMode:options('Fomalhaut','Annihilator','Fail-Not','Savage Blade', 'Aeolian Edge')
-state.JobMode:set('Fomalhaut')
+state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Naegling', 'Tauret')
+state.WeaponMode:set('Fomalhaut')
 
 -- load addons
 send_command('lua l hovershot')
 
---Set the ammo type for each JobMode (above) and Types: Bullet, Arrow, Bolt
+--Set the ammo type for each WeaponMode (above) and Types: Bullet, Arrow, Bolt
 --This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
 Ranged_Weapons = {
-	{JobMode = "Savage Blade", Type = "Bullet"},
-	{JobMode = "Fomalhaut", Type = "Bullet"},
-	{JobMode = "Annihilator", Type = "Bullet"},
-	{JobMode = "Fail-Not", Type = "Arrow"},
-	{JobMode = "Gastraphetes", Type = "Bolt"},
-	{JobMode = "Aeolian Edge", Type = "Bullet"},
+	{WeaponMode = "Naegling", Type = "Bullet"},
+	{WeaponMode = "Fomalhaut", Type = "Bullet"},
+	{WeaponMode = "Annihilator", Type = "Bullet"},
+	{WeaponMode = "Fail-Not", Type = "Arrow"},
+	{WeaponMode = "Gastraphetes", Type = "Bolt"},
+	{WeaponMode = "Tauret", Type = "Bullet"},
 }
 
 -- Used to determine if Obi is used or Orpheus Sash - if either is not present it will not change the waist slot
@@ -65,7 +61,7 @@ function get_sets()
 	-- Weapon setup
 	sets.Weapons = {}
 
-	sets.Weapons['Savage Blade'] = {
+	sets.Weapons['Naegling'] = {
 		main="Naegling",
 		sub="Kraken Club",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
@@ -83,13 +79,19 @@ function get_sets()
 		range={ name="Annihilator", augments={'Path: A',}},
 	}
 
+	sets.Weapons['Gastraphetes'] = {
+		main={ name="Perun +1", augments={'Path: A',}},
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+		range={ name="Gastraphetes", augments={'Path: A',}},
+	}
+
 	sets.Weapons['Fail-Not'] = {
 		main={ name="Perun +1", augments={'Path: A',}},
 		sub={ name="Kustawi +1", augments={'Path: A',}},
 		range={ name="Fail-Not", augments={'Path: A',}},
 	}
 
-	sets.Weapons['Aeolian Edge'] = {
+	sets.Weapons['Tauret'] = {
 		main="Tauret",
 		sub="Ternion Dagger +1",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
@@ -495,39 +497,37 @@ end
 function precast_custom(spell)
 	equipSet = {}
 
-	equipSet = Elemental_check(equipSet, spell)
-
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 
 --Function is called when a self command is issued
@@ -561,43 +561,9 @@ function check_buff_SP()
 	return buff
 end
 
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		else
-			windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
-		end
-	end
-	return equipSet
-end
-
 function Smart_Ammo ()
 	for i = 1, #Ranged_Weapons do
-		if state.JobMode.value == Ranged_Weapons[i].JobMode then
+		if state.WeaponMode.value == Ranged_Weapons[i].WeaponMode then
 			if state.RAMode.value ~= Ranged_Weapons[i].Type then
 				state.RAMode:set(Ranged_Weapons[i].Type)
 				windower.add_to_chat(8,'Ammo Mode is ['..state.RAMode.value..']')

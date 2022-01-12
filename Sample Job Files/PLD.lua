@@ -10,12 +10,12 @@ Food = "Miso Ramen"
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
 state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS and TP modes
 
---Enable JobMode for UI.
+--Enable JobMode for UI - Once locked-on and auto buff enabled it will do enmity actions
 UI_Name = 'Auto Tank'
---Modes for specific to RUN
-state.JobMode = M{['description']='Auto Tank'}
-state.JobMode:options('OFF','ON') -- Modes used to use Rune Enhancement
-state.JobMode:set('OFF')
+
+--Modes for specific to Paladin.  These are defined below in "Weapons".
+state.WeaponMode:options('Burtgang','Naegling','Club')
+state.WeaponMode:set('Burtgang')
 
 -- Function used to change pallets based off sub job and modes
 function Macro_Sub_Job()
@@ -73,10 +73,27 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 
+	sets.Weapons = {}
+
+	sets.Weapons['Burtgang'] = {
+		main="Burtgang",
+	}
+
+	sets.Weapons['Naegling'] = {
+		main="Naegling",
+	}
+
+	sets.Weapons['Club'] = {
+		main="Beryllium Mace +1",
+	}
+
+	--Default Shield
+	sets.Weapons.Shield = {
+		sub="Ochain",
+	}
+
 	-- Standard Idle set
 	sets.Idle = {
-		main="Burtgang", -- 18/0
-		sub="Ochain",
 		ammo="Homiliary", -- Refresh
 		head="Sakpata's Helm", -- 7/7
 		body="Sakpata's Plate", -- 10/10
@@ -370,11 +387,6 @@ function get_sets()
 		feet={ name="Odyssean Greaves", augments={'Pet: DEX+13','"Counter"+1','"Treasure Hunter"+2',}},
 	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
 end
 
 -------------------------------------------------------------------------------------------------------------------

@@ -9,24 +9,32 @@ LockStylePallet = "4"
 MacroBook = "10"
 MacroSet = "1"
 
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
--- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','SB','PDL') -- ACC effects WS and TP modes
-
-jobsetup (LockStylePallet,MacroBook,MacroSet)
+--Uses Items Automatically
+AutoItem = false
 
 -- Set to true to run organizer on job changes
 Organizer = true
 
---Enable JobMode for UI
-UI_Name = 'DPS'
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','SB','PDL') -- ACC effects WS and TP modes
 
---Modes for specific to Samurai
-state.JobMode = M{['description']='Weapon Mode'}
-state.JobMode:options('Masamune', 'Dojikiri', 'Shining One')
-state.JobMode:set('Masamune')
+--Set default mode (TP,ACC,DT,PDL) etc
+state.OffenseMode:set('DT')
+
+--Weapons specific to Samurai
+state.WeaponMode:options('Masamune', 'Dojikiri', 'Shining One')
+state.WeaponMode:set('Masamune')
+
+jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 
@@ -50,7 +58,6 @@ function get_sets()
 
 	-- Standard Idle set with -DT, Refresh and Regen gear
 	sets.Idle = {
-		sub="Utu Grip",
 		ammo="Staunch Tathlum +1",
 		head="Nyame Helm",
 		body="Nyame Mail",
@@ -82,7 +89,6 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		sub="Utu Grip",
 		ammo="Coiste Bodhar",
 		head="Flam. Zucchetto +2",
 		body="Ken. Samue +1",
@@ -92,7 +98,7 @@ function get_sets()
 		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",
 		left_ear="Telos Earring",
-		right_ear="Dedition Earring",
+		right_ear="Schere Earring",
 		left_ring="Flamma Ring",
 		right_ring="Niqmaddu Ring",
 		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
@@ -100,7 +106,6 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = {
-		sub="Utu Grip",
 		ammo="Crepuscular Pebble",
 		head="Ken. Jinpachi +1",
 		body="Nyame Mail",
@@ -118,7 +123,6 @@ function get_sets()
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {
-		sub="Utu Grip",
 		ammo="Coiste Bodhar",
 		head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
@@ -207,7 +211,6 @@ function get_sets()
 
 	--Default Weapon Skill set base
 	sets.WS = {
-		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head={ name="Valorous Mask", augments={'Accuracy+17 Attack+17','Weapon skill damage +4%','STR+9','Accuracy+8',}},
 		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
@@ -225,7 +228,6 @@ function get_sets()
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {
-		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head="Ken. Jinpachi +1",
 		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
@@ -282,13 +284,6 @@ function get_sets()
 		head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},
 		waist="Chaac Belt",
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -304,46 +299,54 @@ end
 function pretarget_custom(spell,action)
 
 end
+
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 	equipSet = choose_Seigan()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when a self command is issued
 function self_command_custom(command)
 
 end
+
 --Custom Function
 function choose_Seigan()
 	equipSet = {}
@@ -359,15 +362,14 @@ function choose_Seigan()
 		end
 	return equipSet
 end
+
 --Function used to automate Job Ability use
 function check_buff_JA()
 	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
-
 	if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
 		buff = "Hasso"
 	end
-
 	if player.sub_job == 'WAR' and player.sub_job_level == 49 then
 		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
 			buff = "Berserk"
@@ -377,26 +379,17 @@ function check_buff_JA()
 			buff = "Warcry"
 		end
 	end
-
 	return buff
 end
+
 --Function used to automate Spell use
 function check_buff_SP()
 	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
--- This function is called when the job file is unloaded
 
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
-end
-
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
 end

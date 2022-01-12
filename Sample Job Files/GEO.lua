@@ -24,8 +24,12 @@ Lockstyle_List = {1,2,6,12}
 --Set default mode (TP,ACC,DT)
 state.OffenseMode:set('TP')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
+-- Set to true to run organizer on job changes
+Organizer = false
+
+--Weapons options
+state.WeaponMode:options('Idris','Unlocked')
+state.WeaponMode:set('Unlocked')
 
 --WS to check for Obi or Orpheus Check
 elemental_ws = S{'Aeolian Edge','Cyclone'}
@@ -35,6 +39,20 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 -- Goal 2200 HP/1400 MP
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Idris'] = {
+		main="Idris",
+		sub="Genmei Shield",
+	}
+
+	sets.Weapons['Unlocked'] = {
+		main="Idris",
+		sub="Genmei Shield",
+	}
+
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = { 	-- 2278/1434
 		main="Idris",
@@ -61,10 +79,6 @@ function get_sets()
 	--Used to swap into movement gear when the player is moving and not engaged
 	sets.Movement = {
 		feet="Geo. Sandals +3",
-	}
-	-- Will be used to keep max HP of Luapon when casting spells
-	sets.Luapon = {
-		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 	}
 
 	sets.OffenseMode = {}
@@ -97,33 +111,6 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','HP+20','"Fast Cast"+10',}},
 	}
-	-- Job Abilities
-	sets.JA = {}
-	sets.JA["Collimated Fervor"] = {}
-	sets.JA["Convert"] = {}
-	sets.JA["Bolster"] = {
-	    body={ name="Bagua Tunic +3", augments={'Enhances "Bolster" effect',}}, 
-	}
-	sets.JA["Full Circle"] = {
-		hands={ name="Bagua Mitaines +3", augments={'Enhances "Curative Recantation" effect',}},
-	}
-	sets.JA["Lasting Emanation"] = {}
-	sets.JA["Ecliptic Attrition"] = {} 
-	sets.JA["Life Cycle"] = {
-		body="Geomancy Tunic +3",
-	}
-	sets.JA["Blaze of Glory"] = {}
-	sets.JA["Dematerialzie"] = {}
-	sets.JA["Theurgic Focus"] = {}
-	sets.JA["Concentric Pulse"] = {}
-	sets.JA["Mending Halation"] = {
-	    legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
-	}
-	sets.JA["Radial Arcana"] = {
-	    feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
-	}
-	sets.JA["Widened Compass"] = {}
-	sets.JA["Entrust"] = {}
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
@@ -185,7 +172,7 @@ function get_sets()
 		right_ear="Malignance Earring",
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
-		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
+		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 	-- Free Nuke
 	sets.Midcast.Nuke = {
@@ -223,10 +210,12 @@ function get_sets()
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 
 	})
+
 	-- Stun Set
 	sets.Midcast["Stun"] = {
 
 	}
+
 	sets.Midcast["Erase"] = sets.Precast.FastCast
 
 	-- Refresh Set
@@ -269,13 +258,46 @@ function get_sets()
 		feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
 	})
 
+	-- Will be used to keep max HP of Luopan when casting spells
+	sets.Luopan = {
+		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+	}
+
+	-- Job Abilities
+	sets.JA = {}
+	sets.JA["Collimated Fervor"] = {}
+	sets.JA["Convert"] = {}
+	sets.JA["Bolster"] = {
+	    body={ name="Bagua Tunic +3", augments={'Enhances "Bolster" effect',}}, 
+	}
+	sets.JA["Full Circle"] = {
+		hands={ name="Bagua Mitaines +3", augments={'Enhances "Curative Recantation" effect',}},
+	}
+	sets.JA["Lasting Emanation"] = {}
+	sets.JA["Ecliptic Attrition"] = {} 
+	sets.JA["Life Cycle"] = {
+		body="Geomancy Tunic +3",
+	}
+	sets.JA["Blaze of Glory"] = {}
+	sets.JA["Dematerialzie"] = {}
+	sets.JA["Theurgic Focus"] = {}
+	sets.JA["Concentric Pulse"] = {}
+	sets.JA["Mending Halation"] = {
+	    legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
+	}
+	sets.JA["Radial Arcana"] = {
+	    feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
+	}
+	sets.JA["Widened Compass"] = {}
+	sets.JA["Entrust"] = {}
+
 	-- Base WS set
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 	-- Set to equip when charmed
 	sets.Charm = {}
-	-- Note that the Mote library will unlock these gear spots when used.
+
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
 		hands={ name="Merlinic Dastanas", augments={'Accuracy+20','"Conserve MP"+4','"Treasure Hunter"+2','Accuracy+18 Attack+18','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
@@ -283,15 +305,11 @@ function get_sets()
 	}
 
 	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
+
 	sets.Midcast["Dispelga"] = set_combine (sets.Midcast.Enfeebling.MACC, sets.TreasureHunter,{
 		main="Daybreak"
 	})
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -310,55 +328,55 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_change_custom(pet,gain)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
 	equipSet = {}
-	equipSet = Luapon(equipSet)
+	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
@@ -383,10 +401,10 @@ function check_buff_SP()
 	return buff
 end
 
-function Luapon(equipSet) --  This maintains the extra 600hp during midcast of spells when luapon is deployed
+function Luopan(equipSet) --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
 	equipSet = {}
 	if pet.isvalid then
-		equipSet = set_combine(equipSet, sets.Luapon)
+		equipSet = set_combine(equipSet, sets.Luopan)
 	end
 	return equipSet
 end

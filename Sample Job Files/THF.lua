@@ -9,11 +9,43 @@ LockStylePallet = "5"
 MacroBook = "6"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Sublime Sushi"
+
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
+--Set default mode (TP,ACC,DT,PDL)
+state.OffenseMode:set('DT')
+
+-- Set to true to run organizer on job changes
+Organizer = true
+
+--Weapons options
+state.WeaponMode:options('Tamin Sari')
+state.WeaponMode:set('Tamin Sari')
+
+-- Initialize Player
+jobsetup (LockStylePallet,MacroBook,MacroSet)
+
 function get_sets()
-	-- Standard Idle set with -DT, Refresh, Regen and movement gear
-	sets.Idle = {
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Tamin Sari'] = {
 		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
 		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
+	}
+
+	-- Standard Idle set with -DT, Refresh, Regen and movement gear
+	sets.Idle = {
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -28,6 +60,7 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back="Moonbeam Cape",
     }
+
 	sets.Movement = {
 		feet="Fajin Boots",
     }
@@ -36,8 +69,6 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Yamarang",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -70,8 +101,6 @@ function get_sets()
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Sapience Orb",
 		head={ name="Herculean Helm", augments={'Accuracy+15','"Fast Cast"+5','INT+9','Mag. Acc.+9','"Mag.Atk.Bns."+13',}},
 		body={ name="Taeon Tabard", augments={'"Fast Cast"+5',}},
@@ -124,8 +153,6 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = {
-		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
 		ammo="Yetshila +1",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -161,16 +188,9 @@ function get_sets()
 	sets.TreasureHunter = {
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
 		hands={ name="Plun. Armlets +1", augments={'Enhances "Perfect Dodge" effect',}},
-		feet={ name="Herculean Boots", augments={'Pet: INT+3','"Subtle Blow"+4','"Treasure Hunter"+1','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
+		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 		waist="Chaac Belt",
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------

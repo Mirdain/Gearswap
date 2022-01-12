@@ -21,25 +21,41 @@ Lockstyle_List = {1,2,6,12}
 -- Use "gs c food" to use the specified food item 
 Food = "Tropical Crepe"
 
+--Set default mode (TP,ACC,DT)
+state.OffenseMode:set('DT')
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
---Modes for Bursting
-state.JobMode = M{['description']='Lists SCH Skillchains'}
-state.JobMode:options('OFF','ON')
-state.JobMode:set('OFF')
+--Weapon Modes
+state.WeaponMode:options('Musa','Unlocked')
+state.WeaponMode:set('Unlocked')
 
---Enable JobMode for UI
-UI_Name = 'Skillchain'
+-- Set to true to run organizer on job changes
+Organizer = false
+
+elemental_ws = S{'Aeolian Edge'}
 
 -- HP Goal: 2200
 -- MP Goal: 1400
 
 function get_sets()
-	-- Standard idle set
-	sets.Idle = { -- HP:2151 MP:1493
+
+	--Set the weapon options.  This is set below in job customization section
+	sets.Weapons = {}
+
+	sets.Weapons['Musa'] ={
 		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
+	}
+
+	sets.Weapons['Unlocked'] ={
+		main={ name="Musa", augments={'Path: C',}},
+		sub="Enki Strap",
+	}
+
+	-- Standard idle set
+	sets.Idle = { -- HP:2151 MP:1493
 		ammo="Staunch Tathlum +1", -- 3/3
 		head={ name="Nyame Helm", priority=1}, -- 7/7
 		body="Agwu's Robe", -- +3 Refresh
@@ -111,11 +127,6 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
 	} -- 80+ Fastcast
 
-	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
-		neck="Voltsurge Torque",
-		body="Twilight Cloak",
-	})
-
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
 	    ammo="Impatiens", -- 2
@@ -143,10 +154,6 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
-
-	sets.Midcast.Earth_Staff ={
-		main = "Earth Staff";
-	}
 
 	-- Cure Set
 	sets.Midcast.Cure = {
@@ -206,6 +213,23 @@ function get_sets()
 	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
 
 	})
+	 -- Used for Vagary (6k+ nuke no kill)
+	sets.Midcast.Vagary = {
+	    main="Earth Staff",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+14','Attack+22','"Fast Cast"+6','Mag. Acc.+15 "Mag.Atk.Bns."+15',}}, -- 14
+		body={ name="Merlinic Jubbah", augments={'"Fast Cast"+6',}}, -- 12
+		hands="Acad. Bracers +3", -- 9
+		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 7
+		feet={ name="Merlinic Crackows", augments={'"Mag.Atk.Bns."+29','"Fast Cast"+6','DEX+7','Mag. Acc.+14',}}, -- 11
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
+		waist="Embla Sash", -- 5
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
+		right_ear={ name="Etiolation Earring", priority=1}, -- 1
+		left_ring="Weather. Ring", -- 5
+		right_ring="Kishar Ring", -- 4
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
+	}
 
 	-- Spells that require SKILL
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {})
@@ -246,7 +270,8 @@ function get_sets()
 	})
 
 	sets.Midcast.Nuke = {
-	    main={ name="Marin Staff +1", augments={'Path: A',}},
+		main={ name="Marin Staff +1", augments={'Path: A',}},
+		sub="Enki Strap",
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
 		body="Acad. Gown +3",
@@ -275,9 +300,9 @@ function get_sets()
 	
 	})
 
-	sets.Charm = {
-	    main="Lament",
-	}
+	sets.Charm = set_combine(sets.Idle, {
+
+	})
 
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -289,12 +314,6 @@ function get_sets()
 	sets.TreasureHunter = {
 	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
 		waist="Chaac Belt",
-	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
 	}
 end
 
@@ -311,12 +330,14 @@ end
 function pretarget_custom(spell,action)
 
 end
+
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
 
 	return equipSet
 end
+
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
@@ -325,35 +346,41 @@ function midcast_custom(spell)
 	end
 	return equipSet
 end
+
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
 	return equipSet
 end
+
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
 	return equipSet
 end
+
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
 	return equipSet
 end
+
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
 	return equipSet
 end
+
 --Function is called when a self command is issued
 function self_command_custom(command)
 
 end
+
 -- This function is called when the job file is unloaded
 function user_file_unload()
-	--windower.send_command('lua u Burst')
+
 end

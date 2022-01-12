@@ -3,7 +3,6 @@
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
-include('organizer-lib')
 
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "6"
@@ -22,21 +21,18 @@ Lockstyle_List = {1,2,6,12}
 -- Use "gs c food" to use the specified food item 
 Food = "Tropical Crepe"
 
+--Set default mode (TP,ACC,DT)
+state.OffenseMode:set('DT')
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
-state.JobMode = M{['description']='Weapon Mode'}
-state.JobMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo')
-state.JobMode:set('Sanguine Blade')
+state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo','Unlocked')
+state.WeaponMode:set('Sanguine Blade')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
-
--- Add to UI to display Tier
-Enable_Burst_Mode = true
-
-Enspell_Buff = false
+-- Set to true to run organizer on job changes
+Organizer = false
 
 elemental_ws = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blade', 'Burning Blade', 'Sanguine Blade', 'Energy Drain','Energy Steal','Cyclone','Gust Slash'}
 
@@ -44,40 +40,50 @@ elemental_ws = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blad
 function get_sets()
 
 	--Set the weapon options.  This is set below in job customization section
-	Weapons = {}
+	sets.Weapons = {}
 
-	Weapons['Seraph Blade'] ={
+	sets.Weapons['Seraph Blade'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub="Daybreak"
 	}
-	Weapons['Sanguine Blade'] ={
+
+	sets.Weapons['Sanguine Blade'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons['Chant du Cygne'] ={
+
+	sets.Weapons['Chant du Cygne'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons['Savage Blade'] ={
+
+	sets.Weapons['Savage Blade'] ={
 		main="Naegling",
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons['Eviceration'] ={
+
+	sets.Weapons['Eviceration'] ={
 		main="Tauret",
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons['Aeolian Edge'] ={
+
+	sets.Weapons['Aeolian Edge'] ={
 		main="Tauret",
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons['Black Halo'] ={
+
+	sets.Weapons['Black Halo'] ={
 		main="Maxentius",
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons.Spells = {
-		sub="Ammurapi Shield",
+
+	sets.Weapons['Unlocked'] ={
+		main={ name="Crocea Mors", augments={'Path: C',}},
+		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
-	Weapons.Shield = {
+
+	--Shield used when melee and not dual wield.
+	sets.Weapons.Shield = {
 		sub="Sacro Bulwark",
 	}
 
@@ -107,12 +113,6 @@ function get_sets()
 	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
 		waist="Gishdubar Sash",
-	}
-
-	sets.TreasureHunter = {
-	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
-		legs={ name="Chironic Hose", augments={'Pet: Accuracy+4 Pet: Rng. Acc.+4','Magic Damage +15','"Treasure Hunter"+1','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
-		waist="Chaac Belt",
 	}
 
 	sets.OffenseMode = {}
@@ -156,10 +156,6 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, --10
 	} -- 51% total Fast Cast
-
-	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
-		body="Crep. Cloak"
-	})
 
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
@@ -348,13 +344,6 @@ function get_sets()
 		neck="Mizu. Kubikazari",
 	})
 
-	sets.Utsusemi = set_combine(sets.Idle, {
-	
-	})
-
-	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
-	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
-
 	sets.WS = {}
 
 	sets.WS.ACC = {}
@@ -425,16 +414,18 @@ function get_sets()
 
 	sets.WS["Savage Blade"] = sets.WS.WSD
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
+	sets.TreasureHunter = {
+	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
+		waist="Chaac Belt",
 	}
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
+
+Enspell_Buff = false
 
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
@@ -449,20 +440,19 @@ end
 function precast_custom(spell)
 	equipSet = {}
 
-	equipSet = Weapon_Check(equipSet, spell)
-		
 	return equipSet
 end
+
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 	if buffactive['Saboteur'] and spell.skill == 'Enfeebling Magic' then
 		equipSet = sets.Saboteur
 	end
-	equipSet = Weapon_Check(equipSet, spell)
 
 	return equipSet
 end
+
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
@@ -474,53 +464,41 @@ function aftercast_custom(spell)
 	if player.status == "Engaged" and Enspell_Buff then
 		equipSet = set_combine(equipSet, sets.Enspell)
 	end
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 	Enspell_Check()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 	if player.status == "Engaged" and Enspell_Buff then
 		equipSet = set_combine(equipSet, sets.Enspell)
 	end
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 	if player.status == "Engaged" and Enspell_Buff then
 		equipSet = set_combine(equipSet, sets.Enspell)
 	end
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when a self command is issued
 function self_command_custom(command)
 
 end
 -- This function is called when the job file is unloaded
 function user_file_unload()
-	windower.send_command('lua u Burst')
-end
 
-function Weapon_Check(equipSet, spell)
-	equipSet = set_combine(equipSet,Weapons[state.JobMode.value])
-	if DualWield == false then
-		if spell ~= nil then
-			if spell.type == "WhiteMagic" or spell.type == "BlackMagic" or spell.type == "Enfeebling Magic" then
-				equipSet = set_combine(equipSet,Weapons.Spells)
-			else
-				equipSet = set_combine(equipSet,Weapons.Shield)
-			end
-		else
-			equipSet = set_combine(equipSet,Weapons.Shield)
-		end
-	end
-	return equipSet
 end
 
 function Enspell_Check()
@@ -540,7 +518,6 @@ end
 --Function used to automate Job Ability use
 function check_buff_JA()
 	buff = 'None'
-	local ja_recasts = windower.ffxi.get_ability_recasts()
 
 	return buff
 end

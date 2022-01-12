@@ -9,34 +9,59 @@ LockStylePallet = "3"
 MacroBook = "7"
 MacroSet = "1"
 
---Uses Items Automatically
-AutoItem = false
-
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
--- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP modes
+--Uses Items Automatically
+AutoItem = false
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP modes
+
 --Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
+
+-- Set to true to run organizer on job changes
+Organizer = true
+
+--Modes for specific to Ninja
+state.WeaponMode:options('Verethragna','Karambit','Pole','Club')
+state.WeaponMode:set('Verethragna')
+
+elemental_ws = S{'Cataclysm', 'Rock Crusher', 'Earth Crusher', 'Starburst','Sunburst'}
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Verethragna'] = {
+		main={ name="Verethragna", augments={'Path: A',}},
+	}
+
+	sets.Weapons['Karambit'] = {
+		main="Karambit",
+	}
+
+	sets.Weapons['Pole'] = {
+		main="Malignance Pole",
+	}
+
+	sets.Weapons['Club'] = {
+		main="Warp Cudgel",
+	}
+
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
-		main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -68,7 +93,6 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Coiste Bodhar",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
@@ -266,12 +290,6 @@ function get_sets()
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
 		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
 end
 
 -------------------------------------------------------------------------------------------------------------------

@@ -23,21 +23,17 @@ Food = "Sublime Sushi"
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('TP')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
-
---Modes for specific to Corsair
-state.JobMode = M{['description']='Corsair Damage Mode'}
-state.JobMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
-state.JobMode:set('Death Penalty')
+--Weapons specific to Corsair
+state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
+state.WeaponMode:set('Death Penalty')
 
 elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
 -- load addons
 send_command('lua l autocor')
 
---Uses Items Automatically
-AutoItem = true
+-- Set to true to run organizer on job changes
+Organizer = false
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -138,6 +134,7 @@ function get_sets()
 
 	--This set is used when OffenseMode is set to DT and enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+		legs="Malignance Tights",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	})
@@ -377,10 +374,14 @@ function get_sets()
 	}
 
 	-- Accuracy set used in OffenseMode.PDL
-	sets.WS.PDL = {}
+	sets.WS.PDL = set_combine(sets.WS, {
+	
+	})
 
 	-- Accuracy set used in OffenseMode.ACC
-	sets.WS.ACC = {}
+	sets.WS.ACC = set_combine(sets.WS, {
+	
+	})
 
 	sets.WS.MAB = {
 		ammo=Ammo.Bullet.MAB,
@@ -459,23 +460,9 @@ function get_sets()
 	sets.WS["Spirits Within"] = {}
 	sets.WS["Requiescat"] = {}
 
-	sets.Charm = {
-	    main="Lament",
-		range="Compensator",
-		ammo=Ammo.Bullet.RA,
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Loricate Torque +1",
-		waist="Yemaya Belt",
-		left_ear="Sanare Earring",
-		right_ear="Thureous Earring",
-		left_ring="Defending Ring",
-		right_ring="Shadow Ring",
-		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}},
-	}
+	sets.Charm = set_combine(sets.Idle, {
+
+	})
 
 	sets.TreasureHunter = {
 	    body={ name="Herculean Vest", augments={'Accuracy+5 Attack+5','Pet: INT+8','"Treasure Hunter"+1','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
@@ -483,12 +470,7 @@ function get_sets()
 	    feet={ name="Herculean Boots", augments={'"Dbl.Atk."+1','Pet: Accuracy+20 Pet: Rng. Acc.+20','"Treasure Hunter"+1','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
 		waist="Chaac Belt",
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
+	
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -513,44 +495,44 @@ function precast_custom(spell)
     end
 
 	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
-		return equipSet
+		equipSet = set_combine(equipSet, sets.PhantomRoll)
 	end
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
 	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
-		return equipSet
+		equipSet = set_combine(equipSet, sets.PhantomRoll)
 	end
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 
 --Function is called when a self command is issued
@@ -565,28 +547,13 @@ end
 function check_buff_JA()
 	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
-	if player.sub_job == 'WAR' then
-		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
-			buff = "Berserk"
-		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
-			buff = "Aggressor"
-		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
-			buff = "Warcry"
-		end
-	end
+
 	return buff
 end
 
 function check_buff_SP()
 	buff = 'None'
-	--local sp_recasts = windower.ffxi.get_spell_recasts()
-	return buff
-end
+	local sp_recasts = windower.ffxi.get_spell_recasts()
 
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
+	return buff
 end

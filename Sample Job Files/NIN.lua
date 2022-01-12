@@ -12,20 +12,26 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
 --Set default mode (TP,ACC,DT)
 state.OffenseMode:set('DT')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
+-- Set to true to run organizer on job changes
+Organizer = true
 
 --Modes for specific to Ninja
-state.JobMode = M{['description']='Ninja Damage Mode'}
-state.JobMode:options('Kannagi', 'Naegling', 'Aeolian Edge')
-state.JobMode:set('Kannagi')
+state.WeaponMode:options('Kannagi','Naegling','Karambit','Aeolian Edge','Abyssea')
+state.WeaponMode:set('Kannagi')
 
 elemental_ws = S{'Aeolian Edge', 'Blade: Teki', 'Blade: To','Blade: Chi','Blade: Ei','Blade: Yu'}
-
-UtsusemiSpell = S{'Utsusemi: San','Utsusemi: San', 'Utsusemi: San'}
 
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -45,17 +51,62 @@ function get_sets()
 		sub="Gokotai",
 	}
 
+	sets.Weapons['Karambit'] = {
+		main="Karambit",
+		sub="empty",
+	}
+
 	sets.Weapons['Aeolian Edge'] = {
-		main={ name="Ternion Dagger +1", augments={'Path: A',}},
-		sub="Levante Dagger",
+		main="Tauret",
+		sub="Naegling",
+	}
+
+	sets.Weapons['Abyssea'] = {
+		main="",
+		sub="",
+	}
+
+	-- Standard Idle set with -DT, Refresh, Regen and movement gear
+	sets.Idle = {
+		ammo="Staunch Tathlum +1",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
+		left_ear="Etiolation Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Eihwaz Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+    }
+
+	--Defined below based off time of day
+	sets.Movement = {}
+
+	sets.Movement.Day = {
+		feet="Danzo Sune-Ate",
+	}
+	sets.Movement.Night = {
+		feet="Hachi. Kyahan +1",
+	}
+	sets.Movement.Dusk = {
+		feet="Hachi. Kyahan +1",
+	}
+
+	-- Set to be used if you get 
+	sets.Cursna_Recieved = {
+	    left_ring="Saida Ring",
+		right_ring="Saida Ring",
+		waist="Gishdubar Sash",
 	}
 
 	sets.OffenseMode = {}
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		main={ name="Kannagi", augments={'Path: A',}},
-		sub="Gokotai",
 		ammo="Happo Shuriken +1",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
@@ -65,28 +116,19 @@ function get_sets()
 		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
 		left_ear="Telos Earring",
-		right_ear="Dedition Earring",
+		right_ear="Crep. Earring",
 		left_ring="Gere Ring",
-		right_ring="Ilabrat Ring",
-		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Parrying rate+5%',}},
+		right_ring="Epona's Ring",
+		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = {
-		main={ name="Kannagi", augments={'Path: A',}},
-		sub="Gokotai",
-		ammo="Happo Shuriken +1",
-		head="Malignance Chapeau",
+	    head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
-		waist="Windbuffet Belt +1",
-		left_ear="Telos Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring="Gere Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Parrying rate+5%',}},
 	}
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {
@@ -97,10 +139,6 @@ function get_sets()
 		feet="Ken. Sune-Ate +1",
 	}
 	sets.DualWield = {}
-	--Default WS set base
-		sets.WS = set_combine(sets.OffenseMode.TP, {
-		waist="Reiki Yotai",
-	})
 
 	sets.Utsusemi ={}
 	sets.Utsusemi.Midcast = {
@@ -110,39 +148,10 @@ function get_sets()
 	sets.Utsusemi.Precast = {
 	    --body={ name="Mochi. Chainmail +3", augments={'Enhances "Sange" effect',}}
 	}
-	-- Standard Idle set with -DT, Refresh, Regen and movement gear
-	sets.Idle = {
-		main={ name="Kannagi", augments={'Path: A',}},
-		sub="Gokotai",
-		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Etiolation Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Defending Ring",
-		right_ring="Ilabrat Ring",
-		back="Moonbeam Cape",
-    }
-
-	--Defined below based off time of day
-	sets.Movement = {}
-
-	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
-	    left_ring="Saida Ring",
-		right_ring="Saida Ring",
-		waist="Gishdubar Sash",
-	}
 
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb",
 		ammo="Sapience Orb",
 		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}},
 		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}},
@@ -152,20 +161,25 @@ function get_sets()
 		neck="Voltsurge Torque",
 		waist="Tempus Fugit",
 		left_ear="Etiolation Earring",
-		right_ear="Loquac. Earring",
+		right_ear="Tuisto Earring",
 		left_ring="Kishar Ring",
 		right_ring="Prolix Ring",
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
-	sets.Precast.Enmity = {
-	    neck="Moonlight Necklace", --10
-	    ammo="Sapience Orb", -- 2
-	    left_ear="Cryptic Earring", -- 4
+	sets.Enmity = { -- Head and Back upgrade slots
+		ammo="Sapience Orb", --2
+		body="Emet Harness +1", --10
+		hands="Kurys Gloves", --9
+		legs="Zoar Subligar +1", --6
+		feet="Ahosi Leggings", --7
+		neck="Moonlight Necklace", --15
+		waist="Kasiri Belt", --3
+		left_ear="Cryptic Earring", --4
 		right_ear="Friomisi Earring", --2
-		feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}}, --8
-		left_ring="Petrov Ring", -- 4
-	    back="Phalangite Mantle", -- 5
+		left_ring="Petrov Ring", --4
+		right_ring="Eihwaz Ring", --5
 	}
+
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
 	
@@ -181,33 +195,33 @@ function get_sets()
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		ammo="Pemphredo Tathlum",
+		ammo="Hydrocera",
 		head="Hachiya Hatsu. +3",
 		body="Malignance Tabard",
 		hands={ name="Mochizuki Tekko +3", augments={'Enh. "Ninja Tool Expertise" effect',}},
 		legs="Malignance Tights",
-		feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
+		feet="Malignance Boots",
 		neck="Moonlight Necklace",
 		waist="Eschan Stone",
 		left_ear="Hermetic Earring",
-		right_ear="Digni. Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		right_ear="Crep. Earring",
+		left_ring={ name="Stikini Ring +1", bag="wardrobe3",},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe4",},
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
 	-- High MAB for spells
 	sets.Midcast.Nuke = {
-		ammo="Pemphredo Tathlum",
-		head="Hachiya Hatsu. +3",
-		body="Malignance Tabard",
-		hands={ name="Mochizuki Tekko +3", augments={'Enh. "Ninja Tool Expertise" effect',}},
-		legs="Malignance Tights",
-		feet={ name="Mochi. Kyahan +3", augments={'Reduces elem. ninjutsu III cast time',}},
+		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+		head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear="Hecate's Earring",
 		right_ear="Friomisi Earring",
-		left_ring="Stikini Ring +1",
+		left_ring="Dingir Ring",
 		right_ring="Stikini Ring +1",
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
@@ -219,17 +233,39 @@ function get_sets()
 	sets.Midcast["Utsusemi: San"] = sets.Utsusemi.Midcast
 
 	sets.JA = {}
-	sets.JA["Futae"] = {hands="Hattori Tekko"}
+	sets.JA["Futae"] = {} --hands="Hattori Tekko"
 	sets.JA["Berserk"] = {}
 	sets.JA["Warcry"] = {}
 	sets.JA["Defender"] = {}
 	sets.JA["Aggressor"] = {}
-	sets.JA["Provoke"] = sets.Precast.Enmity
+	sets.JA["Provoke"] = sets.Enmity
 	sets.JA["Mijin Gakure"] = {}
 	sets.JA["Yonin"] = {head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}}}
 	sets.JA["Innin"] = {head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}}}
 	sets.JA["Issekigan"] = {}
 	sets.JA["Mikage"] = {}
+
+	--Default WS set base
+	sets.WS = set_combine(sets.OffenseMode.TP, {
+
+
+	})
+
+	sets.WS.WSD = {	    
+		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+		head="Hachiya Hatsu. +3",
+		body="Mpaca's Doublet",
+		hands="Mpaca's Gloves",
+		legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},
+		feet="Mpaca's Boots",
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Ishvara Earring",
+		right_ear="Odr Earring",
+		left_ring="Epaminondas's Ring",
+		right_ring="Karieyh Ring +1",
+		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {	    
@@ -240,34 +276,32 @@ function get_sets()
 		feet="Ken. Sune-Ate +1",
 	}
 	sets.WS.CRIT = {
-		main={ name="Kannagi", augments={'Path: A',}},
-		sub="Gokotai",
 		ammo="Yetshila +1",
-		head="Hachiya Hatsu. +3",
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
-		hands="Mummu Wrists +2",
-		legs="Mummu Kecks +2",
-		feet="Ken. Sune-Ate +1",
+		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
 		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
 		left_ear="Ishvara Earring",
 		right_ear="Odr Earring",
-		left_ring="Regal Ring",
-		right_ring="Mummu Ring",
-		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%',}},
+		left_ring="Gere Ring",
+		right_ring="Epona's Ring",
+		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	sets.WS.MAB = {
-		ammo="Yamarang",
+		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
 		head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
-		body="Mummu Jacket +2",
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs="Malignance Tights",
-		feet="Hachi. Kyahan +1",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Karieyh Ring +1",
+		left_ring="Epaminondas's Ring",
 		right_ring="Dingir Ring",
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
@@ -288,16 +322,27 @@ function get_sets()
 	sets.WS["Blade: Hi"] = sets.WS.CRIT
 	sets.WS["Blade: Shun"] = {}
 
+	sets.WS["Asuran Fists"] = {
+	    ammo="Yetshila +1",
+		head="Ken. Jinpachi +1",
+		body="Ken. Samue +1",
+		hands="Ken. Tekko +1",
+		legs="Ken. Hakama +1",
+		feet="Ken. Sune-Ate +1",
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Odr Earring",
+		left_ring="Hetairoi Ring",
+		right_ring="Gere Ring",
+		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
 	sets.TreasureHunter = {
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
 		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -319,53 +364,38 @@ function precast_custom(spell)
 	if UtsusemiSpell:contains(spell.name) then
 		equipSet = sets.Utsusemi.Precast
 	end
-
-	equipSet = Elemental_check(equipSet, spell)
-
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 	NIN_Movement()
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called by the gearswap command
 function self_command_custom(command)
-	if command == "wave1" then
-		state.JobMode:set('Kannagi')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave2" then
-		state.JobMode:set('Kannagi')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "wave3" then
-		state.JobMode:set('Kannagi')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif command == "aoe" then
-		state.JobMode:set('Aeolian Edge')
-		equip(set_combine(choose_set(),choose_set_custom()))
-	end
+
 end
 
 -- This function is called when the job file is unloaded
@@ -394,38 +424,6 @@ function check_buff_SP()
 	return buff
 end
 
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		end
-	end
-	return equipSet
-end
-
 --used to register the time change to equip correct feet
 windower.register_event('time change', function(time)
      NIN_Movement()
@@ -433,8 +431,15 @@ end)
 
 function NIN_Movement ()
 	if world.time >= 17*60 or world.time <= 7*60 then
-		sets.Movement = {feet="Hachi. Kyahan +1"}
+		if world.time >= (18*60) or world.time <= (6*60) then
+			sets.Movement = set_combine(sets.Movement, sets.Movement.Night)
+			log('Night Feet')
+		else
+			sets.Movement = set_combine(sets.Movement, sets.Movement.Dusk)
+			log('Dusk Feet')
+		end
 	else
-		sets.Movement = {feet="Danzo Sune-Ate"}
+		sets.Movement = set_combine(sets.Movement, sets.Movement.Day)
+		log('Day Feet')
 	end
 end

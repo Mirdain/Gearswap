@@ -1,4 +1,3 @@
-
 --Elendnur
 
 -- Load and initialize the include file.
@@ -9,9 +8,6 @@ LockStylePallet = "12"
 MacroBook = "20"
 MacroSet = "1"
 
--- Use "gs c food" to use the specified food item 
-Food = "Tropical Crepe"
-
 --Uses Items Automatically
 AutoItem = false
 
@@ -21,24 +17,38 @@ Random_Lockstyle = false
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
+-- Use "gs c food" to use the specified food item 
+Food = "Tropical Crepe"
+
 --Set default mode (TP,ACC,DT)
-state.OffenseMode:set('TP')
+state.OffenseMode:set('DT')
 
---Enable JobMode for UI
-UI_Name = 'DPS'
+--Weapon Modes
+state.WeaponMode:options('Nuke','Unlocked')
+state.WeaponMode:set('Unlocked')
 
---WS to check for Obi or Orpheus Check
-elemental_ws = S{'Aeolian Edge','Cyclone'}
+-- Set to true to run organizer on job changes
+Organizer = false
+
+elemental_ws = S{'Aeolian Edge'}
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
-
 function get_sets()
+
+	sets.Weapons['Nuke'] ={
+		main={ name="Marin Staff +1", augments={'Path: A',}},
+		sub="Enki Strap",
+	}
+
+	sets.Weapons['Unlocked'] ={
+		main={ name="Marin Staff +1", augments={'Path: A',}},
+		sub="Enki Strap",
+	}
+
 	--Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-	    main={ name="Marin Staff +1", augments={'Path: A',}},
-		sub="Enki Strap",
 		ammo="Staunch Tathlum +1",
 		head="Nyame Helm",
 		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
@@ -53,10 +63,12 @@ function get_sets()
 		right_ring="Stikini Ring +1",
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
     }
+
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}
+
 	-- Set to be used if you get 
 	sets.Cursna_Recieved = {
 	    neck="Nicander's Necklace",
@@ -64,16 +76,19 @@ function get_sets()
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
 		waist="Gishdubar Sash",
 	}
+
 	sets.OffenseMode = {}
 	-- Base TP set
 	sets.OffenseMode.TP = {}
-	-- Set to use when Dual Wielding
-	sets.OffenseMode.TP.DW = {}
+
 	-- TP set when in -Damage Taken mode
 	sets.OffenseMode.DT = {}
+
 	-- TP set to use when mode is in accuracy
 	sets.OffenseMode.ACC = {}
+
 	sets.Precast = {}
+
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
@@ -115,10 +130,6 @@ function get_sets()
 	sets.JA["Widened Compass"] = {}
 	sets.JA["Entrust"] = {}
 
-	-- ===================================================================================================================
-	--		sets.midcast
-	-- ===================================================================================================================
-
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
 	
@@ -128,12 +139,16 @@ function get_sets()
 	sets.Midcast.SIRD = {
 
 	}
+
 	-- Cure Set
 	sets.Midcast.Cure = {
 
     }
+
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Hydrocera",
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
@@ -205,12 +220,15 @@ function get_sets()
 		waist="Siegel Sash",
 		neck="Nodens Gorget",
 	})
+
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1"
 	})
+
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head={ name="Amalric Coif +1"}
 	})
+
 	-- Aspir Set
 	sets.Midcast.Aspir = {
 		ammo="Pemphredo Tathlum",
@@ -228,16 +246,11 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
-	-- ===================================================================================================================
-	--		sets.aftercast
-	-- ===================================================================================================================
-	--Custome sets for each jobsetup
-	sets.Custom = {}
-
 	sets.WS = {}
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
-	-- Note that the Mote library will unlock these gear spots when used.
+
 	sets.WS["Myrkr"] = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
@@ -255,12 +268,7 @@ function get_sets()
 	}
 
 	sets.TreasureHunter = {
-	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
 	}
 
 end

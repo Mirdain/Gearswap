@@ -1,3 +1,4 @@
+
 --Elendnur
 
 -- Load and initialize the include file.
@@ -12,7 +13,7 @@ MacroSet = "1"
 Food = "Sublime Sushi"
 
 --Uses Items Automatically
-AutoItem = true
+AutoItem = false
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
@@ -21,54 +22,57 @@ Random_Lockstyle = false
 Lockstyle_List = {1,2,6,12}
 
 -- Set to true to run organizer on job changes
-Organizer = false
+Organizer = true
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assign equipsets for them
 state.OffenseMode:options('DT','TP','PDL','ACC','SB') -- ACC effects WS and TP modes
 state.OffenseMode:set('DT')
 
---Modes for specific to Dragoon
-state.WeaponMode:options('Trishula','Savage Blade','Staff')
-state.WeaponMode:set('Trishula')
+--Weapon Modes
+state.WeaponMode:options('Scythe','Great Sword','Sword','Club')
+state.WeaponMode:set('Scythe')
 
 -- Initialize Player
 jobsetup(LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 
-	-- Weapon setup
 	sets.Weapons = {}
 
-	sets.Weapons['Trishula'] = {
-		main={ name="Trishula", augments={'Path: A',}},
+	sets.Weapons['Scythe'] = {
+		--main={ name="Trishula", augments={'Path: A',}},
 		sub="Utu Grip",
 	}
 
-	sets.Weapons['Naegling'] = {
+	sets.Weapons['Great Sword'] = {
+		--main={ name="Trishula", augments={'Path: A',}},
+		sub="Utu Grip",
+	}
+
+	sets.Weapons['Sword'] = {
 		main="Naegling",
-		sub="empty"
+		sub="Blurred Shield +1",
 	}
 
-	sets.Weapons['Staff'] = {
-		main="Malignance Pole",
-		sub="Utu Grip",
+	sets.Weapons['Club'] = {
+		main={ name="Loxotic Mace +1", augments={'Path: A',}},
+		sub="Blurred Shield +1",
 	}
 
-	-- Standard Idle set
 	sets.Idle = {
-	    ammo="Staunch Tathlum +1",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
+		ammo="Staunch Tathlum +1",
+		head="Sakpata's Helm",
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear="Eabani Earring",
+		right_ear="Etiolation Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		right_ring="Defending Ring",
-		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
+		right_ring="Moonlight Ring",
+		back={ name="Ankou's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
 	sets.Idle.DT = set_combine(sets.Idle, {
@@ -80,6 +84,7 @@ function get_sets()
 
 	})
 	
+
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
 	}
@@ -98,17 +103,17 @@ function get_sets()
 	sets.OffenseMode.TP = {
 		ammo="Coiste Bodhar",
 		head="Flam. Zucchetto +2",
-		body="Hjarrandi Breast.",
-		hands="Flam. Manopolas +2",
-		legs="Nyame Flanchard", --   Need Upgrade
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
 		feet="Flam. Gambieras +2",
 		neck={ name="Vim Torque +1", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Sherida Earring",
+		left_ear="Crep. Earring",
 		right_ear="Telos Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Moonlight Ring",
-		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
+		back={ name="Ankou's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
@@ -166,77 +171,23 @@ function get_sets()
 	sets.JA["Warding Circle"] = {}
 	sets.JA["Hasso"] = {}
 	sets.JA["Seigan"] = {}
-	sets.JA['Call Wyvern'] = {body="Ptero. Mail +3"}
-	sets.JA['Spirit Surge'] = {
-		body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
-		legs="Vishap Brais +3",
-		feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
-		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-	}
-	sets.JA['Ancient Circle'] = {legs="Vishap Brais +3"}
-	sets.JA['Spirit Link'] = {
-		head="Vishap Armet +3",
-		hands="Pel. Vambraces",
-		feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
-		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-	}
 
-	sets.Jump = {
-		ammo="Coiste Bodhar",
-		head="Hjarrandi Helm",
-		body="Hjarrandi Breast.",
-		hands="Flam. Manopolas +2",
-		legs="Gleti's Breeches",
-		feet="Flam. Gambieras +2",
-		neck={ name="Vim Torque +1", augments={'Path: A',}},
-		waist="Reiki Yotai",
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
-		left_ring="Crepuscular Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
-	}
-
-	sets.JA['Jump'] = set_combine(sets.Jump, {
-
-	})
-	
-	sets.JA['High Jump'] = set_combine(sets.Jump, {
-
-	})
-
-	sets.JA['Spirit Jump'] = set_combine(sets.Jump, {
-
-	})
-
-	sets.JA['Soul Jump'] = set_combine(sets.Jump, {
-
-	})
-	
-	sets.JA['Super Jump'] = set_combine(sets.Jump, {
-
-	})
-	
-	sets.JA['Angon'] = {
-		ammo="Angon",
-		hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
-	}
 
 	--WS Sets
 	sets.WS = {
 		ammo="Knobkierrie",
 		head="Flam. Zucchetto +2",
-		body="Gleti's Cuirass",
-		hands="Gleti's Gauntlets",
-		legs="Gleti's Breeches",
+		body="Sakpata's Plate",
+		hands="Sakpata's Gauntlets",
+		legs="Sakpata's Cuisses",
 		feet="Sulev. Leggings +2",
-		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-		waist="Fotia Belt",
-		left_ear="Sherida Earring",
+		neck="Fotia Gorget",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Niqmaddu Ring",
-		right_ring="Rufescent Ring",
-		back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Magic dmg. taken-10%',}},
+		right_ring="Regal Ring",
+		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -245,67 +196,25 @@ function get_sets()
 	})
 
 	sets.WS.PDL = set_combine(sets.WS, {
-	    head="Gleti's Mask",
+
 
 	})
 
 	sets.WS.WSD = set_combine(sets.WS, {
-	    head="Gleti's Mask",
-		left_ear="Thrud Earring",
-	    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+
 	})
 
 	sets.WS.CRIT = set_combine(sets.WS, {
-	
 	
 	})
 
 	sets.WS.Multi_Hit = set_combine(sets.WS, {
 	
-	
 	})
-
-	sets.WS["Camlann's Torment"] = sets.WS.CRIT
-	sets.WS['Drakesbane'] = sets.WS.CRIT
-	sets.WS['Geirskogul'] = sets.WS.CRIT
-	sets.WS['Impulse Drive'] = sets.WS.CRIT
-	sets.WS['Sonic Thrust'] = sets.WS.CRIT
-	sets.WS['Stardiver'] = sets.WS.CRIT
-	sets.WS['Raiden Thrust'] = sets.WS.WSD
-	sets.WS['Thunder Thrust'] = sets.WS.WSD
-	sets.WS['Leg Sweep'] = sets.WS.WSD
-	sets.WS['Savage Blade'] = sets.WS.WSD
-	
--- Wyvern Ability Gear Sets Below
-	sets.Pet_Midcast = {}
-
-	sets.Pet_Midcast['Steady Wing'] = {}
-
-	sets.Pet_Midcast['Smiting Breath'] = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	neck="Adad Amulet",}
-
-	sets.Pet_Midcast['Restoring Breath'] = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	legs="Vishap Brais +3",
-    	feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
-    	neck={ name="Dgn. Collar +2", augments={'Path: A',}},}
-
-	sets.Pet_Midcast.Breath = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	neck="Adad Amulet",}
-
-	sets.Pet_Midcast['Flame Breath'] = sets.Pet_Midcast.Breath
-	sets.Pet_Midcast['Frost Breath'] = sets.Pet_Midcast.Breath
-	sets.Pet_Midcast['Sand Breath'] = sets.Pet_Midcast.Breath
-	sets.Pet_Midcast['Gust Breath'] = sets.Pet_Midcast.Breath
-	sets.Pet_Midcast['Hydro Breath'] = sets.Pet_Midcast.Breath
-	sets.Pet_Midcast['Lightning Breath'] = sets.Pet_Midcast.Breath
 	 
-	-- Used to Tag TH on a mob (TH4 is max in gear non-THF)
+-- Used to Tag TH on a mob (TH4 is max in gear non-THF)
 	sets.TreasureHunter = {
-		legs={ name="Valorous Hose", augments={'Accuracy+29','Pet: Haste+1','"Treasure Hunter"+2',}},
-		feet={ name="Valorous Greaves", augments={'"Store TP"+4','Pet: VIT+7','"Treasure Hunter"+2','Accuracy+7 Attack+7',}},
+
 	}
 
 end

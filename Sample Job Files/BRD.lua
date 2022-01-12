@@ -12,12 +12,9 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Tropical Crepe"
 
-UI_Name = 'DPS'
-
 --Modes for specific to bard
-state.JobMode = M{['description']='Bard Damage Mode'}
-state.JobMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm', 'Kraken Mode')
-state.JobMode:set('Mordant Rime')
+state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Kraken Mode')
+state.WeaponMode:set('Mordant Rime')
 
 elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
 
@@ -35,59 +32,54 @@ send_command('bind f10 gs c songbuff')
 function get_sets()
 
 	--Set the weapon options.  This is set below in job customization section
-	Weapons = {}
+	sets.Weapons = {}
 
-	Weapons['Mordant Rime'] = {
+	sets.Weapons['Mordant Rime'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Aeolian Edge'] = {
+	sets.Weapons['Aeolian Edge'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Shining Strike'] = {
+	sets.Weapons['Shining Strike'] = {
 		main="Daybreak",
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Kraken Mode'] = {
+	sets.Weapons['Kraken Mode'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub="Kraken Club",
 	}
 
-	Weapons['Shining Blade'] = {
+	sets.Weapons['Shining Blade'] = {
 		main="Naegling",
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Savage Blade'] = {
+	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Eviceration'] = {
+	sets.Weapons['Eviceration'] = {
 		main='Tauret',
 		sub="Crepuscular Knife",
 	}
 
-	Weapons['Rudra\'s Storm'] = {
+	sets.Weapons['Rudra\'s Storm'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub="Crepuscular Knife",
 	}
 
-	Weapons.Songs = {
-		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Genmei Shield",
-	}
-
-	Weapons.Songs.DualWield = {
+	sets.Weapons.Songs = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 	}
 
-	Weapons.Shield = {
+	sets.Weapons.Shield = {
 		sub="Genmei Shield",
 	}
 
@@ -443,29 +435,15 @@ end
 function precast_custom(spell)
 	equipSet = {}
 	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		if DualWield == false then
-			equipSet = set_combine(equipSet, Weapons.Songs)
-		else
-			equipSet = set_combine(equipSet, Weapons.Songs.DualWield)
-		end
-	else
-		equipSet = Weapon_Check(equipSet)
-		equipSet = Elemental_check(equipSet, spell)
+		equipSet = set_combine(equipSet, sets.Weapons.Songs)
 	end
-
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		if DualWield == false then
-			equipSet = set_combine(equipSet, Weapons.Songs)
-		else
-			equipSet = set_combine(equipSet, Weapons.Songs.DualWield)
-		end
-	else
-		equipSet = Weapon_Check(equipSet)
+		equipSet = set_combine(equipSet, sets.Weapons.Songs)
 	end
 	return equipSet
 end
@@ -473,25 +451,25 @@ end
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
@@ -516,18 +494,9 @@ function check_buff_JA()
 	return buff
 end
 
-
 -- Function is called when the job lua is unloaded
 function user_file_unload()
 
-end
-
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,Weapons.Shield)
-	end
-	return equipSet
 end
 
 -- Function to prebuff Dummy Songs
@@ -567,28 +536,4 @@ end
 
 function player_buffing ()
 	is_Buffing = true
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		end
-	end
-	return equipSet
 end

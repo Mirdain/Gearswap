@@ -12,23 +12,29 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
 -- Set to true to run organizer on job changes
 Organizer = true
 
---Enable JobMode for UI
-UI_Name = 'DPS'
+--Weapons options
+state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge')
+state.WeaponMode:set('Chango')
 
---Modes for specific to Corsair
-state.JobMode = M{['description']='Warrior Damage Mode'}
-state.JobMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge')
-state.JobMode:set('Chango')
-
+-- Initialize Player
+jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
-
 	-- Weapon setup
 	sets.Weapons = {}
 
@@ -49,9 +55,10 @@ function get_sets()
 		sub={ name="Digirbalag", augments={'"Dbl.Atk."+4','Accuracy+11','Attack+8',}},
 	}
 	sets.Weapons['Aeolian Edge'] = {
-	    main="Tauret",
+		main={ name="Ternion Dagger +1", augments={'Path: A',}},
 		sub="Naegling",
 	}
+	-- This is used when you do not have dual wield and is not a two handed weapon
 	sets.Weapons.Shield = {
 		sub="Blurred Shield +1",
 	}
@@ -211,6 +218,7 @@ function get_sets()
 		right_ring="Karieyh Ring +1",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}}
 	}
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = set_combine(sets.WS, {
 
@@ -219,6 +227,7 @@ function get_sets()
 	sets.WS.WSD = set_combine(sets.WS, {
 
 	})
+
 	sets.WS.CRIT = {
 		ammo="Yetshila +1",
 		head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -278,21 +287,12 @@ function get_sets()
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	--Custome sets for each jobsetup
-	sets.Custom = {}
-
 	sets.TreasureHunter = {
 	    head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},
 	    hands={ name="Valorous Mitts", augments={'MND+8','Pet: Accuracy+15 Pet: Rng. Acc.+15','"Treasure Hunter"+2','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
 		waist="Chaac Belt",
 	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
-	jobsetup (LockStylePallet,MacroBook,MacroSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -312,37 +312,37 @@ end
 function precast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
@@ -365,6 +365,11 @@ function check_buff_JA()
 			buff = "Warcry"
 		end
 	end
+	if player.sub_job == 'SAM' then
+		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
+			buff = "Hasso"
+		end
+	end
 	return buff
 end
 
@@ -372,41 +377,4 @@ function check_buff_SP()
 	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
-end
-
-function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-
-	return equipSet
-end
-
-function Elemental_check(equipSet, spell)
-	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) then
-		-- Matching double weather (w/o day conflict).
-		if spell.element == world.weather_element and world.weather_intensity == 2 then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-		-- Matching day and weather.
-		elseif spell.element == world.day_element and spell.element == world.weather_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			-- Target distance less than 6 yalms
-		elseif spell.target.distance < (6 + spell.target.model_size) then
-			equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
-			windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
-		-- Match day or weather.
-		elseif spell.element == world.day_element or spell.element == world.weather_element then
-			windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
-		end
-	end
-	return equipSet
-end
-
-function round(num, numDecimalPlaces)
-	if num ~= nil then
-	  local mult = 10^(numDecimalPlaces or 0)
-	  return math.floor(num * mult + 0.5) / mult
-	end
 end

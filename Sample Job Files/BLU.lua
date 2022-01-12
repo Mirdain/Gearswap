@@ -12,29 +12,30 @@ MacroSet = "2"
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
 
---Set default mode (TP,ACC,DT)
+--Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
-BlueHealing = S{'Magic Fruit','Healing Breeze','Pollen','Wild Carrot','Plenilune Embrace'}
+BlueHealing = S{'Magic Fruit'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
-BlueTank = S{'Jettatura','Blank Gaze','Sheep Song','Geist Wall'}
+BlueTank = S{}
+
+--Weapons specific to Blue Mage
+state.WeaponMode:options('Tizona','Naegling','Cleave')
+state.WeaponMode:set('Tizona')
 
 --Enable JobMode for UI
-UI_Name = 'DPS'
+UI_Name = 'Mode'
 
---Modes for specific to Corsair
-state.JobMode = M{['description']='Blue Mage Mode'}
-state.JobMode:options('Tizona','Naegling','Cleave')
-state.JobMode:set('Tizona')
+--Modes for specific to Blue Mage
+state.JobMode:options('AoE','Melee')
+state.JobMode:set('Melee')
 
---Command to bind to the f9 key
-send_command('bind f9 gs c togglecleave')
---Log Message about what the key does
-add_to_chat(8,'[F9] - '..UI_Name..' is ['..state.JobMode.value..']')
+-- Set to true to run organizer on job changes
+Organizer = false
 
 function get_sets()
 
@@ -92,7 +93,7 @@ function get_sets()
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs="Malignance Tights",
 		feet="Nyame Sollerets",
-		neck={ name="Mirage Stole", augments={'Path: A',}},
+		neck={ name="Mirage Stole +2", augments={'Path: A',}},
 		waist="Reiki Yotai",
 		left_ear="Crep. Earring",
 		right_ear="Telos Earring",
@@ -189,7 +190,7 @@ function get_sets()
 		hands="Jhakri Cuffs +2",
 		legs={ name="Luhlaza Shalwar +3", augments={'Enhances "Assimilation" effect',}},
 		feet="Gleti's Boots",
-		neck={ name="Mirage Stole", augments={'Path: A',}},
+		neck={ name="Mirage Stole +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -237,11 +238,6 @@ function get_sets()
 	    feet={ name="Luhlaza Charuqs", augments={'Enhances "Diffusion" effect',}},
 	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -267,60 +263,43 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
 
-	return Weapon_Check(equipSet)
+	return equipSet
 end
+
 --Function is called when a self command is issued
 function self_command_custom(command)
-	if command == 'togglecleave' then
-		weaponcheck()
-		for i,v in ipairs(state.JobMode) do
-			if state.JobMode.value == v then
-				if state.JobMode.value ~= state.JobMode[#state.JobMode] then
-					state.JobMode:set(state.JobMode[i+1])
-					--send_command('input //aset spellset magic;input /macro book 8;wait .1; input /macro set 2')
-				else
-					state.JobMode:set(state.JobMode[1])
-					--send_command('input //aset spellset tp;input /macro book 8;wait .1; input /macro set 1')
-				end
-				info('Mode: ['..state.JobMode.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
-				return
-			end
+	if command == 'jobmode' then
+		if state.JobMode.value == 'AoE' then
+			send_command('input //aset spellset magic;input /macro book 8;wait .1; input /macro set 2')
+		else
+			send_command('input //aset spellset tp;input /macro book 8;wait .1; input /macro set 1')
 		end
 	end
 end
-
- function Weapon_Check(equipSet)
-	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
-	if DualWield == false then
-		equipSet = set_combine(equipSet,sets.Weapons.Shield)
-	end
-	return equipSet
- end
 
 -- Function is called when the job lua is unloaded
 function user_file_unload()
@@ -334,7 +313,14 @@ function check_buff_JA()
 end
 
 function check_buff_SP()
-	buff = ''
-	--local sp_recasts = windower.ffxi.get_spell_recasts()
+	buff = 'None'
+	local sp_recasts = windower.ffxi.get_spell_recasts()
+	if not buffactive['Phalanx'] and sp_recasts[517] == 0 and player.mp >= 19 then
+		buff = "Metallic Body"
+	elseif not buffactive['Aquaveil'] and sp_recasts[55] == 0 and player.mp > 12 then
+		buff = "Aquaveil"
+	elseif not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
+		buff = "Cocoon"
+	end
 	return buff
 end

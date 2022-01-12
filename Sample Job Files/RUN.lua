@@ -12,8 +12,6 @@ BlueHealing = S{'Magic Fruit'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Metallic Body','Mighty Guard'}
 BlueTank = S{'Jettatura','Geist Wall','Blank Gaze','Sheep Song','Sandspin','Healing Breeze'}
 
---Modes for specific to RUN
-state.OffenseMode = M{['description']='Engaged Mode'}
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them
 state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS and TP modes
 
@@ -22,10 +20,12 @@ function Macro_Sub_Job()
 	local macro = 1
 	if player.sub_job == "BLU" then
 		state.OffenseMode:set('DT')
+		--Set you macro pallet for when you are /BLU
 		macro = 1
 		send_command('wait 2;aset set tanking')
 	else
 		state.OffenseMode:set('DT')
+		--Set you macro pallet for when you are NOT /BLU
 		macro = 1
 	end
 	return macro
@@ -42,10 +42,13 @@ MacroSet = Macro_Sub_Job()
 -- Set to true to run organizer on job changes
 Organizer = true
 
+--Modes for specific to Paladin.  These are defined below in "Weapons".
+state.WeaponMode:options('Epeolatry','Naegling','Club')
+state.WeaponMode:set('Epeolatry')
+
 --Enable JobMode for UI.
 UI_Name = 'Runes'
 --Modes for specific to RUN
-state.JobMode = M{['description']='Rune Mode'}
 state.JobMode:options('None','Fire','Ice','Wind','Earth','Lighting','Water','Light','Dark') -- Modes used to use Rune Enhancement
 state.JobMode:set('None')
 
@@ -67,10 +70,24 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 -- MP balancing: 950 MP
 
 function get_sets()
+
+	sets.Weapons = {}
+
+	sets.Weapons['Epeolatry'] = {
+		main="Epeolatry",
+		sub="Utu Grip",
+	}
+
+	sets.Weapons['Naegling'] = {
+		main="Naegling",
+	}
+
+	sets.Weapons['Club'] = {
+		main={ name="Loxotic Mace +1", augments={'Path: A',}},
+	}
+
 	-- Standard Idle set
 	sets.Idle = {
-		main={ name="Epeolatry", augments={'Path: A',}},
-		sub="Utu Grip",
 		ammo="Staunch Tathlum +1", -- 3/3
 		head="Nyame Helm", -- 7/7
 		body="Runeist's Coat +3",
@@ -119,8 +136,6 @@ function get_sets()
 
 	--DPS set for tanking
 	sets.OffenseMode.TP = {
-		main={ name="Epeolatry", augments={'Path: A',}},
-		sub="Utu Grip",
 		ammo="Yamarang",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Runeist's Coat +3",
@@ -302,8 +317,6 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = {
-		main="Epeolatry",
-		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -340,7 +353,6 @@ function get_sets()
 	sets.WS["Spinning Slash"] = {}
 	sets.WS["Herculean Slash"] = {}
 	sets.WS["Resolution"] = {
-		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -356,8 +368,6 @@ function get_sets()
 		back={ name="Ogma's cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
 	}
 	sets.WS["Dimidiation"] = {
-		main="Epeolatry",
-		sub="Utu Grip",
 		ammo="Knobkierrie",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -372,19 +382,11 @@ function get_sets()
 		right_ring="Epaminondas's Ring",
 		back={ name="Ogma's cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
     }
-	--Custome sets for each jobsetup
-	sets.Custom = {}
 
 	sets.TreasureHunter = {
 	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
 		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
 	}
-
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}	
 
 end
 
@@ -411,22 +413,13 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if spell.type == 'WeaponSkill' then
-		if state.OffenseMode.value == 'DT' then
-			equipSet = 	set_combine(equipSet, sets.WS.DT)
-		end
-	end
+
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
 	equipSet = set_combine(equipSet, Embolden_Check(spell))
-	if spell.type == 'WeaponSkill' then
-		if state.OffenseMode.value == 'DT' then
-			--equipSet = 	set_combine(equipSet, sets.WS.DT)
-		end
-	end
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -445,19 +438,11 @@ end
 function choose_set_custom()
 	equipSet = {}
 
-	if player.status == "Idle" and is_moving == false then
-		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
-	end
-
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-
-	if player.status == "Idle" and is_moving == false then
-		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
-	end
 
 	return equipSet
 end
@@ -491,11 +476,11 @@ function check_buff_JA()
 
 		if buffactive[Runes[state.JobMode.value].Name] == 3 and windower.ffxi.get_player().target_locked then
 			if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[23] == 0 and delay > 3 then
-				--buff = "Vallation" -- Next Single Target DT and FC
+				buff = "Vallation" -- Next Single Target DT and FC
 			end
 			if not buffactive['Valiance'] and not buffactive['Vallation'] and not buffactive['Liement'] and ja_recasts[113] == 0 then
-				--buff = "Valiance" -- AoE DT and FC
-				--JA_Delay = os.clock() -- Need to give Valiance a chance to register before Vallation is used
+				buff = "Valiance" -- AoE DT and FC
+				JA_Delay = os.clock() -- Need to give Valiance a chance to register before Vallation is used
 			end
 		end
 
@@ -522,20 +507,20 @@ function check_buff_SP()
 		local sp_recasts = windower.ffxi.get_spell_recasts()
 
 		if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 100 then
-			--buff = "Crusade"
+			buff = "Crusade"
 		elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 100 then
-			--buff = "Phalanx"
+			buff = "Phalanx"
 		elseif not buffactive['Aquaveil'] and sp_recasts[55] == 0 and player.mp > 100 then
-			--buff = "Aquaveil"
+			buff = "Aquaveil"
 		elseif not buffactive['Multi Strikes'] and sp_recasts[493] == 0 and player.mp > 36 then
-			--buff = "Temper"
+			buff = "Temper"
 		elseif not buffactive['Ice Spikes'] and sp_recasts[250] == 0 and player.mp > 16 then
-			--buff = "Ice Spikes"
+			buff = "Ice Spikes"
 		end
 
 		if player.sub_job == "BLU" and player.sub_job_level > 8 then 
 			if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
-				--buff = "Cocoon"
+				buff = "Cocoon"
 			end
 		end
 
@@ -568,8 +553,6 @@ function check_tank()
 	end
 	return buff
 end
-
-
 
 -- This function is called when the job file is unloaded
 function user_file_unload()

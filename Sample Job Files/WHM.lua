@@ -12,16 +12,49 @@ MacroSet = "1"
 -- Use "gs c food" to use the specified food item 
 Food = "Miso Ramen"
 
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
+--Set default mode (TP,ACC,DT,PDL)
+state.OffenseMode:set('DT')
+
+-- Set to true to run organizer on job changes
+Organizer = false
+
+--Weapons options
+state.WeaponMode:options('Club','Unlocked')
+state.WeaponMode:set('Unlocked')
+
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 -- Balance 2100 HP / 1500 MP
-
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	sets.Weapons['Club'] = {
+		main="Daybreak",
+	}
+
+	-- Will swap weapons based off sets below
+	sets.Weapons['Unlocked'] = {
+		main="Daybreak",
+	}
+
+	sets.Weapons.Shield = {
+		sub="Genmei Shield",
+	}
+
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-		main="Daybreak",
-		sub="Genmei Shield",
 		ammo="Staunch Tathlum +1", --  3/3
 		head="Nyame Helm", -- 7/7
 		body="Nyame Mail", -- 9/9
@@ -295,15 +328,9 @@ function get_sets()
 	-- Note that the Mote library will unlock these gear spots when used.
 	sets.TreasureHunter = {}
 
-	sets.Charm = {
-	    main="Lament",
-	}
+	sets.Charm = set_combine(set.Idle, {
+	})
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}
 end
 
 -------------------------------------------------------------------------------------------------------------------
