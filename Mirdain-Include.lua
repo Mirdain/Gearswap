@@ -16,11 +16,13 @@ default = {
 	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1483,y=791},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	}
 
-Display_Box_Settings = {}
+local buttons = {'State','TH Mode','Auto Buff','Weapon','Job Mode'}
 
 settings = config.load(default)
 
 DualWield = false
+TwoHand = false
+
 SpellCastTime = 0
 
 Spellstart = os.clock()
@@ -28,7 +30,6 @@ UpdateTime1 = os.clock()
 UpdateTime2 = os.clock()
 
 Organizer = false
-
 
 command_JA = "None"
 command_SP = "None"
@@ -51,8 +52,6 @@ is_moving = false
 is_Buffing = false
 
 Time_Out = false
-
-Enable_Burst_Mode = false
 
 --Variable to monitor during debug mode
 debug_value = 0
@@ -82,6 +81,12 @@ else
 	state.TreasureMode:set('None')
 end
 
+--Weapon specific modes
+state.WeaponMode = {}
+state.WeaponMode = M{['description']='Weapon Specific Mode'}
+state.WeaponMode:options('OFF','ON')
+state.WeaponMode:set('OFF')
+
 --Job specific modes
 state.JobMode = {}
 state.JobMode = M{['description']='Job Specific Mode'}
@@ -91,8 +96,8 @@ state.JobMode:set('OFF')
 --Burst specific mode
 state.BurstMode = {}
 state.BurstMode = M{['description']='Burst Specific Mode'}
-state.BurstMode:options('OFF','Tier 1','Tier 2','Tier 3','Tier 4','Tier 5')
-state.BurstMode:set('OFF')
+state.BurstMode:options('ON','OFF')
+state.BurstMode:set('ON')
 
 --Ranged Attack mode
 state.RAMode = {}
@@ -120,16 +125,13 @@ function display_box_update()
 
 	width = 20
 	dialog = {}
-	dialog[1] = {description = 'State', value = state.OffenseMode.value}
+	dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
 	dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
 	dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
+	dialog[4] = {description = 'DPS', value = state.WeaponMode.value}
 	if UI_Name ~= "" then
-		dialog[4] = {description = UI_Name, value = state.JobMode.value}
+		dialog[5] = {description = UI_Name, value = state.JobMode.value}
 	end
-	if Enable_Burst_Mode ==  true then
-		dialog[5] = {description = 'Burst Mode', value = state.BurstMode.value}
-	end
-
 	lines = T{}
     for k, v in next, dialog do
 		lines:insert(v.description ..string.format('[%s]',tostring(v.value)):lpad(' ',width-string.len(tostring(v.description))))
@@ -150,6 +152,7 @@ function debug_box_update()
 	lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',12))
 	lines:insert('is_Moving' ..string.format('[%s]',tostring(is_moving)):lpad(' ',10))
 	lines:insert('DualWield' ..string.format('[%s]',tostring(DualWield)):lpad(' ',10))
+	lines:insert('TwoHand' ..string.format('[%s]',tostring(TwoHand)):lpad(' ',12))
 	lines:insert('debug_value' ..string.format('[%s]',tostring(debug_value)):lpad(' ',8))
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
@@ -198,6 +201,7 @@ BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{}
 
+UtsusemiSpell = S{'Utsusemi: San','Utsusemi: San', 'Utsusemi: San'}
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
@@ -406,12 +410,12 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precastequip(spell)
-	--Default gearset
-	equipSet = {}
 	--Cancel for SMN if Avatar is mid action and Item use
     if (pet.isvalid and pet_midaction()) or spell.type=="Item" then
         return
     end
+	--Default gearset
+	equipSet = {}
 	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
 		equipSet = sets.WS
@@ -459,19 +463,6 @@ function precastequip(spell)
 			--Augments the set built for ACC
 			equipSet = set_combine(equipSet, sets.Precast.RA.ACC)
 		end
-	-- Ninjutsu
-    elseif spell.type == 'Ninjutsu' then
-		equipSet = sets.Precast
-		do_Utsu_checks(spell)
-		if equipSet[spell.english] then
-			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
-			info('['..spell.english..'] Precast Set')
-		else
-			equipSet = set_combine(equipSet, sets.Precast.FastCast)
-			if spell.skill == 'Enhancing Magic' then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
-			end
-		end
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
@@ -505,6 +496,19 @@ function precastequip(spell)
 			info( '['..spell.english..'] Set')
 		else
 			info('Quick Draw not set')
+		end
+	-- Ninjutsu
+    elseif spell.type == 'Ninjutsu' then
+		equipSet = sets.Precast
+		do_Utsu_checks(spell)
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			info('['..spell.english..'] Precast Set')
+		else
+			equipSet = set_combine(equipSet, sets.Precast.FastCast)
+			if spell.skill == 'Enhancing Magic' then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
+			end
 		end
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
@@ -547,6 +551,13 @@ function precastequip(spell)
 	-- BardSong
 	elseif spell.type == 'BardSong' then
 		equipSet = sets.Precast
+
+		if DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Songs)
+		else
+			equipSet = set_combine(equipSet, sets.Weapons.Songs.DualWield)
+		end
+
 		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
 			-- Song Count for Minne and Paeon
@@ -617,6 +628,14 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
+	-- Weapon Checks for precast
+	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+	if state.WeaponMode.value ~= "Unlocked" then
+		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+		log('Precast set equiping Offense Mode Gear')
+	end
+
 	end
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
@@ -818,25 +837,31 @@ function midcastequip(spell)
 		end
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
+		equipSet = sets.Midcast
+		if DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Songs)
+		else
+			equipSet = set_combine(equipSet, sets.Weapons.Songs.DualWield)
+		end
 		-- Song Count for Minne and Paeon
 		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
-			equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
+			equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
-			equipSet = set_combine(sets.Midcast, {range=Instrument.Honor})
+			equipSet = set_combine(equipSet, {range=Instrument.Honor})
 		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
 			info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
+			equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 		-- Normal Enfeebles
 		elseif EnfeebleSong:contains(spell.english) then
 			info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
+			equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 		-- Augment the buff songs
 		else
 			info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
-			equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
+			equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Potency})
 		end
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
@@ -893,13 +918,16 @@ function midcastequip(spell)
 		end
 	-- Trust
 	elseif spell.type == 'Trust' then
-		equipSet = sets.FastCast
+		equipSet = sets.Midcast
 	-- BloodPactRage and BloodPactWard
 	elseif spell.type=="BloodPactWard" or spell.type=="BloodPactRage" then
+		equipSet = sets.Midcast
 		-- BP Timer gear needs to swap here if not under Astral Conduit
 		if not buffactive["Astral Conduit"] then
 			equipSet = sets.Midcast
 			equipSet = set_combine(equipSet, sets.Midcast.BP)
+		else
+			equipSet = {}
 		end
 	-- Elemental Siphon
 	elseif spell.name=="Elemental Siphon" then
@@ -918,6 +946,14 @@ function midcastequip(spell)
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		send_command('wait .5;cancel 66;')
 	end
+
+	-- Weapon Checks for precast
+	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+	if state.WeaponMode.value ~= "Unlocked" then
+		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+		log('Midcast set equiping Offense Mode Gear')
+	end
+
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
@@ -958,14 +994,12 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precast(spell)
-
 	-- action is started
 	if is_Buffing == true then
 		info('Player is Buffing')
 		cancel_spell()
 		return
 	end
-
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
 			local cast_spell = res.spells:with('name', spell.name)
@@ -988,28 +1022,23 @@ function precast(spell)
 		cancel_spell()
 		return
 	end
-
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
-
 	-- Check that proper ammo is available if the action requires it
 	if spell.skill == "Marksmanship" or spell.skill == "Archery" or spell.action_type == 'Ranged Attack' then
 		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
 			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 		end
 	end
-
 	--Equip on main hand
 	if spell.name == "Dispelga" then
 		equipSet = set_combine(equipSet, {main="Daybreak"})
 	end
-
 	--Equip body
 	if spell.name == "Impact" then
 		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
 	end
-
 	-- here is where gear is actually equipped
 	equip(equipSet)
  end
@@ -1125,12 +1154,12 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_midcast(spell)
-	equipSet = {}
+	equipSet = sets.Pet_Midcast
 	if equipSet[spell.english] then
-		equipSet = set_combine(equipSet, choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
+		equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
 		info('['..spell.english..'] Set')
 	else
-		equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
+		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 	end
 	equip(equipSet)
 end
@@ -1151,15 +1180,23 @@ end
 
 function choose_set()
 	equipSet = {}
+
 	-- Combat Checks
 	if player.status == "Engaged" then
-		-- Base line TP set
+		-- Weapon Checks
 		if DualWield == true then
-			equipSet = set_combine(equipSet,sets.OffenseMode[state.OffenseMode.value],sets.DualWield)
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.DualWield, sets.Weapons[state.WeaponMode.value])
+			else
+				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+			end
 		else
-			equipSet = set_combine(equipSet,sets.OffenseMode[state.OffenseMode.value])
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons.Shield, sets.Weapons[state.WeaponMode.value])
+			else
+				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+			end
 		end
-
 		-- Check if TreasureMode is active
 		if state.TreasureMode.value ~= 'None' then
 			-- Equip TH gear if mob is not marked as tagged
@@ -1175,7 +1212,13 @@ function choose_set()
 		end
 	-- Idle sets
 	else
-		equipSet = set_combine(sets.Idle, sets.Idle[state.OffenseMode.value])
+		-- Weapon Checks
+		equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+
+		if TwoHand == false and DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
+
 		--Pet specific checks
 		if pet.isvalid then
 			--Augment built set for Perp cost
@@ -1340,20 +1383,6 @@ function self_command(cmd)
 			info('Auto Buff is ['..state.AutoBuff.value..']')
 			equip(set_combine(choose_set(),choose_set_custom()))
 		end
-	elseif command == 'skillchain_burst' then
-		if state.BurstMode.value == 'Tier 1' then
-			send_command('BT cast spell 1')
-		elseif state.BurstMode.value == 'Tier 2' then
-			send_command('BT cast spell 2')
-		elseif state.BurstMode.value == 'Tier 3' then
-			send_command('BT cast spell 3')
-		elseif state.BurstMode.value == 'Tier 4' then
-			send_command('BT cast spell 4')
-		elseif state.BurstMode.value == 'Tier 5' then
-			send_command('BT cast spell 5')
-		elseif state.BurstMode.value == 'Tier 6' then
-			send_command('BT cast spell 6')
-		end
 	-- Shuts down instnace
 	elseif command == 'shutdown' then
 		send_command('terminate')
@@ -1390,6 +1419,8 @@ function self_command(cmd)
 			settings.info = true
 			info('Information [ON]')
 		end
+	elseif command == 'two_hand_check' then
+		two_hand_check()
 	-- Esha Temps
 	elseif command == 'temps' then
 		escha_temps()
@@ -1447,29 +1478,32 @@ function self_command(cmd)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
-
-	elseif command:contains('jobmode') then
-		if command == 'jobmode' then
-			for i,v in ipairs(state.JobMode) do
-				if state.JobMode.value == v then
-					if state.JobMode.value ~= state.JobMode[#state.JobMode] then
-						state.JobMode:set(state.JobMode[i+1])
+	elseif command:contains('weaponmode') then
+		if command == 'weaponmode' then
+			for i,v in ipairs(state.WeaponMode) do
+				if state.WeaponMode.value == v then
+					if state.WeaponMode.value ~= state.WeaponMode[#state.WeaponMode] then
+						state.WeaponMode:set(state.WeaponMode[i+1])
 					else
-						state.JobMode:set(state.JobMode[1])
+						state.WeaponMode:set(state.WeaponMode[1])
 					end
-					info('Job Mode: ['..state.JobMode.value..']')
+					info('Job Mode: ['..state.WeaponMode.value..']')
 					self_command_custom(command)
-					equip(set_combine(choose_set(),choose_set_custom()))
+					two_hand_check()
+					equipset = set_combine(choose_set(),choose_set_custom())
+					equip(equipset)
 					return
 				end
 			end
 		else
 			local mode = {}
 			mode = string.split(cmd," ",2)
-			state.JobMode:set(mode[2])
-			info('Job Mode: ['..state.JobMode.value..']')
+			state.WeaponMode:set(mode[2])
+			info('Weapon Mode: ['..state.WeaponMode.value..']')
 			self_command_custom(command)
-			equip(set_combine(choose_set(),choose_set_custom()))
+			two_hand_check()
+			equipset = set_combine(choose_set(),choose_set_custom())
+			equip(equipset)
 			return
 		end
 	elseif command:contains('burstmode') then
@@ -1492,6 +1526,30 @@ function self_command(cmd)
 			mode = string.split(cmd," ",2)
 			state.BurstMode:set(mode[2])
 			info('Burst Mode: ['..state.BurstMode.value..']')
+			self_command_custom(command)
+			equip(set_combine(choose_set(),choose_set_custom()))
+			return
+		end
+	elseif command:contains('jobmode') then
+		if command == 'jobmode' then
+			for i,v in ipairs(state.JobMode) do
+				if state.JobMode.value == v then
+					if state.JobMode.value ~= state.JobMode[#state.JobMode] then
+						state.JobMode:set(state.JobMode[i+1])
+					else
+						state.JobMode:set(state.JobMode[1])
+					end
+					info('Mode: ['..state.JobMode.value..']')
+					self_command_custom(command)
+					equip(set_combine(choose_set(),choose_set_custom()))
+					return
+				end
+			end
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.JobMode:set(mode[2])
+			info('Job Mode: ['..state.JobMode.value..']')
 			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
@@ -1627,6 +1685,43 @@ windower.register_event('chat message', function(message,sender,mode,gm)
 
 end)
 
+function mouse_event(type, x, y, delta, blocked)
+    local lines = gs_status:text():count('\n') + 1
+    local _, _y = gs_status:extents()
+    local pos_y = y - settings.Display_Box.pos.y
+    local off_y = _y / lines
+    local upper = 1
+    local lower = off_y
+    if gs_status:hover(x, y) then
+	    for row, button in ipairs(buttons) do
+            if pos_y > upper and pos_y < lower then
+                if type == 2 then
+
+					if row == 1 then
+						windower.send_command('gs c modechange')
+					elseif row == 2 then
+						windower.send_command('gs c th')
+					elseif row == 3 then
+						windower.send_command('gs c autobuff')
+					elseif row == 4 then
+						windower.send_command('gs c weaponmode')
+					elseif row == 5 then
+						windower.send_command('gs c jobmode')
+					else
+						
+					end
+					log('Button Clicked - Row: ['..tostring(row)..']')
+                    return true
+                end
+            end
+            upper = lower
+            lower = lower + off_y
+        end
+    end
+end
+
+windower.register_event('mouse', mouse_event)
+
 -- Unbind Keys when the file is unloaded
 function file_unload(file_name)
 	send_command('unbind f9')
@@ -1635,7 +1730,7 @@ function file_unload(file_name)
 	send_command('unbind f12')
 	if Organizer == true then
 		windower.add_to_chat(8,'Clearing Gear from Wardrobe - Do not move or take action')
-		windower.send_command('wait 1;gs equip naked;wait 1;org o '..player.name..'_Naked;wait 15;org get wardrobe '..player.name..'_'..player.main_job..';wait 10;gs validate;wait 3;input /echo Change Complete')
+		windower.send_command('gs equip naked;wait 1;org o '..player.name..'_Naked')
 	end
 	user_file_unload()
 end
@@ -1643,16 +1738,21 @@ end
 send_command('bind f12 gs c ModeChange')
 send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
-send_command('bind f9 gs c JobMode')
+send_command('bind f9 gs c WeaponMode')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
-
 	if Random_Lockstyle == true then
 		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 	end
-
-	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..'')
+	if Organizer == true then
+		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet)
+		send_command('wait 5;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 5;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+	else
+		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+		';wait 1;input /macro set '..MacroSet..
+		';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+	end
 end
 
 -- Called when the player's subjob changes.
@@ -1661,13 +1761,39 @@ function sub_job_change(new, old)
 	sub_job_change_custom()
 end
 
--- Check if you have a Grip or shield to determinate if it's a Dual Wield build
-function weaponcheck()
+-- Check if you have the dual wield trait
+function dual_wield_check()
 	current_abilities = windower.ffxi.get_abilities()
 	if table.contains(current_abilities.job_traits,18) then -- Dual Wield trait
 		DualWield = true
 	else
 		DualWield = false
+	end
+end
+
+function two_hand_check()
+	equipset = set_combine(choose_set(),choose_set_custom())
+	local Main_Weapon = nil
+	if type(equipset.main) == "table" then
+		Main_Weapon = equipset.main.name
+	else
+		Main_Weapon = equipset.main
+	end
+	if Main_Weapon then
+		if Main_Weapon == 'none' or Main_Weapon == '' then
+			log('No weapon detected')
+			TwoHand = false
+		else
+			log('Weapon:['..Main_Weapon..']')
+			local Skill_type = res.items:with('en', Main_Weapon).skill 
+			if Skill_type == 6 or Skill_type == 8 or Skill_type == 4 or Skill_type == 12 or Skill_type == 10 then
+				log('Two Handed Weapon Type: ['..Skill_type..']')
+				TwoHand = true
+			else
+				log('One Handed Weapon Type: ['..Skill_type..']')
+				TwoHand = false
+			end
+		end
 	end
 end
 
@@ -1865,11 +1991,11 @@ windower.register_event('prerender',function()
 	end
 
 	if now - UpdateTime1 > 4 then
-		weaponcheck()
+		dual_wield_check()
 		UpdateTime1 = now
 	end
 
-	if now - UpdateTime2 > .1 then
+	if now - UpdateTime2 > .25 then
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
 
