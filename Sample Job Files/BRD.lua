@@ -400,7 +400,11 @@ function get_sets()
 		range=Instrument.Mordant,
 	})
 
-	sets.WS["Aeolian Edge"] = sets.WS.MAB
+	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
+	    head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+	})
 	sets.WS["Burning Blade"] = sets.WS.MAB
 	sets.WS["Shining Blade"] = set_combine( sets.WS.MAB, {
 		right_ring="Weather. Ring",
@@ -434,17 +438,13 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		equipSet = set_combine(equipSet, sets.Weapons.Songs)
-	end
+
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		equipSet = set_combine(equipSet, sets.Weapons.Songs)
-	end
+
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -481,16 +481,13 @@ end
 
 function check_buff_SP()
 	buff = 'None'
-	local sp_recasts = windower.ffxi.get_spell_recasts()
-
-
+	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
 
 function check_buff_JA()
 	buff = 'None'
-	local ja_recasts = windower.ffxi.get_ability_recasts()
-
+	--local ja_recasts = windower.ffxi.get_ability_recasts()
 	return buff
 end
 
