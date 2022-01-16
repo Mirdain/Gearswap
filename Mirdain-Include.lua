@@ -50,6 +50,7 @@ is_Busy = false
 is_Pianissimo = false
 is_moving = false
 is_Buffing = false
+is_first_time_load = true
 
 Time_Out = false
 
@@ -276,13 +277,13 @@ function pretargetcheck(spell,action)
 			cancel_spell()
 			log('TP:['..player.tp..']')
 			return
-		--Stop gear swap when you can't WS
+			--Stop gear swap when you can't WS
 		elseif buffactive['Amnesia'] then
 			cancel_spell()
 			info('Can\'t Weapon Skill due to amnesia.')
 			return
 		end
-	--Cancel ability due to abilty not ready
+		--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 		local abil_recasts_table = windower.ffxi.get_ability_recasts()
 		local ability_time = abil_recasts_table[spell.recast_id]/60
@@ -326,7 +327,7 @@ function pretargetcheck(spell,action)
 					log('Redirect Spell:[SELF TARGET]')
 					change_target('<me>')
 				end
-			-- Enemy Spells
+				-- Enemy Spells
 			elseif tostring(cast_spell.targets) == '{Enemy}' then
 				if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
 					--Cancel Spell
@@ -335,7 +336,7 @@ function pretargetcheck(spell,action)
 					cancel_spell()
 					return
 				end
-			-- Party Buffs
+				-- Party Buffs
 			elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 				if spell.target.type == 'MONSTER' then
 					if spell.type == 'BardSong' then
@@ -551,13 +552,6 @@ function precastequip(spell)
 	-- BardSong
 	elseif spell.type == 'BardSong' then
 		equipSet = sets.Precast
-
-		if DualWield == false then
-			equipSet = set_combine(equipSet, sets.Weapons.Songs)
-		else
-			equipSet = set_combine(equipSet, sets.Weapons.Songs.DualWield)
-		end
-
 		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
 			-- Song Count for Minne and Paeon
@@ -628,14 +622,40 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
-
+	end
+	-- Check that proper ammo is available if the action requires it
+	if spell.skill == "Marksmanship" or spell.skill == "Archery" or spell.action_type == 'Ranged Attack' then
+		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
+			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
+		end
+	end
 	-- Weapon Checks for precast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
 		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+		if DualWield == false then
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
+		end
 		log('Precast set equiping Offense Mode Gear')
 	end
-
+	--Swap in bard song weapons
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
+		equipSet = set_combine(equipSet, sets.Weapons.Songs)
+		if DualWield == false then
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
+		end
+	end
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+	--Equip body
+	if spell.name == "Impact" then
+		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
 	end
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
@@ -838,18 +858,13 @@ function midcastequip(spell)
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
 		equipSet = sets.Midcast
-		if DualWield == false then
-			equipSet = set_combine(equipSet, sets.Weapons.Songs)
-		else
-			equipSet = set_combine(equipSet, sets.Weapons.Songs.DualWield)
-		end
 		-- Song Count for Minne and Paeon
 		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
 			equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
-			equipSet = set_combine(equipSet, {range=Instrument.Honor})
+			equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Honor})
 		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
 			info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
@@ -946,14 +961,34 @@ function midcastequip(spell)
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		send_command('wait .5;cancel 66;')
 	end
-
-	-- Weapon Checks for precast
+	-- Weapon Checks for midcast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
 		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+		if DualWield == false then
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
+		end
 		log('Midcast set equiping Offense Mode Gear')
 	end
-
+	--Swap in bard song weapons
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
+		equipSet = set_combine(equipSet, sets.Weapons.Songs)
+		if DualWield == false then
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
+		end
+	end
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+	--Equip body
+	if spell.name == "Impact" then
+		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
+	end
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
@@ -1025,20 +1060,6 @@ function precast(spell)
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
-	-- Check that proper ammo is available if the action requires it
-	if spell.skill == "Marksmanship" or spell.skill == "Archery" or spell.action_type == 'Ranged Attack' then
-		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
-			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
-		end
-	end
-	--Equip on main hand
-	if spell.name == "Dispelga" then
-		equipSet = set_combine(equipSet, {main="Daybreak"})
-	end
-	--Equip body
-	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
-	end
 	-- here is where gear is actually equipped
 	equip(equipSet)
  end
@@ -1051,22 +1072,10 @@ function midcast(spell)
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
-
-	--Equip on main hand
-	if spell.name == "Dispelga" then
-		equipSet = set_combine(equipSet, {main="Daybreak"})
-	end
-
-	--Equip body
-	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
-	end
-
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- You passed the checks - player will begin action
 	is_Busy = true
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1079,7 +1088,6 @@ function aftercast(spell)
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
 	-- here is where gear is actually equipped
 	equip(equipSet)
-
 	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
 		SpellCastTime = 2.5
@@ -1183,19 +1191,13 @@ function choose_set()
 
 	-- Combat Checks
 	if player.status == "Engaged" then
-		-- Weapon Checks
-		if DualWield == true then
+		equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+		if DualWield == false then
 			if TwoHand == false then
-				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.DualWield, sets.Weapons[state.WeaponMode.value])
-			else
-				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
 			end
 		else
-			if TwoHand == false then
-				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons.Shield, sets.Weapons[state.WeaponMode.value])
-			else
-				equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-			end
+			equipSet = set_combine(equipSet, sets.DualWield)
 		end
 		-- Check if TreasureMode is active
 		if state.TreasureMode.value ~= 'None' then
@@ -1214,11 +1216,11 @@ function choose_set()
 	else
 		-- Weapon Checks
 		equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-
-		if TwoHand == false and DualWield == false then
-			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		if DualWield == false then
+			if TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
 		end
-
 		--Pet specific checks
 		if pet.isvalid then
 			--Augment built set for Perp cost
@@ -1747,7 +1749,7 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	end
 	if Organizer == true then
 		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet)
-		send_command('wait 5;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 5;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+		send_command('wait 10;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 10;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 	else
 		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
 		';wait 1;input /macro set '..MacroSet..
