@@ -863,8 +863,12 @@ function midcastequip(spell)
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
 		equipSet = sets.Midcast
+		-- Defined Gear Set
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equip_song_gear(spell), equipSet[spell.english])
+			info( '['..spell.english..'] Set')
 		-- Song Count for Minne and Paeon
-		if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
+		elseif spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
 			equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
@@ -945,18 +949,33 @@ function midcastequip(spell)
 		-- BP Timer gear needs to swap here if not under Astral Conduit
 		if not buffactive["Astral Conduit"] then
 			equipSet = sets.Midcast
-			equipSet = set_combine(equipSet, sets.Midcast.BP)
+			if equipSet[spell.english] then
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+				info('['..spell.english..'] Set')
+			else
+				equipSet = set_combine(equipSet, sets.Midcast.BP)
+			end
 		else
 			equipSet = {}
 		end
 	-- Elemental Siphon
 	elseif spell.name=="Elemental Siphon" then
 		equipSet = sets.Midcast
-		equipSet = set_combine(equipSet, sets.Midcast.SummoningMagic)
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			equipSet = set_combine(equipSet, sets.Midcast.SummoningMagic)
+		end
 	-- Summon Avatar
 	elseif spell.type=="SummonerPact" then
 		equipSet = sets.Midcast
-		equipSet = set_combine(equipSet, sets.Midcast.Summon)
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			equipSet = set_combine(equipSet, sets.Midcast.Summon)
+		end
 	end
 	-- Auto-cancel existing buffs
 	if spell.name=="Stoneskin" and buffactive["Stoneskin"] then
