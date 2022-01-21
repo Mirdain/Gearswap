@@ -135,8 +135,6 @@ function get_sets()
 	sets.OffenseMode.DT = sets.OffenseMode.TP
 	sets.OffenseMode.ACC = sets.OffenseMode.TP
 	sets.DualWield = {back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dual Wield"+10','Phys. dmg. taken-10%',}}}
-	sets.Enspell = {hands="Aya. Manopolas +2", waist="Orpheus's Sash",}
-	sets.Saboteur = {hands="Leth. Gantherots +1",}
 
 	-- Used for Magic Spells
 	sets.Precast = {}
@@ -189,14 +187,15 @@ function get_sets()
 
 	-- Cure Set
 	sets.Midcast.Cure = {
-		ammo="Hydrocera",
+		sub="Sacro Bulwark",
+		ammo="Psilomene",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
+		body="Zendik Robe",
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
+		neck="Incanter's Torque",
+		waist="Sacro Cord",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Mendi. Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
@@ -220,8 +219,7 @@ function get_sets()
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 20
-		-- 150% Duration
-	}
+	} -- 150% Duration
 
 	-- Enhancing Duration on OTHERS
 	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
@@ -240,8 +238,9 @@ function get_sets()
 		hands={ name="Viti. Gloves +3", augments={'Enhancing Magic duration',}},
 	})
 
-	-- Enfeebling -- Default Duration
+	-- Enfeebling
 	sets.Midcast.Enfeebling = {
+		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub="Ammurapi Shield",
 		ammo="Regal Gem",
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
@@ -253,19 +252,38 @@ function get_sets()
 		waist="Luminary Sash",
 		left_ear="Regal Earring",
 		right_ear="Snotra Earring",
-		left_ring="Kishar Ring",
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		left_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 
+	-- Skill Based ('Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga')
 	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
-		right_ear="Digni. Earring",
-		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+
 	})
 
+	 -- Potency Basted ('Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II')
 	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
-		body="Lethargy Sayon +1",
+		ammo="Regal Gem", -- 10%
+		body="Lethargy Sayon +1", -- 14%
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10%
+		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}}, -- 10%
+		neck={ name="Dls. Torque +2", augments={'Path: A',}}, -- 10%
 	})
+
+	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga')
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MND, {
+		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
+		--hands="Regal Cuffs" --20%
+		right_ear="Snotra Earring", -- 10%
+		left_ring="Kishar Ring", -- 10%
+		waist={ name="Obstin. Sash", augments={'Path: A',}}, -- 5%
+		neck={ name="Dls. Torque +2", augments={'Path: A',}}, -- 25%
+	})
+
+	sets.Enspell = {hands="Aya. Manopolas +2", waist="Orpheus's Sash",}
+
+	sets.Saboteur = {hands="Leth. Gantherots +1",}
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
@@ -278,7 +296,7 @@ function get_sets()
 		head="Amalric Coif +1"
 	})
 
-	-- Spells that require SKILL - RDM only needs 500 or more except Temper II
+	-- Spells that require SKILL - RDM only needs +500 skill except Temper II
 	sets.Midcast["Temper II"] = set_combine(sets.Midcast.Enhancing, {
 		ammo="Hydrocera",
 		head="Befouled Crown",
@@ -291,33 +309,13 @@ function get_sets()
 
 	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
 	sets.Midcast["Dispelga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
-	sets.Midcast["Frazzle"] = sets.Midcast.Enfeebling.MACC
-	sets.Midcast["Frazzle II"] = sets.Midcast.Enfeebling.MACC
-	sets.Midcast["Frazzle III"] = sets.Midcast.Enfeebling.Potency
-	sets.Midcast["Impact"] = set_combine (sets.Midcast.Enfeebling, {body="Crep. Cloak",})
+
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
 		body="Atrophy Tabard +3",
 		legs="Leth. Fuseau +1",
 		right_ear={ name="Tuisto Earring", priority=1},
 	})
-
-	sets.Midcast["Stun"] = {
-		sub="Ammurapi Shield",
-		ammo="Pemphredo Tathlum",
-		head="C. Palug Crown",
-		body="Atrophy Tabard +3",
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
-		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Luminary Sash",
-		left_ear="Malignance Earring",
-		right_ear="Regal Earring",
-		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
 
 	sets.Midcast.Nuke = {
 		sub="Ammurapi Shield",
@@ -335,10 +333,6 @@ function get_sets()
 		right_ring="Freke Ring",
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-
-	sets.Midcast["Impact"] = set_combine(sets.Midcast.Nuke,{
-		body="Twilight Cloak",
-	})
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
 		neck="Mizu. Kubikazari",
@@ -408,7 +402,13 @@ function get_sets()
 
 	sets.WS["Red Lotus Blade"] = sets.WS.MAB
 
-	sets.WS["Aeolian Edge"] = sets.WS.MAB
+	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		body="Nyame Mail",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		waist="Orpheus's Sash"
+	})
 
 	sets.WS["Chant du Cygne"] = sets.WS.CRIT
 
@@ -449,7 +449,6 @@ function midcast_custom(spell)
 	if buffactive['Saboteur'] and spell.skill == 'Enfeebling Magic' then
 		equipSet = sets.Saboteur
 	end
-
 	return equipSet
 end
 
