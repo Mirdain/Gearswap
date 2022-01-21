@@ -1034,7 +1034,7 @@ function aftercastequip(spell)
         return
     else
 		equipSet = {}
-		equipSet = equip(set_combine(choose_set(),choose_set_custom()))
+		equipSet = set_combine(choose_set(),choose_set_custom())
 		return equipSet
 	end
 end
