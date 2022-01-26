@@ -316,6 +316,8 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+local Luapan_Active = false
+
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
@@ -340,7 +342,13 @@ end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	equipSet = Luopan(equipSet)
+	-- Maintain the High HP of the Luopan
+	if geomancy:contains(spell.english) then
+		equipSet = set_combine(equipSet, sets.Luopan)
+		Luapan_Active = true
+	else
+		equipSet = Luopan(equipSet)
+	end
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
@@ -364,6 +372,9 @@ end
 
 function pet_change_custom(pet,gain)
 	equipSet = {}
+	if gain == false then
+		Luapan_Active = false
+	end
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
@@ -403,8 +414,9 @@ end
 
 function Luopan(equipSet) --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
 	equipSet = {}
-	if pet.isvalid then
+	if Luapan_Active == true then
 		equipSet = set_combine(equipSet, sets.Luopan)
 	end
+	log('luapan status: ['..tostring(Luapan_Active)..']')
 	return equipSet
 end
