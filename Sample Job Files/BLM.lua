@@ -37,6 +37,8 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 
+	sets.Weapons = {}
+
 	sets.Weapons['Nuke'] ={
 		main={ name="Marin Staff +1", augments={'Path: A',}},
 		sub="Enki Strap",
