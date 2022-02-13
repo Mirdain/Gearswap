@@ -204,6 +204,7 @@ BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{}
 
+Elemental_Magic_Enfeeble = S{'Burn','Frost','Choke','Rasp','Shock','Drown'}
 UtsusemiSpell = S{'Utsusemi: San','Utsusemi: San', 'Utsusemi: San'}
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
@@ -852,6 +853,10 @@ function midcastequip(spell)
 		elseif spell.skill == 'Enhancing Magic' then
 			info('Enhancing Magic Set')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
+		-- Enfeelbing Elemental Magic
+		elseif Elemental_Magic_Enfeeble:contains(spell.name) then
+			info('Enfeebling Magic Set - Magic Accuracy')
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 		else
 			-- If Auto Burst mode is turned on it will use the equip set for Bursting
 			if state.BurstMode.value ~= 'OFF' then
@@ -1215,7 +1220,7 @@ end
 
 function choose_set()
 	equipSet = {}
-
+	log('Choose Set Ran')
 	-- Combat Checks
 	if player.status == "Engaged" then
 		equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
@@ -1320,7 +1325,7 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 		end
     end
 
-    local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
+    local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name] or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] 
     -- If no ammo is available, give appropriate warning and end.
     if not available_bullets then
         if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
@@ -1749,7 +1754,7 @@ function mouse_event(type, x, y, delta, blocked)
     end
 end
 
-windower.register_event('mouse', mouse_event)
+--windower.register_event('mouse', mouse_event)
 
 -- Unbind Keys when the file is unloaded
 function file_unload(file_name)
@@ -1768,6 +1773,13 @@ send_command('bind f12 gs c ModeChange')
 send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
 send_command('bind f9 gs c WeaponMode')
+send_command('bind = gs c jobmode')
+
+windower.add_to_chat(8,'Mode Change     (F12)')
+windower.add_to_chat(8,'Treasur Hunter   (F11)')
+windower.add_to_chat(8,'Auto Buff        (F10')
+windower.add_to_chat(8,'Weapon Mode    (F9)')
+windower.add_to_chat(8,'Job Mode         (=)')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
@@ -1775,12 +1787,11 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 	end
 	if Organizer == true then
-		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet)
-		send_command('wait 10;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 10;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+		';wait 1;input /macro set '..MacroSet..';wait 10;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 10;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 	else
 		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
-		';wait 1;input /macro set '..MacroSet..
-		';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+		';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 	end
 end
 
@@ -2001,71 +2012,53 @@ end
 -- Movement Detection Section
 -------------------------------------------------------------------------------------------------------------------
 
-mov = {counter=0, x=0, y=0, x=0}
-
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+mov = {x=0, y=0, z=0}
 
 windower.register_event('prerender',function()
 	local now = os.clock()
-
 	if is_Busy == true then
 		if now - Spellstart > SpellCastTime then
 			-- Action timed out
 			is_Busy = false
 		end
 	end
-
 	if now - UpdateTime1 > 4 then
 		dual_wield_check()
 		UpdateTime1 = now
 	end
-
 	if now - UpdateTime2 > .25 then
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
-
 		-- Status Ailment Check
 		if not buffactive['Muddle'] then
 			if not buffactive['Paralysis'] and not buffactive['Silence'] and player.status ~= "Dead" and player.status ~= "Engaged dead" then
 				check_buff()
 			end									
 		end
-		UpdateTime2 = now
-	end
-
-    mov.counter = mov.counter + 1;
-    if mov.counter > 10 then
-        local pl = windower.ffxi.get_mob_by_index(player.index)
-        if pl and pl.x and mov.x and not buffactive['Mounted'] then
-            local movement = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 ) > 0.5
-            if movement and not is_moving then
+		local position = windower.ffxi.get_mob_by_id(player.id)
+		if position and not buffactive['Mounted'] then
+			local movement = math.sqrt( (position.x-mov.x)^2 + (position.y-mov.y)^2 + (position.z-mov.z)^2 ) > 0.5
+			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
 					--send_command('input /echo Moving! Status: '..player.status..'')
 					equip(set_combine(choose_set(),choose_set_custom()))
 				end
-            elseif not movement and is_moving then
+			elseif not movement and is_moving then
 				is_moving = false
 				--send_command('input /echo Stopped Moving! Status: '..player.status..'')
 				equip(set_combine(choose_set(),choose_set_custom()))
 			end
-        end
-        if pl and pl.x then
-            mov.x = pl.x
-            mov.y = pl.y
-            mov.z = pl.z
-        end
-        mov.counter = 0
-    end
+			mov.x = position.x
+			mov.y = position.y
+			mov.z = position.z
+		end
+		UpdateTime2 = now
+	end
 end)
 
 -- Section used to determine if player is performing an action
 windower.register_event('action', function (data)
-
 	-- category
 
 	-- [1] = 'Melee attack',
