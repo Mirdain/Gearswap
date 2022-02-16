@@ -25,7 +25,7 @@ state.OffenseMode:set('DT')
 
 --Weapon Modes
 state.WeaponMode:options('Nuke','Unlocked')
-state.WeaponMode:set('Unlocked')
+state.WeaponMode:set('Nuke')
 
 -- Set to true to run organizer on job changes
 Organizer = false
@@ -204,14 +204,14 @@ function get_sets()
 		left_ring="Mujin Band",
 	})
 
-	sets.Midcast["Impact"] = set_combine(sets.Midcast.Nuke,{
-		body="Twilight Cloak",
-	})
-
 	-- Misc Sets
 	sets.Midcast.CuragaSet = sets.Midcast.Cure
 
 	sets.Midcast.Cursna = {}
+
+	sets.MP_Recover = {
+	    body="Spaekona's Coat +3",
+	}
 
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = {}
@@ -297,7 +297,12 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-
+	if spell.skill == 'Elemental Magic' and not Elemental_Magic_Enfeeble:contains(spell.name) then
+		if player.MPP < 50 then
+			windower.add_to_chat(8,'Recover MP!')
+			equipSet = sets.MP_Recover
+		end
+	end
 	return equipSet
 end
 -- Augment basic equipment sets
