@@ -193,8 +193,8 @@ function get_sets()
 		range=Instrument.FastCast, -- 6
 		head="Bunzi's Hat", -- 10
 		body="Inyanga Jubbah +2", -- 14
-		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}}, -- 7
-		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}, priority=3}, -- 6
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
+		legs="Aya. Cosciales +2", --6
 		feet="Volte Gaiters", -- 6
 		neck="Voltsurge Torque", -- 4
 		waist="Embla Sash", -- 5
@@ -232,7 +232,7 @@ function get_sets()
 	}
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
-	sets.Midcast.DummySongs = set_combine(sets.Midcast, {feet="Volte Gaiters"})
+	sets.Midcast.DummySongs = set_combine(sets.Midcast, {feet="Bunzi's Sabots",})
 
 	-- Cure Set
 	sets.Midcast.Cure = {

@@ -49,15 +49,15 @@ state.WeaponMode:set('Epeolatry')
 --Enable JobMode for UI.
 UI_Name = 'Runes'
 --Modes for specific to RUN
-state.JobMode:options('None','Fire','Ice','Wind','Earth','Lighting','Water','Light','Dark') -- Modes used to use Rune Enhancement
+state.JobMode:options('None','Fire','Ice','Wind','Earth','Lightning','Water','Light','Dark') -- Modes used to use Rune Enhancement
 state.JobMode:set('None')
 
 Runes = {
 	Fire = {Name = "Ignis", Description = "[ICE RESISTANCE] and deals [FIRE DAMAGE]"},
 	Ice = {Name = "Gelus", Description = "[WIND RESISTANCE] and deals [ICE DAMAGE]"},
 	Wind = {Name = "Flabra", Description = "[EARTH RESISTANCE] and deals [WIND DAMAGE]"},
-	Earth = {Name = "Tellus", Description = "[LIGHTING RESISTANCE] and deals [EARTH DAMAGE]"},
-	Lighting = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTING DAMAGE]"},
+	Earth = {Name = "Tellus", Description = "[LIGHTNING RESISTANCE] and deals [EARTH DAMAGE]"},
+	Lightning = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTNING DAMAGE]"},
 	Water = {Name = "Unda", Description = "[FIRE RESISTANCE] and deals [WATER DAMAGE]"},
 	Light = {Name = "Lux", Description = "[DARK RESISTANCE] and deals [LIGHT DAMAGE]"},
 	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"},
