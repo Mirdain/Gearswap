@@ -40,7 +40,7 @@ Random_Lockstyle = false
 Lockstyle_List = {}
 
 UI_Name = ''
-UI_State = ''
+UI_Name2 = ''
 
 Enemy_ID = 0
 
@@ -106,6 +106,12 @@ state.RAMode = M{['description']='Ranged Attack Mode'}
 state.RAMode:options('Bullet','Arrow','Bolt')
 state.RAMode:set('Bullet')
 
+--Job specific modes
+state.JobMode2 = {}
+state.JobMode2 = M{['description']='Job Specific Mode'}
+state.JobMode2:options('OFF','ON')
+state.JobMode2:set('OFF')
+
 --State for Ammunition check
 state.warned = M(false)
 
@@ -132,6 +138,9 @@ function display_box_update()
 	dialog[4] = {description = 'DPS', value = state.WeaponMode.value}
 	if UI_Name ~= "" then
 		dialog[5] = {description = UI_Name, value = state.JobMode.value}
+	end
+	if UI_Name2 ~= "" then
+		dialog[6] = {description = UI_Name2, value = state.JobMode2.value}
 	end
 	lines = T{}
     for k, v in next, dialog do
@@ -205,7 +214,7 @@ BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','B
 BlueTank = S{}
 
 Elemental_Magic_Enfeeble = S{'Burn','Frost','Choke','Rasp','Shock','Drown'}
-UtsusemiSpell = S{'Utsusemi: San','Utsusemi: San', 'Utsusemi: San'}
+UtsusemiSpell = S{'Utsusemi: Ichi','Utsusemi: Ni', 'Utsusemi: San'}
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
@@ -508,6 +517,9 @@ function precastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info('['..spell.english..'] Precast Set')
+		elseif UtsusemiSpell:contains(spell.name) then
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.QuickMagic)
+			info('['..spell.english..'] Quick Magic Set')
 		else
 			equipSet = set_combine(equipSet, sets.Precast.FastCast)
 			if spell.skill == 'Enhancing Magic' then
@@ -1564,6 +1576,30 @@ function self_command(cmd)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
 		end
+	elseif command:contains('jobmode2') then
+		if command == 'jobmode2' then
+			for i,v in ipairs(state.JobMode2) do
+				if state.JobMode2.value == v then
+					if state.JobMode2.value ~= state.JobMode2[#state.JobMode2] then
+						state.JobMode2:set(state.JobMode2[i+1])
+					else
+						state.JobMode2:set(state.JobMode2[1])
+					end
+					info('Mode: ['..state.JobMode2.value..']')
+					self_command_custom(command)
+					equip(set_combine(choose_set(),choose_set_custom()))
+					return
+				end
+			end
+		else
+			local mode = {}
+			mode = string.split(cmd," ",2)
+			state.JobMode2:set(mode[2])
+			info('Job Mode 2: ['..state.JobMode2.value..']')
+			self_command_custom(command)
+			equip(set_combine(choose_set(),choose_set_custom()))
+			return
+		end
 	elseif command:contains('jobmode') then
 		if command == 'jobmode' then
 			for i,v in ipairs(state.JobMode) do
@@ -1787,7 +1823,7 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 	end
 	if Organizer == true then
-		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+		send_command('wait 5;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
 		';wait 1;input /macro set '..MacroSet..';wait 10;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 10;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 	else
 		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
