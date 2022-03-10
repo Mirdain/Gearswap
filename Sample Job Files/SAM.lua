@@ -31,7 +31,7 @@ state.OffenseMode:options('TP','ACC','DT','SB','PDL') -- ACC effects WS and TP m
 state.OffenseMode:set('DT')
 
 --Weapons specific to Samurai
-state.WeaponMode:options('Masamune', 'Dojikiri', 'Shining One')
+state.WeaponMode:options('Masamune', 'Dojikiri', 'Shining One', 'Yoichinoyumi')
 state.WeaponMode:set('Masamune')
 
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -49,6 +49,13 @@ function get_sets()
 	sets.Weapons['Masamune'] = {
 		main={ name="Masamune", augments={'Path: A',}},
 		sub="Utu Grip",
+	}
+	
+	sets.Weapons['Yoichinoyumi'] = {
+		main={ name="Dojikiri Yasutsuna", augments={'Path: A',}},
+		sub="Utu Grip",
+		range="Yoichinoyumi",
+		ammo="Stone Arrow"
 	}
 
 	sets.Weapons['Shining One'] = {
@@ -157,6 +164,42 @@ function get_sets()
 
 	sets.Precast = {}
 
+	-- 70 snapshot is Cap
+	-- Rapid shot is like quick magic
+	-- Snapshot is like Fast Cast
+
+	-- True Shot Ranges (Increases RA and WS and)
+		-- Distances listed below are effected by Monster Size
+		-- Gun ~6.5 yalms
+		-- Short Bow ~8.6 yalms
+		-- Crossbow ~10.7 yalms
+		-- Long Bow ~ 11.8 yalms
+
+	-- Flurry is 15% Snapshot
+	-- Flurry II 30% Snapshot
+
+	-- Snapshot / Rapidshot
+	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
+		ammo=Ammo.RA,
+		waist="Yemaya Belt", -- 0 / 5
+		right_ring="Crepuscular Ring", -- 3
+    })	
+
+	-- Only the bullet needs to be set for ACC sets (so that it will match the sets.Midcast.RA.ACC)
+    sets.Precast.RA.ACC = set_combine(sets.Precast.RA, {
+		ammo=Ammo.ACC,
+    })
+
+	-- Flurry - 55 Snapshot Needed
+	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
+
+	}) 
+
+	-- Flurry II - 40 Snapshot Needed
+	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
+
+    })
+
 	-- Used for Magic Spells (Fast Cast)
 	sets.Precast.FastCast = set_combine (sets.Idle.DT, {
 		ammo="Sapience Orb",
@@ -182,6 +225,26 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
+
+		-- Ranged Attack Gear (Normal Midshot)
+    sets.Midcast.RA = set_combine(sets.Midcast, {
+
+    })
+
+	-- Ranged Attack Gear (High Accuracy Midshot)
+    sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
+		ammo=Ammo.ACC,
+    })
+
+	-- Ranged Attack Gear (Physical Damage Limit)
+    sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
+
+    })
+
+	-- Ranged Attack Gear (Critical Build)
+    sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
+
+    })
 	
 	--Job Abilities
 	sets.JA = {}
