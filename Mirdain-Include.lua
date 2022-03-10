@@ -58,6 +58,7 @@ Time_Out = false
 debug_value = 0
 
 state = state or {}
+Ammo_Warning_Limit = 99
 
 -- Required gear set.  Expand this in the job file when defining sets.
 sets.TreasureHunter = {}
@@ -648,10 +649,8 @@ function precastequip(spell)
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
 		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-		if DualWield == false then
-			if TwoHand == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
-			end
+		if TwoHand == false and DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
 		end
 		log('Precast set equiping Offense Mode Gear')
 	end
@@ -1009,10 +1008,8 @@ function midcastequip(spell)
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
 		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-		if DualWield == false then
-			if TwoHand == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
-			end
+		if TwoHand == false and DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
 		end
 		log('Midcast set equiping Offense Mode Gear')
 	end
@@ -1260,10 +1257,8 @@ function choose_set()
 	else
 		-- Weapon Checks
 		equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-		if DualWield == false then
-			if TwoHand == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
-			end
+		if DualWield == false and TwoHand == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
 		end
 		--Pet specific checks
 		if pet.isvalid then
@@ -1323,60 +1318,62 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
     local bullet_name
     local bullet_min_count = 1
 
-	bullet_name = equipSet.ammo
+	if equipSet then
+		bullet_name = equipSet.ammo
+		--windower.add_to_chat(8,'['..bullet_name..']')
 
-	--windower.add_to_chat(8,'['..bullet_name..']')
-
-    if spell.action_type == 'Ranged Attack' then
-        if buffactive['Triple Shot'] then
-            bullet_min_count = 3
-        elseif buffactive['Double Shot'] then
-		    bullet_min_count = 2
-		elseif buffactive['Barrage'] then
-			bullet_min_count = 8
+		if spell.action_type == 'Ranged Attack' then
+			if buffactive['Triple Shot'] then
+				bullet_min_count = 3
+			elseif buffactive['Double Shot'] then
+				bullet_min_count = 2
+			elseif buffactive['Barrage'] then
+				bullet_min_count = 8
+			end
 		end
-    end
 
-    local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name] or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] 
-    -- If no ammo is available, give appropriate warning and end.
-    if not available_bullets then
-        if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
-            add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
-            return
-        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == Ammo.Bullet.RA then
-            add_to_chat(104, 'No weaponskill ammo left.  Using what\'s currently equipped (standard ranged bullets: '..player.equipment.ammo..').')
-            return
-        else
-            add_to_chat(104, 'No ammo ('..tostring(bullet_name)..') available for that action.')
+		local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name] or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] 
+
+		-- If no ammo is available, give appropriate warning and end.
+		if not available_bullets then
+			if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
+				add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
+				return
+			elseif spell.type == 'WeaponSkill' and player.equipment.ammo == Ammo.Bullet.RA then
+				add_to_chat(104, 'No weaponskill ammo left.  Using what\'s currently equipped (standard ranged bullets: '..player.equipment.ammo..').')
+				return
+			else
+				add_to_chat(104, 'No ammo ('..tostring(bullet_name)..') available for that action.')
+				cancel_spell()
+				return
+			end
+		end
+		-- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
+		if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
+			add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 			cancel_spell()
 			return
-        end
-    end
-    -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-    if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
-        add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
-		cancel_spell()
-		return
-    end
-    -- Low ammo warning.
-    if spell.type ~= 'CorsairShot' and state.warned.value == false
-        and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
-        local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' on '..player.name..' *****'
-        local border = ""
-        for i = 2, #msg do
-            border = border .. "*"
-        end
+		end
+		-- Low ammo warning.
+		if spell.type ~= 'CorsairShot' and state.warned.value == false
+			and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
+			local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' on '..player.name..' *****'
+			local border = ""
+			for i = 2, #msg do
+				border = border .. "*"
+			end
 
-		send_command('send @others input /echo '..msg..'')
+			send_command('send @others input /echo '..msg..'')
 		
-        add_to_chat(167, border)
-        add_to_chat(167, msg)
-        add_to_chat(167, border)
+			add_to_chat(167, border)
+			add_to_chat(167, msg)
+			add_to_chat(167, border)
 
-        state.warned:set()
-    elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
-        state.warned:reset()
-    end
+			state.warned:set()
+		elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
+			state.warned:reset()
+		end
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
