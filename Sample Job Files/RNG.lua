@@ -33,7 +33,7 @@ state.OffenseMode:set('TP')
 Organizer = true
 
 --Modes for specific to Ranger
-state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Naegling', 'Tauret')
+state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Yoichinoyumi','Naegling', 'Tauret')
 state.WeaponMode:set('Fomalhaut')
 
 -- load addons
@@ -46,6 +46,7 @@ Ranged_Weapons = {
 	{WeaponMode = "Fomalhaut", Type = "Bullet"},
 	{WeaponMode = "Annihilator", Type = "Bullet"},
 	{WeaponMode = "Fail-Not", Type = "Arrow"},
+	{WeaponMode = "Yoichinoyumi", Type = "Arrow"},
 	{WeaponMode = "Gastraphetes", Type = "Bolt"},
 	{WeaponMode = "Tauret", Type = "Bullet"},
 }
@@ -97,6 +98,12 @@ function get_sets()
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
+	sets.Weapons['Yoichinoyumi'] = {
+		main={ name="Perun +1", augments={'Path: A',}},
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+		range="Yoichinoyumi",
+	}
+
 	sets.Weapons.Shield = {
 		sub={ name="Nusku Shield",},
 	}
@@ -122,17 +129,18 @@ function get_sets()
 
 	Ammo.Bolt.RA = "Quelling Bolt"			-- TP Ammo
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
-	Ammo.Bolt.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+	Ammo.Bolt.CRIT = "Quelling Bolt"		-- Critical Hit Mode Ammo
 	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (consumed)
 	Ammo.Bolt.MAB = "Quelling Bolt"			-- Magical Weaponskills
 	Ammo.Bolt.MACC = "Quelling Bolt"		-- Magic Accuracy
 	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic  (Not consumed)
-	Ammo.Bolt.PHY_WS = "Chrono Bullet"		-- Magic Weaponskills (Not Consumed)
+	Ammo.Bolt.PHY_WS = "Quelling Bolt"		-- Magic Weaponskills (Not Consumed)
 
 	--Modes to select correct ammo based off weapon type
 	Ammo.RA = Ammo[state.RAMode.value].RA
 	Ammo.ACC = Ammo[state.RAMode.value].ACC
 	Ammo.CRIT = Ammo[state.RAMode.value].CRIT
+	Ammo.WS = Ammo[state.RAMode.value].WS
 	Ammo.WSD = Ammo[state.RAMode.value].WSD
 	Ammo.MAB = Ammo[state.RAMode.value].MAB
 	Ammo.MACC = Ammo[state.RAMode.value].MACC
@@ -446,6 +454,7 @@ function get_sets()
 	sets.WS["Refulgent Arrow"] = set_combine(sets.WS.WSD, {})
 	sets.WS["Jishnu's Radiance"] = set_combine(sets.WS.WSD, {})
 	sets.WS["Apex Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Namas Arrow"] = set_combine(sets.WS.WSD, {})
 
 	-- Sword Weaponskills
 	sets.WS["Fast Blade"] = set_combine(sets.WS.WSD, {})
@@ -570,6 +579,7 @@ function Smart_Ammo ()
 				get_sets()
 			end
 			log('Ammo Mode is ['..state.RAMode.value..']')
+			equip({ammo=Ammo.RA})
 			return
 		end
 	end

@@ -63,6 +63,9 @@ function get_sets()
 		sub="Utu Grip",
 	}
 
+	--Default arrow to use
+	Ammo.RA = "Stone Arrow"
+
 	-- Standard Idle set with -DT, Refresh and Regen gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
