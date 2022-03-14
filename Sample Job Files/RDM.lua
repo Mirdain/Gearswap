@@ -74,7 +74,7 @@ function get_sets()
 
 	sets.Weapons['Black Halo'] ={
 		main="Maxentius",
-		sub={ name="Demers. Degen +1", augments={'Path: A',}},
+		sub={ name="Machaera +2", augments={'TP Bonus +1000',}},
 	}
 
 	sets.Weapons['Unlocked'] ={
@@ -274,7 +274,7 @@ function get_sets()
 	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga')
 	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MND, {
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
-		--hands="Regal Cuffs" --20%
+		hands="Regal Cuffs", --20%
 		right_ear="Snotra Earring", -- 10%
 		left_ring="Kishar Ring", -- 10%
 		waist={ name="Obstin. Sash", augments={'Path: A',}}, -- 5%
@@ -414,6 +414,22 @@ function get_sets()
 
 	sets.WS["Savage Blade"] = sets.WS.WSD
 
+	sets.WS["Black Halo"] = {
+	    ammo="Crepuscular Pebble",
+		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
+		body="Malignance Tabard",
+		hands="Atrophy Gloves +3",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck={ name="Dls. Torque +2", augments={'Path: A',}},
+		waist="Grunfeld Rope",
+		left_ear="Ishvara Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Petrov Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
 	sets.TreasureHunter = {
 	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
 		waist="Chaac Belt",
@@ -495,6 +511,7 @@ end
 function self_command_custom(command)
 
 end
+
 -- This function is called when the job file is unloaded
 function user_file_unload()
 

@@ -70,6 +70,7 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}, priority=2}, -- 10/0
     }
 
+
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
 	    waist="Embla Sash", -- +3 Submlimation when active

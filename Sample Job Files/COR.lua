@@ -27,7 +27,7 @@ state.OffenseMode:set('TP')
 state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
 state.WeaponMode:set('Death Penalty')
 
-elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
+elemental_ws = S{'Aeolian Edge','Leaden Salute','Wildfire','Hot Shot','Gust Slash','Cyclone','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
 -- load addons
 send_command('lua l autocor')
@@ -201,7 +201,7 @@ function get_sets()
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+7','"Fast Cast"+6',}}, -- 6
 		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}}, -- 8
 		neck="Voltsurge Torque", -- 4
-		waist="Sailfi Belt",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Loquac. Earring", -- 2
 		right_ear="Etiolation Earring", -- 1
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
@@ -385,10 +385,10 @@ function get_sets()
 
 	sets.WS.MAB = {
 		ammo=Ammo.Bullet.MAB,
-		head={ name="Herculean Helm", augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','Crit.hit rate+2','MND+1','Mag. Acc.+9','"Mag.Atk.Bns."+14',}},
+		head="Nyame Helm",
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands={ name="Herculean Gloves", augments={'Mag. Acc.+19 "Mag.Atk.Bns."+19','Mag. Acc.+14','"Mag.Atk.Bns."+13',}},
-		legs={ name="Herculean Trousers", augments={'"Mag.Atk.Bns."+28','CHR+2','Mag. Acc.+20 "Mag.Atk.Bns."+20',}},
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Eschan Stone",
@@ -398,6 +398,10 @@ function get_sets()
 		right_ring="Karieyh Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
+
+	sets.WS.MACC = set_combine(sets.WS.MAB, {
+		ammo=Ammo.Bullet.MACC,
+	})
 
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
 
@@ -411,12 +415,7 @@ function get_sets()
 	})
 
 	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
-		Ammo.Bullet.MAB,
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-	})
-
-	sets.WS.MACC = set_combine(sets.WS.MAB, {
-		ammo=Ammo.Bullet.MACC,
 	})
 
 	sets.WS.WSD = {
@@ -427,7 +426,7 @@ function get_sets()
 		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
-		waist="Grunfeld Rope",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
 		left_ring="Karieyh Ring",
@@ -447,7 +446,9 @@ function get_sets()
 	})
 
 	-- Uses Default WS set
-	sets.WS["Hot Shot"] = {}
+	sets.WS["Hot Shot"] = set_combine(sets.WS.MAB, {
+		body="Nyame Mail"
+	})
 	sets.WS["Split Shot"] = {}
 	sets.WS["Sniper Shot"] = {}
 	sets.WS["Slug Shot"] = {}
