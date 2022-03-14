@@ -12,6 +12,10 @@ state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS 
 
 --Enable JobMode for UI - Once locked-on and auto buff enabled it will do enmity actions
 UI_Name = 'Auto Tank'
+UI_Name2 = 'Runes'
+
+Buff_Delay = 10 -- Used this to slow down auto buffing
+Tank_Delay = 3 -- delays between tanking actions (only used when auto-buffing enabled and target locked on)
 
 --Modes for specific to Paladin.  These are defined below in "Weapons".
 state.WeaponMode:options('Burtgang','Naegling','Club')
@@ -24,6 +28,8 @@ function Macro_Sub_Job()
 		state.OffenseMode:set('DT')
 		macro = 3
 		send_command('wait 2;aset set tanking')
+	elseif player.sub_job == "RUN" then
+		macro = 4
 	else
 		state.OffenseMode:set('DT')
 		macro = 1
@@ -54,6 +60,24 @@ BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
 BlueHealing = S{'Magic Fruit', 'Healing Breeze','Pollen', 'Wild Carrot'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{'Jettatura','Blank Gaze','Sheep Song','Geist Wall'}
+
+-- Used when /RUN
+
+--Modes for specific to /RUN
+state.JobMode2:options('None','Fire','Ice','Wind','Earth','Lightning','Water','Light','Dark') -- Modes used to use Rune Enhancement
+state.JobMode2:set('None')
+
+Runes = {
+	Fire = {Name = "Ignis", Description = "[ICE RESISTANCE] and deals [FIRE DAMAGE]"},
+	Ice = {Name = "Gelus", Description = "[WIND RESISTANCE] and deals [ICE DAMAGE]"},
+	Wind = {Name = "Flabra", Description = "[EARTH RESISTANCE] and deals [WIND DAMAGE]"},
+	Earth = {Name = "Tellus", Description = "[LIGHTNING RESISTANCE] and deals [EARTH DAMAGE]"},
+	Lightning = {Name = "Sulpor", Description = "[WATER RESISTANCE] and deals [LIGHTNING DAMAGE]"},
+	Water = {Name = "Unda", Description = "[FIRE RESISTANCE] and deals [WATER DAMAGE]"},
+	Light = {Name = "Lux", Description = "[DARK RESISTANCE] and deals [LIGHT DAMAGE]"},
+	Dark = {Name = "Tenebrae", Description = "[LIGHT RESISTANCE] and deals [DARKNESS DAMAGE]"},
+	None = {Name = 'None', Description = "None"}
+}
 
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "13"
@@ -89,11 +113,12 @@ function get_sets()
 
 	--Default Shield
 	sets.Weapons.Shield = {
-		sub="Ochain",
+
 	}
 
 	-- Standard Idle set
 	sets.Idle = {
+		sub="Ochain",
 		ammo="Homiliary", -- Refresh
 		head="Sakpata's Helm", -- 7/7
 		body="Sakpata's Plate", -- 10/10
@@ -115,7 +140,7 @@ function get_sets()
 
 	sets.Idle.PDT = set_combine( sets.Idle, {
 	    waist="Flume Belt +1",
-		left_ear="Thureous Earring",
+		left_ear="Ethereal Earring",
 	})
 
 	sets.Idle.MEVA = set_combine( sets.Idle, {
@@ -171,7 +196,8 @@ function get_sets()
 
 	--This set is used when OffenseMode is PDT and Enaged (Augments the TP base set)
 	sets.OffenseMode.PDT = set_combine( sets.OffenseMode, {
-
+		waist="Flume Belt +1",
+		left_ear="Ethereal Earring",
 	})
 
 	--This set is used when OffenseMode is MEVA and Enaged (Augments the TP base set)
@@ -294,10 +320,6 @@ function get_sets()
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {}
 
-	sets.Midcast.Rampart ={
-
-	}
-
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
@@ -393,6 +415,10 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
+buff_time = os.clock()
+tank_time = os.clock()
+JA_Delay = os.clock()
+
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
@@ -456,61 +482,100 @@ end
 --Function used to automate Job Ability use
 function check_buff_JA()
 	buff = 'None'
-	local ja_recasts = windower.ffxi.get_ability_recasts()
+	if os.clock() - buff_time > Buff_Delay then
+		local ja_recasts = windower.ffxi.get_ability_recasts()
 
-	if player.sub_job == 'SAM' then
-		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
-			buff = "Hasso"
+		if player.sub_job == 'SAM' then
+			if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
+				buff = "Hasso"
+			end
+		end
+
+		if player.sub_job == 'WAR' then
+			if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+				buff = "Berserk"
+			end
+			if not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+				buff = "Aggressor"
+			end
+			if not buffactive['Warcry'] and ja_recasts[2] == 0 then
+				buff = "Warcry"
+			end
+		end
+
+		if player.sub_job == 'RUN' then
+			--Rune sets
+			if Runes[state.JobMode2.value].Name ~= "None" then
+				if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode2.value].Name] ~= 2 then
+					buff = Runes[state.JobMode2.value].Name
+					info(Runes[state.JobMode2.value].Description)
+				end
+			end
+		end
+
+		if not buffactive['Majesty'] and ja_recasts[150] == 0 then
+			buff = "Majesty"
+		elseif ja_recasts[46] == 0 and player.status == "Engaged" and state.JobMode.value == "ON" then
+			buff = "Shield Bash"
+		elseif ja_recasts[159] == 0 and player.status == "Engaged" and player.mp < 150 and player.tp > 2000 and state.JobMode.value == "ON" then
+			buff = "Chivary"
+		end
+
+		if buff ~= 'None' then
+			buff_time = os.clock()
 		end
 	end
-
-	if player.sub_job == 'WAR' then
-		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
-			buff = "Berserk"
-		end
-		if not buffactive['Aggressor'] and ja_recasts[4] == 0 then
-			buff = "Aggressor"
-		end
-		if not buffactive['Warcry'] and ja_recasts[2] == 0 then
-			buff = "Warcry"
-		end
-	end
-
-	if not buffactive['Majesty'] and ja_recasts[150] == 0 then
-		buff = "Majesty"
-	elseif ja_recasts[46] == 0 and player.status == "Engaged" and state.JobMode.value == "ON" then
-		buff = "Shield Bash"
-	elseif ja_recasts[159] == 0 and player.status == "Engaged" and player.mp < 150 and player.tp > 2000 and state.JobMode.value == "ON" then
-		buff = "Chivary"
-	end
-
 	return buff
 end
 
 --Function used to automate Spell use
 function check_buff_SP()
 	buff = 'None'
-	local sp_recasts = windower.ffxi.get_spell_recasts()
-	if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 18 then
-		buff = "Crusade"
-	elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 21 then
-		buff = "Phalanx"
-	elseif not buffactive['Reprisal'] and sp_recasts[97] == 0 and player.mp > 25 then
-		buff = "Reprisal"
-	elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 then
-		buff = "Enlight II"
-	end
+	if os.clock() - buff_time > Buff_Delay then
+		local sp_recasts = windower.ffxi.get_spell_recasts()
+		if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 18 then
+			buff = "Crusade"
+		elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 21 then
+			buff = "Phalanx"
+		elseif not buffactive['Reprisal'] and sp_recasts[97] == 0 and player.mp > 25 then
+			buff = "Reprisal"
+		elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 then
+			buff = "Enlight II"
+		end
 
-	if (player.status == "Engaged" or windower.ffxi.get_player().target_locked) and sp_recasts[112] == 0 and player.mp > 25 and state.JobMode.value == "ON" then
-		buff = "Flash"
-	end
+		if player.sub_job == "BLU" and player.sub_job_level > 8 then
+			if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
+				buff = "Cocoon"
+			end
+		end
 
-	if player.sub_job == "BLU" and player.sub_job_level > 8 then
-		if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
-			buff = "Cocoon"
+		if buff ~= 'None' then
+			buff_time = os.clock()
+		else
+			buff = check_tank()
+		end
+
+	end
+	return buff
+end
+
+function check_tank()
+	buff = 'None'
+	if os.clock() - tank_time > Tank_Delay then
+		if (player.status == "Engaged" or windower.ffxi.get_player().target_locked) and state.JobMode.value == "ON" then
+			local sp_recasts = windower.ffxi.get_spell_recasts()
+			if sp_recasts[112] == 0 and player.mp > 25 then
+				buff = "Flash"
+			end
+			--if sp_recasts[840] == 0 and player.mp > 48 then
+				--buff = "Foil"
+			--end
 		end
 	end
 
+	if buff ~= 'None' then
+		tank_time = os.clock()
+	end
 	return buff
 end
 
