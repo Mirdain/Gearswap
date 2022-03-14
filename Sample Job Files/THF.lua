@@ -28,8 +28,8 @@ state.OffenseMode:set('DT')
 Organizer = true
 
 --Weapons options
-state.WeaponMode:options('Tamin Sari')
-state.WeaponMode:set('Tamin Sari')
+state.WeaponMode:options('Aeneas','Naegling')
+state.WeaponMode:set('Aeneas')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -39,9 +39,14 @@ function get_sets()
 	-- Weapon setup
 	sets.Weapons = {}
 
-	sets.Weapons['Tamin Sari'] = {
-		main={ name="Taming Sari", augments={'STR+10','DEX+10','DMG:+15','"Treasure Hunter"+1',}},
-		sub={ name="Sandung", augments={'Accuracy+50','Crit. hit rate+5%','"Triple Atk."+3',}},
+	sets.Weapons['Aeneas'] = {
+		main={ name="Aeneas", augments={'Path: A',}},
+		sub="Gandring",
+	}
+
+	sets.Weapons['Naegling'] = {
+		main="Naegling",
+		sub="Gandring",
 	}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
@@ -53,12 +58,12 @@ function get_sets()
 		legs="Malignance Tights",
 		feet="Malignance Boots",
 		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
-		left_ear="Tuisto Earring",
+		waist="Carrier's Sash",
+		left_ear="Eabani Earring",
 		right_ear="Odnowa Earring +1",
 		left_ring="Moonlight Ring",
 		right_ring="Moonlight Ring",
-		back="Moonbeam Cape",
+		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 
 	sets.Movement = {
@@ -69,59 +74,69 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		ammo="Yamarang",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
 		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
-		neck="Sanctity Necklace",
+		neck={ name="Asn. Gorget +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
+		right_ear="Sherida Earring",
+		left_ear="Telos Earring",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
-		back="Moonbeam Cape",
+		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
+
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-	}
+	})
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {}
-	--Dual Wield
-	sets.OffenseMode.DW = {
 
+	--Dual Wield
+	sets.DualWield = {
+	    left_ear="Eabani Earring",
+	    waist="Reiki Yotai",
 	}
 
 	sets.Precast = {}
+
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb",
-		head={ name="Herculean Helm", augments={'Accuracy+15','"Fast Cast"+5','INT+9','Mag. Acc.+9','"Mag.Atk.Bns."+13',}},
-		body={ name="Taeon Tabard", augments={'"Fast Cast"+5',}},
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs={ name="Herculean Trousers", augments={'"Fast Cast"+5','MND+10','Mag. Acc.+12','"Mag.Atk.Bns."+9',}},
-		feet={ name="Herculean Boots", augments={'Mag. Acc.+23','"Fast Cast"+6','VIT+4','"Mag.Atk.Bns."+1',}},
-		neck="Voltsurge Torque",
+		ammo="Sapience Orb", -- 2
+		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}}, -- 13
+		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}}, -- 8
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, -- 6
+		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}}, -- 6
+		neck="Voltsurge Torque", --4
 		waist="Tempus Fugit",
-		left_ear="Etiolation Earring",
+		left_ear="Etiolation Earring", -- 1
 		right_ear="Tuisto Earring",
-		left_ring="Prolix Ring",
+		left_ring="Prolix Ring", -- 3
 		right_ring="Moonlight Ring",
-		back="Moonbeam Cape",
-	}
-	sets.Precast.Enmity = {
+	} -- 51
+
+	sets.Enmity = {
 	    ammo="Sapience Orb", -- 2
 	    left_ear="Cryptic Earring", -- 4
 		right_ear="Friomisi Earring", --2
 		left_ring="Petrov Ring", -- 4
-	    back="Phalangite Mantle", -- 5
 	}
+
+	-- Used for Raises and Cure spells
+	sets.Precast.QuickMagic = set_combine( sets.Precast.FastCast, {
+
+	});
+
 	sets.Midcast = {}
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
@@ -136,7 +151,7 @@ function get_sets()
 		waist="Siegel Sash",
 	}
 	sets.JA = {}
-	sets.JA["Perfect Dodge"] = {hands={ name="Plun. Armlets +1", augments={'Enhances "Perfect Dodge" effect',}}}
+	sets.JA["Perfect Dodge"] = {hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},}
 	sets.JA["Steal"] = {}
 	sets.JA["Flee"] = {}
 	sets.JA["Hide"] = {}
@@ -154,21 +169,32 @@ function get_sets()
 	--Default WS set base
 	sets.WS = {
 		ammo="Yetshila +1",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet="Mummu Gamash. +2",
+		head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Meg. Gloves +2",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear="Sherida Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Gere Ring",
 		right_ring="Regal Ring",
-		back="Moonbeam Cape",
+		back={ name="Toutatis's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
+
+	sets.WS.MAB = set_combine( sets.WS, {
+		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+		neck="Sanctity Necklace",
+		waist="Orpheus's Sash",
+		left_ear="Friomisi Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Karieyh Ring +1",
+		right_ring="Epaminondas's Ring",
+		back={ name="Toutatis's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
 	--WS Sets
 	sets.WS["Wasp Sting"] = {}
 	sets.WS["Viper Bite"] = {}
@@ -180,16 +206,15 @@ function get_sets()
 	sets.WS["Dancing Edge"] = {}
 	sets.WS["Shark Bite"] = {}
 	sets.WS["Evisceration"] = {}
-	sets.WS["Aeolian Edge"] = {}
+	sets.WS["Aeolian Edge"] = set_combine( sets.WS.MAB, {
+		hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},
+	})
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
-	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		hands={ name="Plun. Armlets +1", augments={'Enhances "Perfect Dodge" effect',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
-		waist="Chaac Belt",
+		hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},
 	}
 end
 

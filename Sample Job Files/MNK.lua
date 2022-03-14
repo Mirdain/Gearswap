@@ -102,7 +102,7 @@ function get_sets()
 		neck="Mnk. Nodowa +2",
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
+		right_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
@@ -139,24 +139,23 @@ function get_sets()
 		hands="Malignance Gloves",
 	})
 
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
 	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 50% in either I or II
-	sets.OffenseMode.SB = {
-		ammo="Coiste Bodhar",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body="Ken. Samue +1",
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 12% SB I
-		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}}, -- 10% SB I
-		feet="Anch. Gaiters +3",
-		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
-		waist="Moonbow Belt +1", -- 15% SB II
-		left_ear="Sherida Earring", -- 5% SB II
-		right_ear="Telos Earring",
-		left_ring="Niqmaddu Ring", -- 5%  SB II
+	sets.SubtleBlow = {
+		legs={ name="Mpaca's Hose", augments={'Path: A',}}, -- SB II 5
+		feet="Ken. Sune-Ate +1", -- SB 8
+		waist="Moonbow Belt +1", -- SB II 15
+		left_ear="Sherida Earring", -- SB II 5
+		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
+		left_ring="Niqmaddu Ring", -- SB II 5
+	} -- 35+11% SB I + %30 SB II = 76 (Over Cap)
+
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, sets.SubtleBlow, {
+		head="Malignance Chapeau",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-	} -- 57% SB I + 25% SB II = Cap
+	})
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -176,12 +175,18 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, --10
 	} -- FC 64
 
-	sets.Precast.Enmity = {
+	sets.Enmity = {
 	    ammo="Sapience Orb", -- 2
+		neck="Moonlight Necklace", -- 15
+		body="Emet Harness +1", -- 10
+		hands="Kurys Gloves", -- 9
+		feet="Ahosi Leggings", -- 7
+		waist="Kasiri Belt", -- 3
 	    left_ear="Cryptic Earring", -- 4
-		right_ear="Friomisi Earring", --2
-		left_ring="Petrov Ring", -- 4
-	}
+		right_ear="Trux Earring", -- 5
+		left_ring="Eihwaz Ring", -- 5
+		right_ring="Petrov Ring", -- 4
+	} -- 64
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
@@ -194,7 +199,7 @@ function get_sets()
 	sets.JA["Warcry"] = {}
 	sets.JA["Defender"] = {}
 	sets.JA["Aggressor"] = {}
-	sets.JA["Provoke"] = sets.Precast.Enmity
+	sets.JA["Provoke"] = sets.Enmity
 	sets.JA["Focus"] = {}
 	sets.JA["Dodge"] = {}
 	sets.JA["Chakra"] = {}
@@ -224,7 +229,7 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
 	}
 
-	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
+	sets.WS.SB = set_combine( sets.WS, sets.SubtleBlow ,{ -- This maximize SB
 		-- Belt SB II - 25%
 		-- Legs and Feet over cap 
 	})
@@ -233,6 +238,22 @@ function get_sets()
 	sets.WS.ACC = set_combine(sets.WS,{})
 
 	sets.WS.PDL = set_combine(sets.WS,{})
+
+	sets.WS.Kicks = {
+		ammo="Crepuscular Pebble",
+		head="Mpaca's Cap",
+		body="Ken. Samue +1",
+		hands={ name="Ryuo Tekko +1", augments={'STR+12','DEX+12','Accuracy+20',}},
+		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
+		feet="Anch. Gaiters +3",
+		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
+		waist="Moonbow Belt +1",
+		left_ear="Sherida Earring",
+		right_ear="Odr Earring",
+		left_ring="Niqmaddu Ring",
+		right_ring="Gere Ring",
+		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
+	}
 
 	--WS Sets
 	sets.WS["Combo"] = set_combine(sets.WS,{})
@@ -248,13 +269,9 @@ function get_sets()
 		neck="Mnk. Nodowa +2",
 		feet="Ken. Sune-Ate +1",
 	})
-	sets.WS["Dragon Kick"] = set_combine(sets.WS,{
-		feet="Anch. Gaiters +3",
-	})
+	sets.WS["Dragon Kick"] = sets.WS.Kicks
 	sets.WS["Asuran Fists"] = set_combine(sets.WS,{})
-	sets.WS["Tornado Kick"] = set_combine(sets.WS,{
-		feet="Anch. Gaiters +3",
-	})
+	sets.WS["Tornado Kick"] = sets.WS.Kicks
 	sets.WS["Victory Smite"] = set_combine(sets.WS,{})
 	sets.WS["Shijin Spiral"] = set_combine(sets.WS,{
 		head="Ken. Jinpachi +1",
