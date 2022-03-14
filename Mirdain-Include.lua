@@ -1320,7 +1320,7 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 
 	if equipSet then
 		bullet_name = equipSet.ammo
-		--windower.add_to_chat(8,'['..bullet_name..']')
+		windower.add_to_chat(8,'['..bullet_name..']')
 
 		if spell.action_type == 'Ranged Attack' then
 			if buffactive['Triple Shot'] then
@@ -1791,6 +1791,8 @@ end
 
 -- Unbind Keys when the file is unloaded
 function file_unload(file_name)
+	send_command('unbind ^f11')
+	send_command('unbind ^f12')
 	send_command('unbind f9')
 	send_command('unbind f10')
 	send_command('unbind f11')
@@ -1806,13 +1808,15 @@ send_command('bind f12 gs c ModeChange')
 send_command('bind f11 gs c TH')
 send_command('bind f10 gs c AutoBuff')
 send_command('bind f9 gs c WeaponMode')
-send_command('bind = gs c jobmode')
+send_command('bind ^f12 gs c jobmode')
+send_command('bind ^f11 gs c jobmode2')
 
-windower.add_to_chat(8,'Mode Change     (F12)')
-windower.add_to_chat(8,'Treasur Hunter   (F11)')
-windower.add_to_chat(8,'Auto Buff        (F10')
-windower.add_to_chat(8,'Weapon Mode    (F9)')
-windower.add_to_chat(8,'Job Mode         (=)')
+windower.add_to_chat(8,'[F12]           Mode Change')
+windower.add_to_chat(8,'[F11]           Treasur Hunter')
+windower.add_to_chat(8,'[F10]           Auto Buff')
+windower.add_to_chat(8,'[F9]            Weapon Mode')
+windower.add_to_chat(8,'[Ctrl + F12]    Job Mode')
+windower.add_to_chat(8,'[Ctrl + F11]    Job Mode 2')
 
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
