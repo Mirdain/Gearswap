@@ -9,24 +9,54 @@ LockStylePallet = "1"
 MacroBook = "2"
 MacroSet = "1"
 
+-- Use "gs c food" to use the specified food item 
+Food = "Grape Daifuku"
+
+--Uses Items Automatically
+AutoItem = false
+
+--Upon Job change will use a random lockstyleset
+Random_Lockstyle = false
+
+--Lockstyle sets to randomly equip
+Lockstyle_List = {1,2,6,12}
+
+--Set default mode (TP,ACC,DT,PDL)
+state.OffenseMode:set('DT')
+
+-- Set to true to run organizer on job changes
+Organizer = true
+
+--Weapons options
+state.WeaponMode:options('Nirvana','Unlocked')
+state.WeaponMode:set('Nirvana')
+
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
---Command to bind to the f9 key
-send_command('bind f9 gs c Weaponlock')
---Log Message about what the key does
-add_to_chat(8,'[F9] - Weapon Lock')
-
 function get_sets()
+
+	-- Weapon setup
+	sets.Weapons = {}
+
+	-- This locks your weapon to a mode
+	sets.Weapons['Nirvana'] = {
+		main="Nirvana",
+		sub="Elan Strap +1",
+	}
+
+	-- This is the default for Idle.  When unlocked any "main" or "sub" defined in a set will be used
+	sets.Weapons['Unlocked'] = {
+		main="Malignance Pole",
+		sub="Enki Strap",
+	}
 
 	-- Standard Idle set with -DT,Refresh,Regen
 	sets.Idle = {
-		main="Malignance Pole",
-		sub="Enki Strap",
 		ammo="Sancus Sachet +1",
 		head="Beckoner's Horn +1",
 		body="Shomonjijoe +1",
-		hands="Convo. Bracers +3",
+		hands="Nyame Gauntlets",
 		legs="Assid. Pants +1",
 		feet="Baaya. Sabots +1",
 		neck={ name="Smn. Collar +2", augments={'Path: A',}},
@@ -35,41 +65,40 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back="Moonbeam Cape",
+		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Eva.+20 /Mag. Eva.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
     }
+
 	-- Perpetuation and Refresh Set
-	sets.Idle.Pet = {
-		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
-		sub="Elan Strap +1",
-		ammo="Sancus Sachet +1",
-		head="Beckoner's Horn +1",
-		body="Shomonjijoe +1",
-		hands="Baayami Cuffs",
-		legs="Assid. Pants +1",
+	sets.Idle.Pet = set_combine(sets.Idle, {
 		feet={ name="Apogee Pumps +1", augments={'MP+80','Pet: "Mag.Atk.Bns."+35','Blood Pact Dmg.+8',}},
-		neck={ name="Smn. Collar +2", augments={'Path: A',}},
-		waist="Lucidity Sash",
-		left_ear="Evans Earring",
-		right_ear="C. Palug Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
-	}
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
+	})
 
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}
+
+	sets.OffenseMode = {}
+	-- Base TP set
+	sets.OffenseMode.TP = {}
+	-- TP set when in -Damage Taken mode
+	sets.OffenseMode.DT = {}
+	-- TP set to use when mode is in accuracy
+	sets.OffenseMode.ACC = {}
+
 	sets.Precast = {}
+
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		main="Malignance Pole",
-		sub="Enki Strap",
+		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
+		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		body="Inyanga Jubbah +2",
-		hands="Convo. Bracers +3",
-		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}},
-		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		hands="Regal Cuffs",
+		legs="Nyame Flanchard",
+		feet={ name="Merlinic Crackows", augments={'Mag. Acc.+16 "Mag.Atk.Bns."+16','Magic Damage +13','Mag. Acc.+15',}},
 		neck="Voltsurge Torque",
 		waist="Regal Belt",
 		left_ear="Malignance Earring",
@@ -79,123 +108,118 @@ function get_sets()
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
 
-	-- ===================================================================================================================
-	--		sets.midcast
-	-- ===================================================================================================================
-
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
-	
+	    body="Baayami Robe +1",
 	})
+
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
-
+		body="Baayami Robe +1",
 	}
+
 	-- Cure Set
 	sets.Midcast.Cure = {
-		main="Malignance Pole",
-		sub="Enki Strap",
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Sancus Sachet +1",
 		head={ name="Vanya Hood", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
-		body={ name="Vanya Robe", augments={'HP+50','MP+50','"Refresh"+2',}},
+		body="Baayami Robe +1",
 		hands={ name="Vanya Cuffs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
-		legs={ name="Lengo Pants", augments={'INT+5','Mag. Acc.+4','"Mag.Atk.Bns."+1','"Refresh"+1',}},
+		legs={ name="Vanya Slops", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
 		feet={ name="Vanya Clogs", augments={'MP+50','"Cure" potency +7%','Enmity-6',}},
 		neck="Nodens Gorget",
 		waist="Regal Belt",
 		left_ear="Mendi. Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back="Solemnity Cape",
+		right_ear="Roundel Earring",
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
+		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Eva.+20 /Mag. Eva.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
     }
+
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
-		ring1="Stikini Ring +1",
-		ring2="Stikini Ring +1",
+		main="Daybreak",
+		sub="Ammurapi Shield",
+	    head="Befouled Crown",
+		neck="Incanter's Torque",
+		waist="Embla Sash",
+	    left_ear="Mimir Earring",
+		right_ear="Andoaa Earring",
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 	}
+
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-	    main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Sancus Sachet +1",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		body="Inyanga Jubbah +2",
-		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs="Inyanga Shalwar +2",
-		feet={ name="Medium's Sabots", augments={'MP+45','MND+9','"Conserve MP"+5','"Cure" potency +4%',}},
+		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		hands="Regal Cuffs",
+		legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','"Occult Acumen"+2','INT+7','"Mag.Atk.Bns."+12',}},
+		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		neck="Sanctity Necklace",
 		waist="Luminary Sash",
-		left_ear="Digni. Earring",
-		right_ear="Hermetic Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ear="Crep. Earring",
+		right_ear="Malignance Earring",
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
-	-- Specific gear for spells
+
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
 		waist="Siegel Sash",
 		neck="Nodens Gorget",
 	})
+
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
 		waist="Gishdubar Sash"
 	})
+
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1"
 	})
+
 	sets.Midcast.Nuke = {
-	    main={ name="Grioavolr", augments={'Enfb.mag. skill +13','Mag. Acc.+24','"Mag.Atk.Bns."+27',}},
+		main="Daybreak",
+		sub="Ammurapi Shield",
 		ammo="Sancus Sachet +1",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		body="Inyanga Jubbah +2",
+		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs="Inyanga Shalwar +2",
-		feet={ name="Medium's Sabots", augments={'MP+45','MND+9','"Conserve MP"+5','"Cure" potency +4%',}},
+		legs={ name="Amalric Slops +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
 		neck="Sanctity Necklace",
-		waist="Luminary Sash",
-		left_ear="Digni. Earring",
-		right_ear="Hermetic Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		waist="Eschan Stone",
+		left_ear="Malignance Earring",
+		right_ear="Friomisi Earring",
+		left_ring="Freke Ring",
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
+
 	-- BP Timer Gear
-    sets.Midcast.BP = {
-		ammo="Sancus Sachet +1",
-		head="Beckoner's Horn +1",
-		body="Con. Doublet +3",
-		hands="Baayami Cuffs",
-		legs="Baayami Slops",
-		feet="Baaya. Sabots +1",
-		neck="Incanter's Torque",
-		waist="Lucidity Sash",
-		left_ear="C. Palug Earring",
-		right_ear="Etiolation Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+    sets.Midcast.BP = { -- 10 from Master
+		ammo="Sancus Sachet +1", -- 7
+		head="Beckoner's Horn +1", -- Avatar's Favor
+		body="Con. Doublet +3", -- 15
 	}
-	sets.Midcast.Summon = set_combine(sets.Precast.FastCast, {
+
+	sets.Midcast.Summon = set_combine(sets.Idle, {
 		body="Baayami Robe +1"
 	})
-	-- ===================================================================================================================
-	--		sets.aftercast
-	-- ===================================================================================================================
-	--Custome sets for each jobsetup
-	sets.Custom = {}
-
-	sets.OffenseMode = {}
-	sets.OffenseMode.TP = {}
-	sets.OffenseMode.TP.DW = {}
-	sets.OffenseMode.DT = {}
-	sets.OffenseMode.ACC = {}
 
 	sets.WS = {}
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 
 	sets.Midcast.MAB = {
+		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
 		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
@@ -207,10 +231,11 @@ function get_sets()
 		waist="Eschan Stone",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Friomisi Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
+
 	sets.WS["Garland of Bliss"] = sets.Midcast.MAB
 	sets.WS["Shattersoul"] = sets.Midcast.MAB
 	sets.WS["Cataclysm"] = sets.Midcast.MAB
@@ -235,10 +260,12 @@ function get_sets()
 		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	}
+
 	-- Physical pacts which benefit more from TP than Pet:DA (like single-hit BP)
 	sets.Pet_Midcast.Physical_BP_TP = set_combine(sets.Pet_Midcast.Physical_BP, {
 		legs="Enticer's Pants",
 	})
+
 	-- Base magic pact set
 	sets.Pet_Midcast.Magic_BP = {
 		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
@@ -257,10 +284,12 @@ function get_sets()
 		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
+
 	-- Some magic pacts benefit more from TP than others.
 	sets.Pet_Midcast.Magic_BP_TP = set_combine(sets.Pet_Midcast.Magic_BP, {
 		legs="Enticer's Pants"
 	})
+
 	-- Similar to the Magic Set except Nirvana used
 	sets.Pet_Midcast.FlamingCrush = {
 		main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: INT+15','Pet: Mag. Acc.+24',}},
@@ -279,20 +308,23 @@ function get_sets()
 		right_ring="C. Palug Ring",
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
+
 	-- Pure summoning magic set, mainly used for buffs like Hastega II.
 	sets.Pet_Midcast.SummoningMagic = {
+		main="Nirvana",
+		sub="Elan Strap +1",
 		ammo="Sancus Sachet +1",
-		head="Baayami Hat",
+		head="Beckoner's Horn +1",
 		body="Baayami Robe +1",
-		hands="Baayami Cuffs",
-		legs="Baayami Slops",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
 		feet="Baaya. Sabots +1",
-		neck={ name="Smn. Collar +2", augments={'Path: A',}},
-		waist="Lucidity Sash",
-		left_ear="Lugalbanda Earring",
+		neck="Incanter's Torque",
+		waist="Regal Belt",
+		left_ear="Andoaa Earring",
 		right_ear="C. Palug Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring={ name="Stikini Ring +1", bag='wardrobe3'},
+		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 		back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Mag. Acc+20 /Mag. Dmg.+20','Pet: Magic Damage+10','"Fast Cast"+10',}},
 	}
 
@@ -307,14 +339,8 @@ function get_sets()
 
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
-	    head="Wh. Rarab Cap +1",
 	}
 
-	organizer_items  = {		
-		item1 = "Echo Drops",
-		item2 = "Remedy",
-		item3 = "Holy Water",
-	}
 end
 
 -------------------------------------------------------------------------------------------------------------------
