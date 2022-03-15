@@ -565,6 +565,50 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+	-- Waltz
+	elseif spell.type == 'Waltz' then
+		equipSet = sets.Waltz
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			info('Waltz not set for ['..spell.english..']')
+		end
+	-- Jig
+	elseif spell.type == 'Jig' then
+		equipSet = sets.Jig
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			info('Jig not set for ['..spell.english..']')
+		end
+	-- Samba
+	elseif spell.type == 'Samba' then
+		equipSet = sets.Samba
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			info('Samba not set for ['..spell.english..']')
+		end
+	-- Step
+	elseif spell.type == 'Step' then
+		equipSet = sets.Step
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			info('Step not set for ['..spell.english..']')
+		end
+	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' then
+		equipSet = sets.Flourish
+		if equipSet[spell.english] then
+			equipSet = set_combine(equipSet, equipSet[spell.english])
+			info('['..spell.english..'] Set')
+		else
+			info('Flourish not set for ['..spell.english..']')
+		end
 	-- BardSong
 	elseif spell.type == 'BardSong' then
 		equipSet = sets.Precast
