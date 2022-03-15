@@ -1,4 +1,4 @@
---Groverton
+--Salidar
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -167,7 +167,7 @@ function get_sets()
 
 	sets.Precast = {}
 	sets.Precast.FastCast = {}
-	sets.Precast.Enmity = {}
+	sets.Enmity = { head="Nyame Helm",}
 	sets.Midcast = {}
 	sets.Midcast.SIRD = {}
 	sets.Midcast.Cure = {}
@@ -178,7 +178,7 @@ function get_sets()
 	-------------------  JA Sets  ----------------------
 	sets.JA = {}
 
-	sets.Waltzes = {    
+	sets.Waltz = {    
 		ammo="Yamarang",
     	head={ name="Horos Tiara +1", augments={'Enhances "Trance" effect',}},
     	body="Maxixi Casaque",
@@ -196,34 +196,38 @@ function get_sets()
 
 	--When you combine with idle during JA's you'll get ~2 sec of high defense if not overwritten by specified gear
 	sets.Samba = set_combine(sets.Idle.DT, {
-		head="Maxixi Tiara",
+    	head="Nyame Helm",
 	})
 
-	sets.Jigs = set_combine(sets.Idle.DT, {
-		feet="Maxixi Toe Shoes",
+	sets.Jig = set_combine(sets.Idle.DT, {
+    	head="Nyame Helm",
 	})
 
-	sets.Steps = set_combine(sets.Idle.DT, {
-
+	sets.Step = set_combine(sets.Idle.DT, {
+	    head="Nyame Helm",
 	})
 
-	sets.JA["Animated Flourish"] = sets.Enmity
+	sets.Flourish = set_combine(sets.Idle.DT, {
+	    head="Nyame Helm",
+	})
 
-	sets.JA["Curing Waltz"] = sets.Waltzes
-	sets.JA["Curing Waltz II"] = sets.Waltzes
-	sets.JA["Curing Waltz III"] = sets.Waltzes
-	sets.JA["Curing Waltz IV"] = sets.Waltzes
-	sets.JA["Curing Waltz V"] = sets.Waltzes
-	sets.JA["Divine Waltz"] = sets.Waltzes
-	sets.JA["Divine Waltz II"] = sets.Waltzes
-	sets.JA["Healing Waltz"] = sets.Waltzes
+	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, sets.Enmity)
 
-	sets.JA["Haste Samba"] = sets.Samba
-	sets.JA["Aspir Samba"] = sets.Samba
-	sets.JA["Aspir Samba II"] = sets.Samba
-	sets.JA["Drain Samba"] = sets.Samba
-	sets.JA["Drain Samba II"] = sets.Samba
-	sets.JA["Drain Samba III"] = sets.Samba
+	sets.Waltz["Curing Waltz"] = {}
+	sets.Waltz["Curing Waltz II"] = {}
+	sets.Waltz["Curing Waltz III"] = {}
+	sets.Waltz["Curing Waltz IV"] = {}
+	sets.Waltz["Curing Waltz V"] = {}
+	sets.Waltz["Divine Waltz"] = {}
+	sets.Waltz["Divine Waltz II"] = {}
+	sets.Waltz["Healing Waltz"] = {}
+
+	sets.Samba["Haste Samba"] = {}
+	sets.Samba["Aspir Samba"] = {}
+	sets.Samba["Aspir Samba II"] = {}
+	sets.Samba["Drain Samba"] = {}
+	sets.Samba["Drain Samba II"] = {}
+	sets.Samba["Drain Samba III"] = {}
 
 	sets.JA["Quickstep"] = sets.Steps
 	sets.JA["Box Step"] = sets.Steps
