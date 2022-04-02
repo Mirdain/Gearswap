@@ -180,7 +180,21 @@ end
 
 function log (msg)
 	if settings.debug == true then
-		windower.add_to_chat(80,'-------'..msg..'-------')
+        if msg == nil then
+            windower.add_to_chat(80,'----Value is Nil----')
+        elseif type(msg) == "table" then
+            for index, value in pairs(msg) do
+                windower.add_to_chat(80,'----'..tostring(value)..'----')
+            end
+        elseif type(msg) == "number" then
+            windower.add_to_chat(80,'----'..tostring(msg)..'----')
+        elseif type(msg) == "string" then
+            windower.add_to_chat(80,'----'..msg..'----')
+        elseif type(msg) == "boolean" then
+            windower.add_to_chat(80,'----'..tostring(msg)..'----')
+        else
+            windower.add_to_chat(80,'----Unknown Debug Message----')
+        end
 	end
 end
 
@@ -601,7 +615,7 @@ function precastequip(spell)
 		else
 			info('Step not set for ['..spell.english..']')
 		end
-	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' then
+	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
 		equipSet = sets.Flourish
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equipSet[spell.english])
@@ -2052,6 +2066,7 @@ windower.register_event('gain buff', function(id)
 		info('DOOOOOOM!!!')
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
 			if AutoItem == true then
+				equip(set_combine(choose_set(), sets.Cursna_Received, sets.Holy_Water, choose_set_custom()))
 				windower.send_command('input /item "Holy Water" <me>')
 			end
 		else 
@@ -2158,10 +2173,11 @@ windower.register_event('action', function (data)
 	-- [15] = 'Job Ability RUN',
 
 	if data ~= nil then
-		log('cat='..data.category..',param='..data.param)
 		local self = windower.ffxi.get_player()
 		local targets = data.targets
 		local ability = {}
+
+		log('cat='..data.category..',param='..data.param)
 
 		if data.actor_id == player.id then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
@@ -2173,14 +2189,36 @@ windower.register_event('action', function (data)
 			--Casting finish
 			elseif data.category == 4 then
 				log('Casting Finished')
+				--log('Player ID is '..player.id)
+				for i, target in pairs(data.targets) do
+					for n, action in pairs(target.actions) do
+						if action.message ~= 0 and res.action_messages[action.message] ~= nil then
+							-- Action message gives the results of spell
+							log('Target ID ['..target.id..'] with result of ['..action.message..']')
+						end
+					end
+				end
+			-- Item use Finished
+			elseif data.category == 5 then
+				if data.param == 4154 then
+					log('Item Use Finished')
+					Unlock()
+				end
 			-- Casting Start
 			elseif data.category == 8 then
 				if data.param == 28787 then
 					log('Spell Interupt')
 					equip(set_combine(choose_set(),choose_set_custom()))
-					is_Busy = false
 				elseif data.param == 24931 then
 					log('Casting Spell')
+				end
+			-- Item Use
+			elseif data.category == 9 then
+				if data.param == 24931 then
+					log('Holy Water')
+				elseif data.param == 28787 then
+					log('Item Use Interupted')
+					Unlock()
 				end
 			-- Ranged attack start
 			elseif data.category == 12 then
@@ -2206,7 +2244,7 @@ windower.register_event('action', function (data)
 							-- Swap in Cursna Gear
 							if ability ~= nil then
 								if ability.en == "Cursna" then
-									equip(sets.Cursna_Recieved)
+									equip(sets.Cursna_Received)
 								end
 							end
 						end
@@ -2252,6 +2290,10 @@ end)
 
 function Unlock ()
 	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+end
+
+function Lock ()
+	disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 end
 
 function Elemental_check(equipSet, spell)
