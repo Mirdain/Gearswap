@@ -1,4 +1,4 @@
---Salidar
+-- Groverton
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -31,13 +31,14 @@ state.WeaponMode:set('Aeneas')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
-	-- Standard Idle set with -DT, Refresh, Regen and movement gear
+
 	sets.Weapons = {}
 	sets.Weapons['Terpsichore'] = {}
 	sets.Weapons['Twashtar'] = {}
 	sets.Weapons['Aeneas'] = {main="Aeneas", sub="Gleti's Knife",}
 	sets.Weapons['Karambit'] = {main="Karambit",}
 
+	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {}
 
 	sets.Idle.DT = {
@@ -53,8 +54,7 @@ function get_sets()
     	right_ear="Infused Earring",
     	left_ring="Chirich Ring +1",
     	right_ring="Chirich Ring +1",
-    	back="Sacro Mantle",
-	}
+    	back="Sacro Mantle",}
 
 	sets.Idle.TP = {
 		ammo="Staunch Tathlum +1",
@@ -69,11 +69,10 @@ function get_sets()
     	right_ear="Infused Earring",
     	left_ring="Chirich Ring +1",
     	right_ring="Chirich Ring +1",
-    	back="Sacro Mantle",
-	}
+    	back="Sacro Mantle",}
 	
 	sets.Idle.SB = sets.Idle.DT
-	
+
 	sets.Idle.Farm = {
 		ammo="Staunch Tathlum +1",
     	head="Nyame Helm",
@@ -87,13 +86,13 @@ function get_sets()
     	right_ear="Tuisto Earring",
     	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     	right_ring="Moonlight Ring",
-    	back="Moonlight Cape",
-	}
+    	back="Moonlight Cape",}
 
 	sets.Movement = {right_ring="Shneddick Ring",}
 
-	sets.OffenseMode = {}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
+	sets.OffenseMode = {}
+
 	sets.OffenseMode.DT = {
 		ammo="Yamarang",
 		head="Malignance Chapeau",
@@ -143,7 +142,6 @@ function get_sets()
     	right_ring="Chirich Ring +1", -- SB+10
     	back="Sacro Mantle", -- Ambu Cape has SB+10
 	}
-
 	sets.OffenseMode.Farm = {
 		ammo="Staunch Tathlum +1",
     	head="Nyame Helm",
@@ -166,81 +164,133 @@ function get_sets()
 	sets.OffenseMode.DW = {}
 
 	sets.Precast = {}
-	sets.Precast.FastCast = {}
-	sets.Enmity = { head="Nyame Helm",}
+	sets.Precast.FastCast = {
+		ammo="Sapience Orb",
+		head={ name="Herculean Helm", augments={'"Subtle Blow"+1','STR+3','"Treasure Hunter"+2','Mag. Acc.+10 "Mag.Atk.Bns."+10',}},
+    	hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
+    	neck="Baetyl Pendant",
+    	waist="Hachirin-no-Obi",
+    	left_ear="Etiolation Earring",
+    	right_ear="Enchntr. Earring +1",
+    	right_ring="Rahab Ring",
+	}
+	sets.Enmity = {}
 	sets.Midcast = {}
 	sets.Midcast.SIRD = {}
 	sets.Midcast.Cure = {}
 	sets.Midcast.Enhancing = {}
 	sets.Midcast.Enfeebling = {}
 	sets.Midcast["Stoneskin"] = {}
-
-	-------------------  JA Sets  ----------------------
+	-------------------------------------------------------------------------------
+	---------------------------------  JA Sets  -----------------------------------
+	-- When you combine with idle during JA's you'll get ~2 sec of high defense --- 
+	-------------------- if not overwritten by specified gear ---------------------
+	-------------------------------------------------------------------------------
 	sets.JA = {}
 
+	sets.JA["Trance"] = {}
+	sets.JA["Contradance"] = {}
+	sets.JA["Saber Dance"] = {}
+	sets.JA["Fan Dance"] = {}
+	sets.JA["No Foot Rise"] = {}
+	sets.JA["Presto"] = {}
+	sets.JA["Grand Pas"] = {}
+	-------------------------------------------------------------------------------
+	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
+	-------------------------------------------------------------------------------
+	sets.Flourish = set_combine(sets.Idle.DT, {head="Nyame Helm",})
+																					-- Flourishes I : Monster Control
+	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, sets.Enmity) 	-- Volatile Enmity spike like Provoke
+	sets.Flourish["Desperate Flourish"] = {} 										-- Gravity effect 
+	sets.Flourish["Violent Flourish"] = {} 											-- Stun effect 
+																					-- Flourishes II : Skillchain Enhancers
+	sets.Flourish["Reverse Flourish"] = {} 											-- Returns TP in exchange for Finishing Moves
+	sets.Flourish["Building Flourish"] = {head="Nyame Helm",}						-- Increases the strength of the next Weapon Skill
+	sets.Flourish["Wild Flourish"] = {}												-- Readies target for Skillchain
+																					-- Flourishes III : Weapon Skill Buffs
+	sets.Flourish["Climactic Flourish"] = {}										-- Forces Critical Hit(s) on the next attack(s) 
+	sets.Flourish["Striking Flourish"] = {head="Nyame Helm",}						-- Forces a Double Attack on the next swing 
+	sets.Flourish["Ternary Flourish"] = {}											-- Forces a Triple Attack on the next swing
+	-------------------------------------------------------------------------------
+	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
+	-------------------------------------------------------------------------------
 	sets.Waltz = {    
 		ammo="Yamarang",
     	head={ name="Horos Tiara +1", augments={'Enhances "Trance" effect',}},
     	body="Maxixi Casaque",
     	hands={ name="Horos Bangles +1", augments={'Enhances "Fan Dance" effect',}},
-    	legs="Malignance Tights",
+    	legs="Dashing Subligar",
     	feet="Maxixi Toe Shoes",
     	neck={ name="Unmoving Collar +1", augments={'Path: A',}},
     	waist="Chaac Belt",
     	left_ear="Enchntr. Earring +1",
     	right_ear="Cryptic Earring",
-    	left_ring="Dawnsoul Ring",
-    	right_ring="Asklepian Ring",
+    	left_ring="Metamorph Ring",
+    	right_ring="Carb. Ring +1",
     	back="Moonlight Cape",
 	}
-
-	--When you combine with idle during JA's you'll get ~2 sec of high defense if not overwritten by specified gear
-	sets.Samba = set_combine(sets.Idle.DT, {
-    	head="Nyame Helm",
-	})
-
-	sets.Jig = set_combine(sets.Idle.DT, {
-    	head="Nyame Helm",
-	})
-
-	sets.Step = set_combine(sets.Idle.DT, {
-	    head="Nyame Helm",
-	})
-
-	sets.Flourish = set_combine(sets.Idle.DT, {
-	    head="Nyame Helm",
-	})
-
-	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, sets.Enmity)
-
-	sets.Waltz["Curing Waltz"] = {}
-	sets.Waltz["Curing Waltz II"] = {}
-	sets.Waltz["Curing Waltz III"] = {}
-	sets.Waltz["Curing Waltz IV"] = {}
-	sets.Waltz["Curing Waltz V"] = {}
-	sets.Waltz["Divine Waltz"] = {}
-	sets.Waltz["Divine Waltz II"] = {}
-	sets.Waltz["Healing Waltz"] = {}
-
+	sets.Waltz["Curing Waltz"] = sets.Waltz
+	sets.Waltz["Curing Waltz II"] = sets.Waltz
+	sets.Waltz["Curing Waltz III"] = sets.Waltz
+	sets.Waltz["Curing Waltz IV"] = sets.Waltz
+	sets.Waltz["Curing Waltz V"] = sets.Waltz
+	sets.Waltz["Divine Waltz"] = sets.Waltz
+	sets.Waltz["Divine Waltz II"] = sets.Waltz
+	sets.Waltz["Healing Waltz"] = sets.Waltz
+	-------------------------------------------------------------------------------
+	---------- Samba duration can be increased using various equipment. -----------
+	-------------------------------------------------------------------------------
+	sets.Samba = set_combine(sets.Idle.DT, {head="Maxixi Tiara",}) --  Missing Ambu Cape for +15
+	
 	sets.Samba["Haste Samba"] = {}
 	sets.Samba["Aspir Samba"] = {}
 	sets.Samba["Aspir Samba II"] = {}
 	sets.Samba["Drain Samba"] = {}
 	sets.Samba["Drain Samba II"] = {}
 	sets.Samba["Drain Samba III"] = {}
+	-------------------------------------------------------------------------------
+	----------- Jigs duration can be increased using various equipment. ----------- 
+	-------------------------------------------------------------------------------
+	sets.Jig = set_combine(sets.Idle.DT, {feet="Maxixi Toe Shoes",}) -- Horos Tights +3 and Maxixi Toe Shoes +3
 
-	sets.JA["Quickstep"] = sets.Steps
-	sets.JA["Box Step"] = sets.Steps
-	sets.JA["Stutter Step"] = sets.Steps
+	sets.Jig["Spectral Jig"] = sets.Jig
+	sets.Jig["Chocobo Jig"] = sets.Jig
+	sets.Jig["Chocobo Jig II"] = sets.Jig
+	-------------------------------------------------------------------------------
+	----- Step Accuracy depends on your melee hit rate (including your normal -----
+	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
+	-- bonus, which can be further enhanced through various pieces of equipment, -- 
+	----------------------------- merits, and Presto. -----------------------------
+	-------------------------------------------------------------------------------
+	sets.Step = {
+		ammo="Yamarang",
+    	head="Malignance Chapeau",
+    	body="Malignance Tabard",
+    	hands="Malignance Gloves",
+    	legs="Malignance Tights",
+    	feet="Malignance Boots",
+    	neck="Etoile Gorget +1",
+    	waist="Reiki Yotai",
+    	left_ear="Odr Earring",
+    	right_ear="Telos Earring",
+    	left_ring="Chirich Ring +1",
+    	right_ring="Chirich Ring +1",
+    	back="Sacro Mantle",
+	}
+	
+	sets.JA["Quickstep"] = sets.Step
+	sets.JA["Box Step"] = sets.Step
+	sets.JA["Stutter Step"] = sets.Step
+	sets.JA["Feather Step"] = set_combine(sets.Idle.DT, {})
 
 	--Default WS set base
 	sets.WS = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-    	head="Gleti's Mask",
-    	body="Gleti's Cuirass",
-    	hands="Meg. Gloves +2",
-    	legs="Gleti's Breeches",
-    	feet="Gleti's Boots",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
     	neck="Anu Torque",
     	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
     	left_ear="Sherida Earring",
@@ -253,6 +303,7 @@ function get_sets()
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 	--WS Sets
+	-- Dagger WS
 	sets.WS["Wasp Sting"] = {}
 	sets.WS["Viper Bite"] = {}
 	sets.WS["Shadowstich"] = {}
@@ -272,10 +323,9 @@ function get_sets()
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear="Sherida Earring",
-		right_ear="Ishvara Earring",
+		right_ear="Odr Earring",
 		left_ring="Regal Ring",
-		right_ring="Epona's Ring",
-	}
+		right_ring="Epona's Ring",}
 	sets.WS["Aeolian Edge"] = {
 		ammo="Yamarang",
     	head="Nyame Helm",
@@ -289,11 +339,23 @@ function get_sets()
     	right_ear="Friomisi Earring",
     	left_ring="Regal Ring",
     	right_ring="Ilabrat Ring",
-    	back="Sacro Mantle",
-	}
+    	back="Sacro Mantle",}
+	sets.WS["Rudra's Storm"] = {}
 
-	sets.TreasureHunter = {head={ name="Herculean Helm", augments={'"Subtle Blow"+1','STR+3','"Treasure Hunter"+2','Mag. Acc.+10 "Mag.Atk.Bns."+10',}},
-	waist="Chaac Belt",}
+	-- Hand to Hand WS
+	sets.WS["Combo"] = {}
+	sets.WS["Shoulder Tackle"] = {}
+	sets.WS["Backhand Blow"] = {}
+	sets.WS["Asuran Fists"] = {} 	-- Only if Karambit Weapon Equipt
+	sets.WS["Dragon Kick"] = {} 	-- Only if Hepatizon Baghnakhs NQ/+1 Weapon Equipt
+	sets.WS["One Inch Punch"] = {} 	-- Must Sub MNK
+	sets.WS["Raging Fists"] = {} 	-- Must Sub MNK
+	sets.WS["Tornado Kick"] = {} 	-- Must Sub MNK
+
+	sets.TreasureHunter = {
+		head={ name="Herculean Helm", augments={'"Subtle Blow"+1','STR+3','"Treasure Hunter"+2','Mag. Acc.+10 "Mag.Atk.Bns."+10',}}, 
+		legs={ name="Herculean Trousers", augments={'Enmity-2','Pet: Haste+3','"Treasure Hunter"+1','Accuracy+9 Attack+9',}},
+		waist="Chaac Belt",}
 end
 
 -------------------------------------------------------------------------------------------------------------------
