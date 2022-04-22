@@ -21,9 +21,6 @@ Food = "Sublime Sushi"
 --Uses Items Automatically
 AutoItem = false
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
 state.OffenseMode:options('TP','ACC','DT','SB','PDL') -- ACC effects WS and TP modes
 

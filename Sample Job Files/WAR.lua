@@ -24,9 +24,6 @@ Lockstyle_List = {1,2,6,12}
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Weapons options
 state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge')
 state.WeaponMode:set('Chango')
@@ -79,19 +76,18 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
+
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Hermes' Sandals",
 	}
 
-	sets.OffenseMode = {}
-
+	--WAR Double attack
 	--28% Job Trait
 	--5% Merits
 
-	--Base TP set to build off
-	sets.OffenseMode.TP = {
-		ammo="Coiste Bodhar",
+	sets.OffenseMode = {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
 		body="Dagon Breast.",
 		hands="Sakpata's Gauntlets",
@@ -99,52 +95,48 @@ function get_sets()
 		feet="Pumm. Calligae +3",
 		neck={ name="War. Beads +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Schere Earring",
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		right_ear="Telos Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Moonlight Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
-		ammo="Coiste Bodhar",
+
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode.TP, {
+
+	})
+
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets",
 		legs="Sakpata's Cuisses",
 		feet="Sakpata's Leggings",
-		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Schere Earring",
-		right_ear="Telos Earring",
-		left_ring="Niqmaddu Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
-	}
+	})
 
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT, {
 		ammo="Crepuscular Pebble",
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
 
-	}
-	--This set is used when sub job is NIN/THF/DNC and Enaged (Augments the TP base set)
+	})
+
 	sets.DualWield = {
-		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
 		waist="Reiki Yotai",
 		right_ear="Eabani Earring",
 	}
 
-	sets.Precast = {}
+	sets.Precast = set_combine(sets.Idle, {
+	
+	})
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb", --2
 		head="Sakpata's Helm", --8
 		body="Sacro Breastplate", --10
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
-		feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}}, -- 6
 		neck="Voltsurge Torque", -- 4
 		left_ear="Etiolation Earring", --1
 		right_ear="Loquac. Earring", -- 3
@@ -174,7 +166,7 @@ function get_sets()
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
 	    ammo="Staunch Tathlum +1", --11
-		feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}}, --20
+		--feet={ name="Odyssean Greaves", augments={'Attack+1','"Fast Cast"+6',}}, --20
 		neck="Moonlight Necklace", --15
 		left_ear="Magnetic Earring", --8
 		waist="Audumbla Sash", --10
@@ -191,7 +183,7 @@ function get_sets()
 	}
 	sets.JA = {}
 	sets.JA["Mighty Strikes"] = {}
-	sets.JA["Berserk"] = {body="Pumm. Lorica +2"}
+	sets.JA["Berserk"] = {body="Pumm. Lorica +3"}
 	sets.JA["Warcry"] = {head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}}}
 	sets.JA["Defender"] = {}
 	sets.JA["Aggressor"] = {}
@@ -206,10 +198,10 @@ function get_sets()
 	sets.WS = {
 		ammo="Knobkierrie",
 		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
-		body="Sakpata's Plate",
-		hands="Sakpata's Gauntlets",
-		legs="Sakpata's Cuisses",
-		feet="Sulev. Leggings +2",
+		body="Pumm. Lorica +3",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="War. Beads +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Thrud Earring",
@@ -228,21 +220,18 @@ function get_sets()
 
 	})
 
-	sets.WS.CRIT = {
+	sets.WS.CRIT = set_combine(sets.WS, {
 		ammo="Yetshila +1",
 		head={ name="Blistering Sallet +1", augments={'Path: A',}},
 		body="Hjarrandi Breast.",
 		hands="Sakpata's Gauntlets",
 		legs="Sakpata's Cuisses",
 		feet="Sakpata's Leggings",
-		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Schere Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Hetairoi Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	})
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}
 	sets.WS["Smash Axe"] = {}
@@ -270,22 +259,7 @@ function get_sets()
 	sets.WS["Sanguine Blade"] = {}
 	sets.WS["Requiescat"] = {}
 
-	sets.WS["Impulse Drive"] = {
-		sub="Utu Grip",
-		ammo="Yetshila +1",
-		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
-		body="Hjarrandi Breast.",
-		hands="Sakpata's Gauntlets",
-		legs="Sakpata's Cuisses",
-		feet="Sakpata's Leggings",
-		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Thrud Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Karieyh Ring +1",
-		right_ring="Epaminondas's Ring",
-		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	sets.WS["Impulse Drive"] = sets.WS.CRIT
 
 	sets.TreasureHunter = {
 	    head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},

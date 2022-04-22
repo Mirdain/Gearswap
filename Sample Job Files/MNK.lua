@@ -27,9 +27,6 @@ state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP m
 --Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Modes for specific to Ninja
 state.WeaponMode:options('Verethragna','Karambit','Pole','Club')
 state.WeaponMode:set('Verethragna')

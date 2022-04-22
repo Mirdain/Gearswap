@@ -24,9 +24,6 @@ Lockstyle_List = {1,2,6,12}
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Weapons options
 state.WeaponMode:options('Aeneas','Naegling')
 state.WeaponMode:set('Aeneas')
@@ -52,17 +49,17 @@ function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Loricate Torque +1",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear="Eabani Earring",
-		right_ear="Odnowa Earring +1",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
+		right_ear="Sanare Earring",
+		left_ring={ name="Moonlight Ring", bag="wardrobe3"},
+		right_ring={ name="Moonlight Ring", bag="wardrobe4"},
 		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 
@@ -137,7 +134,10 @@ function get_sets()
 
 	});
 
-	sets.Midcast = {}
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
+	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
 	-- Cure Set
@@ -169,11 +169,11 @@ function get_sets()
 	--Default WS set base
 	sets.WS = {
 		ammo="Yetshila +1",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Meg. Gloves +2",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear="Sherida Earring",
@@ -186,7 +186,7 @@ function get_sets()
 	sets.WS.ACC = {}
 
 	sets.WS.MAB = set_combine( sets.WS, {
-		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		neck="Sanctity Necklace",
 		waist="Orpheus's Sash",
 		left_ear="Friomisi Earring",
