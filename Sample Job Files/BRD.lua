@@ -21,9 +21,6 @@ elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade
 --Default to DT Mode
 state.OffenseMode:set('TP')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 send_command('bind f10 gs c songbuff')
@@ -120,7 +117,14 @@ function get_sets()
 	sets.Movement = { feet="Fili Cothurnes +1"}
 
     -- Set to be used if you get cursna casted on you
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		waist="Gishdubar Sash",
+	}
+
+	sets.Holy_Water = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
@@ -148,10 +152,11 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-	    head="Nyame Helm",
-		body="Nyame Mail",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		waist="Sarissapho. Belt",
 		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
@@ -216,7 +221,7 @@ function get_sets()
 	}) -- 10% Quick Magic
 
 	-- Default song duration / strength
-	sets.Midcast = {
+	sets.Midcast = set_combine(sets.Idle, {
 		head="Fili Calot +1",
 		body="Fili Hongreline +1",
 		hands="Fili Manchettes +1",
@@ -229,10 +234,25 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
 		right_ring="Defending Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-	}
+		feet="Brioso Slippers +3",
+	})
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
-	sets.Midcast.DummySongs = set_combine(sets.Midcast, {feet="Bunzi's Sabots",})
+	sets.Midcast.DummySongs = {
+		head="Fili Calot +1",
+		body="Fili Hongreline +1",
+		hands="Fili Manchettes +1",
+		legs="Inyanga Shalwar +2",
+		feet="Brioso Slippers +3",
+		neck="Mnbw. Whistle +1",
+		waist="Flume Belt +1",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
+		right_ear={ name="Etiolation Earring", priority=1}, -- 1
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
+		right_ring="Defending Ring",
+		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		feet="Bunzi's Sabots",
+	}
 
 	-- Cure Set
 	sets.Midcast.Cure = {
@@ -353,15 +373,16 @@ function get_sets()
 	
 	--Default WS set base
 	sets.WS = {
-		head={ name="Bihu Roundlet +3", augments={'Enhances "Con Anima" effect',}},
-		body={ name="Bihu Jstcorps. +3", augments={'Enhances "Troubadour" effect',}},
-		hands={ name="Bihu Cuffs +3", augments={'Enhances "Con Brio" effect',}},
-		legs={ name="Bihu Cannions +3", augments={'Enhances "Soul Voice" effect',}},
-		feet={ name="Bihu Slippers +3", augments={'Enhances "Nightingale" effect',}},
+		range=Instrument.Mordant,
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Regal Earring",
-		right_ear="Ishvara Earring",
+		left_ear="Ishvara Earring",
+		right_ear="Regal Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
@@ -369,19 +390,19 @@ function get_sets()
 
 	--The following sets augment the WS base set
 	sets.WS.WSD = set_combine(sets.WS, {
-		range=Instrument.Mordant,
-		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Rufescent Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.WS.MAB = {
+	sets.WS.MAB = set_combine(sets.WS, {
 		range=Instrument.MAB,
-		body={ name="Cohort Cloak +1", augments={'Path: A',}},
-		hands={ name="Chironic Gloves", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','"Drain" and "Aspir" potency +6','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+24 "Mag.Atk.Bns."+24','Haste+1','INT+10','"Mag.Atk.Bns."+13',}},
-		feet={ name="Chironic Slippers", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','Enmity-2','INT+8','"Mag.Atk.Bns."+13',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -389,10 +410,21 @@ function get_sets()
 		left_ring="Shiva Ring +1",
 		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	})
 
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {}
+
+	sets.WS.ACC = set_combine(sets.WS, {
+	
+	})
+
+	sets.WS.CRIT = set_combine(sets.WS, {
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Hetairoi Ring",
+		right_ring="Ilabrat Ring",
+		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
 
 	sets.WS["Savage Blade"] =  sets.WS.WSD
 
@@ -400,11 +432,14 @@ function get_sets()
 		range=Instrument.Mordant,
 	})
 
+	sets.WS["Eviceration"] = sets.WS.CRIT
+
 	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
 	    head="Nyame Helm",
 		body="Nyame Mail",
 		hands="Nyame Gauntlets",
 	})
+
 	sets.WS["Burning Blade"] = sets.WS.MAB
 	sets.WS["Shining Blade"] = set_combine( sets.WS.MAB, {
 		right_ring="Weather. Ring",

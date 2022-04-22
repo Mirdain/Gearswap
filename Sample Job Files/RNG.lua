@@ -25,12 +25,7 @@ Ammo_Warning_Limit = 99
 
 -- Add CRIT the base modes to allow AM3 Critical Builds
 state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
-
---Set default modes are (TP,ACC,DT,PDL)
 state.OffenseMode:set('TP')
-
--- Set to true to run organizer on job changes
-Organizer = true
 
 --Modes for specific to Ranger
 state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Yoichinoyumi','Naegling', 'Tauret')
@@ -120,12 +115,12 @@ function get_sets()
 
 	Ammo.Arrow.RA = "Chrono Arrow"			-- TP Ammo
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
-	Ammo.Arrow.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+	Ammo.Arrow.CRIT = "Chrono Arrow"	-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
-	Ammo.Arrow.PHY_WS = "Chrono Bullet"		-- Magic Weaponskills (Not Consumed)
+	Ammo.Arrow.PHY_WS = "Chrono Arrow"		-- Magic Weaponskills (Not Consumed)
 
 	Ammo.Bolt.RA = "Quelling Bolt"			-- TP Ammo
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
