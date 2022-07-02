@@ -773,6 +773,10 @@ function midcastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
 			info('['..spell.english..'] Set')
+		-- Utsusemi Spells
+		elseif UtsusemiSpell:contains(spell.name) then
+			equipSet = set_combine(equipSet, sets.Midcast.Utsusemi)
+			info('['..spell.english..'] Utsusemi Set')
 		-- Enhancing Magic
 		elseif spell.target.type == 'SELF' then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
@@ -1378,6 +1382,12 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 
 	if equipSet then
 		bullet_name = equipSet.ammo
+
+		if bullet_name == 'empty' then
+			log('Ammo name is: '..bullet_name)
+			return
+		end
+
 		windower.add_to_chat(8,'['..bullet_name..']')
 
 		if spell.action_type == 'Ranged Attack' then
@@ -1390,7 +1400,9 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 			end
 		end
 
-		local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name] or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] 
+		local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name]
+		 or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] or player.wardrobe5[bullet_name] 
+		 or player.wardrobe6[bullet_name] or player.wardrobe7[bullet_name] or player.wardrobe8[bullet_name]
 
 		-- If no ammo is available, give appropriate warning and end.
 		if not available_bullets then
