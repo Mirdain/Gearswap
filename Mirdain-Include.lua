@@ -224,6 +224,7 @@ Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater
 Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 'Banish', 'Banish II', 'Banish III', 'Banishga', 'Banishga II',}
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
+BlueACC = S{'Cruel Joke','Dream Flower'}
 BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{}
@@ -310,7 +311,7 @@ function pretargetcheck(spell,action)
 			info('Can\'t Weapon Skill due to amnesia.')
 			return
 		end
-		--Cancel ability due to abilty not ready
+	--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 		local abil_recasts_table = windower.ffxi.get_ability_recasts()
 		local ability_time = abil_recasts_table[spell.recast_id]/60
@@ -981,7 +982,7 @@ function midcastequip(spell)
 			info('Blue Nuke set')
 		-- Spells that benifit from Blue Magic Skill
 		elseif BlueSkill:contains(spell.english) then
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Skill)
 			info('Blue Skill set')
 		elseif BlueTank:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Enmity)
@@ -989,6 +990,9 @@ function midcastequip(spell)
 		elseif BlueHealing:contains(spell.english) then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cure)
 			info('Blue Cure set')
+		elseif BlueACC:contains(spell.english) then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.ACC)
+			info('Blue Magic Accuracy set')
 		-- Default Spell set
 		else
 			info('Midcast not set')
@@ -1120,7 +1124,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
-
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
@@ -1272,6 +1275,17 @@ function pet_midcast(spell)
 	else
 		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 	end
+
+	-- Weapon Checks for midcast
+	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+	if state.WeaponMode.value ~= "Unlocked" then
+		equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+		if TwoHand == false and DualWield == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
+		log('Midcast set equiping Offense Mode Gear')
+	end
+
 	equip(equipSet)
 end
 
