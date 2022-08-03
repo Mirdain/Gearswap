@@ -27,6 +27,13 @@ state.OffenseMode:set('TP')
 state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
 state.WeaponMode:set('Death Penalty')
 
+--Enable JobMode for UI.
+UI_Name = 'TP Mode'
+
+--Melee or Ranged Mode
+state.JobMode:options('Standard','Melee','Ranged')
+state.JobMode:set('Standard')
+
 elemental_ws = S{'Aeolian Edge','Leaden Salute','Wildfire','Hot Shot','Gust Slash','Cyclone','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
 -- load addons
@@ -77,6 +84,14 @@ function get_sets()
 		sub={ name="Nusku Shield", priority=1},
 	}
 
+	sets.Weapons.Melee = {
+		sub="Blurred Knife +1",
+	}
+
+	sets.Weapons.Ranged = {
+		sub={ name="Kustawi +1", augments={'Path: A',}},
+	}
+
 	-- Ammo Selection
 	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills
@@ -88,11 +103,11 @@ function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
 		ammo = Ammo.Bullet.RA,
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -357,54 +372,53 @@ function get_sets()
     sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +1"})
     sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +1"})
 
-	sets.WS = {
+sets.WS = {
 		ammo=Ammo.Bullet.WS,
-		head={ name="Herculean Helm", augments={'Accuracy+25','Weapon skill damage +4%','AGI+10','Attack+14',}},
-		body="Laksa. Frac +3",
-		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck="Comm. Charm +2",
-		waist="Grunfeld Rope",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Comm. Charm +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
-		left_ring="Karieyh Ring",
-		right_ring="Regal Ring",
+		left_ring="Epaminondas's Ring",
+		right_ring="Karieyh Ring",
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	-- Accuracy set used in OffenseMode.PDL
-	sets.WS.PDL = set_combine(sets.WS, {
-	
-	})
-
 	-- Accuracy set used in OffenseMode.ACC
 	sets.WS.ACC = set_combine(sets.WS, {
-	
 	})
 
-	sets.WS.MAB = {
+	sets.WS.PDL = set_combine(sets.WS, {
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+	})
+
+	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.Bullet.MAB,
-		head="Nyame Helm",
-		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
 		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
 		right_ear="Crematio Earring",
-		left_ring="Dingir Ring",
-		right_ring="Karieyh Ring",
+		right_ring="Dingir Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	})
 
 	sets.WS.MACC = set_combine(sets.WS.MAB, {
 		ammo=Ammo.Bullet.MACC,
 	})
 
-	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
+	sets.WS.WSD = set_combine(sets.WS, {
+		ammo=Ammo.Bullet.WS,
+	})
 
+	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
 	})
 
 	sets.WS["Leaden Salute"] = set_combine(sets.WS.MAB, {
@@ -418,37 +432,18 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	})
 
-	sets.WS.WSD = {
-		ammo=Ammo.Bullet.WS,
-		head={ name="Herculean Helm", augments={'Accuracy+25','Weapon skill damage +4%','AGI+10','Attack+14',}},
-		body="Laksa. Frac +3",
-		hands="Meg. Gloves +2",
-		legs={ name="Herculean Trousers", augments={'DEX+7','Pet: Mag. Acc.+4','Weapon skill damage +10%','Accuracy+1 Attack+1',}},
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		neck={ name="Comm. Charm +2", augments={'Path: A',}},
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Ishvara Earring",
-		left_ring="Karieyh Ring",
-		right_ring="Regal Ring",
-		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
-
 	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
 
 	})
 
 	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {
-		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	-- Uses Default WS set
-	sets.WS["Hot Shot"] = set_combine(sets.WS.MAB, {
-		body="Nyame Mail"
-	})
+	sets.WS["Hot Shot"] = {}
 	sets.WS["Split Shot"] = {}
 	sets.WS["Sniper Shot"] = {}
 	sets.WS["Slug Shot"] = {}
@@ -509,11 +504,15 @@ function midcast_custom(spell)
 		equipSet = set_combine(equipSet, sets.PhantomRoll)
 	end
 
+	equipSet = Job_Mode_Check(equipSet)
+
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
+
+	equipSet = Job_Mode_Check(equipSet)
 
 	return equipSet
 end
@@ -521,17 +520,23 @@ end
 function buff_change_custom(name,gain)
 	equipSet = {}
 
+	equipSet = Job_Mode_Check(equipSet)
+
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
 
+	equipSet = Job_Mode_Check(equipSet)
+
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
+
+	equipSet = Job_Mode_Check(equipSet)
 
 	return equipSet
 end
@@ -557,4 +562,13 @@ function check_buff_SP()
 	local sp_recasts = windower.ffxi.get_spell_recasts()
 
 	return buff
+end
+
+function Job_Mode_Check(equipSet)
+	if state.JobMode.value == 'Melee' then
+		equipSet = set_combine(equipSet, sets.Weapons.Melee)
+	elseif state.JobMode.value == 'Ranged' then
+		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	end
+	return equipSet
 end
