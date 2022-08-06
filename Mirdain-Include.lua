@@ -1213,7 +1213,7 @@ function buff_change(name,gain)
 	equipSet = {}
 	if is_Busy == false then
 		--calls the include file and custom on a buff change
-		equipSet = set_combine(choose_set(), buff_change_custom(name,gain))
+		equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
 		equip(equipSet)
 	end
 end
@@ -1225,7 +1225,7 @@ end
 function status_change(new,old)
 	equipSet = {}
 	--calls the include file and custom on a state change
-	equipSet = set_combine(choose_set(), status_change_custom(new,old))
+	equipSet = set_combine(choose_set(), choose_set_custom(), status_change_custom(new,old))
 	equip(equipSet)
 end
 
