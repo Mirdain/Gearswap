@@ -207,14 +207,14 @@ function get_sets()
 	sets.WS["Shark Bite"] = {}
 	sets.WS["Evisceration"] = {}
 	sets.WS["Aeolian Edge"] = set_combine( sets.WS.MAB, {
-		hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},
+		feet="Skulk. Poulaines +2",
 	})
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
-		hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},
+		feet="Skulk. Poulaines +2",
 	}
 end
 

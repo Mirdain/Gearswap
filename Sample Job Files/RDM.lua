@@ -39,6 +39,10 @@ elemental_ws = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blad
 -- Goal 2100 hp and 1300 MP
 function get_sets()
 
+	-- ===================================================================================================================
+	--		sets.Weapons
+	-- ===================================================================================================================
+
 	--Set the weapon options.  This is set below in job customization section
 	sets.Weapons = {}
 
@@ -87,6 +91,10 @@ function get_sets()
 		sub="Sacro Bulwark",
 	}
 
+	-- ===================================================================================================================
+	--		sets.Idle
+	-- ===================================================================================================================
+
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1", -- 3/3
@@ -115,6 +123,10 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
+	-- ===================================================================================================================
+	--		sets.OffenseMode
+	-- ===================================================================================================================
+
 	sets.OffenseMode = {}
 
 	sets.OffenseMode.TP = {
@@ -135,6 +147,10 @@ function get_sets()
 	sets.OffenseMode.DT = sets.OffenseMode.TP
 	sets.OffenseMode.ACC = sets.OffenseMode.TP
 	sets.DualWield = {back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dual Wield"+10','Phys. dmg. taken-10%',}}}
+
+	-- ===================================================================================================================
+	--		sets.Precast
+	-- ===================================================================================================================
 
 	-- Used for Magic Spells
 	sets.Precast = {}
@@ -164,15 +180,6 @@ function get_sets()
 	    back="Perimede Cape", -- 4
 	})
 
-	-- Job Abilities
-	sets.JA = {}
-	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}}
-	sets.JA["Saboteur"] = {}
-	sets.JA["Spontaneity"] = {}
-	sets.JA["Stymie"] = {}
-	sets.JA["Convert"] = {}
-	sets.JA["Composure"] = {}
-
 	-- ===================================================================================================================
 	--		sets.midcast
 	-- ===================================================================================================================
@@ -188,16 +195,16 @@ function get_sets()
 	-- Cure Set
 	sets.Midcast.Cure = {
 		sub="Sacro Bulwark",
-		ammo="Psilomene",
+		ammo="Staunch Tathlum +1",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body="Zendik Robe",
+		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
 		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck="Incanter's Torque",
-		waist="Sacro Cord",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear="Mendi. Earring",
+		right_ear="Etiolation Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Defending Ring",
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
@@ -211,7 +218,7 @@ function get_sets()
 		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, --15
 		hands="Atrophy Gloves +3", -- 20
 		legs={ name="Telchine Braconi", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		feet="Leth. Houseaux +1", -- 30
+		feet="Leth. Houseaux +2", -- 30
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, --25
 		waist="Embla Sash", --10
 		left_ear="Mimir Earring",
@@ -223,9 +230,9 @@ function get_sets()
 
 	-- Enhancing Duration on OTHERS
 	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
-		head="Leth. Chappel +1",
-		body="Lethargy Sayon +1",
-		legs="Leth. Fuseau +1",
+		head="Leth. Chappel +2",
+		body="Lethargy Sayon +2",
+		legs="Leth. Fuseau +2",
 	})
 
 	-- Spells that require SKILL - RDM only needs 500 or more except Temper II
@@ -265,14 +272,14 @@ function get_sets()
 	 -- Potency Basted ('Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II')
 	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
 		ammo="Regal Gem", -- 10%
-		body="Lethargy Sayon +1", -- 14%
+		body="Lethargy Sayon +2", -- 14%
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10%
 		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}}, -- 10%
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, -- 10%
 	})
 
 	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga')
-	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MND, {
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
 		hands="Regal Cuffs", --20%
 		right_ear="Snotra Earring", -- 10%
@@ -283,7 +290,7 @@ function get_sets()
 
 	sets.Enspell = {hands="Aya. Manopolas +2", waist="Orpheus's Sash",}
 
-	sets.Saboteur = {hands="Leth. Gantherots +1",}
+	sets.Saboteur = {hands="Leth. Ganth. +2",}
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
@@ -313,7 +320,7 @@ function get_sets()
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
 		body="Atrophy Tabard +3",
-		legs="Leth. Fuseau +1",
+		legs="Leth. Fuseau +2",
 		right_ear={ name="Tuisto Earring", priority=1},
 	})
 
@@ -338,33 +345,52 @@ function get_sets()
 		neck="Mizu. Kubikazari",
 	})
 
-	sets.WS = {}
+	-- ===================================================================================================================
+	--		sets.JA
+	-- ===================================================================================================================
 
-	sets.WS.ACC = {}
+	-- Job Abilities
+	sets.JA = {}
+	sets.JA["Chainspell"] = {body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}}
+	sets.JA["Saboteur"] = {}
+	sets.JA["Spontaneity"] = {}
+	sets.JA["Stymie"] = {}
+	sets.JA["Convert"] = {}
+	sets.JA["Composure"] = {}
 
-	sets.WS.WSD = { -- Setup for Capped Attack
-	    ammo="Regal Gem",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body="Malignance Tabard",
-		hands="Atrophy Gloves +3",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+	-- ===================================================================================================================
+	--		sets.WS
+	-- ===================================================================================================================
+
+	sets.WS = {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Dls. Torque +2", augments={'Path: A',}},
 		waist="Eschan Stone",
-		left_ear="Ishvara Earring", -- Need to get
+		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Stikini Ring +1", -- Upgrade to Rufescent Ring
+		left_ring="Ilabrat Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	sets.WS.ACC = {}
+
+	sets.WS.WSD = set_combine(sets.WS, { -- Setup for Capped Attack
+
+	})
+
 	sets.WS.MAB = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head="C. Palug Crown",
-		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		hands="Jhakri Cuffs +2",
-		legs={ name="Amalric Slops +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		feet={ name="Amalric Nails +1", augments={'Mag. Acc.+20','"Mag.Atk.Bns."+20','"Conserve MP"+7',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet="Leth. Houseaux +2",
 		neck="Sanctity Necklace",
 		waist="Orpheus's Sash",
 		left_ear="Malignance Earring",
@@ -404,31 +430,13 @@ function get_sets()
 
 	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		body="Nyame Mail",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
-		waist="Orpheus's Sash"
 	})
 
 	sets.WS["Chant du Cygne"] = sets.WS.CRIT
 
 	sets.WS["Savage Blade"] = sets.WS.WSD
 
-	sets.WS["Black Halo"] = {
-	    ammo="Crepuscular Pebble",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body="Malignance Tabard",
-		hands="Atrophy Gloves +3",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck={ name="Dls. Torque +2", augments={'Path: A',}},
-		waist="Grunfeld Rope",
-		left_ear="Ishvara Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Petrov Ring",
-		right_ring="Epaminondas's Ring",
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
+	sets.WS["Black Halo"] = sets.WS.WSD
 
 	sets.TreasureHunter = {
 	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
@@ -472,7 +480,7 @@ end
 function aftercast_custom(spell)
 	equipSet = {}
 	if not buffactive['Composure'] and spell.name ~=  "Composure" then
-		add_to_chat(8,'Composure is down')
+		--add_to_chat(8,'Composure is down')
 	end
 	coroutine.schedule(Enspell_Check,1) -- windower is not firing buff_change correctly with Enspells and has a delay
 

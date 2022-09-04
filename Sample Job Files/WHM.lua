@@ -57,10 +57,10 @@ function get_sets()
 	sets.Idle = {
 		ammo="Staunch Tathlum +1", --  3/3
 		head="Nyame Helm", -- 7/7
-		body="Nyame Mail", -- 9/9
+		body="Ebers Bliaut +2",
 		hands="Nyame Gauntlets", -- 7/7
-		legs="Nyame Flanchard", -- 8/8
-		feet="Nyame Sollerets", -- 7/7
+		legs="Ebers Pant. +2", -- 12/12
+		feet="Ebers Duckbills +2", -- 10/10
 		neck={ name="Loricate Torque +1", augments={'Path: A',}}, -- 6/6
 		waist="Carrier's Sash",
 		left_ear={ name="Etiolation Earring", priority=1}, -- 0/3
@@ -95,13 +95,33 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
+	sets.OffenseMode = {
+	    main="Maxentius",
+		sub="Genmei Shield",
+		ammo="Hasty Pinion +1",
+		head="Nyame Helm",
+		body="Nyame Mail",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		neck="Sanctity Necklace",
+		waist="Grunfeld Rope",
+		left_ear="Crep. Earring",
+		right_ear="Telos Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Ilabrat Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
+	}
 	-- Base TP set
 	sets.OffenseMode.TP = {}
+
 	-- Set to use when Dual Wielding
 	sets.OffenseMode.TP.DW = {}
+	
 	-- TP set when in -Damage Taken mode
-	sets.OffenseMode.DT = {}
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
+	
+	})
 	-- TP set to use when mode is in accuracy
 	sets.OffenseMode.ACC = {}
 
@@ -110,12 +130,12 @@ function get_sets()
 	sets.Precast.FastCast = {
 		main="C. Palug Hammer", -- 7
 		sub="Ammurapi Shield",
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}, priority=3},
+		ammo="Hasty Pinion +1",
 		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}}, -- 10
 		body="Inyanga Jubbah +2", -- 14
 		hands="Gende. Gages +1", -- 7
 		legs="Pinga Pants +1", -- 13
-		feet="Regal Pumps +1", -- ~4-7
+		feet="Volte Gaiters", -- 6
 		neck={ name="Clr. Torque +2", augments={'Path: A',}}, -- 10
 		waist="Embla Sash", -- 5
 		left_ear={ name="Etiolation Earring", priority=2}, -- 1
@@ -123,7 +143,7 @@ function get_sets()
 		left_ring="Kishar Ring", -- 4
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A'}, priority=1},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
-	} -- 80%
+	} -- 81%
 
 	-- Cap is 10% Quick Magic - used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
@@ -167,9 +187,9 @@ function get_sets()
 		sub="Genmei Shield",
 		ammo="Impatiens",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		body={ name="Ebers Bliaut +1", priority=2},
+		body={ name="Ebers Bliaut +2", priority=2},
 		hands="Theophany Mitts +3",
-		legs="Ebers Pant. +1",
+		legs="Ebers Pant. +2",
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
 		neck={ name="Clr. Torque +2", augments={'Path: A',}}, -- 10
 		waist="Hachirin-no-Obi",
@@ -206,13 +226,13 @@ function get_sets()
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 	    main="Beneficus",
-		head="Ebers Cap +1",
-		body="Ebers Bliaut +1",
-		hands="Ebers Mitts +1",
+		head="Ebers Cap +2",
+		body="Ebers Bliaut +2",
+		hands="Ebers Mitts +2",
 		left_ear="Andoaa Earring",
 		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
-		feet="Ebers Duckbills +1",
+		feet="Ebers Duckbills +2",
 	})
 
 	--Used for elemental Bar Magic Spells
@@ -244,16 +264,16 @@ function get_sets()
 
 	sets.Midcast["Cursna"] = {
 		main="Yagrush",
-		sub="Sors Shield",
+		sub="Ammurapi Shield",
 		ammo="Hasty Pinion +1",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body="Ebers Bliaut +1",
+		body="Ebers Bliaut +2",
 		hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
 		legs="Th. Pant. +3",
 		feet="Gende. Galosh. +1",
 		neck="Debilis Medallion",
 		waist="Bishop's Sash",
-		left_ear="Beatific Earring",
+		left_ear={ name="Etiolation Earring", priority=1},
 		right_ear="Meili Earring",
 		left_ring="Haoma's Ring",
 		right_ring="Menelaus's Ring",
@@ -265,32 +285,32 @@ function get_sets()
 	})
 
 	sets.Midcast["Silena"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Poisona"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Paralyna"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Stona"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Blinda"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Viruna"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		main="Yagrush"
 	})
 
@@ -301,7 +321,7 @@ function get_sets()
 		ammo="Hydrocera",
 		head="Inyanga Tiara +2",
 		body={ name="Piety Bliaut +2", augments={'Enhances "Benediction" effect',}},
-		hands="Ebers Mitts +1",
+		hands="Ebers Mitts +2",
 		legs="Th. Pant. +3",
 		feet="Theo. Duckbills +3",
 		neck={ name="Clr. Torque +2", augments={'Path: A',}},

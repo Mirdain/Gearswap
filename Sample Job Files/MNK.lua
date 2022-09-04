@@ -59,19 +59,19 @@ function get_sets()
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
-		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+	    ammo="Staunch Tathlum +1",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Loricate Torque +1",
-		waist="Moonbow Belt +1",
+		waist="Carrier's Sash",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ear="Etiolation Earring",
+		left_ear="Sanare Earring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		left_ring="Regal Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		left_ring="Archon Ring",
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -102,23 +102,15 @@ function get_sets()
 		right_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-		ammo="Crepuscular Pebble",
-		head="Ken. Jinpachi +1",
+		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Ken. Sune-Ate +1",
-		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
-		waist="Moonbow Belt +1",
-		left_ear="Sherida Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring="Niqmaddu Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		legs={ name="Mpaca's Hose", augments={'Path: A',}},
+		feet="Malignance Boots",
 	})
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
@@ -129,11 +121,8 @@ function get_sets()
 		feet="Ken. Sune-Ate +1",
 	})
 
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP,{
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT,{
 	    ammo="Crepuscular Pebble",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
 	})
 
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
@@ -199,7 +188,22 @@ function get_sets()
 	sets.JA["Provoke"] = sets.Enmity
 	sets.JA["Focus"] = {}
 	sets.JA["Dodge"] = {}
-	sets.JA["Chakra"] = {}
+	sets.JA["Chakra"] = {
+	    main={ name="Verethragna", augments={'Path: A',}},
+		ammo="Crepuscular Pebble",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Moonbow Belt +1",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Regal Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}
 	sets.JA["Boost"] = {}
 	sets.JA["Counterstance"] = {}
 	sets.JA["Chi Blast"] = {}
@@ -223,7 +227,7 @@ function get_sets()
 		right_ear="Odr Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
+		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
 
 	sets.WS.SB = set_combine( sets.WS, sets.SubtleBlow ,{ -- This maximize SB
@@ -249,7 +253,7 @@ function get_sets()
 		right_ear="Odr Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Phys. dmg. taken-10%',}},
+		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
 
 	--WS Sets
@@ -276,18 +280,17 @@ function get_sets()
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}}
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}}
 	})
 
 	--Impetus set has priority over any other modes
 	sets.Impetus = {
-		body="Bhikku Cyclas +1",
+		body="Bhikku Cyclas +2",
 	}
 
 	-- Impetus for the DT stance (need more PDT)
 	sets.Impetus.DT = {
-	    head="Malignance Chapeau",
-		body="Bhikku Cyclas +1",
+		body="Bhikku Cyclas +2",
 		right_ring="Defending Ring",
 	}
 
@@ -300,9 +303,9 @@ function get_sets()
 	})
 
 	sets.TreasureHunter = {
-		head="Malignance Chapeau",
-	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
+		ammo="Per. Lucky Egg",
+		body="Volte Jupon",
+		waist="Chaac Belt",
 	}
 end
 

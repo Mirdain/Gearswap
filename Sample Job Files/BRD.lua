@@ -58,7 +58,7 @@ function get_sets()
 
 	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub="Crepuscular Knife",
+		sub={ name="Fusetto +2", augments={'TP Bonus +1000',}},
 	}
 
 	sets.Weapons['Eviceration'] = {
@@ -114,7 +114,7 @@ function get_sets()
     } -- PDT 60%%, MDT 56%
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
-	sets.Movement = { feet="Fili Cothurnes +1"}
+	sets.Movement = { feet="Fili Cothurnes +2"}
 
     -- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
@@ -136,14 +136,14 @@ function get_sets()
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
 		range=Instrument.TP,
-		head="Volte Tiara",
-		body="Volte Harness",
+		head="Volte Tiara", -- Upgrade to Bunzi
+		body="Ashera Harness",
 		hands="Bunzi's Gloves",
-		legs="Aya. Cosciales +2",
+		legs="Volte Tights",
 		feet="Nyame Sollerets",
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
-		left_ear="Brutal Earring", -- swapped out with Dual Wield
+		left_ear="Crep. Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
 		left_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=2},
 		right_ring={ name="Chirich Ring +1", bag="wardrobe3", priority=1},
@@ -153,19 +153,18 @@ function get_sets()
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		waist="Sarissapho. Belt",
 		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
 	
+	})
+
+	--This set is used when OffenseMode is PDL and Enaged
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+		left_ring="Sroda Ring",
 	})
 
 	--The following sets augment the base TP set
@@ -176,39 +175,25 @@ function get_sets()
 
 	sets.Precast = {}
 
-	-- Used to Songs
-	sets.Precast.Songs = {
-		range=Instrument.FastCast, -- 6
-		head="Fili Calot +1", -- 14
-		body="Brioso Justau. +3", -- 15
-		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -4%','Magic dmg. taken -3%','Song spellcasting time -5%',}, priority=7}, -- 12
-		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}, priority=2}, -- 6
-		feet={ name="Telchine Pigaches", augments={'Song spellcasting time -7%',}}, -- 13
-		neck="Voltsurge Torque", -- 4
-		waist="Embla Sash", -- 5
-		left_ear={ name="Etiolation Earring", priority=3}, -- 1
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=5},
-		right_ring={ name="Moonlight Ring",  bag="wardrobe3", priority=4},
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 82% FC
-
-	-- Used for Magic Spells
+		-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		range=Instrument.FastCast, -- 6
 		head="Bunzi's Hat", -- 10
 		body="Inyanga Jubbah +2", -- 14
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
-		legs="Aya. Cosciales +2", --6
-		feet="Volte Gaiters", -- 6
-		neck="Voltsurge Torque", -- 4
+		legs="Volte Brais", -- 8
+		feet="Fili Cothurnes +2", -- 10
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
 		waist="Embla Sash", -- 5
 		left_ear={ name="Etiolation Earring", priority=1}, -- 1
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=5},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
 		left_ring="Kishar Ring", -- 4
 		right_ring="Weather. Ring", -- 5
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 78 FC
+	} -- 81 FC
+
+	-- Used for Songs (now easy to max Fast Cast so not needed)
+	sets.Precast.Songs = sets.Precast.FastCast
 
 	-- Used for "-Cure casting time"
 	sets.Precast.Cure = {}
@@ -222,9 +207,9 @@ function get_sets()
 
 	-- Default song duration / strength
 	sets.Midcast = set_combine(sets.Idle, {
-		head="Fili Calot +1",
-		body="Fili Hongreline +1",
-		hands="Fili Manchettes +1",
+		head="Fili Calot +2",
+		body="Fili Hongreline +2",
+		hands="Fili Manchettes +2",
 		legs="Inyanga Shalwar +2",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
@@ -238,38 +223,26 @@ function get_sets()
 	})
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
-	sets.Midcast.DummySongs = {
-		head="Fili Calot +1",
-		body="Fili Hongreline +1",
-		hands="Fili Manchettes +1",
-		legs="Inyanga Shalwar +2",
-		feet="Brioso Slippers +3",
-		neck="Mnbw. Whistle +1",
-		waist="Flume Belt +1",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
-		right_ear={ name="Etiolation Earring", priority=1}, -- 1
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
-		right_ring="Defending Ring",
-		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+	sets.Midcast.DummySongs = set_combine(sets.Midcast, {
 		feet="Bunzi's Sabots",
-	}
+	})
 
 	-- Cure Set
 	sets.Midcast.Cure = {
 		range=Instrument.FastCast, 
-		head={ name="Kaykaus Mitra", augments={'MP+60','"Cure" spellcasting time -5%','Enmity-5',}}, -- 10    UPGRADE
-		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}}, -- 6
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}}, -- 11
-		legs={ name="Kaykaus Tights", augments={'INT+10','"Mag.Atk.Bns."+15','Enmity-5',}}, -- 10  UPGRADE
-		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
-		waist="Tempus Fugit",
-		left_ear="Mendi. Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11/2
+		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 0/6
+		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}}, -- 11/2
+		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11/2
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11/2
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Luminary Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Mendi. Earring", -- 5/0
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Naji's Loop", -- 1/1
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-    } -- 53% Cure Potency / 8% Cure Potency II
+    } -- 50% Cure Potency / 15% Cure Potency II
 
 	-- Base set for duration
 	sets.Midcast.Enhancing = {
@@ -282,23 +255,23 @@ function get_sets()
 		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +10',}},
 		neck="Incanter's Torque",
 		waist="Embla Sash",
-		left_ear="Tuisto Earring",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Etiolation Earring",
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1}, -- 7/-1
-		right_ring="Stikini Ring +1",
+		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
+		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Curaga Set (different rules than cure)
 	sets.Midcast.Curaga = sets.Midcast.Cure
 
 	-- Cursna Set
-	sets.Midcast.Cursna = {
+	sets.Midcast.Cursna = set_combine (sets.Midcast.Cure, {
 	    hands="Inyan. Dastanas +2",
 	    left_ring="Menelaus's Ring",
 		right_ring="Haoma's Ring",
 		feet={ name="Vanya Clogs", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 		waist="Bishop's Sash",
-	}
+	})
 
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = {}
@@ -313,7 +286,7 @@ function get_sets()
 		legs="Brioso Cannions +3",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
-		waist="Luminary Sash",
+		waist={ name="Obstin. Sash", augments={'Path: A',}},
 		left_ear="Regal Earring",
 		right_ear="Crep. Earring",
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
@@ -325,7 +298,7 @@ function get_sets()
 	-- Max duration
 	sets.Midcast.Lullaby = set_combine(sets.Midcast.Enfeebling, {
 		range=Instrument.Honor,
-		body="Fili Hongreline +1",
+		body="Fili Hongreline +2",
 		hands="Brioso Cuffs +3",
 		legs="Inyanga Shalwar +2",
 	})
@@ -333,11 +306,11 @@ function get_sets()
 	sets.Midcast.Requiem = {}
 	sets.Midcast.Elegy = {}
 	sets.Midcast.Prelude = {}
-	sets.Midcast.Madrigal = {head="Fili Calot +1"}
-    sets.Midcast.Minuet = {body="Fili Hongreline +1"}
-    sets.Midcast.March = {hands="Fili Manchettes +1"}
-    sets.Midcast.Ballad = {legs="Fili Rhingrave +1"}
-    sets.Midcast.Scherzo = {feet="Fili Cothurnes +1"}
+	sets.Midcast.Madrigal = {head="Fili Calot +2"}
+    sets.Midcast.Minuet = {body="Fili Hongreline +2"}
+    sets.Midcast.March = {hands="Fili Manchettes +2"}
+    sets.Midcast.Ballad = {legs="Fili Rhingrave +2"}
+    sets.Midcast.Scherzo = {feet="Fili Cothurnes +2"}
     sets.Midcast.Mazurka = {}
     sets.Midcast.Paeon = {head="Brioso Roundlet +3"}
     sets.Midcast.Threnody = {body="Mou. Manteel +1"}
@@ -388,6 +361,11 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	-- Equipment to augment the Melee WS for Physical Damage Limit (Capped Attack)
+	sets.WS.PDL = set_combine(sets.WS, {
+		left_ring="Sroda Ring",
+	})
+
 	--The following sets augment the WS base set
 	sets.WS.WSD = set_combine(sets.WS, {
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -412,7 +390,6 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-
 	sets.WS.ACC = set_combine(sets.WS, {
 	
 	})
@@ -426,7 +403,9 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.WS["Savage Blade"] =  sets.WS.WSD
+	sets.WS["Savage Blade"] =  set_combine(sets.WS.WSD, {
+		left_ring="Sroda Ring",
+	})
 
 	sets.WS["Mordant Rime"] = set_combine(sets.WS, {
 		range=Instrument.Mordant,
@@ -453,6 +432,8 @@ function get_sets()
     })
 
 	sets.TreasureHunter = {
+		body="Volte Jupon",
+		legs="Volte Hose",
 		waist="Chaac Belt",
 	}	
 end

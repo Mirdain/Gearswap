@@ -1,4 +1,3 @@
-
 --Inyana
 
 -- Load and initialize the include file.
@@ -57,30 +56,29 @@ function get_sets()
 	-- Standard idle set
 	sets.Idle = { -- HP:2151 MP:1493
 		ammo="Staunch Tathlum +1", -- 3/3
-		head={ name="Nyame Helm", priority=1}, -- 7/7
-		body="Agwu's Robe", -- +3 Refresh
+		head="Arbatel Bonnet +2", -- 9/9
+		body="Arbatel Gown +2", -- 12/12 -- +3 Refresh
 		hands={ name="Nyame Gauntlets", priority=2}, -- 7/7
-		legs={ name="Nyame Flanchard", priority=3}, -- 8/8
-		feet="Nyame Sollerets", -- 7/7
+		legs="Arbatel Pants +2", -- 11/11
+		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
 		neck="Loricate Torque +1", -- 6/6
 		waist="Carrier's Sash",
 		left_ear="Lugalbanda Earring",
 		right_ear={ name="Etiolation Earring", priority=1}, -- 0/3
-		left_ring="Defending Ring", -- 10/10
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10/0
-    }	-- 44 MDT and 51 PDT (With sublimation active)
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
+    } -- 55 PDT / 56 MDT
 
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
-	    left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
 		head="Acad. Mortar. +3", -- +4 Submlimation when active
+		right_ring="Defending Ring",
 	    waist="Embla Sash", -- +3 Submlimation when active
 	})
 
 	-- Set to swap into when player is moving
 	sets.Movement = {
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
 		feet="Herald's Gaiters"
 	}
 
@@ -124,7 +122,7 @@ function get_sets()
 		right_ear={ name="Etiolation Earring", priority=1}, -- 1
 		left_ring="Weather. Ring", -- 5
 		right_ring="Kishar Ring", -- 4
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10
 	} -- 80+ Fastcast
 
 	-- Used for Raises and Cures
@@ -160,22 +158,32 @@ function get_sets()
 		-- Staff 20% Cure Potency
 		ammo="Hasty Pinion +1", --2% Haste
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 6% Haste 11/2
-		body={ name="Nyame Mail", priority=3}, -- 3% Haste
+		body="Arbatel Gown +2", -- 3% Haste
 		hands={ name="Peda. Bracers +3", augments={'Enh. "Tranquility" and "Equanimity"',}}, -- 3% Haste 0/3
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 5% Haste 11/2
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 3% Haste 11/2
-		neck="Incanter's Torque",
+		neck="Loricate Torque +1",
 		waist="Witful Belt", -- 3% Haste
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 		right_ear={ name="Etiolation Earring", priority=1},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Defending Ring",
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
     }	-- 25% Haste 50%+ Cure Potency and 9% Cure Potency II
+
+	-- Cursna Gear
+	sets.Midcast.Cursna = set_combine(sets.Midcast.Cure, {
+		body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
+		legs="Acad. Pants +3",
+		feet="Gende. Galosh. +1",
+		neck="Debilis Medallion",
+	    left_ring="Menelaus's Ring",
+		right_ring="Haoma's Ring",
+	})
 
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
-		ammo="Hydrocera",
+		ammo="Psilomene",
 		head={ name="Telchine Cap", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
 		hands={ name="Telchine Gloves", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
@@ -187,7 +195,7 @@ function get_sets()
 		right_ear={ name="Etiolation Earring", priority=1},
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
@@ -195,15 +203,15 @@ function get_sets()
 		head="Acad. Mortar. +3",
 		body="Acad. Gown +3",
 		hands="Acad. Bracers +3",
-		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
+		legs="Arbatel Pants +2",
 		feet="Acad. Loafers +3",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
-		waist="Luminary Sash",
+		waist={ name="Obstin. Sash", augments={'Path: A',}},
 		left_ear="Regal Earring",
-		right_ear="Regal Earring",
+		right_ear="Crep. Earring",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
-		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
 	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
@@ -215,20 +223,20 @@ function get_sets()
 	})
 	 -- Used for Vagary (6k+ nuke no kill)
 	sets.Midcast.Vagary = {
-	    main="Earth Staff",
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+14','Attack+22','"Fast Cast"+6','Mag. Acc.+15 "Mag.Atk.Bns."+15',}}, -- 14
-		body={ name="Merlinic Jubbah", augments={'"Fast Cast"+6',}}, -- 12
-		hands="Acad. Bracers +3", -- 9
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 7
-		feet={ name="Merlinic Crackows", augments={'"Mag.Atk.Bns."+29','"Fast Cast"+6','DEX+7','Mag. Acc.+14',}}, -- 11
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
-		waist="Embla Sash", -- 5
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
-		right_ear={ name="Etiolation Earring", priority=1}, -- 1
-		left_ring="Weather. Ring", -- 5
-		right_ring="Kishar Ring", -- 4
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
+	    main="Chatoyant Staff",
+		ammo="Hasty Pinion +1",
+		head="Nahtirah Hat",
+		body="Zendik Robe",
+		hands="Gende. Gages +1",
+		legs="Pinga Pants +1",
+		feet={ name="Merlinic Crackows", augments={'"Mag.Atk.Bns."+29','"Fast Cast"+6','DEX+7','Mag. Acc.+14',}},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Embla Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Etiolation Earring",
+		left_ring="Weather. Ring",
+		right_ring="Kishar Ring",
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
 
 	-- Spells that require SKILL
@@ -237,16 +245,37 @@ function get_sets()
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
 
-	-- Enhancing Skill
-	sets.Midcast.Cursna = {}
-
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
 		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		head="Arbatel Bonnet +1",
+		head="Arbatel Bonnet +2",
 	})
 
 	sets.Perpetuance = {
-		hands="Arbatel Bracers +1",
+		hands="Arbatel Bracers +2",
+	}
+
+	sets.Immanence = {
+		hands="Arbatel Bracers +2",
+	}
+
+	sets.Ebullience = {
+		head="Arbatel Bonnet +2",
+	}
+
+	sets.Rapture = {
+		head="Arbatel Bonnet +2",
+	}
+
+	sets.Penury = {
+		--legs="Arbatel Pants +2",
+	}
+
+	sets.Parsimony = {
+		legs="Arbatel Pants +2",
+	}
+
+	sets.Klimaform = {
+		feet="Arbatel Loafers +2",
 	}
 
 	-- Specific gear for spells
@@ -277,14 +306,14 @@ function get_sets()
 		body="Acad. Gown +3",
 		hands={ name="Agwu's Gages", augments={'Path: A',}},
 		legs="Agwu's Slops",
-		feet="Agwu's Pigaches",
+		feet="Arbatel Loafers +2",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
 		right_ear="Regal Earring",
 		left_ring="Freke Ring",
 		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10',}},
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
@@ -300,10 +329,6 @@ function get_sets()
 	
 	})
 
-	sets.Charm = set_combine(sets.Idle, {
-
-	})
-
 	sets.WS = {}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
@@ -312,6 +337,7 @@ function get_sets()
 
 	-- Set used to tag treasure hunger
 	sets.TreasureHunter = {
+		ammo="Per. Lucky Egg",
 	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
 		waist="Chaac Belt",
 	}
@@ -343,6 +369,21 @@ function midcast_custom(spell)
 	equipSet = {}
 	if buffactive["Perpetuance"] then
 		equipSet = set_combine(equipSet, sets.Perpetuance)
+	end
+	if buffactive["Immanence"] then
+		equipSet = set_combine(equipSet, sets.Immanence)
+	end
+	if buffactive["Ebullience"] then
+		equipSet = set_combine(equipSet, sets.Ebullience)
+	end
+	if buffactive["Rapture"] then
+		equipSet = set_combine(equipSet, sets.Rapture)
+	end
+	if buffactive["Penury"] then
+		equipSet = set_combine(equipSet, sets.Rapture)
+	end
+	if buffactive["Parsimony"] then
+		equipSet = set_combine(equipSet, sets.Rapture)
 	end
 	return equipSet
 end
