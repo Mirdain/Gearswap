@@ -114,11 +114,11 @@ function get_sets()
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = {
 		ammo="Crepuscular Pebble",
-		head="Ken. Jinpachi +1",
-		body="Nyame Mail",
-		hands="Ken. Tekko +1",
-		legs="Nyame Flanchard",
-		feet="Ken. Sune-Ate +1",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",
 		left_ear="Telos Earring",
@@ -275,11 +275,11 @@ function get_sets()
 	--Default Weapon Skill set base
 	sets.WS = {
 		ammo="Knobkierrie",
-		head={ name="Valorous Mask", augments={'Accuracy+17 Attack+17','Weapon skill damage +4%','STR+9','Accuracy+8',}},
-		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
-		hands={ name="Valorous Mitts", augments={'Accuracy+21 Attack+21','Weapon skill damage +4%','STR+13',}},
-		legs="Wakido Haidate +3",
-		feet={ name="Valorous Greaves", augments={'Attack+29','Weapon skill damage +4%','STR+9','Accuracy+11',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
 		waist="Fotia Belt",
 		left_ear="Thrud Earring",
@@ -322,17 +322,18 @@ function get_sets()
 		neck="Fotia Gorget",
 		waist="Orpheus's Sash",
 		left_ear="Friomisi Earring",
+		back={ name="Smertrios's Mantle", augments={'STR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
-	sets.WS["Tachi: Goten"] = {}
-	sets.WS["Tachi: Kagero"] = {}
-	sets.WS["Tachi: Koki"] = {}
-	sets.WS["Tachi: Yukikaze"] = {}
-	sets.WS["Tachi: Gekko"] = {}
-	sets.WS["Tachi: Kasha"] = {}
-	sets.WS["Tachi: Rana"] = {}
-	sets.WS["Tachi: Ageha"] = {}
-	sets.WS["Tachi: Fudo"] = {}
-	sets.WS["Tachi: Shoha"] = {}
+	sets.WS["Tachi: Goten"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Kagero"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Koki"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Yukikaze"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Gekko"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Kasha"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Rana"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Ageha"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Fudo"] = set_combine (sets.WS, {})
+	sets.WS["Tachi: Shoha"] = set_combine (sets.WS, {})
 
 	sets.Seigan = {
 	    head="Kasuga Kabuto +1",

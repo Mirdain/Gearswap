@@ -14,8 +14,8 @@ state.OffenseMode:options('TP','ACC','DT','PDT','MEVA','AoE') -- ACC effects WS 
 UI_Name = 'Auto Tank'
 UI_Name2 = 'Runes'
 
-Buff_Delay = 10 -- Used this to slow down auto buffing
-Tank_Delay = 3 -- delays between tanking actions (only used when auto-buffing enabled and target locked on)
+Buff_Delay = 2 -- Used this to slow down auto buffing
+Tank_Delay = 1 -- delays between tanking actions (only used when auto-buffing enabled and target locked on)
 
 --Modes for specific to Paladin.  These are defined below in "Weapons".
 state.WeaponMode:options('Burtgang','Naegling','Club')
@@ -84,9 +84,6 @@ LockStylePallet = "13"
 MacroBook = "5"
 MacroSet = Macro_Sub_Job()
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -100,7 +97,7 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Burtgang'] = {
-		main="Burtgang",
+		main={ name="Burtgang", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Naegling'] = {

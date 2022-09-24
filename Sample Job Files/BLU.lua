@@ -28,7 +28,8 @@ state.OffenseMode:set('DT')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
-BlueHealing = S{'Magic Fruit'}
+BlueACC = S{'Cruel Joke','Dream Flower'}
+BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{}
 
@@ -42,9 +43,6 @@ UI_Name = 'Mode'
 --Modes for specific to Blue Mage
 state.JobMode:options('AoE','Melee')
 state.JobMode:set('AoE')
-
--- Set to true to run organizer on job changes
-Organizer = true
 
 function get_sets()
 
@@ -245,10 +243,11 @@ function get_sets()
 
 	sets.Midcast.Nuke = {
 		ammo="Pemphredo Tathlum",
-		body={ name="Cohort Cloak +1", augments={'Path: A',}},
-		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs={ name="Amalric Slops +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		feet={ name="Amalric Nails +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		head="Hashishin Kavuk +2",
+		body="Hashishin Mintan +2",
+		hands="Hashi. Bazu. +2",
+		legs="Hashishin Tayt +2",
+		feet="Hashi. Basmak +2",
 		neck="Sanctity Necklace",
 		waist="Orpheus's Sash",
 		left_ear="Hecate's Earring",

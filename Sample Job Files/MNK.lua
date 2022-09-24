@@ -94,7 +94,7 @@ function get_sets()
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
+		legs="Bhikku Hose +2",
 		feet="Anch. Gaiters +3",
 		neck="Mnk. Nodowa +2",
 		waist="Moonbow Belt +1",
@@ -109,7 +109,7 @@ function get_sets()
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs={ name="Mpaca's Hose", augments={'Path: A',}},
+		legs="Bhikku Hose +2",
 		feet="Malignance Boots",
 	})
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -129,18 +129,14 @@ function get_sets()
 	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 50% in either I or II
 	sets.SubtleBlow = {
-		legs={ name="Mpaca's Hose", augments={'Path: A',}}, -- SB II 5
-		feet="Ken. Sune-Ate +1", -- SB 8
 		waist="Moonbow Belt +1", -- SB II 15
 		left_ear="Sherida Earring", -- SB II 5
 		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
 		left_ring="Niqmaddu Ring", -- SB II 5
 	} -- 35+11% SB I + %30 SB II = 76 (Over Cap)
 
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, sets.SubtleBlow, {
-		head="Malignance Chapeau",
-		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-		right_ring="Gere Ring",
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.TP, sets.SubtleBlow, {
+
 	})
 
 	sets.Precast = {}
@@ -206,7 +202,9 @@ function get_sets()
 	}
 	sets.JA["Boost"] = {}
 	sets.JA["Counterstance"] = {}
-	sets.JA["Chi Blast"] = {}
+	sets.JA["Chi Blast"] = {
+		head={ name="Hes. Crown +3", augments={'Enhances "Penance" effect',}},
+	}
 	sets.JA["Mantra"] = {}
 	sets.JA["Footwork"] = {}
 	sets.JA["Perfect Counter"] = {}
@@ -219,7 +217,7 @@ function get_sets()
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- Need Aug'd
 		body="Ken. Samue +1",
 		hands={ name="Ryuo Tekko +1", augments={'STR+12','DEX+12','Accuracy+20',}},
-		legs="Ken. Hakama +1",
+		legs={ name="Mpaca's Hose", augments={'Path: A',}},
 		feet="Ken. Sune-Ate +1", -- Need Aug a Herc Feet
 		neck="Fotia Gorget",
 		waist="Moonbow Belt +1",

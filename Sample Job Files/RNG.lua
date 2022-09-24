@@ -115,7 +115,7 @@ function get_sets()
 
 	Ammo.Arrow.RA = "Chrono Arrow"			-- TP Ammo
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
-	Ammo.Arrow.CRIT = "Chrono Arrow"	-- Critical Hit Mode Ammo
+	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy

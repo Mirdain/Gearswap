@@ -202,7 +202,11 @@ function get_sets()
 	sets.Midcast.Curaga = set_combine( sets.Midcast.Cure, {})
 
 	-- Cursna Set
-	sets.Midcast.Cursna = {}
+	sets.Midcast.Cursna = set_combine( sets.Midcast.Cure, {
+	    left_ring="Menelaus's Ring",
+		right_ring="Haoma's Ring",
+	})
+
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},

@@ -438,11 +438,6 @@ function get_sets()
 	-- Equipment to augment the Melee WS for Physical Damage Limit (Capped Attack)
 	sets.WS.PDL = set_combine(sets.WS, {
 		left_ring="Sroda Ring",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
 	})
 
 	-- Equipment to augment the Ranged WS for Physical Damage Limit (Capped Attack)
