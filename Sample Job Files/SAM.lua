@@ -52,7 +52,7 @@ function get_sets()
 		main={ name="Dojikiri Yasutsuna", augments={'Path: A',}},
 		sub="Utu Grip",
 		range="Yoichinoyumi",
-		ammo="Stone Arrow"
+		ammo="Yoichi's Arrow",
 	}
 
 	sets.Weapons['Shining One'] = {
@@ -61,7 +61,7 @@ function get_sets()
 	}
 
 	--Default arrow to use
-	Ammo.RA = "Stone Arrow"
+	Ammo.RA = "Yoichi's Arrow"
 
 	-- Standard Idle set with -DT, Refresh and Regen gear
 	sets.Idle = {
@@ -96,71 +96,39 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		ammo="Coiste Bodhar",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
-		body="Ken. Samue +1",
-		hands="Wakido Kote +3",
-		legs="Ken. Hakama +1",
+		body="Kasuga Domaru +2",
+		hands="Ken. Tekko +1",
+		legs="Kasuga Haidate +2",
 		feet="Ken. Sune-Ate +1",
 		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Telos Earring",
-		right_ear="Schere Earring",
-		left_ring="Flamma Ring",
+		right_ear={ name="Schere Earring", augments={'Path: A',}},
+		left_ring="Chirich Ring +1",
 		right_ring="Niqmaddu Ring",
 		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
-		ammo="Crepuscular Pebble",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Telos Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring="Defending Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+		head="Kasuga Kabuto +2",
+		hands="Mpaca's Gloves",
+	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
-		ammo="Coiste Bodhar",
-		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
-		hands="Wakido Kote +3",
-		legs="Ken. Hakama +1",
-		feet="Ken. Sune-Ate +1",
-		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-		waist="Ioskeha Belt +1",
-		left_ear="Telos Earring",
-		right_ear="Crep. Earring",
-		left_ring="Niqmaddu Ring",
-		right_ring="Regal Ring",
-		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
+		head="Kasuga Kabuto +2",
+	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.SB = {
-		ammo="Coiste Bodhar",
-		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
-		hands="Ken. Tekko +1",
-		legs="Ken. Hakama +1",
-		feet="Ken. Sune-Ate +1",
-		neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-		waist="Windbuffet Belt +1",
-		left_ear="Telos Earring",
-		right_ear="Crep. Earring",
-		left_ring="Niqmaddu Ring",
-		right_ring="Chirich Ring +1",
-		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.TP, {
+		-- 29 SB I and 5 SB II on TP gear
+		head="Ken. Jinpachi +1",  --8
+		body="Ken. Samue +1", -- 8
+		waist="Sarissapho. Belt", -- 5
+	})
 
 	sets.Precast = {}
 
@@ -168,7 +136,7 @@ function get_sets()
 	-- Rapid shot is like quick magic
 	-- Snapshot is like Fast Cast
 
-	-- True Shot Ranges (Increases RA and WS and)
+	-- True Shot Ranges (Increases RA and WS)
 		-- Distances listed below are effected by Monster Size
 		-- Gun ~6.5 yalms
 		-- Short Bow ~8.6 yalms
@@ -284,27 +252,15 @@ function get_sets()
 		waist="Fotia Belt",
 		left_ear="Thrud Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Regal Ring",
+		left_ring="Epaminondas's Ring",
 		right_ring="Karieyh Ring +1",
 		back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {
-		ammo="Knobkierrie",
-		head="Ken. Jinpachi +1",
-		body={ name="Sakonji Domaru +3", augments={'Enhances "Overwhelm" effect',}},
-		hands="Ken. Tekko +1",
-		legs="Wakido Haidate +3",
-		feet="Ken. Sune-Ate +1",
-		neck="Fotia Gorget",
-		waist="Fotia Belt",
-		left_ear="Telos Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Niqmaddu Ring",
-		right_ring="Regal Ring",
-		back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}},
-	}
+	sets.WS.ACC = set_combine (sets.WS, {
+
+	})
 
 	sets.WS.SB = set_combine (sets.WS, {
 
@@ -314,15 +270,9 @@ function get_sets()
 	sets.WS["Tachi: Enpi"] = {}
 	sets.WS["Tachi: Hobaku"] = {}
 	sets.WS["Tachi: Jinpu"] = set_combine (sets.WS, {
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
 		neck="Fotia Gorget",
 		waist="Orpheus's Sash",
 		left_ear="Friomisi Earring",
-		back={ name="Smertrios's Mantle", augments={'STR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 	sets.WS["Tachi: Goten"] = set_combine (sets.WS, {})
 	sets.WS["Tachi: Kagero"] = set_combine (sets.WS, {})
@@ -336,16 +286,17 @@ function get_sets()
 	sets.WS["Tachi: Shoha"] = set_combine (sets.WS, {})
 
 	sets.Seigan = {
-	    head="Kasuga Kabuto +1",
-		body="Kasuga Domaru +1",
+	    head="Kasuga Kabuto +2",
+		body="Kasuga Domaru +2",
 	}
 	sets.ThirdEye = {
 		--legs={ name="Sakonji Haidate +3", augments={'Enhances "Shikikoyo" effect',}},
 	}
+
 	-- Used to Tag TH on a mob (TH4 is max in gear non-THF)
 	sets.TreasureHunter = {
-	    hands={ name="Valorous Mitts", augments={'MND+8','Pet: Accuracy+15 Pet: Rng. Acc.+15','"Treasure Hunter"+2','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
-		head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},
+		ammo="Per. Lucky Egg",
+		body="Volte Jupon",
 		waist="Chaac Belt",
 	}
 end
