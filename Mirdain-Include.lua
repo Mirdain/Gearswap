@@ -79,7 +79,7 @@ if player.main_job == "THF" then
 	state.TreasureMode:options('None','Tag','Fulltime','SATA')
 	state.TreasureMode:set('Tag')
 else
-	state.TreasureMode:options('None','Tag')
+	state.TreasureMode:options('None','Tag','Fulltime')
 	state.TreasureMode:set('None')
 end
 
@@ -402,32 +402,52 @@ function pretargetcheck(spell,action)
 	if spell.name == "Poison" then
 		info('Dancing Chains')
 		if player.main_job == "RDM" then
-			send_command('exec RDM/CP')
+			send_command('exec CP/RDM')
 		elseif player.main_job == "GEO" then
-			send_command('exec GEO/CP')
+			send_command('exec CP/GEO')
 		elseif player.main_job == "SCH" then
-			send_command('exec SCH/CP')
+			send_command('exec CP/SCH')
 		elseif player.main_job == "BRD" then
-			send_command('exec BRD/CP')
+			send_command('exec CP/BRD')
 		elseif player.main_job == "RNG" then
-			send_command('exec RNG/CP')
+			send_command('exec CP/RNG')
+		elseif player.main_job == "BLM" then
+			send_command('exec CP/BLM')
+		elseif player.main_job == "DRG" then
+			send_command('exec CP/DRG')
+		elseif player.main_job == "BLU" then
+			send_command('exec CP/BLU')
+		elseif player.main_job == "WAR" then
+			send_command('exec CP/WAR')
+		elseif player.main_job == "SMN" then
+			send_command('exec CP/SMN')
 		end
 		cancel_spell()
 		return
 	end
-	--Used to fire a second script
-	if spell.name == "Poison II" then
+	--Used to fire a script
+	if spell.name == "Dia" then
 		info('Dancing Chains')
 		if player.main_job == "RDM" then
-			send_command('exec RDM/CP2')
+			send_command('exec CP/RDM')
 		elseif player.main_job == "GEO" then
-			send_command('exec GEO/CP2')
+			send_command('exec CP/GEO')
 		elseif player.main_job == "SCH" then
-			send_command('exec SCH/CP2')
+			send_command('exec CP/SCH')
 		elseif player.main_job == "BRD" then
-			send_command('exec BRD/CP2')
+			send_command('exec CP/BRD')
 		elseif player.main_job == "RNG" then
-			send_command('exec RNG/CP2')
+			send_command('exec CP/RNG')
+		elseif player.main_job == "BLM" then
+			send_command('exec CP/BLM')
+		elseif player.main_job == "DRG" then
+			send_command('exec CP/DRG')
+		elseif player.main_job == "BLU" then
+			send_command('exec CP/BLU')
+		elseif player.main_job == "WAR" then
+			send_command('exec CP/WAR')
+		elseif player.main_job == "SMN" then
+			send_command('exec CP/SMN')
 		end
 		cancel_spell()
 		return
@@ -451,15 +471,21 @@ function precastequip(spell)
 		if equipSet[spell.english] then		
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			if state.OffenseMode.value == 'ACC' then
-				--Augments the set built for ACC
+				--Augments the WS set built for ACC
 				info( '['..spell.english..'] Set with Accuracy')
 				equipSet = set_combine(equipSet, sets.WS.ACC)
 			elseif state.OffenseMode.value == 'PDL' then
-				--Augments the set built TP set for PDL
-				info( '['..spell.english..'] Set with Physical Damage Limit')
-				equipSet = set_combine(equipSet, sets.WS.PDL)
+				--Augments the WS set for PDL
+				--info('Type of WS is ['..spell.skill..']')
+				if spell.skill == "Marksmanship" or spell.skill == "Archery" then
+					info( '['..spell.english..'] Set with Physical Damage Limit (Ranged)')
+					equipSet = set_combine(equipSet, sets.WS.PDL.RA)
+				else
+					info( '['..spell.english..'] Set with Physical Damage Limit')
+					equipSet = set_combine(equipSet, sets.WS.PDL)
+				end
 			elseif state.OffenseMode.value == 'SB' then
-				--Augments the set built TP set for PDL
+				--Augments the WS set for PDL
 				info( '['..spell.english..'] Set with Subtle Blow')
 				equipSet = set_combine(equipSet, sets.WS.SB)
 			else
@@ -467,13 +493,17 @@ function precastequip(spell)
 			end
 		else
 			if state.OffenseMode.value == 'ACC' then
-				--Augments the set built for ACC
 				info('Using Default WS Set with Accuracy')
 				equipSet = set_combine(equipSet, sets.WS.ACC)
-			elseif state.OffenseMode.value == 'PDL' then
-				--Augments the set built TP set for PDL
-				info( 'Using Default WS Set with Physical Damage Limit')
+			elseif state.OffenseMode.value == 'PDL' and state.JobMode.value ~= 'Ranged' then
+				info('Using Default WS Set with Physical Damage Limit')
 				equipSet = set_combine(equipSet, sets.WS.PDL)
+			elseif state.OffenseMode.value == 'PDL' and state.JobMode.value == 'Ranged' then
+				info('Using Default WS Set with Physical Damage Limit (Ranged)')
+				equipSet = set_combine(equipSet, sets.WS.PDL.RA)
+			elseif state.OffenseMode.value == 'SB' then
+				info('Using Default WS Set with Subtle Blow')
+				equipSet = set_combine(equipSet, sets.WS.SB)
 			else
 				info('Using Default WS Set')
 			end
@@ -748,13 +778,13 @@ function midcastequip(spell)
 	if spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Midcast.RA
 		if state.OffenseMode.value == 'ACC' then
-			--Augments the set built for ACC
+			--Augments the RA set built for ACC
 			equipSet = set_combine(equipSet, sets.Midcast.RA.ACC)
 		elseif state.OffenseMode.value == 'PDL' then
-			--Augments the set built for PDL
+			--Augments the RA set built for PDL
 			equipSet = set_combine(equipSet, sets.Midcast.RA.PDL)
 		elseif state.OffenseMode.value == 'CRIT' then
-			--Augments the set built for PDL
+			--Augments the RA set built for CRIT
 			equipSet = set_combine(equipSet, sets.Midcast.RA.CRIT)
 		end
 		if buffactive['Triple Shot'] then 
@@ -1614,7 +1644,7 @@ function self_command(cmd)
 					else
 						state.WeaponMode:set(state.WeaponMode[1])
 					end
-					info('Job Mode: ['..state.WeaponMode.value..']')
+					info('Weapon Mode: ['..state.WeaponMode.value..']')
 					self_command_custom(command)
 					two_hand_check()
 					equipset = set_combine(choose_set(),choose_set_custom())
@@ -1666,7 +1696,7 @@ function self_command(cmd)
 					else
 						state.JobMode2:set(state.JobMode2[1])
 					end
-					info('Mode: ['..state.JobMode2.value..']')
+					info(UI_Name2..': ['..state.JobMode2.value..']')
 					self_command_custom(command)
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
@@ -1676,7 +1706,7 @@ function self_command(cmd)
 			local mode = {}
 			mode = string.split(cmd," ",2)
 			state.JobMode2:set(mode[2])
-			info('Job Mode 2: ['..state.JobMode2.value..']')
+			info(UI_Name2..': ['..state.JobMode2.value..']')
 			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
@@ -1690,7 +1720,7 @@ function self_command(cmd)
 					else
 						state.JobMode:set(state.JobMode[1])
 					end
-					info('Mode: ['..state.JobMode.value..']')
+					info(UI_Name..': ['..state.JobMode.value..']')
 					self_command_custom(command)
 					equip(set_combine(choose_set(),choose_set_custom()))
 					return
@@ -1700,7 +1730,7 @@ function self_command(cmd)
 			local mode = {}
 			mode = string.split(cmd," ",2)
 			state.JobMode:set(mode[2])
-			info('Job Mode: ['..state.JobMode.value..']')
+			info(UI_Name..': ['..state.JobMode.value..']')
 			self_command_custom(command)
 			equip(set_combine(choose_set(),choose_set_custom()))
 			return
