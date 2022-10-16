@@ -24,9 +24,6 @@ Lockstyle_List = {1,2,6,12}
 --Set default mode (TP,ACC,DT)
 state.OffenseMode:set('DT')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Modes for specific to Ninja
 state.WeaponMode:options('Kannagi','Naegling','Karambit','Aeolian Edge','Abyssea')
 state.WeaponMode:set('Kannagi')
@@ -69,11 +66,11 @@ function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear="Etiolation Earring",
@@ -112,42 +109,40 @@ function get_sets()
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		feet="Ken. Sune-Ate +1",
 		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
-		waist="Windbuffet Belt +1",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Telos Earring",
-		right_ear="Crep. Earring",
+		right_ear="Odr Earring",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
 		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = {
+	sets.OffenseMode.DT = set_combine (sets.OffenseMode.TP, {
 	    head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-	}
+	})
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {
+	sets.OffenseMode.ACC = set_combine (sets.OffenseMode.TP, {
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-	}
-	sets.DualWield = {}
+	})
+	sets.OffenseMode.PDL = set_combine (sets.OffenseMode.TP, {
+	    head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+	})
 
-	sets.Utsusemi ={}
-	sets.Utsusemi.Midcast = {
-		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
-		feet="Hattori Kyahan +1",
-	}
-	sets.Utsusemi.Precast = {
-	    --body={ name="Mochi. Chainmail +3", augments={'Enhances "Sange" effect',}}
-	}
+	sets.DualWield = {}
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -166,11 +161,15 @@ function get_sets()
 		right_ring="Prolix Ring",
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
+	sets.Precast.QuickMagic = {
+
+	}
+
 	sets.Enmity = { -- Head and Back upgrade slots
 		ammo="Sapience Orb", --2
 		body="Emet Harness +1", --10
 		hands="Kurys Gloves", --9
-		legs="Zoar Subligar +1", --6
+		--="Zoar Subligar +1", --6
 		feet="Ahosi Leggings", --7
 		neck="Moonlight Necklace", --15
 		waist="Kasiri Belt", --3
@@ -184,9 +183,13 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
-	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {
+	-- Utsusemi Set
+	sets.Midcast.Utsusemi = {
+		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
+		feet="Hattori Kyahan +1",
 	}
+	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
+	sets.Midcast.SIRD = {}
 	-- Cure Set
 	sets.Midcast.Cure = {}
 	-- Enhancing Skill
@@ -228,9 +231,6 @@ function get_sets()
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {waist="Siegel Sash",}
-	sets.Midcast["Utsusemi: Ichi"] = sets.Utsusemi.Midcast
-	sets.Midcast["Utsusemi: Ni"] = sets.Utsusemi.Midcast
-	sets.Midcast["Utsusemi: San"] = sets.Utsusemi.Midcast
 
 	sets.JA = {}
 	sets.JA["Futae"] = {} --hands="Hattori Tekko"
@@ -246,35 +246,36 @@ function get_sets()
 	sets.JA["Mikage"] = {}
 
 	--Default WS set base
-	sets.WS = set_combine(sets.OffenseMode.TP, {
-
-
-	})
-
-	sets.WS.WSD = {	    
-		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
-		head="Hachiya Hatsu. +3",
-		body="Mpaca's Doublet",
-		hands="Mpaca's Gloves",
-		legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},
-		feet="Mpaca's Boots",
+	sets.WS = {
+		ammo="Yetshila +1",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Ishvara Earring",
-		right_ear="Odr Earring",
-		left_ring="Epaminondas's Ring",
-		right_ring="Karieyh Ring +1",
+		left_ear="Odr Earring",
+		right_ear="Ishvara Earring",
+		left_ring="Gere Ring",
+		right_ring="Epona's Ring",
 		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	sets.WS.WSD = set_combine({ sets.WS,
+		left_ring="Epaminondas's Ring",
+		right_ring="Karieyh Ring +1",
+	})
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {	    
+	sets.WS.ACC = set_combine({ sets.WS,	    
 		head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
 		hands="Ken. Tekko +1",
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
-	}
+	})
+
 	sets.WS.CRIT = {
 		ammo="Yetshila +1",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -290,13 +291,8 @@ function get_sets()
 		right_ring="Epona's Ring",
 		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
-	sets.WS.MAB = {
+	sets.WS.MAB = set_combine({ sets.WS,
 		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
-		head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
@@ -304,8 +300,7 @@ function get_sets()
 		left_ring="Epaminondas's Ring",
 		right_ring="Dingir Ring",
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
-	}
-
+	})
 
 	--WS Sets
 	sets.WS["Blade: Rin"] = sets.WS.CRIT
@@ -339,8 +334,9 @@ function get_sets()
 	}
 
 	sets.TreasureHunter = {
-	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
+	    head="Volte Cap",
+		body="Volte Jupon",
+		waist="Chaac Belt",
 	}
 
 end
@@ -361,9 +357,7 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if UtsusemiSpell:contains(spell.name) then
-		equipSet = sets.Utsusemi.Precast
-	end
+
 	return equipSet
 end
 -- Augment basic equipment sets

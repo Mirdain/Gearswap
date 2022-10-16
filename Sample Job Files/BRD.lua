@@ -99,7 +99,7 @@ function get_sets()
 	-- Standard Idle set
 	sets.Idle = {
 		range=Instrument.Idle,  -- 4/0
-		head="Bunzi's Hat", -- 7/7
+		head={ name="Bunzi's Hat", augments={'Path: A',}}, -- 7/7
 		body="Bunzi's Robe", -- 10/10
 		hands="Bunzi's Gloves", -- 8/8 
 		legs="Bunzi's Pants", -- 9/9
@@ -136,9 +136,9 @@ function get_sets()
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
 		range=Instrument.TP,
-		head="Volte Tiara", -- Upgrade to Bunzi
+		head={ name="Bunzi's Hat", augments={'Path: A',}},
 		body="Ashera Harness",
-		hands="Bunzi's Gloves",
+		hands={ name="Bunzi's Gloves", augments={'Path: A',}},
 		legs="Volte Tights",
 		feet="Nyame Sollerets",
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
@@ -208,7 +208,7 @@ function get_sets()
 	-- Default song duration / strength
 	sets.Midcast = set_combine(sets.Idle, {
 		head="Fili Calot +2",
-		body="Fili Hongreline +2",
+		body="Fili Hongreline +3",
 		hands="Fili Manchettes +2",
 		legs="Inyanga Shalwar +2",
 		feet="Brioso Slippers +3",
@@ -298,7 +298,7 @@ function get_sets()
 	-- Max duration
 	sets.Midcast.Lullaby = set_combine(sets.Midcast.Enfeebling, {
 		range=Instrument.Honor,
-		body="Fili Hongreline +2",
+		body="Fili Hongreline +3",
 		hands="Brioso Cuffs +3",
 		legs="Inyanga Shalwar +2",
 	})
@@ -307,7 +307,7 @@ function get_sets()
 	sets.Midcast.Elegy = {}
 	sets.Midcast.Prelude = {}
 	sets.Midcast.Madrigal = {head="Fili Calot +2"}
-    sets.Midcast.Minuet = {body="Fili Hongreline +2"}
+    sets.Midcast.Minuet = {body="Fili Hongreline +3"}
     sets.Midcast.March = {hands="Fili Manchettes +2"}
     sets.Midcast.Ballad = {legs="Fili Rhingrave +2"}
     sets.Midcast.Scherzo = {feet="Fili Cothurnes +2"}

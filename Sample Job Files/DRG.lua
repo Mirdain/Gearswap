@@ -24,7 +24,7 @@ Lockstyle_List = {1,2,6,12}
 Organizer = false
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assign equipsets for them
-state.OffenseMode:options('DT','TP','PDL','ACC','SB') -- ACC effects WS and TP modes
+state.OffenseMode:options('DT','TP','PDL','ACC','SB','CRIT') -- ACC effects WS and TP modes
 state.OffenseMode:set('DT')
 
 --Modes for specific to Dragoon
@@ -57,11 +57,11 @@ function get_sets()
 	-- Standard Idle set
 	sets.Idle = {
 	    ammo="Staunch Tathlum +1",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -96,11 +96,11 @@ function get_sets()
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		ammo="Coiste Bodhar",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
 		body="Hjarrandi Breast.",
 		hands="Flam. Manopolas +2",
-		legs="Nyame Flanchard", --   Need Upgrade
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet="Flam. Gambieras +2",
 		neck={ name="Vim Torque +1", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
@@ -112,14 +112,27 @@ function get_sets()
 	}
 
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-	    head="Nyame Helm",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
+		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	})
 	
-	--Same TP set but WSD can be altered also
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+	    head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+	})
 
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.TP, {
+	    head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
 	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.TP, {
@@ -144,13 +157,23 @@ function get_sets()
 		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}}, --8
 		neck="Voltsurge Torque", --4
 		left_ear="Etiolation Earring", --1
+		right_ear="Tuisto Earring",
 		left_ring="Weather. Ring", --5
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 	}
 		
 	sets.Enmity = {}
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
+	
+	})
+
+	sets.Midcast.Enhancing = set_combine(sets.Idle, {
+	
+	})
+
+	sets.Midcast.Enfeebling = set_combine(sets.Idle, {
 	
 	})
 	
@@ -166,27 +189,27 @@ function get_sets()
 	sets.JA["Warding Circle"] = {}
 	sets.JA["Hasso"] = {}
 	sets.JA["Seigan"] = {}
-	sets.JA['Call Wyvern'] = {body="Ptero. Mail +3"}
+	sets.JA['Call Wyvern'] = {} -- body="Ptero. Mail +3"
 	sets.JA['Spirit Surge'] = {
-		body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
-		legs="Vishap Brais +3",
-		feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
+		--body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
+		--legs="Vishap Brais +3",
+		--feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
 	}
-	sets.JA['Ancient Circle'] = {legs="Vishap Brais +3"}
+	sets.JA['Ancient Circle'] = {} --legs="Vishap Brais +3"
 	sets.JA['Spirit Link'] = {
-		head="Vishap Armet +3",
-		hands="Pel. Vambraces",
-		feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
+		--head="Vishap Armet +3",
+		--hands="Pel. Vambraces",
+		--feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
 	}
 
 	sets.Jump = {
-		ammo="Coiste Bodhar",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Hjarrandi Helm",
 		body="Hjarrandi Breast.",
 		hands="Flam. Manopolas +2",
-		legs="Gleti's Breeches",
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
 		feet="Flam. Gambieras +2",
 		neck={ name="Vim Torque +1", augments={'Path: A',}},
 		waist="Reiki Yotai",
@@ -219,23 +242,23 @@ function get_sets()
 	
 	sets.JA['Angon'] = {
 		ammo="Angon",
-		hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
+		--hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
 	}
 
 	--WS Sets
 	sets.WS = {
-		ammo="Knobkierrie",
-		head="Flam. Zucchetto +2",
-		body="Gleti's Cuirass",
-		hands="Gleti's Gauntlets",
-		legs="Gleti's Breeches",
-		feet="Sulev. Leggings +2",
+    ammo="Knobkierrie",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-		waist="Fotia Belt",
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Sherida Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Niqmaddu Ring",
-		right_ring="Rufescent Ring",
+		right_ring="Epaminondas's Ring",
 		back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Magic dmg. taken-10%',}},
 	}
 
@@ -245,24 +268,23 @@ function get_sets()
 	})
 
 	sets.WS.PDL = set_combine(sets.WS, {
-	    head="Gleti's Mask",
-
+		head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
 	sets.WS.WSD = set_combine(sets.WS, {
-	    head="Gleti's Mask",
 		left_ear="Thrud Earring",
-	    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 	})
 
 	sets.WS.CRIT = set_combine(sets.WS, {
-	
-	
-	})
-
-	sets.WS.Multi_Hit = set_combine(sets.WS, {
-	
-	
+	    head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
 	sets.WS["Camlann's Torment"] = sets.WS.CRIT
@@ -270,7 +292,13 @@ function get_sets()
 	sets.WS['Geirskogul'] = sets.WS.CRIT
 	sets.WS['Impulse Drive'] = sets.WS.CRIT
 	sets.WS['Sonic Thrust'] = sets.WS.CRIT
-	sets.WS['Stardiver'] = sets.WS.CRIT
+	sets.WS['Stardiver'] = set_combine( sets.WS, {
+	    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+	    body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		right_ring="Regal Ring",
+	})
 	sets.WS['Raiden Thrust'] = sets.WS.WSD
 	sets.WS['Thunder Thrust'] = sets.WS.WSD
 	sets.WS['Leg Sweep'] = sets.WS.WSD
@@ -282,18 +310,21 @@ function get_sets()
 	sets.Pet_Midcast['Steady Wing'] = {}
 
 	sets.Pet_Midcast['Smiting Breath'] = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	neck="Adad Amulet",}
+		--head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
+    	neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+	}
 
 	sets.Pet_Midcast['Restoring Breath'] = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	legs="Vishap Brais +3",
-    	feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
-    	neck={ name="Dgn. Collar +2", augments={'Path: A',}},}
+		--head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
+    	--legs="Vishap Brais +3",
+    	--feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
+    	neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+	}
 
 	sets.Pet_Midcast.Breath = {
-		head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
-    	neck="Adad Amulet",}
+		--head={ name="Ptero. Armet +3", augments={'Enhances "Deep Breathing" effect',}},
+    	neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+	}
 
 	sets.Pet_Midcast['Flame Breath'] = sets.Pet_Midcast.Breath
 	sets.Pet_Midcast['Frost Breath'] = sets.Pet_Midcast.Breath
@@ -304,8 +335,7 @@ function get_sets()
 	 
 	-- Used to Tag TH on a mob (TH4 is max in gear non-THF)
 	sets.TreasureHunter = {
-		legs={ name="Valorous Hose", augments={'Accuracy+29','Pet: Haste+1','"Treasure Hunter"+2',}},
-		feet={ name="Valorous Greaves", augments={'"Store TP"+4','Pet: VIT+7','"Treasure Hunter"+2','Accuracy+7 Attack+7',}},
+		waist="Chaac Belt",
 	}
 
 end

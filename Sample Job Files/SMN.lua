@@ -24,9 +24,6 @@ Lockstyle_List = {1,2,6,12}
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
--- Set to true to run organizer on job changes
-Organizer = true
-
 --Weapons options
 state.WeaponMode:options('Nirvana','Unlocked')
 state.WeaponMode:set('Nirvana')

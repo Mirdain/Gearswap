@@ -127,7 +127,7 @@ function get_sets()
 		left_ear="Sanare Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3}, -- 3/5
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=4}, -- 7/-1
-		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=5}, -- 5/5
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=5}, -- 5/5
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
 	}
 
@@ -143,9 +143,9 @@ function get_sets()
 	sets.Idle.MEVA = set_combine( sets.Idle, {
 		sub="Aegis", 
 		ammo="Staunch Tathlum +1",
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
+		right_ear="Eabani Earring",
 		hands="Sakpata's Gauntlets",
-		left_ear="Tuisto Earring",
+		left_ear="Sanare Earring",
 	})
 
 	sets.Idle.AoE = set_combine( sets.Idle, {
@@ -187,23 +187,24 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = set_combine( sets.OffenseMode, {
+	sets.OffenseMode.DT = set_combine( sets.Idle.DT, {
 
 	})
 
 	--This set is used when OffenseMode is PDT and Enaged (Augments the TP base set)
-	sets.OffenseMode.PDT = set_combine( sets.OffenseMode, {
+	sets.OffenseMode.PDT = set_combine( sets.Idle.PDT, {
 		waist="Flume Belt +1",
 		left_ear="Ethereal Earring",
 	})
 
 	--This set is used when OffenseMode is MEVA and Enaged (Augments the TP base set)
-	sets.OffenseMode.MEVA = set_combine( sets.OffenseMode, {
-
+	sets.OffenseMode.MEVA = set_combine( sets.Idle.MEVA, {
+		right_ear="Ethereal Earring",
+		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1}, -- 5/5
 	})
 
 	--This set is used when OffenseMode is AoE and Enaged (Augments the TP base set)
-	sets.OffenseMode.AoE = set_combine( sets.OffenseMode, {
+	sets.OffenseMode.AoE = set_combine( sets.Idle.AoE, {
 
 	})
 
@@ -402,8 +403,9 @@ function get_sets()
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
+		ammo="Per. Lucky Egg",
+		body="Volte Jupon",
 		waist="Chaac Belt",
-		feet={ name="Odyssean Greaves", augments={'Pet: DEX+13','"Counter"+1','"Treasure Hunter"+2',}},
 	}
 
 end
@@ -482,27 +484,27 @@ function check_buff_JA()
 	if os.clock() - buff_time > Buff_Delay then
 		local ja_recasts = windower.ffxi.get_ability_recasts()
 
-		if player.sub_job == 'SAM' then
-			if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
+		if player.sub_job == 'SAM' and player.sub_job_level > 24 then
+			if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 and player.sub_job_level > 24 then
 				buff = "Hasso"
 			end
 		end
 
 		if player.sub_job == 'WAR' then
-			if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+			if not buffactive['Berserk'] and ja_recasts[1] == 0 and player.sub_job_level > 14 then
 				buff = "Berserk"
 			end
-			if not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+			if not buffactive['Aggressor'] and ja_recasts[4] == 0 and player.sub_job_level > 44 then
 				buff = "Aggressor"
 			end
-			if not buffactive['Warcry'] and ja_recasts[2] == 0 then
+			if not buffactive['Warcry'] and ja_recasts[2] == 0 and player.sub_job_level > 34 then
 				buff = "Warcry"
 			end
 		end
 
 		if player.sub_job == 'RUN' then
 			--Rune sets
-			if Runes[state.JobMode2.value].Name ~= "None" then
+			if Runes[state.JobMode2.value].Name ~= "None" and player.sub_job_level > 4 then
 				if ja_recasts[92] == 0 and buffactive[Runes[state.JobMode2.value].Name] ~= 2 then
 					buff = Runes[state.JobMode2.value].Name
 					info(Runes[state.JobMode2.value].Description)
@@ -510,12 +512,8 @@ function check_buff_JA()
 			end
 		end
 
-		if not buffactive['Majesty'] and ja_recasts[150] == 0 then
+		if not buffactive['Majesty'] and ja_recasts[150] == 0 and player.main_job_level > 69 then
 			buff = "Majesty"
-		elseif ja_recasts[46] == 0 and player.status == "Engaged" and state.JobMode.value == "ON" then
-			buff = "Shield Bash"
-		elseif ja_recasts[159] == 0 and player.status == "Engaged" and player.mp < 150 and player.tp > 2000 and state.JobMode.value == "ON" then
-			buff = "Chivary"
 		end
 
 		if buff ~= 'None' then
@@ -530,28 +528,25 @@ function check_buff_SP()
 	buff = 'None'
 	if os.clock() - buff_time > Buff_Delay then
 		local sp_recasts = windower.ffxi.get_spell_recasts()
-		if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 18 then
+		if not buffactive['Enmity Boost'] and sp_recasts[476] == 0 and player.mp > 18 and player.main_job_level > 87 then
 			buff = "Crusade"
-		elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 21 then
+		elseif not buffactive['Phalanx'] and sp_recasts[106] == 0 and player.mp > 21 and player.main_job_level > 76 then
 			buff = "Phalanx"
-		elseif not buffactive['Reprisal'] and sp_recasts[97] == 0 and player.mp > 25 then
+		elseif not buffactive['Reprisal'] and sp_recasts[97] == 0 and player.mp > 25 and player.main_job_level > 60 then
 			buff = "Reprisal"
-		elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 then
+		elseif not buffactive['Enlight'] and sp_recasts[274] == 0 and player.mp > 25 and player.main_job_level > 84 then
 			buff = "Enlight II"
 		end
-
-		if player.sub_job == "BLU" and player.sub_job_level > 8 then
-			if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 then
+		if player.sub_job == "BLU" then
+			if not buffactive['Defense Boost'] and sp_recasts[547] == 0 and player.mp > 10 and player.sub_job_level > 8 then
 				buff = "Cocoon"
 			end
 		end
-
 		if buff ~= 'None' then
 			buff_time = os.clock()
 		else
 			buff = check_tank()
 		end
-
 	end
 	return buff
 end
@@ -561,12 +556,16 @@ function check_tank()
 	if os.clock() - tank_time > Tank_Delay then
 		if (player.status == "Engaged" or windower.ffxi.get_player().target_locked) and state.JobMode.value == "ON" then
 			local sp_recasts = windower.ffxi.get_spell_recasts()
-			if sp_recasts[112] == 0 and player.mp > 25 then
+			local ja_recasts = windower.ffxi.get_ability_recasts()
+			if sp_recasts[112] == 0 and player.mp > 25 and player.main_job_level > 36 then
 				buff = "Flash"
+			elseif ja_recasts[46] == 0 and state.JobMode.value == "ON" and player.main_job_level > 14 then
+				buff = "Shield Bash"
+			elseif ja_recasts[159] == 0 and player.mp < 150 and player.tp > 2000 and state.JobMode.value == "ON" and player.main_job_level > 14 then
+				buff = "Chivalry"
+			elseif sp_recasts[840] == 0 and player.mp > 48 and player.sub_job == "RUN" and player.sub_job_level > 57 then
+				buff = "Foil"
 			end
-			--if sp_recasts[840] == 0 and player.mp > 48 then
-				--buff = "Foil"
-			--end
 		end
 	end
 

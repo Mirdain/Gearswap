@@ -31,6 +31,13 @@ state.OffenseMode:set('TP')
 state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Yoichinoyumi','Naegling', 'Tauret')
 state.WeaponMode:set('Fomalhaut')
 
+--Enable JobMode for UI.
+UI_Name = 'TP Mode'
+
+--Melee or Ranged Mode
+state.JobMode:options('Standard','Melee','Ranged')
+state.JobMode:set('Standard')
+
 -- load addons
 send_command('lua l hovershot')
 
@@ -97,6 +104,15 @@ function get_sets()
 		main={ name="Perun +1", augments={'Path: A',}},
 		sub={ name="Kustawi +1", augments={'Path: A',}},
 		range="Yoichinoyumi",
+	}
+
+	sets.Weapons.Melee = {
+		main="Ternion Dagger +1",
+		sub="Kraken Club",
+	}
+
+	sets.Weapons.Ranged = {
+		sub={ name="Kustawi +1", augments={'Path: A',}},
 	}
 
 	sets.Weapons.Shield = {
@@ -176,6 +192,7 @@ function get_sets()
 
 	--Set focuses on maximum TP gain
 	sets.OffenseMode.TP = {
+		ammo = Ammo.Bullet.RA,
 	    head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -255,7 +272,7 @@ function get_sets()
 	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
 		ammo=Ammo.RA,
 	    head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10
-		body="Amini Caban +1", -- 7% Velocity Shot
+		body="Amini Caban +2", -- 7% Velocity Shot
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8 / 11
 		legs="Orion Braccae +3", -- 15
 		feet={ name="Adhe. Gamashes +1", augments={'HP+65','"Store TP"+7','"Snapshot"+10',}, priority=4}, -- 10 / 13
@@ -309,9 +326,9 @@ function get_sets()
     sets.Midcast.RA = set_combine(sets.Midcast, {
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body="Ikenga's Vest",
-		hands="Ikenga's Gloves",
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
-		feet="Ikenga's Clogs",
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="K. Kachina Belt +1",
 		left_ear="Telos Earring",
@@ -329,14 +346,14 @@ function get_sets()
 	-- Ranged Attack Gear (Physical Damage Limit)
     sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
 	    head="Ikenga's Hat",
-		legs="Ikenga's Trousers",
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
     })
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
 		head="Meghanada Visor +2",
 		body="Nisroch Jerkin",
-		legs="Ikenga's Trousers",
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
 		feet="Osh. Leggings +1",
 		right_ring="Ilabrat Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
@@ -366,7 +383,7 @@ function get_sets()
 	sets.JA["Unlimited Shot"] = {}
 	sets.JA["Velocity Shot"] = {}
 	sets.JA["Double Shot"] = {} -- Midcast.RA.Double Shot set
-	sets.JA["Bounty Shot"] = { ammo= Ammo.RA, hands="Amini Glove. +1",} -- Upgrade to TH4
+	sets.JA["Bounty Shot"] = { ammo= Ammo.RA, hands="Amini Glove. +2",} -- Upgrade to TH4
 	sets.JA["Decoy Shot"] = {}
 	sets.JA["Overkill"] = {}
 	sets.JA["Hover Shot"] = {}
@@ -500,37 +517,37 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-
+	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 
@@ -578,4 +595,22 @@ function Smart_Ammo ()
 			return
 		end
 	end
+end
+
+function Job_Mode_Check(equipSet)
+	if state.JobMode.value == 'Melee' then
+		equipSet = set_combine(equipSet, sets.Weapons.Melee)
+	elseif state.JobMode.value == 'Ranged' then
+		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	end
+	return equipSet
+end
+
+function PDL_Type_Check()
+	if state.JobMode.value == 'Melee' then
+		equipSet = set_combine(equipSet, sets.Weapons.Melee)
+	elseif state.JobMode.value == 'Ranged' then
+		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	end
+	return equipSet
 end

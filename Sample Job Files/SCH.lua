@@ -56,7 +56,7 @@ function get_sets()
 	-- Standard idle set
 	sets.Idle = { -- HP:2151 MP:1493
 		ammo="Staunch Tathlum +1", -- 3/3
-		head="Arbatel Bonnet +2", -- 9/9
+		head="Arbatel Bonnet +3", -- 10/10
 		body="Arbatel Gown +2", -- 12/12 -- +3 Refresh
 		hands={ name="Nyame Gauntlets", priority=2}, -- 7/7
 		legs="Arbatel Pants +2", -- 11/11
@@ -68,7 +68,7 @@ function get_sets()
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
-    } -- 55 PDT / 56 MDT
+    } -- 56 PDT / 57 MDT
 
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
@@ -199,7 +199,7 @@ function get_sets()
 	}
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		ammo="Pemphredo Tathlum",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="Acad. Mortar. +3",
 		body="Acad. Gown +3",
 		hands="Acad. Bracers +3",
@@ -225,7 +225,7 @@ function get_sets()
 	sets.Midcast.Vagary = {
 	    main="Chatoyant Staff",
 		ammo="Hasty Pinion +1",
-		head="Nahtirah Hat",
+		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 		body="Zendik Robe",
 		hands="Gende. Gages +1",
 		legs="Pinga Pants +1",
@@ -247,7 +247,7 @@ function get_sets()
 
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
 		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		head="Arbatel Bonnet +2",
+		head="Arbatel Bonnet +3",
 	})
 
 	sets.Perpetuance = {
@@ -259,11 +259,11 @@ function get_sets()
 	}
 
 	sets.Ebullience = {
-		head="Arbatel Bonnet +2",
+		head="Arbatel Bonnet +3",
 	}
 
 	sets.Rapture = {
-		head="Arbatel Bonnet +2",
+		head="Arbatel Bonnet +3",
 	}
 
 	sets.Penury = {
@@ -293,6 +293,12 @@ function get_sets()
 
 	sets.Midcast["Impact"] = set_combine(sets.Midcast.Enfeebling, {
 		body="Twilight Cloak",	
+	})
+
+	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {
+		right_ear={ name="Etiolation Earring", priority=3},
+		left_ring={ name="Etana Ring", priority=1},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 	})
 
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {

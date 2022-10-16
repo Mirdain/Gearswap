@@ -188,7 +188,7 @@ function get_sets()
 	--No flurry - 60 Snapshot needed
 	sets.Precast.RA = {
 		ammo=Ammo.Bullet.RA,
-		head="Chass. Tricorne +2", -- 0/14
+		head="Chass. Tricorne +3", -- 0/14
 		body="Oshosi Vest +1", -- 14/0
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8/11
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}}, -- 10/13
@@ -238,11 +238,11 @@ function get_sets()
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = {
 		ammo=Ammo.Bullet.RA,
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
+		head="Ikenga's Hat",
+		body="Ikenga's Vest",
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
@@ -264,11 +264,6 @@ function get_sets()
 	-- Ranged PDL
 	sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
 		left_ring="Sroda Ring",
-		head="Ikenga's Hat",
-		body="Ikenga's Vest",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
     })
 
 	-- Ranged CRIT
@@ -413,7 +408,7 @@ function get_sets()
 	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
     sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +2"})
-    sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +2"})
+    sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +3"})
 
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
@@ -484,7 +479,7 @@ function get_sets()
 	})
 
 	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
-
+		left_ring="Sroda Ring",
 	})
 
 	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {

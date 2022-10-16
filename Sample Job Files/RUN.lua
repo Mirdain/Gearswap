@@ -87,20 +87,20 @@ function get_sets()
 
 	-- Standard Idle set
 	sets.Idle = {
-		ammo="Staunch Tathlum +1", -- 3/3
-		head="Nyame Helm", -- 7/7
-		body="Runeist's Coat +3",
-		hands="Nyame Gauntlets", -- 7/7
-		legs="Nyame Flanchard", -- 8/8
-		feet="Nyame Sollerets", -- 7/7
+		ammo="Homiliary", -- 1 Refresh
+		head={ name="Nyame Helm", augments={'Path: B',}}, -- 7/7
+		body="Runeist's Coat +3", -- 3/3
+		hands="Regal Gauntlets", -- 1 Refresh
+		legs="Eri. Leg Guards +2", -- 12/12
+		feet="Erilaz Greaves +2", -- 10/10
 		neck={ name="Futhark Torque +2", augments={'Path: A',}}, -- 7/7
 		waist="Carrier's Sash",
 		left_ear="Sanare Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
-		left_ring={ name="Moonlight Ring", bag="wardrobe3", priority=2}, -- 5/5
-		right_ring={ name="Moonlight Ring", bag="wardrobe4", priority=1}, -- 5/5
-		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10/0
-    } -- 75 PDT / 50 MDT		3161 HP/ 1095 MP
+		left_ring="Moonlight Ring", -- 5/5
+		right_ring="Moonlight Ring", -- 5/5
+		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
+    } -- 75 PDT / 51 MDT		3533 HP/ 1173 MP
 
 	sets.Idle.PDT = set_combine( sets.Idle, {
 	    body={ name="Nyame Mail", augments={'Path: B',}},
@@ -115,6 +115,10 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear="Sanare Earring",
 		right_ear="Etiolation Earring",
+	})
+
+	sets.Idle.DT = set_combine( sets.Idle, {
+
 	})
 
 	-- This gear will be equiped when the player is moving and not engaged
@@ -179,23 +183,53 @@ function get_sets()
 	}) -- Focus on Magic Evasion with some DPS mixed in
 
 	-- Standard Tanking TP set
-	sets.OffenseMode.DT = set_combine(sets.Idle,{		
-		ammo="Yamarang",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
+	sets.OffenseMode.DT = {		
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body="Ashera Harness",
+		hands="Turms Mittens +1",
+		legs="Eri. Leg Guards +2",
+		feet="Turms Leggings +1",
 		neck={ name="Futhark Torque +2", augments={'Path: A',}},
 		waist="Ioskeha Belt +1",
-		left_ear="Crep. Earring",
+		left_ear="Sherida Earring",
 		right_ear="Telos Earring",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
 		back={ name="Ogma's Cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	})  -- 
+	}
 
 	sets.OffenseMode.AoE = set_combine(sets.OffenseMode.PDT, {
 
 	})
+
+	-- Set used for hate generation on Job abilities
+	sets.Enmity = { -- 23 Epo
+		ammo="Sapience Orb", -- 2
+		head="Nyame Helm",
+		body="Emet Harness +1", -- 10
+		hands="Kurys Gloves", -- 9
+		legs="Eri. Leg Guards +2", -- 11
+		feet="Erilaz Greaves +2", -- 7
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1}, -- 10
+		waist="Kasiri Belt", -- 3
+		left_ear="Trux Earring",
+		right_ear="Cryptic Earring", -- 4
+		left_ring="Eihwaz Ring", -- 5
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
+	} -- 99 Enmity 2884 HP / 840 MP
+
+	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
+	sets.SIRD = {
+		ammo="Staunch Tathlum +1", -- 11
+		head="Erilaz Galea +2", -- 15 (Goes up to 20)
+		hands="Regal Gauntlets", -- 10
+		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}}, -- 20
+		neck="Moonlight Necklace", -- 15
+		waist="Audumbla Sash", -- 10
+		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
+	}	-- 104 With Merits
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -203,7 +237,7 @@ function get_sets()
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb", -- 2
 		head="Rune. Bandeau +3", -- 14
-		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}}, -- 9
+		body="Erilaz Surcoat +2", -- 10
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, -- 6
 		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}, priority=5}, -- 8
@@ -214,32 +248,20 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe1", priority=3},
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
-	} --62 FC
+	} --63 FC
 
 	sets.Precast.FastCast.Enhancing = set_combine(sets.Precast.FastCast, {
 		waist="Siegel Sash",
 	})
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
+	sets.Midcast = set_combine(sets.Idle, sets.Enmity, sets.SIRD, {
 	
 	})
 
-	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {
-		ammo="Staunch Tathlum +1", -- 11
-		head="Agwu's Cap", -- 10
-		hands="Regal Gauntlets", -- 10
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}}, -- 20
-		neck="Moonlight Necklace", -- 15
-		waist="Audumbla Sash", -- 10
-		left_ear="Magnetic Earring", -- 8
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
-	}	-- 104 With Merits
-
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
-	    head="Erilaz Galea +1",
+	    head="Erilaz Galea +2",
 		body="Nyame Mail",
 		hands={ name="Regal Gauntlets", priority=2},
 		legs={ name="Futhark Trousers +3", augments={'Enhances "Inspire" effect',}},
@@ -260,32 +282,21 @@ function get_sets()
 		waist="Siegel Sash",
 	})
 
-	sets.Midcast["Aquaveil"] = set_combine(sets.Idle, sets.Midcast.SIRD, {
-	})
+	sets.Midcast["Aquaveil"] = {
+
+	}
 
 	sets.Midcast["Phalanx"] = set_combine(sets.Midcast.Enhancing, {
 		head={ name="Fu. Bandeau +3", augments={'Enhances "Battuta" effect',}}, --7
 	})
 
-	sets.Midcast["Flash"] = set_combine(sets.Midcast.SIRD, sets.Enmity, {
+	sets.Midcast["Flash"] = set_combine(sets.Enmity, {
+
 	})
 
-	-- Set used for hate generation on Job abilities
-	sets.Enmity = { -- 23 Epo
-		ammo="Sapience Orb", -- 2
-		head="Nyame Helm",
-		body="Emet Harness +1", -- 10
-		hands="Kurys Gloves", -- 9
-		legs="Eri. Leg Guards +1", -- 11
-		feet="Ahosi Leggings", -- 7
-		neck="Moonlight Necklace", -- 15
-		waist="Kasiri Belt", -- 3
-		left_ear={ name="Tuisto Earring", priority=2},
-		right_ear="Cryptic Earring", -- 4
-		left_ring="Eihwaz Ring", -- 5
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
-		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 99 Enmity 2884 HP / 840 MP
+	sets.Midcast["Foil"] = set_combine(sets.Enmity, {
+
+	})
 
 	-- JOB ABILITIES --
 	sets.JA = {}
@@ -306,7 +317,7 @@ function get_sets()
     })
     sets.JA["Pflug"] = set_combine(sets.Enmity, { feet="Runeist Bottes +1" })
     sets.JA["Battuta"] = set_combine(sets.Enmity, { head="Futhark Bandeau +3" })
-    sets.JA["Vivacious Pulse"] = set_combine(sets.Precast.Divine, { head="Erilaz Galea +1" })
+    sets.JA["Vivacious Pulse"] = set_combine(sets.Precast.Divine, { head="Erilaz Galea +2" })
     sets.JA["Embolden"] = set_combine(sets.Enmity, { back={ name="Evasionist's Cape", augments={'Enmity+1','"Embolden"+15','"Dbl.Atk."+1',}},})
     sets.JA["Swordplay"] = set_combine(sets.Enmity, { hands="Futhark Mitons +3" })
 	sets.JA["Provoke"] = sets.Enmity
@@ -316,30 +327,23 @@ function get_sets()
 	--Default WS set base
 	sets.WS = {
 		ammo="Knobkierrie",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands="Meg. Gloves +2",
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear="Sherida Earring",
 		right_ear="Odr Earring",
 		left_ring="Niqmaddu Ring",
 		right_ring="Epaminondas's Ring",
-		back={ name="Ogma's cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
+		back={ name="Ogma's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
 	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 	sets.WS.WSD = {}
 	sets.WS.CRIT = {}
-	sets.WS.DT = set_combine(sets.WS, {
-	    head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
-	})
 
 	--Great Sword WS
 	sets.WS["Hard Slash"] = {}
@@ -350,40 +354,13 @@ function get_sets()
 	sets.WS["Sickle Moon"] = {}
 	sets.WS["Spinning Slash"] = {}
 	sets.WS["Herculean Slash"] = {}
-	sets.WS["Resolution"] = {
-		ammo="Knobkierrie",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
-		neck="Fotia Gorget",
-		waist="Fotia Belt",
-		left_ear="Sherida Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Niqmaddu Ring",
-		right_ring="Regal Ring",
-		back={ name="Ogma's cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
-	}
-	sets.WS["Dimidiation"] = {
-		ammo="Knobkierrie",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands="Meg. Gloves +2",
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
-		neck="Fotia Gorget",
-		waist="Fotia Belt",
-		left_ear="Sherida Earring",
-		right_ear="Odr Earring",
-		left_ring="Niqmaddu Ring",
-		right_ring="Epaminondas's Ring",
-		back={ name="Ogma's cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%',}},
-    }
+	sets.WS["Resolution"] = {}
+	sets.WS["Dimidiation"] = {}
 
 	sets.TreasureHunter = {
-	    body={ name="Herculean Vest", augments={'"Dual Wield"+4','Pet: Mag. Acc.+22 Pet: "Mag.Atk.Bns."+22','"Treasure Hunter"+2',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+11','"Subtle Blow"+2','"Treasure Hunter"+2',}},
+		ammo="Per. Lucky Egg",
+		body="Volte Jupon",
+		waist="Chaac Belt",
 	}
 
 end

@@ -102,11 +102,11 @@ function get_sets()
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	sets.OffenseMode.TP = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {
 
 	})
 
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets",
@@ -116,6 +116,7 @@ function get_sets()
 
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT, {
 		ammo="Crepuscular Pebble",
+		right_ring="Sroda Ring",
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -229,9 +230,10 @@ function get_sets()
 		feet="Sakpata's Leggings",
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
-		right_ring="Hetairoi Ring",
+		right_ring="Sroda Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
+
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}
 	sets.WS["Smash Axe"] = {}
