@@ -275,7 +275,45 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
+
 	-- Status Ailment Check
+	if buffactive['Stun'] then
+		cancel_spell()	
+		equip(sets.Idle)
+		return
+		log('Cancel Spell - Player is stunned')
+	end
+	if buffactive['Sleep'] then
+		cancel_spell()	
+		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
+		equip(equipSet)
+		return
+		log('Cancel Spell - Player is asleep')
+	end
+	if buffactive['KO'] then
+		cancel_spell()
+		return
+		log('Cancel Spell - Player is dead')
+	end
+	if buffactive['Petrification'] then
+		cancel_spell()	
+		return
+		log('Cancel Spell - Player is dead')
+	end
+	if buffactive['Charm'] then
+		cancel_spell()
+		equip(sets.Idle)
+		return
+		log('Cancel Spell - Player is dead')
+	end
+	if buffactive['Terror'] then
+		cancel_spell()
+		equip(sets.Idle)
+		return
+		log('Cancel Spell - Player is dead')
+	end
+
+
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
@@ -297,6 +335,7 @@ function pretargetcheck(spell,action)
 			end
 		end											
 	end
+
 	--Weapon Skill checks
 	if spell.type == 'WeaponSkill' then
 		local ws_used = res.weapon_skills:with('en',spell.english)
@@ -1246,6 +1285,17 @@ function buff_change(name,gain)
 		equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
 		equip(equipSet)
 	end
+	-- Used to wake up during sleep
+	if gain and name == "sleep" then
+		-- Cancel stoneskin
+		if buffactive['Stoneskin'] then
+	  	 	info('Cancel Stoneskin')
+			cancel('Stoneskin')
+		end
+		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
+		equip(equipSet)
+	end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1336,6 +1386,12 @@ end
 function choose_set()
 	equipSet = {}
 	log('Choose Set Ran')
+
+	if buffactive['Sleep'] then
+		equip(set_combine(sets.Idle,sets.Weapons.Sleep))
+		return
+		log('Choose Set - Player is asleep')
+	end
 	-- Combat Checks
 	if player.status == "Engaged" then
 		equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
@@ -1918,20 +1974,6 @@ function file_unload(file_name)
 	user_file_unload()
 end
 
-send_command('bind f12 gs c ModeChange')
-send_command('bind f11 gs c TH')
-send_command('bind f10 gs c AutoBuff')
-send_command('bind f9 gs c WeaponMode')
-send_command('bind ^f12 gs c jobmode')
-send_command('bind ^f11 gs c jobmode2')
-
-windower.add_to_chat(8,'[F12]           Mode Change')
-windower.add_to_chat(8,'[F11]           Treasur Hunter')
-windower.add_to_chat(8,'[F10]           Auto Buff')
-windower.add_to_chat(8,'[F9]            Weapon Mode')
-windower.add_to_chat(8,'[Ctrl + F12]    Job Mode')
-windower.add_to_chat(8,'[Ctrl + F11]    Job Mode 2')
-
 -- Command to Lock Style and Set the correct macros
 function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	if Random_Lockstyle == true then
@@ -1943,6 +1985,25 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	else
 		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
 		';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+	end
+
+	send_command('bind f12 gs c ModeChange')
+	send_command('bind f11 gs c TH')
+	send_command('bind f10 gs c AutoBuff')
+	send_command('bind f9 gs c WeaponMode')
+	send_command('bind ^f12 gs c jobmode')
+	send_command('bind ^f11 gs c jobmode2')
+
+	local maxWidth = 40
+	windower.add_to_chat(8,'Stance - '..string.format('[%s]','F12'))
+	windower.add_to_chat(8,'TH Mode - '..string.format('[%s]','F11'))
+	windower.add_to_chat(8,'Auto Buff - '..string.format('[%s]','F10'))
+	windower.add_to_chat(8,'Weapon Mode - '..string.format('[%s]','F9')) 
+	if UI_Name ~= '' then
+		windower.add_to_chat(8,UI_Name..' - '..string.format('[%s]','Ctrl + F12'))
+	end
+	if UI_Name2 ~= '' then
+		windower.add_to_chat(8,UI_Name2..' - '..string.format('[%s]','Ctrl + F11'))
 	end
 end
 
@@ -2108,7 +2169,7 @@ windower.register_event('gain buff', function(id)
 		end
 	elseif id == 2 then
 		log("Sleep - Checking Gear")
-		equip(set_combine(choose_set(),choose_set_custom()))
+		equip(set_combine(choose_set(),choose_set_custom(),sets.Weapons.Sleep))
 	elseif id == 7 then
 		log("Petrification - Checking Gear")
 		equip(set_combine(choose_set(),choose_set_custom()))
@@ -2271,7 +2332,7 @@ windower.register_event('action', function (data)
 			-- Item Use
 			elseif data.category == 9 then
 				if data.param == 24931 then
-					log('Holy Water')
+					log('Item use')
 				elseif data.param == 28787 then
 					log('Item Use Interupted')
 					Unlock()
