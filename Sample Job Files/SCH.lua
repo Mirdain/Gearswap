@@ -53,13 +53,18 @@ function get_sets()
 		sub="Enki Strap",
 	}
 
+	
+	sets.Weapons.Sleep ={
+		main="Opashoro",
+	}
+
 	-- Standard idle set
 	sets.Idle = { -- HP:2151 MP:1493
 		ammo="Staunch Tathlum +1", -- 3/3
 		head="Arbatel Bonnet +3", -- 10/10
-		body="Arbatel Gown +2", -- 12/12 -- +3 Refresh
+		body="Arbatel Gown +3", -- 12/12 -- +3 Refresh
 		hands={ name="Nyame Gauntlets", priority=2}, -- 7/7
-		legs="Arbatel Pants +2", -- 11/11
+		legs="Arbatel Pants +3", -- 12/12
 		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
 		neck="Loricate Torque +1", -- 6/6
 		waist="Carrier's Sash",
@@ -68,7 +73,7 @@ function get_sets()
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
-    } -- 56 PDT / 57 MDT
+    } -- 57 PDT / 58 MDT
 
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
@@ -109,21 +114,22 @@ function get_sets()
 	sets.Precast = {}
 
 	sets.Precast.FastCast = {
-		-- 10 from staff
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+14','Attack+22','"Fast Cast"+6','Mag. Acc.+15 "Mag.Atk.Bns."+15',}}, -- 14
-		body={ name="Merlinic Jubbah", augments={'"Fast Cast"+6',}}, -- 12
-		hands="Acad. Bracers +3", -- 9
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 7
-		feet={ name="Merlinic Crackows", augments={'"Mag.Atk.Bns."+29','"Fast Cast"+6','DEX+7','Mag. Acc.+14',}}, -- 11
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
-		waist="Embla Sash", -- 5
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
-		right_ear={ name="Etiolation Earring", priority=1}, -- 1
-		left_ring="Weather. Ring", -- 5
-		right_ring="Kishar Ring", -- 4
-		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10
-	} -- 80+ Fastcast
+		-- 10 from staff (Arts is 10%)
+		ammo="Hasty Pinion +1", -- 2% Haste
+		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
+		body="Zendik Robe", -- 13% FC, 4% Haste
+		hands="Acad. Bracers +3", -- 9% FC, 3% Haste
+		legs="Agwu's Slops", -- 7% FC, 5% Haste
+		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
+		neck="Voltsurge Torque", -- 4% FC
+		--neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Embla Sash", -- 5% FC
+		left_ear="Malignance Earring", -- 4% FC
+		right_ear="Etiolation Earring", -- 1% FC
+		left_ring="Weather. Ring", -- 5% FC
+		right_ring="Kishar Ring", -- 4% FC
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10% FC
+	} -- 82 Fastcast, 
 
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
@@ -157,19 +163,19 @@ function get_sets()
 	sets.Midcast.Cure = {
 		-- Staff 20% Cure Potency
 		ammo="Hasty Pinion +1", --2% Haste
-		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 6% Haste 11/2
-		body="Arbatel Gown +2", -- 3% Haste
+		head="Arbatel Bonnet +3", -- 6% Haste
+		body="Arbatel Gown +3", -- 3% Haste
 		hands={ name="Peda. Bracers +3", augments={'Enh. "Tranquility" and "Equanimity"',}}, -- 3% Haste 0/3
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 5% Haste 11/2
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 3% Haste 11/2
 		neck="Loricate Torque +1",
 		waist="Witful Belt", -- 3% Haste
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
-		right_ear={ name="Etiolation Earring", priority=1},
+		right_ear="Mendi. Earring",
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Defending Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
-    }	-- 25% Haste 50%+ Cure Potency and 9% Cure Potency II
+    }	-- 25% Haste 50%+ Cure Potency and 7% Cure Potency II 50 DT
 
 	-- Cursna Gear
 	sets.Midcast.Cursna = set_combine(sets.Midcast.Cure, {
@@ -203,7 +209,7 @@ function get_sets()
 		head="Acad. Mortar. +3",
 		body="Acad. Gown +3",
 		hands="Acad. Bracers +3",
-		legs="Arbatel Pants +2",
+		legs="Arbatel Pants +3",
 		feet="Acad. Loafers +3",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
 		waist={ name="Obstin. Sash", augments={'Path: A',}},
@@ -250,12 +256,41 @@ function get_sets()
 		head="Arbatel Bonnet +3",
 	})
 
+		sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
+	})
+
+	sets.Midcast.Nuke = {
+		main={ name="Bunzi's Rod", augments={'Path: A',}},
+		sub="Ammurapi Shield",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
+		body="Agwu's Robe",
+		hands={ name="Agwu's Gages", augments={'Path: A',}},
+		legs="Agwu's Slops",
+		feet="Arbatel Loafers +3",
+		neck={ name="Argute Stole +2", augments={'Path: A',}},
+		waist={ name="Acuity Belt +1", augments={'Path: A',}},
+		left_ear="Malignance Earring",
+		right_ear="Regal Earring",
+		left_ring="Mujin Band",
+		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
+	}
+
+	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
+		left_ring="Mujin Band",
+	})
+
+	sets.Midcast.Helix = set_combine(sets.Midcast.Nuke, {
+
+	})
+
 	sets.Perpetuance = {
-		hands="Arbatel Bracers +2",
+		hands="Arbatel Bracers +3",
 	}
 
 	sets.Immanence = {
-		hands="Arbatel Bracers +2",
+		hands="Arbatel Bracers +3",
 	}
 
 	sets.Ebullience = {
@@ -265,17 +300,17 @@ function get_sets()
 	sets.Rapture = {
 		head="Arbatel Bonnet +3",
 	}
-
+	-- not swapped due to duration
 	sets.Penury = {
-		--legs="Arbatel Pants +2",
+		legs="Arbatel Pants +3",
 	}
 
 	sets.Parsimony = {
-		legs="Arbatel Pants +2",
+		legs="Arbatel Pants +3",
 	}
 
 	sets.Klimaform = {
-		feet="Arbatel Loafers +2",
+		feet="Arbatel Loafers +3",
 	}
 
 	-- Specific gear for spells
@@ -296,40 +331,8 @@ function get_sets()
 	})
 
 	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {
-		right_ear={ name="Etiolation Earring", priority=3},
-		left_ring={ name="Etana Ring", priority=1},
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
-	})
-
-	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-	})
-
-	sets.Midcast.Nuke = {
-		main={ name="Marin Staff +1", augments={'Path: A',}},
-		sub="Enki Strap",
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
-		body="Acad. Gown +3",
-		hands={ name="Agwu's Gages", augments={'Path: A',}},
-		legs="Agwu's Slops",
-		feet="Arbatel Loafers +2",
-		neck={ name="Argute Stole +2", augments={'Path: A',}},
-		waist={ name="Acuity Belt +1", augments={'Path: A',}},
-		left_ear="Malignance Earring",
-		right_ear="Regal Earring",
-		left_ring="Freke Ring",
-		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
-	}
-
-	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-		left_ring="Mujin Band",
-	})
-
-	sets.Midcast.Helix = set_combine(sets.Midcast.Nuke, {
 
 	})
-
 
 	sets.Midcast["Stun"] = set_combine(sets.Midcast.Enfeebling.MACC, {
 	
@@ -373,23 +376,32 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if buffactive["Perpetuance"] then
-		equipSet = set_combine(equipSet, sets.Perpetuance)
-	end
 	if buffactive["Immanence"] then
-		equipSet = set_combine(equipSet, sets.Immanence)
+		log("Immanence Set")
+		equipSet = sets.Immanence
 	end
 	if buffactive["Ebullience"] then
-		equipSet = set_combine(equipSet, sets.Ebullience)
+		log("Ebullience Set")
+		equipSet = sets.Ebullience
 	end
 	if buffactive["Rapture"] then
-		equipSet = set_combine(equipSet, sets.Rapture)
+		log("Rapture Set")
+		equipSet = sets.Rapture
 	end
+	-- Skipping Penury due to lack of duration gear (Embrava)
+	--[[
 	if buffactive["Penury"] then
-		equipSet = set_combine(equipSet, sets.Rapture)
+		log("Penury Set")
+		equipSet = sets.Penury
 	end
+	]]--
 	if buffactive["Parsimony"] then
-		equipSet = set_combine(equipSet, sets.Rapture)
+		log("Parsimony Set")
+		equipSet = sets.Parsimony
+	end
+	if buffactive["Perpetuance"] then
+		log("Perpetuance Set")
+		equipSet = sets.Perpetuance
 	end
 	return equipSet
 end

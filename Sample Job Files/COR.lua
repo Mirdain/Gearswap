@@ -93,6 +93,10 @@ function get_sets()
 		sub={ name="Nusku Shield", priority=1},
 	}
 
+	sets.Weapons.Sleep = {
+		range="Earp",
+	}
+
 	-- Ammo Selection
 	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills
@@ -145,17 +149,14 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Telos Earring",
 		right_ear="Crep. Earring",
-		left_ring="Petrov Ring", -- Upgrade
+		left_ring="Chirich Ring +1",
 		right_ring="Epona's Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		neck={ name="Loricate Torque +1", augments={'Path: A',}},
-	    legs="Malignance Tights",
-		left_ring="Ilabrat Ring",
+	    legs="Chas. Culottes +3",
 	})
 
 	--This set is used when OffenseMode is PDL and Enaged
@@ -255,7 +256,7 @@ function get_sets()
 	-- Ranged Attack Gear (Triple Shot Midshot)
 	sets.Midcast.RA.TripleShot = set_combine(sets.Midcast.RA, {
         head="Oshosi Mask +1", -- Missing
-        body="Chasseur's Frac +2", --13
+        body="Chasseur's Frac +3", --14
         hands="Lanun Gants +3", -- Tripple shot becomes Quad shot
         legs="Osh. Trousers +1", -- Missing
         feet="Osh. Leggings +1", --3
@@ -308,7 +309,7 @@ function get_sets()
 		body={ name="Lanun Frac +3", augments={'Enhances "Loaded Deck" effect',}},
 		hands="Nyame Gauntlets",
 		legs="Nyame Flanchard",
-		feet="Chass. Bottes +2",
+		feet="Chass. Bottes +3",
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist="Orpheus's Sash",
 		left_ear="Friomisi Earring",
@@ -323,7 +324,7 @@ function get_sets()
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs="Malignance Tights",
+		legs="Chas. Culottes +3",
 		feet="Malignance Boots",
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
@@ -373,7 +374,7 @@ function get_sets()
 		sub={ name="Nusku Shield", priority=2},
 		range="Compensator", -- 20 sec Duration
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
-		hands="Chasseur's Gants +2", --55 sec Duration
+		hands="Chasseur's Gants +3", --60 sec Duration
 		neck="Regal Necklace", -- 20 sec Duration
 		right_ring="Luzaf's Ring", -- 16 yalm range
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 30 sec Duration
@@ -400,14 +401,14 @@ function get_sets()
 	sets.PhantomRoll['Dancer\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Scholar\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Bolter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll["Caster\'s Roll"] = set_combine(sets.PhantomRoll, {}) -- {legs="Chas. Culottes +1"}
-	sets.PhantomRoll["Tactician\'s Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +2"})
-	sets.PhantomRoll["Allies\' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +2"})
+	sets.PhantomRoll["Caster\'s Roll"] = set_combine(sets.PhantomRoll, {legs="Chas. Culottes +3",})
+	sets.PhantomRoll["Tactician\'s Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +3"})
+	sets.PhantomRoll["Allies\' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +3"})
 	sets.PhantomRoll['Miser\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Companion\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
 	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
-    sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +2"})
+    sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +3"})
     sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +3"})
 
 	sets.WS = {
@@ -425,6 +426,13 @@ function get_sets()
 		right_ring="Epaminondas's Ring",
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
+
+	sets.WS.RA = set_combine (sets.WS, {
+		body="Laksa. Frac +3",
+		hands="Chasseur's Gants +3",
+		left_ring="Regal Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
 
 	-- Accuracy set used in OffenseMode.ACC
 	sets.WS.ACC = set_combine(sets.WS, {
@@ -482,11 +490,9 @@ function get_sets()
 		left_ring="Sroda Ring",
 	})
 
-	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {
+	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, sets.WS.RA, {
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
-		left_ring="Dingir Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	-- Uses Default WS set

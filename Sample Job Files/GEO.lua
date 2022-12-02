@@ -53,14 +53,18 @@ function get_sets()
 		sub="Genmei Shield",
 	}
 
+	sets.Weapons.Sleep = {
+		range="Lorg Mor",
+	}
+
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-		head="Azimuth Hood +2", -- 11/11
-		body="Azimuth Coat +2",
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}}, -- 7/7
+		head="Azimuth Hood +3", -- 11/11
+		body="Azimuth Coat +3",
+		hands="Azimuth Gloves +3", -- 12/12
 		legs={ name="Nyame Flanchard", augments={'Path: B',}}, -- 8/8
-		feet="Azimuth Gaiters +2", -- 10/10
+		feet="Azimuth Gaiters +3", -- 10/10
 		neck={ name="Loricate Torque +1", augments={'Path: A',}}, -- 6/6
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
@@ -137,9 +141,9 @@ function get_sets()
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head={ name="Vanya Hood", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}}, -- 10
 		body={ name="Vanya Robe", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
-		hands="Azimuth Gloves +2",
+		hands="Azimuth Gloves +3",
 		legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
-		feet="Azimuth Gaiters +2",
+		feet="Azimuth Gaiters +3",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Luminary Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -173,7 +177,7 @@ function get_sets()
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head="Geo. Galero +3",
 		body="Geomancy Tunic +3",
-		hands="Azimuth Gloves +2",
+		hands="Azimuth Gloves +3",
 		legs="Geomancy Pants +3",
 		feet="Geo. Sandals +3",
 		neck={ name="Bagua Charm +2", augments={'Path: A',}},
@@ -252,10 +256,10 @@ function get_sets()
 		sub="Genmei Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
-		body="Azimuth Coat +2",
+		body="Azimuth Coat +3",
 		hands="Geo. Mitaines +3",
 		legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}}, -- 21
-		feet="Azimuth Gaiters +2", -- 25
+		feet="Azimuth Gaiters +3", -- 30
 		neck={ name="Bagua Charm +2", augments={'Path: A',}},
 		waist="Luminary Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -270,7 +274,7 @@ function get_sets()
 	-- Geo Potency
 	sets.Geomancy.Geo = set_combine( sets.Geomancy.Indi, {
 		legs={ name="Nyame Flanchard", augments={'Path: B',}}, -- 8/8
-		feet="Azimuth Gaiters +2", -- 10/10
+		feet="Azimuth Gaiters +3", -- 11/11
 	})
 
 	-- Will be used to keep max HP of Luopan when casting spells
@@ -286,7 +290,7 @@ function get_sets()
 	    body={ name="Bagua Tunic +3", augments={'Enhances "Bolster" effect',}}, 
 	}
 	sets.JA["Full Circle"] = {
-		head="Azimuth Hood +2", -- 3
+		head="Azimuth Hood +3", -- 3
 		hands={ name="Bagua Mitaines +3", augments={'Enhances "Curative Recantation" effect',}},
 	}
 	sets.JA["Lasting Emanation"] = {}

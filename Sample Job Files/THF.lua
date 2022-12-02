@@ -38,12 +38,16 @@ function get_sets()
 
 	sets.Weapons['Aeneas'] = {
 		main={ name="Aeneas", augments={'Path: A',}},
-		sub="Gandring",
+		sub="Tauret",
 	}
 
 	sets.Weapons['Naegling'] = {
 		main="Naegling",
-		sub="Gandring",
+		sub="Crepuscular Knife",
+	}
+
+	sets.Weapons.Sleep = {
+		sub="Prime Dagger",
 	}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
@@ -207,14 +211,14 @@ function get_sets()
 	sets.WS["Shark Bite"] = {}
 	sets.WS["Evisceration"] = {}
 	sets.WS["Aeolian Edge"] = set_combine( sets.WS.MAB, {
-		feet="Skulk. Poulaines +2",
+		feet="Skulk. Poulaines +3",
 	})
 
 	--Custome sets for each jobsetup
 	sets.Custom = {}
 
 	sets.TreasureHunter = {
-		feet="Skulk. Poulaines +2",
+		feet="Skulk. Poulaines +3",
 	}
 end
 

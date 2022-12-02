@@ -38,7 +38,7 @@ function get_sets()
 
 	sets.Weapons['Aeolian Edge'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Crepuscular Knife",
+		sub="Tauret",
 	}
 
 	sets.Weapons['Shining Strike'] = {
@@ -80,6 +80,10 @@ function get_sets()
 		sub="Genmei Shield",
 	}
 
+	sets.Weapons.Sleep = {
+		sub="Loughnashade",
+	}
+
 	-- Instruments to use
 	Instrument ={}
 	Instrument.Count = { name="Daurdabla" }
@@ -99,22 +103,22 @@ function get_sets()
 	-- Standard Idle set
 	sets.Idle = {
 		range=Instrument.Idle,  -- 4/0
-		head={ name="Bunzi's Hat", augments={'Path: A',}}, -- 7/7
+		head="Fili Calot +3", -- 11/11
 		body="Bunzi's Robe", -- 10/10
 		hands="Bunzi's Gloves", -- 8/8 
-		legs="Bunzi's Pants", -- 9/9
+		legs="Fili Rhingrave +3", -- 13/13
 		feet="Bunzi's Sabots", -- 6/6
 		neck="Loricate Torque +1", -- 6/6
 		waist="Carrier's Sash",
-		left_ear="Eabani Earring",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/3
 		right_ear="Sanare Earring",
-		left_ring="Defending Ring", -- 10/10 (over capped due to movement gear)
+		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2}, -- 5/5 (over capped due to movement gear)
 		right_ring="Shadow Ring",
 		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Mag. Evasion+15',}},
     } -- PDT 60%%, MDT 56%
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
-	sets.Movement = { feet="Fili Cothurnes +2"}
+	sets.Movement = { feet="Fili Cothurnes +3"}
 
     -- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
@@ -152,7 +156,6 @@ function get_sets()
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		head={ name="Nyame Helm", augments={'Path: B',}},
 		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
 	})
@@ -182,7 +185,7 @@ function get_sets()
 		body="Inyanga Jubbah +2", -- 14
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
 		legs="Volte Brais", -- 8
-		feet="Fili Cothurnes +2", -- 10
+		feet="Fili Cothurnes +3", -- 13
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
 		waist="Embla Sash", -- 5
 		left_ear={ name="Etiolation Earring", priority=1}, -- 1
@@ -207,9 +210,9 @@ function get_sets()
 
 	-- Default song duration / strength
 	sets.Midcast = set_combine(sets.Idle, {
-		head="Fili Calot +2",
+		head="Fili Calot +3",
 		body="Fili Hongreline +3",
-		hands="Fili Manchettes +2",
+		hands="Fili Manchettes +3",
 		legs="Inyanga Shalwar +2",
 		feet="Brioso Slippers +3",
 		neck="Mnbw. Whistle +1",
@@ -306,11 +309,11 @@ function get_sets()
 	sets.Midcast.Requiem = {}
 	sets.Midcast.Elegy = {}
 	sets.Midcast.Prelude = {}
-	sets.Midcast.Madrigal = {head="Fili Calot +2"}
+	sets.Midcast.Madrigal = {head="Fili Calot +3"}
     sets.Midcast.Minuet = {body="Fili Hongreline +3"}
-    sets.Midcast.March = {hands="Fili Manchettes +2"}
-    sets.Midcast.Ballad = {legs="Fili Rhingrave +2"}
-    sets.Midcast.Scherzo = {feet="Fili Cothurnes +2"}
+    sets.Midcast.March = {hands="Fili Manchettes +3"}
+    sets.Midcast.Ballad = {legs="Fili Rhingrave +3"}
+    sets.Midcast.Scherzo = {feet="Fili Cothurnes +3"}
     sets.Midcast.Mazurka = {}
     sets.Midcast.Paeon = {head="Brioso Roundlet +3"}
     sets.Midcast.Threnody = {body="Mou. Manteel +1"}
