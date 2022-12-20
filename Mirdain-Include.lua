@@ -28,6 +28,7 @@ SpellCastTime = 0
 Spellstart = os.clock()
 UpdateTime1 = os.clock()
 UpdateTime2 = os.clock()
+UpdateTime3 = os.clock()
 
 Organizer = false
 
@@ -873,12 +874,21 @@ function midcastequip(spell)
 			info('Cure Set')
 		-- Regen
 		elseif spell.name:contains('Regen') then
-			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing, sets.Midcast.Regen)
-			info('Regen Set')
+			if spell.target.type == 'SELF' then
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing, sets.Midcast.Regen)
+				info('Regen Set')
+			else
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing.Others, sets.Midcast.Regen)
+				info('Regen Set - Others')
+			end
 		-- Curaga 
-		elseif spell.name:contains('Cura') then
+		elseif spell.name:contains('Curaga') then
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Curaga)
 			info('Curaga Set')
+		-- Cura
+		elseif spell.name:contains('Cura') then
+			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cura)
+			info('Cura Set')
 		-- Raise (Stay in FastCast set for recast timers)
 		elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
 			equipSet = sets.Precast.FastCast
@@ -1431,9 +1441,6 @@ function choose_set()
 		if buffactive[187] then
 			equipSet = set_combine(equipSet, sets.Idle.Sublimation)
 		end
-		if player.mpp < 75 and state.OffenseMode.value ~= 'DT' then
-			equipSet = set_combine(equipSet, sets.Idle.Refresh)
-		end
 		-- Equip movement gear
 		if is_moving == true then
 			equipSet = set_combine(equipSet, sets.Movement)
@@ -1796,7 +1803,7 @@ function self_command(cmd)
 		local mode = {}
 		mode = string.split(cmd," ",3)
 		info('Profile: ['..tostring(mode[3])..']')
-		windower.send_command('cpaddon cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		windower.send_command('sm cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
@@ -2267,6 +2274,12 @@ windower.register_event('prerender',function()
 			mov.z = position.z
 		end
 		UpdateTime2 = now
+	end
+	if Cycle_Time then
+		if now - UpdateTime3 > Cycle_Time then
+			Cycle_Timer()
+			UpdateTime3 = now
+		end
 	end
 end)
 
