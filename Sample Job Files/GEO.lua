@@ -76,7 +76,7 @@ function get_sets()
 
 	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = set_combine( sets.Idle, { --2278/1482
-		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+		head="Azimuth Hood +3", -- 11/11
 		neck={ name="Bagua Charm +2", augments={'Path: A',}},
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
@@ -196,7 +196,7 @@ function get_sets()
 		head="Ea Hat +1",
 		body="Ea Houppe. +1",
 		hands={ name="Agwu's Gages", augments={'Path: A',}},
-		legs="Azimuth Tights +2",
+		legs="Azimuth Tights +3",
 		feet="Agwu's Pigaches",
 		neck="Mizu. Kubikazari",
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
@@ -277,7 +277,7 @@ function get_sets()
 		feet="Azimuth Gaiters +3", -- 11/11
 	})
 
-	-- Will be used to keep max HP of Luopan when casting spells
+	-- Will be used to keep max HP of Luopan when casting spells but switches when below 70% to the Idle.Pet set.
 	sets.Luopan = {
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
 	}
@@ -336,8 +336,6 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
-local Luapan_Active = false
-
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
@@ -365,7 +363,6 @@ function aftercast_custom(spell)
 	-- Maintain the High HP of the Luopan
 	if geomancy:contains(spell.english) then
 		equipSet = set_combine(equipSet, sets.Luopan)
-		Luapan_Active = true
 	else
 		equipSet = Luopan(equipSet)
 	end
@@ -392,9 +389,6 @@ end
 
 function pet_change_custom(pet,gain)
 	equipSet = {}
-	if gain == false then
-		Luapan_Active = false
-	end
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
@@ -434,9 +428,20 @@ end
 
 function Luopan(equipSet) --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
 	equipSet = {}
-	if Luapan_Active == true then
+	local head_item = player.equipment.head
+	local relic_equiped = false
+	if head_item and head_item:contains("Bagua") then
+		relic_equiped = true
+	end
+	if pet.isvalid and pet.hpp >= 70 and relic_equiped then
 		equipSet = set_combine(equipSet, sets.Luopan)
 	end
-	log('luapan status: ['..tostring(Luapan_Active)..']')
 	return equipSet
+end
+
+Cycle_Time = 3
+function Cycle_Timer()
+	if player.status == "Idle" then
+		equip(set_combine(choose_set(),choose_set_custom()))
+	end
 end
