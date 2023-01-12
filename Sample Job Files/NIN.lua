@@ -379,7 +379,6 @@ end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-	NIN_Movement()
 	return equipSet
 end
 --Function is called when the player changes states
@@ -418,12 +417,8 @@ function check_buff_SP()
 	return buff
 end
 
---used to register the time change to equip correct feet
-windower.register_event('time change', function(time)
-     NIN_Movement()
-end)
-
-function NIN_Movement ()
+Cycle_Time = 1
+function Cycle_Timer()
 	if world.time >= 17*60 or world.time <= 7*60 then
 		if world.time >= (18*60) or world.time <= (6*60) then
 			sets.Movement = set_combine(sets.Movement, sets.Movement.Night)
