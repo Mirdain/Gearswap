@@ -2,9 +2,6 @@ res = require 'resources'
 config = require('config')
 packets = require('packets')
 
--- loads gear from Moogle
-include('organizer-lib')
-
 -- Modes is the include for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
@@ -2306,9 +2303,7 @@ windower.register_event('action', function (data)
 		local self = windower.ffxi.get_player()
 		local targets = data.targets
 		local ability = {}
-
 		log('cat='..data.category..',param='..data.param)
-
 		if data.actor_id == player.id then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
 			-- Ranged attack finish
@@ -2359,7 +2354,6 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
-
 		-- Any Spells
 		if data.category == 8 then
 			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
@@ -2395,7 +2389,6 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
-
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
@@ -2413,8 +2406,8 @@ windower.register_event('action', function (data)
 					th_info.tagged_mobs[data.targets[1].id] = os.clock()
 				end
 			end
+			cleanup_tagged_mobs()
 		end
-		cleanup_tagged_mobs()
 	end
 end)
 
