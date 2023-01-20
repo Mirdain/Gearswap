@@ -332,14 +332,12 @@ end
 function check_buff_JA()
 	buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
-	if player.sub_job == 'WAR' then
-		if not buffactive['Berserk'] and ja_recasts[1] == 0 then
-			buff = "Berserk"
-		elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
-			buff = "Aggressor"
-		elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
-			buff = "Warcry"
-		end
+	if not buffactive['Berserk'] and ja_recasts[1] == 0 then
+		buff = "Berserk"
+	elseif not buffactive['Aggressor'] and ja_recasts[4] == 0 then
+		buff = "Aggressor"
+	elseif not buffactive['Warcry'] and ja_recasts[2] == 0 then
+		buff = "Warcry"
 	end
 	if player.sub_job == 'SAM' then
 		if not buffactive['Hasso'] and not buffactive['Seigan'] and ja_recasts[138] == 0 then
