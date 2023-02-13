@@ -73,19 +73,17 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
-		main={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
-		sub={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
-		body="Shamash Robe",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Loricate Torque +1",
-		waist="Flume Belt +1",
+		body="Hashishin Mintan +3",
+		hands="Hashi. Bazu. +3",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +3",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
 		left_ear="Etiolation Earring",
-		right_ear="Tuisto Earring",
-		left_ring="Defending Ring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Stikini Ring +1",
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
@@ -93,6 +91,14 @@ function get_sets()
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}, priority=1},
     }
+
+	-- Set to be used if you get cursna casted on you
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+		waist="Gishdubar Sash",
+	}
 
 	sets.OffenseMode = {}
 
@@ -175,17 +181,17 @@ function get_sets()
 	-- Cure Set
 	sets.Midcast.Cure = {
 		ammo="Staunch Tathlum +1",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}}, -- 10
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
-		feet={ name="Medium's Sabots", augments={'MP+50','MND+10','"Conserve MP"+7','"Cure" potency +5%',}}, --12
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body="Hashishin Mintan +3",
+		hands={ name="Telchine Gloves", augments={'Enh. Mag. eff. dur. +10',}},
+		legs="Hashishin Tayt +3",
+		feet={ name="Medium's Sabots", augments={'MP+50','MND+10','"Conserve MP"+7','"Cure" potency +5%',}},
 		neck="Incanter's Torque",
-		waist="Gishdubar Sash", -- 10% recieved
-		left_ear="Mendi. Earring", --5
-		right_ear="Regal Earring",
-		left_ring="Lebeche Ring", -- 3
-		right_ring="Menelaus's Ring", --5
+		waist="Gishdubar Sash",
+		left_ear="Mendi. Earring",
+		right_ear={ name="Hashi. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+13','Mag. Acc.+13','"Dbl.Atk."+4',}},
+		left_ring="Lebeche Ring",
+		right_ring="Menelaus's Ring",
 		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
     } --35 %
 
@@ -243,33 +249,33 @@ function get_sets()
 
 	sets.Midcast.Nuke = {
 		ammo="Pemphredo Tathlum",
-		head="Hashishin Kavuk +2",
-		body="Hashishin Mintan +2",
-		hands="Hashi. Bazu. +2",
-		legs="Hashishin Tayt +2",
-		feet="Hashi. Basmak +2",
+		head="Hashishin Kavuk +3",
+		body="Hashishin Mintan +3",
+		hands="Hashi. Bazu. +3",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +3",
 		neck="Sanctity Necklace",
 		waist="Orpheus's Sash",
-		left_ear="Hecate's Earring",
+		left_ear="Friomisi Earring",
 		right_ear="Regal Earring",
 		left_ring="Shiva Ring +1",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
 	}
 
 	sets.WS = {
-		ammo="Ginsen",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet="Nyame Sollerets",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head="Hashishin Kavuk +3",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Fotia Gorget",
 		waist="Fotia Belt",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Odr Earring",
 		left_ring="Epona's Ring",
-		right_ring="Ilabrat Ring",
+		right_ring="Epaminondas's Ring",
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 
@@ -279,7 +285,8 @@ function get_sets()
 	-- Note that the Mote library will unlock these gear spots when used.
 	sets.TreasureHunter = {
 		waist="Chaac Belt",
-		body={ name="Herculean Vest", augments={'DEX+11','Accuracy+7','"Treasure Hunter"+1',}},
+		body="Volte Jupon",
+		ammo="Per. Lucky Egg",
 	}
 
 	sets.Diffusion = {

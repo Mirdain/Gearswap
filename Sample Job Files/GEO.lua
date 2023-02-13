@@ -90,9 +90,9 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
 		waist="Gishdubar Sash",
 	}
@@ -297,6 +297,7 @@ function get_sets()
 	sets.JA["Ecliptic Attrition"] = {} 
 	sets.JA["Life Cycle"] = {
 		body="Geomancy Tunic +3",
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 	sets.JA["Blaze of Glory"] = {}
 	sets.JA["Dematerialzie"] = {}
@@ -439,7 +440,7 @@ function Luopan(equipSet) --  This maintains the extra 600hp during midcast of s
 	return equipSet
 end
 
-Cycle_Time = 3
+Cycle_Time = 5
 function Cycle_Timer()
 	if player.status == "Idle" then
 		equip(set_combine(choose_set(),choose_set_custom()))

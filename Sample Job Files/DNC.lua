@@ -90,6 +90,14 @@ function get_sets()
 
 	sets.Movement = {right_ring="Shneddick Ring",}
 
+	-- Set to be used if you get cursna casted on you
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+		waist="Gishdubar Sash",
+	}
+
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode = {}
 

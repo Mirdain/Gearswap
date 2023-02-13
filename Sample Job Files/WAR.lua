@@ -82,6 +82,14 @@ function get_sets()
 		feet="Hermes' Sandals",
 	}
 
+	-- Set to be used if you get 
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+		waist="Gishdubar Sash",
+	}
+
 	--WAR Double attack
 	--28% Job Trait
 	--5% Merits

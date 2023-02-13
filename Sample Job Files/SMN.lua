@@ -72,6 +72,14 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1", bag='wardrobe4'},
 	})
 
+	-- Set to be used if you get 
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+		waist="Gishdubar Sash",
+	}
+
 	sets.Movement = {
 		feet="Herald's Gaiters",
 	}

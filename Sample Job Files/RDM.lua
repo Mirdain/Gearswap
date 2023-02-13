@@ -123,7 +123,7 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
@@ -243,7 +243,7 @@ function get_sets()
 		feet="Leth. Houseaux +3", -- 35
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, --25
 		waist="Embla Sash", --10
-		left_ear="Mimir Earring",
+		left_ear="Leth. Earring +1", -- 8
 		right_ear={ name="Etiolation Earring", priority=2}, -- Used to Keep HP/MP pool
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
@@ -252,10 +252,15 @@ function get_sets()
 
 	-- Enhancing Duration on OTHERS
 	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
-		head="Leth. Chappel +2",
+		head="Leth. Chappel +3",
 		body="Lethargy Sayon +3",
 		legs="Leth. Fuseau +3",
 	})
+
+	-- Regen
+	sets.Midcast.Regen = {
+		feet={ name="Bunzi's Sabots", augments={'Path: A',}},
+	}
 
 	-- Spells that require SKILL - RDM only needs 500 or more except Temper II
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
@@ -350,7 +355,7 @@ function get_sets()
 	sets.Midcast.Nuke = {
 		sub="Ammurapi Shield",
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head="Leth. Chappel +2",
+		head="Leth. Chappel +3",
 		body="Lethargy Sayon +3",
 		hands="Leth. Ganth. +3",
 		legs="Leth. Fuseau +3",
@@ -463,7 +468,9 @@ function get_sets()
 	sets.WS["Black Halo"] = sets.WS.WSD
 
 	sets.TreasureHunter = {
-	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
+		ammo="Per. Lucky Egg",
+		head="Volte Cap",
+	    legs="Volte Hose",
 		waist="Chaac Belt",
 	}
 

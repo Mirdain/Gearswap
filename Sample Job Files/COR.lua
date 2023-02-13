@@ -128,10 +128,10 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
 		waist="Gishdubar Sash",
 	}
 

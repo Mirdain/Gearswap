@@ -28,7 +28,7 @@ state.OffenseMode:set('DT')
 Organizer = false
 
 --Weapons options
-state.WeaponMode:options('Club','Unlocked')
+state.WeaponMode:options('Seraph Strike','Black Halo','Unlocked')
 state.WeaponMode:set('Unlocked')
 
 --Command to Lock Style and Set the correct macros
@@ -40,8 +40,12 @@ function get_sets()
 	-- Weapon setup
 	sets.Weapons = {}
 
-	sets.Weapons['Club'] = {
+	sets.Weapons['Seraph Strike'] = {
 		main="Daybreak",
+	}
+
+	sets.Weapons['Black Halo'] = {
+		main="Maxentius",
 	}
 
 	-- Will swap weapons based off sets below
@@ -57,10 +61,10 @@ function get_sets()
 	sets.Idle = {
 		ammo="Staunch Tathlum +1", --  3/3
 		head="Nyame Helm", -- 7/7
-		body="Ebers Bliaut +2",
+		body="Ebers Bliaut +3",
 		hands="Nyame Gauntlets", -- 7/7
-		legs="Ebers Pant. +2", -- 12/12
-		feet="Ebers Duckbills +2", -- 10/10
+		legs="Ebers Pant. +3", -- 12/12
+		feet="Ebers Duckbills +3", -- 11/11
 		neck={ name="Loricate Torque +1", augments={'Path: A',}}, -- 6/6
 		waist="Carrier's Sash",
 		left_ear={ name="Etiolation Earring", priority=1}, -- 0/3
@@ -69,7 +73,6 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}, priority=2}, -- 10/0
     }
-
 
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
@@ -88,7 +91,7 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
@@ -131,7 +134,7 @@ function get_sets()
 		main="C. Palug Hammer", -- 7
 		sub="Ammurapi Shield",
 		ammo="Hasty Pinion +1",
-		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}}, -- 10
+		head="Ebers Cap +3", -- 13
 		body="Inyanga Jubbah +2", -- 14
 		hands="Gende. Gages +1", -- 7
 		legs="Pinga Pants +1", -- 13
@@ -141,7 +144,7 @@ function get_sets()
 		left_ear={ name="Etiolation Earring", priority=2}, -- 1
 		right_ear="Malignance Earring", -- 4
 		left_ring="Kishar Ring", -- 4
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A'}, priority=1},
+		right_ring="Weather. Ring", -- 5
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
 	} -- 81%
 
@@ -187,9 +190,9 @@ function get_sets()
 		sub="Genmei Shield",
 		ammo="Impatiens",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
-		body={ name="Ebers Bliaut +2", priority=2},
+		body={ name="Ebers Bliaut +3", priority=2},
 		hands="Theophany Mitts +3",
-		legs="Ebers Pant. +2",
+		legs="Ebers Pant. +3",
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 11
 		neck={ name="Clr. Torque +2", augments={'Path: A',}}, -- 10
 		waist="Hachirin-no-Obi",
@@ -201,6 +204,9 @@ function get_sets()
     }
 	-- For AoE cure
 	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",}) -- Need to complete
+
+	-- For Cura - foucs on DT
+	sets.Midcast.Cura = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",})
 
 	-- Enhancing Skill
 
@@ -226,13 +232,13 @@ function get_sets()
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 	    main="Beneficus",
-		head="Ebers Cap +2",
-		body="Ebers Bliaut +2",
-		hands="Ebers Mitts +2",
+		head="Ebers Cap +3",
+		body="Ebers Bliaut +3",
+		hands="Ebers Mitts +3",
 		left_ear="Andoaa Earring",
 		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
-		feet="Ebers Duckbills +2",
+		feet="Ebers Duckbills +3",
 	})
 
 	--Used for elemental Bar Magic Spells
@@ -245,21 +251,21 @@ function get_sets()
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		main="Daybreak",
+		main="Maxentius",
 		sub="Ammurapi Shield",
-		ammo="Pemphredo Tathlum",
+		ammo="Hydrocera",
 		head="Theophany Cap +3",
 		body="Theo. Bliaut +3",
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
+		hands="Ebers Mitts +3",
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
 		feet="Theo. Duckbills +3",
 		neck="Erra Pendant",
-		waist="Luminary Sash",
+		waist={ name="Obstin. Sash", augments={'Path: A',}},
 		left_ear="Regal Earring",
 		right_ear="Malignance Earring",
 		left_ring="Kishar Ring",
 		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Haste"+10','Phys. dmg. taken-10%',}},
+		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Phys. dmg. taken-10%',}},
 	}
 
 	sets.Midcast["Cursna"] = {
@@ -267,14 +273,14 @@ function get_sets()
 		sub="Ammurapi Shield",
 		ammo="Hasty Pinion +1",
 		head={ name="Kaykaus Mitra +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		body="Ebers Bliaut +2",
+		body="Ebers Bliaut +3",
 		hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
 		legs="Th. Pant. +3",
 		feet="Gende. Galosh. +1",
 		neck="Debilis Medallion",
 		waist="Bishop's Sash",
-		left_ear={ name="Etiolation Earring", priority=1},
-		right_ear="Meili Earring",
+		left_ear="Meili Earring",
+		right_ear="Ebers Earring +1",
 		left_ring="Haoma's Ring",
 		right_ring="Menelaus's Ring",
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Phys. dmg. taken-10%',}},
@@ -284,33 +290,37 @@ function get_sets()
 		main="Yagrush"
 	})
 
+	sets.Midcast["Esuna"] = set_combine(sets.Precast.FastCast, {
+		main="Asclepius",
+	})
+
 	sets.Midcast["Silena"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Poisona"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Paralyna"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Stona"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
-	sets.Midcast["Blinda"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+	sets.Midcast["Blindna"] = set_combine(sets.Precast.FastCast, {
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
 	sets.Midcast["Viruna"] = set_combine(sets.Precast.FastCast, {
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		main="Yagrush"
 	})
 
@@ -321,7 +331,7 @@ function get_sets()
 		ammo="Hydrocera",
 		head="Inyanga Tiara +2",
 		body={ name="Piety Bliaut +2", augments={'Enhances "Benediction" effect',}},
-		hands="Ebers Mitts +2",
+		hands="Ebers Mitts +3",
 		legs="Th. Pant. +3",
 		feet="Theo. Duckbills +3",
 		neck={ name="Clr. Torque +2", augments={'Path: A',}},
@@ -382,8 +392,8 @@ end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
-	if not buffactive['Afflatus Solace'] and spell.name ~=  "Afflatus Solace" then
-		add_to_chat(8,'Afflatus Solace is down')
+	if not buffactive['Afflatus Solace'] and not buffactive['Afflatus Misery'] then
+		add_to_chat(8,'You are not in a stance')
 	end
 	return equipSet
 end

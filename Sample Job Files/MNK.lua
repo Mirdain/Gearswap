@@ -79,7 +79,7 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
@@ -94,7 +94,7 @@ function get_sets()
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Bhikku Hose +2",
+		legs="Bhikku Hose +3",
 		feet="Anch. Gaiters +3",
 		neck="Mnk. Nodowa +2",
 		waist="Moonbow Belt +1",
@@ -109,7 +109,6 @@ function get_sets()
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs="Bhikku Hose +2",
 		feet="Malignance Boots",
 	})
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -283,12 +282,12 @@ function get_sets()
 
 	--Impetus set has priority over any other modes
 	sets.Impetus = {
-		body="Bhikku Cyclas +2",
+		body="Bhikku Cyclas +3",
 	}
 
 	-- Impetus for the DT stance (need more PDT)
 	sets.Impetus.DT = {
-		body="Bhikku Cyclas +2",
+		body="Bhikku Cyclas +3",
 		right_ring="Defending Ring",
 	}
 

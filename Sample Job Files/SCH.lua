@@ -88,7 +88,7 @@ function get_sets()
 	}
 
 	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
@@ -327,7 +327,7 @@ function get_sets()
 	sets.Midcast["Klimaform"] = set_combine(sets.Midcast.Enhancing, {})
 
 	sets.Midcast["Impact"] = set_combine(sets.Midcast.Enfeebling, {
-		body="Twilight Cloak",	
+		body="Crepuscular Cloak",	
 	})
 
 	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {
@@ -347,7 +347,8 @@ function get_sets()
 	-- Set used to tag treasure hunger
 	sets.TreasureHunter = {
 		ammo="Per. Lucky Egg",
-	    hands={ name="Merlinic Dastanas", augments={'Pet: INT+6','Phys. dmg. taken -4%','"Treasure Hunter"+2',}},
+		head="Volte Cap",
+		legs="Volte Hose",
 		waist="Chaac Belt",
 	}
 end

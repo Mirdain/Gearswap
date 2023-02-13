@@ -65,36 +65,42 @@ function get_sets()
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Regal Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back="Dispersal Mantle",
+		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Hermes' Sandals",
 	}
 
-	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
-
+    -- Set to be used if you get cursna casted on you
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
-
-	--Base TP set to build off
-	sets.OffenseMode.TP = {
+	sets.OffenseMode = {
+	    main="Godhands",
 		ammo="Crepuscular Pebble",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
-		feet="Nyame Sollerets",
+		feet="Malignance Boots",
 		neck="Combatant's Torque",
-		waist="Windbuffet Belt +1",
-		left_ear="Crep. Earring",
+		waist="Moonbow Belt",
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		right_ear="Telos Earring",
 		left_ring="Gere Ring",
-		right_ring="Niqmaddu Ring",
-		back="Dispersal Mantle",
+		right_ring="Chirich Ring +1",
+		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
+
+	--Base TP set to build off
+	sets.OffenseMode.TP = set_combine (set.OffenseMode, {
+	    body={ name="Mpaca's Doublet", augments={'Path: A',}},
+	})
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
 
@@ -140,19 +146,19 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = set_combine(sets.TP, {
-		ammo="Crepuscular Pebble",
-		head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet={ name="Herculean Boots", augments={'Accuracy+22','"Triple Atk."+4','AGI+2','Attack+1',}},
+	    ammo="Crepuscular Pebble",
+		head="Mpaca's Cap",
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
+		hands="Mpaca's Gloves",
+		legs="Mpaca's Hose",
+		feet="Mpaca's Boots",
 		neck="Combatant's Torque",
-		waist="Fotia Belt",
-		left_ear="Ishvara Earring",
-		right_ear="Brutal Earring",
+		waist="Moonbow Belt",
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
+		right_ear="Ishvara Earring",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
-		back="Dispersal Mantle",
+		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	})
 
 	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB

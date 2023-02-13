@@ -81,7 +81,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Sleep = {
-		sub="Loughnashade",
+		range="Loughnashade",
 	}
 
 	-- Instruments to use
@@ -120,18 +120,11 @@ function get_sets()
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +3"}
 
-    -- Set to be used if you get cursna casted on you
+	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
-		waist="Gishdubar Sash",
-	}
-
-	sets.Holy_Water = {
-	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
 		waist="Gishdubar Sash",
 	}
 

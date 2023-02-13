@@ -112,6 +112,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Ranged = {
+		main={ name="Perun +1", augments={'Path: A',}},
 		sub={ name="Kustawi +1", augments={'Path: A',}},
 	}
 
@@ -124,6 +125,7 @@ function get_sets()
 	Ammo.Bullet.ACC = "Eradicating Bullet"	-- Accuracy Ammo
 	Ammo.Bullet.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills (consumed)
+	Ammo.Bullet.WSD = "Chrono Bullet"		-- Physical Weaponskills (not consumed)
 	Ammo.Bullet.MAB = "Chrono Bullet"		-- Magical Weaponskills
 	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
 	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
@@ -133,6 +135,7 @@ function get_sets()
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
 	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
+	Ammo.Arrow.WSD = "Chrono Arrow"			-- Physical Weaponskills (not consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
@@ -142,6 +145,7 @@ function get_sets()
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
 	Ammo.Bolt.CRIT = "Quelling Bolt"		-- Critical Hit Mode Ammo
 	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (consumed)
+	Ammo.Bolt.WSD = "Quelling Bolt"			-- Physical Weaponskills (not consumed)
 	Ammo.Bolt.MAB = "Quelling Bolt"			-- Magical Weaponskills
 	Ammo.Bolt.MACC = "Quelling Bolt"		-- Magic Accuracy
 	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic  (Not consumed)
@@ -179,11 +183,11 @@ function get_sets()
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
 	}
 
-	-- Set to be used if you get 
-	sets.Cursna_Recieved = {
+	-- Set to be used if you get cursna casted on you
+	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -192,7 +196,6 @@ function get_sets()
 
 	--Set focuses on maximum TP gain
 	sets.OffenseMode.TP = {
-		ammo = Ammo.Bullet.RA,
 	    head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -206,6 +209,11 @@ function get_sets()
 		right_ring="Epona's Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Need to update Cape
 	}
+
+	-- Set is used for when you are engaged and in ranged mode (not actually hitting an enemy)
+	sets.OffenseMode.Ranged = set_combine(sets.Idle, {
+
+	})
 
 	--This set is used when OffenseMode is set to DT and enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
@@ -530,6 +538,9 @@ end
 function aftercast_custom(spell)
 	equipSet = {}
 	equipSet = Job_Mode_Check(equipSet)
+	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
@@ -547,6 +558,9 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
+	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end

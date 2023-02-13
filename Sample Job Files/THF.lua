@@ -47,7 +47,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Sleep = {
-		sub="Prime Dagger",
+		sub="Mpu Gandring",
 	}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
@@ -71,6 +71,14 @@ function get_sets()
 		feet="Fajin Boots",
     }
 
+	-- Set to be used if you get 
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+		waist="Gishdubar Sash",
+
+	}
 	sets.OffenseMode = {}
 
 	--Base TP set to build off
