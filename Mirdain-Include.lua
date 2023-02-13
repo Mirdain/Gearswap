@@ -9,8 +9,8 @@ default = {
 	visible = true,
 	debug = false,
 	info = true,
-	Display_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1647,y=835},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
-	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1483,y=791},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
+	Display_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1636,y=803},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
+	Debug_Box = {text={size=10,font='Consolas',red=255,green=255,blue=255,alpha=255},pos={x=1470,y=764},bg={visible=true,red=0,green=0,blue=0,alpha=102},},
 	}
 
 local buttons = {'State','TH Mode','Auto Buff','Weapon','Job Mode'}
@@ -128,7 +128,6 @@ gs_status = texts.new("",settings.Display_Box)
 
 -- UI for displaying the current states
 function display_box_update()
-
 	width = 20
 	dialog = {}
 	dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
@@ -145,11 +144,9 @@ function display_box_update()
     for k, v in next, dialog do
 		lines:insert(v.description ..string.format('[%s]',tostring(v.value)):lpad(' ',width-string.len(tostring(v.description))))
     end
-
 	local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 	for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
     gs_status:text(lines:concat('\n'))
-
 end
 
 gs_debug = {}
@@ -273,20 +270,12 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
-
 	-- Status Ailment Check
 	if buffactive['Stun'] then
 		cancel_spell()	
 		equip(sets.Idle)
 		return
 		log('Cancel Spell - Player is stunned')
-	end
-	if buffactive['Sleep'] then
-		cancel_spell()	
-		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
-		equip(equipSet)
-		return
-		log('Cancel Spell - Player is asleep')
 	end
 	if buffactive['KO'] then
 		cancel_spell()
@@ -310,8 +299,6 @@ function pretargetcheck(spell,action)
 		return
 		log('Cancel Spell - Player is dead')
 	end
-
-
 	if not buffactive['Muddle'] then
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
@@ -333,7 +320,6 @@ function pretargetcheck(spell,action)
 			end
 		end											
 	end
-
 	--Weapon Skill checks
 	if spell.type == 'WeaponSkill' then
 		local ws_used = res.weapon_skills:with('en',spell.english)
@@ -437,33 +423,6 @@ function pretargetcheck(spell,action)
 	end
 	--Used to fire a script
 	if spell.name == "Poison" then
-		info('Dancing Chains')
-		if player.main_job == "RDM" then
-			send_command('exec CP/RDM')
-		elseif player.main_job == "GEO" then
-			send_command('exec CP/GEO')
-		elseif player.main_job == "SCH" then
-			send_command('exec CP/SCH')
-		elseif player.main_job == "BRD" then
-			send_command('exec CP/BRD')
-		elseif player.main_job == "RNG" then
-			send_command('exec CP/RNG')
-		elseif player.main_job == "BLM" then
-			send_command('exec CP/BLM')
-		elseif player.main_job == "DRG" then
-			send_command('exec CP/DRG')
-		elseif player.main_job == "BLU" then
-			send_command('exec CP/BLU')
-		elseif player.main_job == "WAR" then
-			send_command('exec CP/WAR')
-		elseif player.main_job == "SMN" then
-			send_command('exec CP/SMN')
-		end
-		cancel_spell()
-		return
-	end
-	--Used to fire a script
-	if spell.name == "Dia" then
 		info('Dancing Chains')
 		if player.main_job == "RDM" then
 			send_command('exec CP/RDM')
@@ -601,7 +560,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
 			info('['..spell.english..'] Precast Set')
 		elseif UtsusemiSpell:contains(spell.name) then
-			equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.QuickMagic)
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.QuickMagic, sets.Precast.Utsusemi)
 			info('['..spell.english..'] Quick Magic Set')
 		else
 			equipSet = set_combine(equipSet, sets.Precast.FastCast)
@@ -1200,6 +1159,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
+	sleep_check()
+	if buffactive['Sleep'] then
+		cancel_spell()	
+		log('Cancel Spell - Player is asleep')
+	end
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
@@ -1211,6 +1175,11 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precast(spell)
+	sleep_check()
+	if buffactive['Sleep'] then
+		cancel_spell()	
+		log('Cancel Spell - Player is asleep')
+	end
 	-- action is started
 	if is_Buffing == true then
 		info('Player is Buffing')
@@ -1251,6 +1220,7 @@ function precast(spell)
 -------------------------------------------------------------------------------------------------------------------
 
 function midcast(spell)
+	sleep_check()
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
@@ -1265,6 +1235,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function aftercast(spell)
+	sleep_check()
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
@@ -1286,6 +1257,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function buff_change(name,gain)
+	sleep_check()
 	equipSet = {}
 	if is_Busy == false then
 		--calls the include file and custom on a buff change
@@ -1302,7 +1274,6 @@ function buff_change(name,gain)
 		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
 		equip(equipSet)
 	end
-
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1310,6 +1281,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function status_change(new,old)
+	sleep_check()
 	equipSet = {}
 	--calls the include file and custom on a state change
 	equipSet = set_combine(choose_set(), choose_set_custom(), status_change_custom(new,old))
@@ -1321,6 +1293,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_change(pet,gain)
+	sleep_check()
 	equipSet = {}
 	if player.main_job == 'SMN' or player.main_job == 'GEO' then
 		if gain == false and player.main_job == 'SMN' then
@@ -1355,6 +1328,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_midcast(spell)
+	sleep_check()
 	equipSet = sets.Pet_Midcast
 	if equipSet[spell.english] then
 		equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
@@ -1362,7 +1336,6 @@ function pet_midcast(spell)
 	else
 		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 	end
-
 	-- Weapon Checks for midcast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
@@ -1372,7 +1345,6 @@ function pet_midcast(spell)
 		end
 		log('Midcast set equiping Offense Mode Gear')
 	end
-
 	equip(equipSet)
 end
 
@@ -1381,6 +1353,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_aftercast(spell)
+	sleep_check()
 	equipSet = {}
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
 	equip(equipSet)
@@ -1391,14 +1364,12 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function choose_set()
+	sleep_check()
+	if buffactive['Sleep'] then
+		return
+	end
 	equipSet = {}
 	log('Choose Set Ran')
-
-	if buffactive['Sleep'] then
-		equip(set_combine(sets.Idle,sets.Weapons.Sleep))
-		return
-		log('Choose Set - Player is asleep')
-	end
 	-- Combat Checks
 	if player.status == "Engaged" then
 		equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
@@ -1453,24 +1424,21 @@ end
 function check_buff()
 	-- Auto Buff is on and not in a town
 	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
-
-		command_JA = check_buff_JA()
+		command_JA = 'None'	
 		command_SP = 'None'
-
+		command_BP = 'None'
+		command_JA = check_buff_JA()
 		if not is_moving then
 			command_SP = check_buff_SP()
 		end
-
-		command_BP = 'None'
 		if player.main_job == 'SMN' then
 			command_BP = check_buff_BP()
 		end
-
-		if command_JA ~= 'None' then
+		if command_JA ~= 'None' and not buffactive['Amnesia'] then
 			command_JA_execute()
 		elseif command_SP ~= 'None' then
 			command_SP_execute()
-		elseif command_BP ~= 'None' then
+		elseif command_BP ~= 'None' and not buffactive['Amnesia'] then
 			command_BP_execute()
 		end
 	end
@@ -1483,17 +1451,13 @@ end
 function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
     local bullet_name
     local bullet_min_count = 1
-
 	if equipSet then
 		bullet_name = equipSet.ammo
-
 		if bullet_name == 'empty' then
 			log('Ammo name is: '..bullet_name)
 			return
 		end
-
 		windower.add_to_chat(8,'['..bullet_name..']')
-
 		if spell.action_type == 'Ranged Attack' then
 			if buffactive['Triple Shot'] then
 				bullet_min_count = 3
@@ -1503,11 +1467,9 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 				bullet_min_count = 8
 			end
 		end
-
 		local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name]
 		 or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] or player.wardrobe5[bullet_name] 
 		 or player.wardrobe6[bullet_name] or player.wardrobe7[bullet_name] or player.wardrobe8[bullet_name]
-
 		-- If no ammo is available, give appropriate warning and end.
 		if not available_bullets then
 			if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
@@ -1536,13 +1498,10 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 			for i = 2, #msg do
 				border = border .. "*"
 			end
-
 			send_command('send @others input /echo '..msg..'')
-		
 			add_to_chat(167, border)
 			add_to_chat(167, msg)
 			add_to_chat(167, border)
-
 			state.warned:set()
 		elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
 			state.warned:reset()
@@ -1555,10 +1514,8 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function do_Utsu_checks(spell)
-
     local available_shihei = player.inventory['Shihei']
 	local shihei_warning_level = 50
-
     if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
 		if available_shihei.count < shihei_warning_level  then
 			local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x on '..player.name..' *****'
@@ -1983,13 +1940,9 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	if Random_Lockstyle == true then
 		LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 	end
-	if Organizer == true then
-		send_command('wait 5;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
-		';wait 1;input /macro set '..MacroSet..';wait 10;input /echo Getting Gear from Wardrobe - Do not move or take action;org o;wait 10;gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
-	else
-		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
-		';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
-	end
+
+	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+	';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 
 	send_command('bind f12 gs c ModeChange')
 	send_command('bind f11 gs c TH')
@@ -2173,7 +2126,7 @@ windower.register_event('gain buff', function(id)
 		end
 	elseif id == 2 then
 		log("Sleep - Checking Gear")
-		equip(set_combine(choose_set(),choose_set_custom(),sets.Weapons.Sleep))
+		sleep_check()
 	elseif id == 7 then
 		log("Petrification - Checking Gear")
 		equip(set_combine(choose_set(),choose_set_custom()))
@@ -2232,6 +2185,12 @@ end
 mov = {x=0, y=0, z=0}
 
 windower.register_event('prerender',function()
+	if player.status == "Dead" then
+		return
+	end
+	if player.status == "Engaged dead" then
+		return
+	end
 	local now = os.clock()
 	if is_Busy == true then
 		if now - Spellstart > SpellCastTime then
@@ -2244,17 +2203,16 @@ windower.register_event('prerender',function()
 		UpdateTime1 = now
 	end
 	if now - UpdateTime2 > .25 then
+		local position = windower.ffxi.get_mob_by_id(player.id)
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
 		-- Status Ailment Check
-		if not buffactive['Muddle'] then
-			if not buffactive['Paralysis'] and not buffactive['Silence'] and player.status ~= "Dead" and player.status ~= "Engaged dead" then
-				check_buff()
-			end									
-		end
-		local position = windower.ffxi.get_mob_by_id(player.id)
-		if position and not buffactive['Mounted'] then
+		if not buffactive['Paralysis'] and not buffactive['Silence'] and not buffactive['Sleep'] and not buffactive['Muddle'] then
+			check_buff()
+		end									
+		if position and not buffactive['Mounted'] and not buffactive['Sleep'] then
 			local movement = math.sqrt( (position.x-mov.x)^2 + (position.y-mov.y)^2 + (position.z-mov.z)^2 ) > 0.5
+					sleep_check()
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
@@ -2283,7 +2241,6 @@ end)
 -- Section used to determine if player is performing an action
 windower.register_event('action', function (data)
 	-- category
-
 	-- [1] = 'Melee attack',
 	-- [2] = 'Ranged attack finish',
 	-- [3] = 'Weapon Skill finish',
@@ -2298,14 +2255,11 @@ windower.register_event('action', function (data)
 	-- [13] = 'Avatar TP finish',
 	-- [14] = 'Job Ability DNC',
 	-- [15] = 'Job Ability RUN',
-
 	if data ~= nil then
-		local self = windower.ffxi.get_player()
 		local targets = data.targets
 		local ability = {}
 		log('cat='..data.category..',param='..data.param)
 		if data.actor_id == player.id then
-			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
 			-- Ranged attack finish
 			if data.category == 2 then
 				if data.param == 26739 then
@@ -2314,7 +2268,8 @@ windower.register_event('action', function (data)
 			--Casting finish
 			elseif data.category == 4 then
 				log('Casting Finished')
-				--log('Player ID is '..player.id)
+				--[[
+				log('Player ID is '..player.id)
 				for i, target in pairs(data.targets) do
 					for n, action in pairs(target.actions) do
 						if action.message ~= 0 and res.action_messages[action.message] ~= nil then
@@ -2322,6 +2277,15 @@ windower.register_event('action', function (data)
 							log('Target ID ['..target.id..'] with result of ['..action.message..']')
 						end
 					end
+				end
+				]]--
+			-- Item Use
+			elseif data.category == 9 then
+				if data.param == 24931 then
+					log('Item use')
+				elseif data.param == 28787 then
+					log('Item Use Interupted')
+					Unlock()
 				end
 			-- Item use Finished
 			elseif data.category == 5 then
@@ -2337,57 +2301,48 @@ windower.register_event('action', function (data)
 				elseif data.param == 24931 then
 					log('Casting Spell')
 				end
-			-- Item Use
-			elseif data.category == 9 then
-				if data.param == 24931 then
-					log('Item use')
-				elseif data.param == 28787 then
-					log('Item Use Interupted')
-					Unlock()
-				end
 			-- Ranged attack start
 			elseif data.category == 12 then
 				if data.param == 24931 then
-					log(''..primarytarget.name ..' is Shooting')
+					log(''..player.name ..' is Shooting')
 				elseif data.param == 28787 then
 					log('Shooting is interrupted')
 				end
 			end
 		end
 		-- Any Spells
+		-- Casting Spell
 		if data.category == 8 then
-			local primarytarget = windower.ffxi.get_mob_by_id(targets[1].id)
-			if primarytarget ~= nil then 
-				-- Spell being cast on  you
-				if primarytarget.name == self.name then
-					-- Casting Spell
-					if data.param == 24931 then
-						if targets[1].actions[1].param ~= 0 then
-							-- Get the ability
-							ability = res.spells[targets[1].actions[1].param] -- .en
-							-- Swap in Cursna Gear
-							if ability ~= nil then
-								if ability.en == "Cursna" then
-									equip(sets.Cursna_Received)
-								end
-							end
-						end
-					-- Spell inturpted
-					elseif data.param == 28787 then 
-						if targets[1].actions[1].param ~= 0 then
-							ability = res.spells[targets[1].actions[1].param] -- .en
-							if ability ~= nil then
-								-- Swap gear back 
-								if ability.en == "Cursna" then
-									equip(set_combine(choose_set(),choose_set_custom()))
-								end
-							end
+			if data.param == 24931 then
+				if targets[1].actions[1].param ~= 0 then
+					-- Get the ability
+					ability = res.spells[targets[1].actions[1].param]
+					-- Swap in Cursna Gear
+					if ability ~= nil then
+						if ability.en == "Cursna" then
+							log('Cursna Cast')
+							equip(sets.Cursna_Received)
 						end
 					end
-				elseif data.category == 4 then
-  					equip(set_combine(choose_set(),choose_set_custom()))
+				end
+			-- Spell inturpted
+			elseif data.param == 28787 then 
+				if targets[1].actions[1].param ~= 0 then
+					-- Get the ability
+					ability = res.spells[targets[1].actions[1].param]
+					-- Swap out of Cursna Gear
+					if ability ~= nil then
+						if ability.en == "Cursna" then
+							log('Cursna interupted')
+							equip(set_combine(choose_set(),choose_set_custom()))
+						end
+					end
 				end
 			end
+		--Casting finish
+		elseif data.category == 4 and data.param == 20 then
+			log('Cursna Finished')
+			equip(set_combine(choose_set(),choose_set_custom()))
 		end
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
@@ -2443,6 +2398,15 @@ function Elemental_check(equipSet, spell)
 		end
 	end
 	return equipSet
+end
+
+--Sleep 
+function sleep_check()
+	if buffactive['Sleep'] then
+		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
+		equip(equipSet)
+		log("Equip Sleep Set")
+	end
 end
 
 function round(num, numDecimalPlaces)
