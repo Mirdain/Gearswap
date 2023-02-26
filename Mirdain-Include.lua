@@ -1159,7 +1159,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
-	sleep_check()
 	if buffactive['Sleep'] then
 		cancel_spell()	
 		log('Cancel Spell - Player is asleep')
@@ -1175,7 +1174,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precast(spell)
-	sleep_check()
 	if buffactive['Sleep'] then
 		cancel_spell()	
 		log('Cancel Spell - Player is asleep')
@@ -1220,7 +1218,6 @@ function precast(spell)
 -------------------------------------------------------------------------------------------------------------------
 
 function midcast(spell)
-	sleep_check()
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
@@ -1235,7 +1232,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function aftercast(spell)
-	sleep_check()
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
@@ -1257,21 +1253,10 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function buff_change(name,gain)
-	sleep_check()
 	equipSet = {}
 	if is_Busy == false then
 		--calls the include file and custom on a buff change
 		equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
-		equip(equipSet)
-	end
-	-- Used to wake up during sleep
-	if gain and name == "sleep" then
-		-- Cancel stoneskin
-		if buffactive['Stoneskin'] then
-	  	 	info('Cancel Stoneskin')
-			cancel('Stoneskin')
-		end
-		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
 		equip(equipSet)
 	end
 end
@@ -1281,7 +1266,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function status_change(new,old)
-	sleep_check()
 	equipSet = {}
 	--calls the include file and custom on a state change
 	equipSet = set_combine(choose_set(), choose_set_custom(), status_change_custom(new,old))
@@ -1293,7 +1277,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_change(pet,gain)
-	sleep_check()
 	equipSet = {}
 	if player.main_job == 'SMN' or player.main_job == 'GEO' then
 		if gain == false and player.main_job == 'SMN' then
@@ -1328,7 +1311,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_midcast(spell)
-	sleep_check()
 	equipSet = sets.Pet_Midcast
 	if equipSet[spell.english] then
 		equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
@@ -1353,7 +1335,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pet_aftercast(spell)
-	sleep_check()
 	equipSet = {}
 	equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
 	equip(equipSet)
@@ -1364,7 +1345,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function choose_set()
-	sleep_check()
 	if buffactive['Sleep'] then
 		return
 	end
@@ -2125,8 +2105,16 @@ windower.register_event('gain buff', function(id)
 			info('No Remedies in inventory.')
 		end
 	elseif id == 2 then
-		log("Sleep - Checking Gear")
-		sleep_check()
+		info('Locking Sleep Gear')
+		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
+		equip(equipSet)
+		disable('main','range')
+		-- Used to wake up during sleep
+		-- Cancel stoneskin
+		if buffactive['Stoneskin'] then
+	  	 	info('Cancel Stoneskin')
+			cancel('Stoneskin')
+		end
 	elseif id == 7 then
 		log("Petrification - Checking Gear")
 		equip(set_combine(choose_set(),choose_set_custom()))
@@ -2138,14 +2126,33 @@ windower.register_event('gain buff', function(id)
 		equip(set_combine(choose_set(),choose_set_custom(),sets.Charm))
 	elseif id == 15 then
 		info('DOOOOOOM!!!')
+		equip(sets.Cursna_Received)
+		disable('neck','lring','rring','waist')
+		info('Locking Cursna Received Gear')
 		if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
 			if AutoItem == true then
-				equip(set_combine(choose_set(), sets.Cursna_Received, sets.Holy_Water, choose_set_custom()))
+				equip(set_combine(choose_set(), sets.Cursna_Received))
 				windower.send_command('input /item "Holy Water" <me>')
 			end
 		else 
 			info('No Holy Waters in inventory. Unable to cure DOOM status!')
 		end
+	end
+end)
+
+windower.register_event('lose buff', function(id)
+    local name = res.buffs[id].english
+	local gain = false
+	if id == 15 then
+		enable('neck','lring','rring','waist')
+		equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
+		equip(equipSet)
+		info('Unlocking Cursna Received Gear')
+	elseif id == 2 then
+		enable('main','range')
+		equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
+		equip(equipSet)
+		info('Unlocking Sleep Gear')
 	end
 end)
 
@@ -2212,7 +2219,6 @@ windower.register_event('prerender',function()
 		end									
 		if position and not buffactive['Mounted'] and not buffactive['Sleep'] then
 			local movement = math.sqrt( (position.x-mov.x)^2 + (position.y-mov.y)^2 + (position.z-mov.z)^2 ) > 0.5
-					sleep_check()
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
@@ -2320,8 +2326,7 @@ windower.register_event('action', function (data)
 					-- Swap in Cursna Gear
 					if ability ~= nil then
 						if ability.en == "Cursna" then
-							log('Cursna Cast')
-							equip(sets.Cursna_Received)
+
 						end
 					end
 				end
@@ -2333,16 +2338,14 @@ windower.register_event('action', function (data)
 					-- Swap out of Cursna Gear
 					if ability ~= nil then
 						if ability.en == "Cursna" then
-							log('Cursna interupted')
-							equip(set_combine(choose_set(),choose_set_custom()))
+
 						end
 					end
 				end
 			end
 		--Casting finish
 		elseif data.category == 4 and data.param == 20 then
-			log('Cursna Finished')
-			equip(set_combine(choose_set(),choose_set_custom()))
+			--log('Cursna Finished')
 		end
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
@@ -2398,15 +2401,6 @@ function Elemental_check(equipSet, spell)
 		end
 	end
 	return equipSet
-end
-
---Sleep 
-function sleep_check()
-	if buffactive['Sleep'] then
-		equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
-		equip(equipSet)
-		log("Equip Sleep Set")
-	end
 end
 
 function round(num, numDecimalPlaces)
