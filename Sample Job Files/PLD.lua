@@ -18,7 +18,7 @@ Buff_Delay = 2 -- Used this to slow down auto buffing
 Tank_Delay = 1 -- delays between tanking actions (only used when auto-buffing enabled and target locked on)
 
 --Modes for specific to Paladin.  These are defined below in "Weapons".
-state.WeaponMode:options('Burtgang','Naegling','Club')
+state.WeaponMode:options('Burtgang','Naegling','Club','Shining One')
 state.WeaponMode:set('Burtgang')
 
 -- Function used to change pallets based off sub job and modes
@@ -106,6 +106,11 @@ function get_sets()
 
 	sets.Weapons['Club'] = {
 		main="Beryllium Mace +1",
+	}
+
+	sets.Weapons['Shining One'] = {
+		main="Shining One",
+		sub="Alber strap",
 	}
 
 	--Default Shield
