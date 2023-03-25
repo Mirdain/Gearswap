@@ -748,17 +748,22 @@ function precastequip(spell)
 			end
 		end
 	end
+	-- If TH mode is on - check if new mob and then equip TH gear
+	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
+		equipSet = set_combine(equipSet, sets.TreasureHunter)
+	end
 	--Equip on main hand
 	if spell.name == "Dispelga" then
 		equipSet = set_combine(equipSet, {main="Daybreak"})
 	end
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
-	end
-	-- If TH mode is on - check if new mob and then equip TH gear
-	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
-		equipSet = set_combine(equipSet, sets.TreasureHunter)
+		equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english], {head=empty, body="Crepuscular Cloak",})
+		equip(equipSet) -- Test if availible
+		if player.equipment.body ~= "Crepuscular Cloak" then
+			log("body not found - equiping Twilight (Precast)")
+			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english], {head=empty, body="Twilight Cloak",})
+		end
 	end
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
@@ -1123,17 +1128,22 @@ function midcastequip(spell)
 			end
 		end
 	end
+	-- If TH mode is on - check if new mob and then equip TH gear
+	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
+		equipSet = set_combine(equipSet, sets.TreasureHunter)
+	end
 	--Equip on main hand
 	if spell.name == "Dispelga" then
 		equipSet = set_combine(equipSet, {main="Daybreak"})
 	end
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, {head="empty", body="Twilight Cloak", body="Crepuscular Cloak",})
-	end
-	-- If TH mode is on - check if new mob and then equip TH gear
-	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
-		equipSet = set_combine(equipSet, sets.TreasureHunter)
+		equipSet = set_combine(equipSet, sets.Midcast, sets.Midcast.Nuke, equipSet[spell.english], {head=empty, body="Crepuscular Cloak",})
+		equip(equipSet) -- Test if availible
+		if player.equipment.body ~= "Crepuscular Cloak" then
+			log("body not found - equiping Twilight (Midcast)")
+			equipSet = set_combine(equipSet, sets.Midcast, sets.Midcast.Nuke, equipSet[spell.english], {head=empty, body="Twilight Cloak",})
+		end
 	end
 	-- Built equipset to return
 	return equipSet
