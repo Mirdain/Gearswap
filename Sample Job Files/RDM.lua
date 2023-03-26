@@ -28,7 +28,7 @@ state.OffenseMode:set('DT')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
-state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo','Unlocked')
+state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo','Ullr','Unlocked')
 state.WeaponMode:set('Sanguine Blade')
 
 -- Set to true to run organizer on job changes
