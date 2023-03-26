@@ -81,6 +81,11 @@ function get_sets()
 		sub={ name="Machaera +2", augments={'TP Bonus +1000',}},
 	}
 
+	sets.Weapons['Ullr'] = {
+		range="Ullr",
+		ammo="Stone Arrow",
+	}
+
 	sets.Weapons['Unlocked'] ={
 		main={ name="Crocea Mors", augments={'Path: C',}},
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
@@ -94,6 +99,10 @@ function get_sets()
 	sets.Weapons.Sleep = {
 		sub="Caliburnus",
 	}
+
+	--Default arrow to use
+	Ammo.RA = "Stone Arrow"
+	Ammo.ACC = "Stone Arrow"
 
 	-- ===================================================================================================================
 	--		sets.Idle
@@ -198,6 +207,27 @@ function get_sets()
 	    back="Perimede Cape", -- 4
 	})
 
+	sets.Precast.RA = set_combine(sets.Precast, {
+		ammo=Ammo.RA,
+		waist="Yemaya Belt", -- 0 / 5
+		right_ring="Crepuscular Ring", -- 3
+    })	
+
+	-- Only the bullet needs to be set for ACC sets (so that it will match the sets.Midcast.RA.ACC)
+    sets.Precast.RA.ACC = set_combine(sets.Precast.RA, {
+		ammo=Ammo.ACC,
+    })
+
+	-- Flurry - 55 Snapshot Needed
+	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
+
+	}) 
+
+	-- Flurry II - 40 Snapshot Needed
+	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
+
+    })
+
 	-- ===================================================================================================================
 	--		sets.midcast
 	-- ===================================================================================================================
@@ -206,6 +236,26 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
+
+	-- Ranged Attack Gear (Normal Midshot)
+    sets.Midcast.RA = set_combine(sets.Midcast, {
+
+    })
+
+	-- Ranged Attack Gear (High Accuracy Midshot)
+    sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
+		ammo=Ammo.ACC,
+    })
+
+	-- Ranged Attack Gear (Physical Damage Limit)
+    sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
+
+    })
+
+	-- Ranged Attack Gear (Critical Build)
+    sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
+
+    })
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
@@ -444,6 +494,10 @@ function get_sets()
 		right_ring="Ilabrat Ring",
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
+
+	sets.WS.RA = set_combine(sets.WS,{
+
+	})
 
 	sets.WS["Seraph Blade"] =  set_combine(sets.WS.MAB, {
 		left_ring="Weather. Ring",
