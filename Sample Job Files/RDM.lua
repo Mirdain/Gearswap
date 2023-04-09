@@ -28,7 +28,7 @@ state.OffenseMode:set('DT')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
-state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo','Ullr','Unlocked')
+state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo', 'Ullr', 'Unlocked')
 state.WeaponMode:set('Sanguine Blade')
 
 -- Set to true to run organizer on job changes
@@ -355,7 +355,7 @@ function get_sets()
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, -- 10%
 	})
 
-	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga')
+	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga', 'Bind', 'Bind II')
 	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {
 		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
 		hands="Regal Cuffs", --20% swaps out with Saboteur active
