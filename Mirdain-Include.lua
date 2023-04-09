@@ -213,7 +213,7 @@ EnfeebleSong = S{
 
 Enfeeble_Acc = S{'Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga'}
 Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II'}
-Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga'}
+Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga','Bind','Bind II'}
 
 Storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
@@ -1753,7 +1753,7 @@ function self_command(cmd)
 		local mode = {}
 		mode = string.split(cmd," ",3)
 		info('Profile: ['..tostring(mode[3])..']')
-		windower.send_command('sm cmd load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		windower.send_command('sm load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
