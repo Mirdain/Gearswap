@@ -231,6 +231,9 @@ Elemental_Magic_Enfeeble = S{'Burn','Frost','Choke','Rasp','Shock','Drown'}
 UtsusemiSpell = S{'Utsusemi: Ichi','Utsusemi: Ni', 'Utsusemi: San'}
 RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
+
+SongCount = S{"Knight's Minne", "Knight's Minne II", "Army's Paeon", "Army's Paeon II", "Army's Paeon III", "Army's Paeon IV", "Fowl Aubade", "Herb Pastoral", 
+			"Shining Fantasia", "Scop's Operetta", "Puppet's Operetta", "Gold Capriccio", "Warding Round", "Goblin Gavotte"}
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
 Mage_Job = S{'BLM','RDM','WHM','BRD','BLU','GEO','SCH','NIN','PLD','RUN','DRK','SMN'}
 Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thunder','Crimson Howl','Lightning Armor','Ecliptic Growl','Glittering Ruby','Earthen Ward','Hastega','Noctoshield','Ecliptic Howl','Dream Shroud','Earthen Armor','Fleet Wind','Inferno Howl','Heavenward Howl','Hastega II','Soothing Current','Crystal Blessing'}
@@ -645,6 +648,7 @@ function precastequip(spell)
 		else
 			info('Step not set for ['..spell.english..']')
 		end
+	-- Flourishes
 	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
 		equipSet = sets.Flourish
 		if equipSet[spell.english] then
@@ -658,8 +662,8 @@ function precastequip(spell)
 		equipSet = sets.Precast
 		-- Normal Song Casting
 		if not buffactive['Nightingale'] then
-			-- Song Count for Minne and Paeon
-			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II"  or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
+			-- Song Count
+			if SongCount:contains(spell.name) then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Count})
 			elseif spell.name == "Honor March" then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Honor})
@@ -995,8 +999,8 @@ function midcastequip(spell)
 		if equipSet[spell.english] then
 			equipSet = set_combine(equipSet, equip_song_gear(spell), equipSet[spell.english])
 			info( '['..spell.english..'] Set')
-		-- Song Count for Minne and Paeon
-		elseif spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
+		-- Song Count
+		elseif SongCount:contains(spell.name) then
 			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
 			equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
@@ -1750,11 +1754,19 @@ function self_command(cmd)
 		end
 	-- This profile mode is used to load a Cureplease profile and at same time fire a script to set correct modes in your job file.  The file structure needs to be same for both.
 	elseif command:contains('profile') then
-		local mode = {}
-		mode = string.split(cmd," ",3)
-		info('Profile: ['..tostring(mode[3])..']')
-		windower.send_command('sm load '..mode[2]..'_'..mode[3]..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
-		windower.send_command('exec '..mode[2]..'/'..mode[3]..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		local modes = {}
+		for mode in string.gmatch(cmd, "(%w+)") do
+            table.insert(modes, mode)
+        end
+        local smModePath = table.concat(modes, '_', 2, #modes)
+		info('Profile: ['..smModePath ..']')
+		windower.send_command('sm load '..smModePath ..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		modes = {}
+		for mode in string.gmatch(cmd, "(%w+)") do
+            table.insert(modes, mode)
+        end
+        smModePath = table.concat(modes, '/', 2, #modes)
+		windower.send_command('exec '..smModePath..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 	elseif command == 'food' then
 	    windower.send_command('input /item "'..Food..'" <me>')
 	-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
