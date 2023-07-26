@@ -1485,7 +1485,7 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 			end
 		end
 		-- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-		if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
+		if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD then
 			add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 			cancel_spell()
 			return
@@ -1759,7 +1759,7 @@ function self_command(cmd)
             table.insert(modes, mode)
         end
         local smModePath = table.concat(modes, '_', 2, #modes)
-		info('Profile: ['..smModePath ..']')
+		info('Profile: ['..modes[#modes] ..']')
 		windower.send_command('sm load '..smModePath ..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		modes = {}
 		for mode in string.gmatch(cmd, "(%w+)") do
@@ -2066,6 +2066,7 @@ end
 
 -- Clear out the entire tagged mobs table when zoning.
 function on_zone_change_for_th(new_zone, old_zone)
+	Unlock ()
     if settings.debug then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
     th_info.tagged_mobs:clear()
 	-- Turn off for zones
