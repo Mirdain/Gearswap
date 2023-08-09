@@ -54,7 +54,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Sleep = {
-		range="Lorg Mor",
+		main="Lorg Mor",
 	}
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
@@ -170,6 +170,9 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
+	
+	});
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		main={ name="Idris", augments={'Path: A',}},
