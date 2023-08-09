@@ -75,7 +75,7 @@ state.AutoBuff:set('OFF')
 state.TreasureMode = M{['description']='Treasure Mode'}
 if player.main_job == "THF" then
 	state.TreasureMode:options('None','Tag','Fulltime','SATA')
-	state.TreasureMode:set('Tag')
+	state.TreasureMode:set('Fulltime')
 else
 	state.TreasureMode:options('None','Tag','Fulltime')
 	state.TreasureMode:set('None')
@@ -1423,7 +1423,7 @@ end
 
 function check_buff()
 	-- Auto Buff is on and not in a town
-	if state.AutoBuff.value == 'ON' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
+	if state.AutoBuff.value ~= 'OFF' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
 		command_JA = 'None'	
 		command_SP = 'None'
 		command_BP = 'None'
@@ -1485,7 +1485,7 @@ function do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 			end
 		end
 		-- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-		if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD then
+		if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
 			add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 			cancel_spell()
 			return
