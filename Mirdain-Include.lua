@@ -909,7 +909,6 @@ function midcastequip(spell)
 				if spell.name:contains('Refresh') then
 					info('Refresh Set - Others')
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
-				end
 				-- Enhancing SKill
 				elseif Enhancing_Skill:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
