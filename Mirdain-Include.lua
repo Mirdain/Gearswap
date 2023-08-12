@@ -240,7 +240,8 @@ Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thund
 Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water'}
 Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare','Pavor Nocturnus','Ultimate Terror','Somnolence','Slowga','Tidal Roar','Diamond Storm','Sleepga','Shock Squall'}
 Debuff_Rage_BPs = S{'Moonlit Charge','Tail Whip'}
-Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzard','Baraero','Barstonra','Barthundra','Barwatera'}
+Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'}
+Status_Bar = S{'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus', 'Barpetrify', 'Baramnesia'}
 Magic_BPs_NoTP = S{'Holy Mist','Nether Blast','Aerial Blast','Searing Light','Diamond Dust','Earthen Fury','Zantetsuken','Tidal Wave','Judgment Bolt','Inferno','Howling Moon','Ruinous Omen','Night Terror','Thunderspark'}
 Magic_BPs_TP = S{'Impact','Conflag Strike','Level ? Holy','Lunar Bay'}
 Merit_BPs = S{'Meteor Strike','Geocrush','Grand Fall','Wind Blade','Heavenly Strike','Thunderstorm'}
@@ -887,6 +888,9 @@ function midcastequip(spell)
 				elseif Elemental_Bar:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
 					info('Elemental Bar Set')
+				elseif Status_Bar:contains(spell.name) then 
+					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Status)
+					info('Status Bar Set')
 				-- Enhancing SKill
 				elseif Enhancing_Skill:contains(spell.name) then 
 					if buffactive['Accession'] then
@@ -906,10 +910,6 @@ function midcastequip(spell)
 					info('Refresh Set - Others')
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
 				end
-				-- Bar Spells
-				if Elemental_Bar:contains(spell.name) then 
-					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Enhancing.Elemental)
-					info('Elemental Bar Set - Others')
 				-- Enhancing SKill
 				elseif Enhancing_Skill:contains(spell.name) then 
 					equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
