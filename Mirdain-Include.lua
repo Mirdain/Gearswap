@@ -241,7 +241,7 @@ Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring 
 Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare','Pavor Nocturnus','Ultimate Terror','Somnolence','Slowga','Tidal Roar','Diamond Storm','Sleepga','Shock Squall'}
 Debuff_Rage_BPs = S{'Moonlit Charge','Tail Whip'}
 Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'}
-Status_Bar = S{'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus', 'Barpetrify', 'Baramnesia'}
+Status_Bar = S{'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'}
 Magic_BPs_NoTP = S{'Holy Mist','Nether Blast','Aerial Blast','Searing Light','Diamond Dust','Earthen Fury','Zantetsuken','Tidal Wave','Judgment Bolt','Inferno','Howling Moon','Ruinous Omen','Night Terror','Thunderspark'}
 Magic_BPs_TP = S{'Impact','Conflag Strike','Level ? Holy','Lunar Bay'}
 Merit_BPs = S{'Meteor Strike','Geocrush','Grand Fall','Wind Blade','Heavenly Strike','Thunderstorm'}
@@ -1759,7 +1759,7 @@ function self_command(cmd)
         end
         local smModePath = table.concat(modes, '_', 2, #modes)
 		info('Profile: ['..modes[#modes] ..']')
-		windower.send_command('sm load '..smModePath ..'_'..player.main_job..'_'..player.sub_job..'_'..player.name)
+		windower.send_command('sm load '..smModePath)
 		modes = {}
 		for mode in string.gmatch(cmd, "(%w+)") do
             table.insert(modes, mode)
