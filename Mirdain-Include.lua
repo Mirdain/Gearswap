@@ -674,8 +674,8 @@ function precastequip(spell)
 		-- NiTro Songs (Midcast Sets)
 		else 
 			info('Nitro Mode')
-			-- Song Count for Minne and Paeon
-			if spell.name == "Knight's Minne" or spell.name == "Knight's Minne II" or spell.name == "Army's Paeon" or spell.name == "Army's Paeon II" or spell.name == "Army's Paeon III" or spell.name == "Army's Paeon IV" then
+			-- Song Count for Dummy Songs
+			if SongCount:contains(spell.name) then
 				info( '['..spell.english..'] Set (Song Count - Daurdabla)')
 				equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
 			-- Equip Marsyas
