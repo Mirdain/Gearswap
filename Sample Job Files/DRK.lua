@@ -158,6 +158,32 @@ function get_sets()
 	sets.Midcast = set_combine(sets.Idle, {
 	
 	})
+
+	sets.Midcast.SIRD = {}
+
+	sets.Midcast.Enfeebling = set_combine(sets.Midcast, {
+	
+	})
+
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
+	
+	})
+
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
+	
+	})
+
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {
+	
+	})
+
+	sets.Midcast.Enfeebling.Drain = set_combine(sets.Midcast.Enfeebling, {
+	
+	})
+
+	sets.Midcast.Enfeebling.Aspir = set_combine(sets.Midcast.Enfeebling, {
+	
+	})
 	
 	--Job Abilities
 	sets.JA = {}
