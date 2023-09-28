@@ -81,7 +81,6 @@ function get_sets()
 	}
 
 	sets.OffenseMode = {
-	    main="Godhands",
 		ammo="Crepuscular Pebble",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -92,14 +91,14 @@ function get_sets()
 		waist="Moonbow Belt",
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		right_ear="Telos Earring",
-		left_ring="Gere Ring",
-		right_ring="Chirich Ring +1",
+		left_ring="Niqmaddu Ring",
+		right_ring="Gere Ring",
 		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
 	--Base TP set to build off
-	sets.OffenseMode.TP = set_combine (set.OffenseMode, {
-	    body={ name="Mpaca's Doublet", augments={'Path: A',}},
+	sets.OffenseMode.TP = set_combine (sets.OffenseMode, {
+
 	})
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
@@ -146,19 +145,11 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = set_combine(sets.TP, {
-	    ammo="Crepuscular Pebble",
 		head="Mpaca's Cap",
 		body={ name="Mpaca's Doublet", augments={'Path: A',}},
 		hands="Mpaca's Gloves",
 		legs="Mpaca's Hose",
 		feet="Mpaca's Boots",
-		neck="Combatant's Torque",
-		waist="Moonbow Belt",
-		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear="Ishvara Earring",
-		left_ring="Gere Ring",
-		right_ring="Epona's Ring",
-		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	})
 
 	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
