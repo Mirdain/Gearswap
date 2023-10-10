@@ -1297,32 +1297,30 @@ end
 
 function pet_change(pet,gain)
 	equipSet = {}
-	if player.main_job == 'SMN' or player.main_job == 'GEO' then
-		if gain == false and player.main_job == 'SMN' then
-			if not buffactive["Astral Conduit"] then
-				avatar = "None"
-				command_BP = 'None'
-			else
-				-- Avatar died during AFAC
-			end
+	if gain == false and player.main_job == 'SMN' then
+		if not buffactive["Astral Conduit"] then
+			avatar = "None"
+			command_BP = 'None'
 		else
-			avatar = pet.name
-			-- Default Offensive Blood Pacts
-			if pet.name=='Ifrit' then
-				command_BP = 'Flaming Crush'
-			elseif pet.name=='Siren' then
-				command_BP = 'Flaming Crush'
-			elseif pet.name=='Ramuh' then
-				command_BP = 'Volt Strike'
-			elseif pet.name=='Cait Sith' then
-				command_BP = 'Mewing Lulluby'
-			else
-				command_BP = 'None'
-			end
+			-- Avatar died during AFAC
 		end
-		equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
-		equip(equipSet)
+	else
+		avatar = pet.name
+		-- Default Offensive Blood Pacts
+		if pet.name=='Ifrit' then
+			command_BP = 'Flaming Crush'
+		elseif pet.name=='Siren' then
+			command_BP = 'Flaming Crush'
+		elseif pet.name=='Ramuh' then
+			command_BP = 'Volt Strike'
+		elseif pet.name=='Cait Sith' then
+			command_BP = 'Mewing Lulluby'
+		else
+			command_BP = 'None'
+		end
 	end
+	equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
+	equip(equipSet)
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1379,7 +1377,7 @@ function choose_set()
 		else
 			equipSet = set_combine(equipSet, sets.DualWield)
 		end
-		-- Check if TreasureMode is active
+		-- Check if TreasureMode is activew
 		if state.TreasureMode.value ~= 'None' then
 			-- Equip TH gear if mob is not marked as tagged
 			if not th_info.tagged_mobs[player.target.id] then
@@ -1624,7 +1622,6 @@ function self_command(cmd)
 	elseif command == "reset" then
 		state.Charmed.set("OFF")
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-		info('Charm Set Unequiped')
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the current player stances
 	elseif command:contains('modechange') then
@@ -1822,27 +1819,25 @@ end
 -- Determines correct gear for the songs
 function equip_song_gear(spell)
 	equipSet = {}
-	if spell.target.type == 'MONSTER' then
-		if string.find(spell.english,'Finale') then equipSet = sets.Midcast.Finale end
-		if string.find(spell.english,'Lullaby') then equipSet = sets.Midcast.Lullaby end
-		if string.find(spell.english,'Threnody') then equipSet = sets.Midcast.Threnody end
-		if string.find(spell.english,'Elegy') then equipSet = sets.Midcast.Elegy end
-		if string.find(spell.english,'Requiem') then equipSet = sets.Midcast.Requiem end
-	else
-		if string.find(spell.english,'March') then equipSet = sets.Midcast.March end
-		if string.find(spell.english,'Minuet') then equipSet = sets.Midcast.Minuet end
-		if string.find(spell.english,'Madrigal') then equipSet = sets.Midcast.Madrigal end
-		if string.find(spell.english,'Ballad') then equipSet = sets.Midcast.Ballad end
-		if string.find(spell.english,'Scherzo') then equipSet = sets.Midcast.Scherzo end
-		if string.find(spell.english,'Mazurka') then equipSet = sets.Midcast.Mazurka end
-		if string.find(spell.english,'Paeon') then equipSet = sets.Midcast.Paeon end
-		if string.find(spell.english,'Carol') then equipSet = sets.Midcast.Carol end
-		if string.find(spell.english,'Minne') then equipSet = sets.Midcast.Minne end
-		if string.find(spell.english,'Mambo') then equipSet = sets.Midcast.Mambo end
-		if string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude end
-		if string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude end
-		if string.find(spell.english,'Dirge') then equipSet = sets.Midcast.Dirge end
-		if string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente end
+	if string.find(spell.english,'Finale') then equipSet = sets.Midcast.Finale
+	elseif string.find(spell.english,'Lullaby') then equipSet = sets.Midcast.Lullaby
+	elseif string.find(spell.english,'Threnody') then equipSet = sets.Midcast.Threnody
+	elseif string.find(spell.english,'Elegy') then equipSet = sets.Midcast.Elegy
+	elseif string.find(spell.english,'Requiem') then equipSet = sets.Midcast.Requiem
+	elseif string.find(spell.english,'March') then equipSet = sets.Midcast.March
+	elseif string.find(spell.english,'Minuet') then equipSet = sets.Midcast.Minuet
+	elseif string.find(spell.english,'Madrigal') then equipSet = sets.Midcast.Madrigal
+	elseif string.find(spell.english,'Ballad') then equipSet = sets.Midcast.Ballad
+	elseif string.find(spell.english,'Scherzo') then equipSet = sets.Midcast.Scherzo
+	elseif string.find(spell.english,'Mazurka') then equipSet = sets.Midcast.Mazurka
+	elseif string.find(spell.english,'Paeon') then equipSet = sets.Midcast.Paeon
+	elseif string.find(spell.english,'Carol') then equipSet = sets.Midcast.Carol
+	elseif string.find(spell.english,'Minne') then equipSet = sets.Midcast.Minne
+	elseif string.find(spell.english,'Mambo') then equipSet = sets.Midcast.Mambo
+	elseif string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude
+	elseif string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude
+	elseif string.find(spell.english,'Dirge') then equipSet = sets.Midcast.Dirge
+	elseif string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente 
 	end
 	return equipSet
 end
@@ -1868,7 +1863,7 @@ function use_enchantment(item)
     enable(slot)
     equip({[slot]=item_table.en})
     disable(slot)
-    windower.send_command('wait '..item_table.cast_delay+3 ..';input /item "'..item_table.en..'" <me>;wait '..item_table.cast_time-.5 ..';gs enable '..slot)
+    windower.send_command('wait '..item_table.cast_delay + 3 ..';input /item "'..item_table.en..'" <me>;wait '..item_table.cast_time - .5 ..';gs enable '..slot)
 end
 
 --Future Hooks for PT chat or tells
