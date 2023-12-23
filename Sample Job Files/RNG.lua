@@ -28,7 +28,7 @@ state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Ranger
-state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Yoichinoyumi','Naegling', 'Tauret')
+state.WeaponMode:options('Fomalhaut','Annihilator','Gastraphetes','Fail-Not','Yoichinoyumi','Naegling', 'Tauret', 'Dolichenus')
 state.WeaponMode:set('Fomalhaut')
 
 --Enable JobMode for UI.
@@ -38,13 +38,11 @@ UI_Name = 'TP Mode'
 state.JobMode:options('Standard','Melee','Ranged')
 state.JobMode:set('Standard')
 
--- load addons
-send_command('lua l hovershot')
-
 --Set the ammo type for each WeaponMode (above) and Types: Bullet, Arrow, Bolt
 --This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
 Ranged_Weapons = {
 	{WeaponMode = "Naegling", Type = "Bullet"},
+	{WeaponMode = "Dolichenus", Type = "Arrow"},
 	{WeaponMode = "Fomalhaut", Type = "Bullet"},
 	{WeaponMode = "Annihilator", Type = "Bullet"},
 	{WeaponMode = "Fail-Not", Type = "Arrow"},
@@ -106,9 +104,15 @@ function get_sets()
 		range="Yoichinoyumi",
 	}
 
+	sets.Weapons['Dolichenus'] = {
+		main="Dolichenus",
+		sub="Crepuscular Knife",
+		range={ name="Fail-Not", augments={'Path: A',}},
+	}
+
 	sets.Weapons.Melee = {
 		main="Ternion Dagger +1",
-		sub="Kraken Club",
+		sub="Gleti's Knife",
 	}
 
 	sets.Weapons.Ranged = {
@@ -135,7 +139,7 @@ function get_sets()
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
 	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
-	Ammo.Arrow.WSD = "Chrono Arrow"			-- Physical Weaponskills (not consumed)
+	Ammo.Arrow.WSD = "Hauksbok Arrow"			-- Physical Weaponskills (not consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
@@ -280,7 +284,7 @@ function get_sets()
 	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
 		ammo=Ammo.RA,
 	    head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10
-		body="Amini Caban +2", -- 7% Velocity Shot
+		body="Amini Caban +3", -- 7% Velocity Shot
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8 / 11
 		legs="Orion Braccae +3", -- 15
 		feet={ name="Adhe. Gamashes +1", augments={'HP+65','"Store TP"+7','"Snapshot"+10',}, priority=4}, -- 10 / 13
@@ -391,10 +395,73 @@ function get_sets()
 	sets.JA["Unlimited Shot"] = {}
 	sets.JA["Velocity Shot"] = {}
 	sets.JA["Double Shot"] = {} -- Midcast.RA.Double Shot set
-	sets.JA["Bounty Shot"] = { ammo= Ammo.RA, hands="Amini Glove. +2",} -- Upgrade to TH4
+	sets.JA["Bounty Shot"] = { ammo= Ammo.RA, hands="Amini Glove. +3",} -- Upgrade to TH4
 	sets.JA["Decoy Shot"] = {}
 	sets.JA["Overkill"] = {}
 	sets.JA["Hover Shot"] = {}
+
+
+	-- Dancer JA Section
+
+	-------------------------------------------------------------------------------
+	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
+	-------------------------------------------------------------------------------
+	sets.Flourish = set_combine(sets.Idle.DT, {})
+
+	-- Flourishes I : Monster Control																	
+	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
+	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
+	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
+
+	-- Flourishes II : Skillchain Enhancers																			
+	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
+	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
+	sets.Flourish["Wild Flourish"] = set_combine(sets.Flourish, { })									-- Readies target for Skillchain
+					
+	-- Flourishes III : Weapon Skill Buffs
+	sets.Flourish["Climactic Flourish"] = set_combine(sets.Flourish, { })								-- Forces Critical Hit(s) on the next attack(s) 
+	sets.Flourish["Striking Flourish"] = set_combine(sets.Flourish, { })								-- Forces a Double Attack on the next swing 
+	sets.Flourish["Ternary Flourish"] = set_combine(sets.Flourish, { })									-- Forces a Triple Attack on the next swing
+
+	-------------------------------------------------------------------------------
+	----------- Jigs duration can be increased using various equipment. ----------- 
+	-------------------------------------------------------------------------------
+	sets.Jig = set_combine(sets.Idle.DT, { })
+
+	sets.Jig["Spectral Jig"] = sets.Jig
+	sets.Jig["Chocobo Jig"] = sets.Jig
+
+	-------------------------------------------------------------------------------
+	----- Step Accuracy depends on your melee hit rate (including your normal -----
+	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
+	-- bonus, which can be further enhanced through various pieces of equipment, -- 
+	----------------------------- merits, and Presto. -----------------------------
+	-------------------------------------------------------------------------------
+
+	sets.Step = set_combine(sets.Idle.DT, {})
+	
+	sets.JA["Quickstep"] = sets.Step
+	sets.JA["Box Step"] = sets.Step
+	sets.JA["Stutter Step"] = sets.Step
+	sets.JA["Feather Step"] = sets.Step
+
+	sets.Samba = set_combine(sets.Idle.DT, {})
+
+	sets.Samba["Haste Samba"] = {}
+    sets.Samba["Drain Samba"] = {}
+    sets.Samba["Drain Samba II"] = {}
+	sets.Samba["Aspir Samba"] = {}
+
+	-------------------------------------------------------------------------------
+	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
+	-------------------------------------------------------------------------------
+	sets.Waltz = set_combine(sets.Idle.DT, {})
+
+	sets.Waltz["Curing Waltz"] = sets.Waltz
+	sets.Waltz["Curing Waltz II"] = sets.Waltz
+	sets.Waltz["Curing Waltz III"] = sets.Waltz
+	sets.Waltz["Divine Waltz"] = sets.Waltz
+	sets.Waltz["Healing Waltz"] = sets.Waltz
 
 	-- Base Weapon Skill set
 	sets.WS = {
@@ -411,17 +478,18 @@ function get_sets()
 	-- Weapon Skill Damage
 	sets.WS.WSD = set_combine(sets.WS, {
 		ammo=Ammo.WSD,
-		head="Orion Beret +3",
-		body="Ikenga's Vest",
-		hands="Meg. Gloves +2",
-		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
-		feet="Ikenga's Clogs",
+		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Fotia Belt",
 		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Epaminondas's Ring",
-		right_ring="Regal Ring",
+		left_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
@@ -572,7 +640,7 @@ end
 
 -- Function is called whn lua is unloaded
 function user_file_unload()
-	send_command('lua u hovershot')
+
 end
 
 function check_buff_JA()
