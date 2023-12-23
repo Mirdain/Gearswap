@@ -416,12 +416,6 @@ function get_sets()
 	-- Flourishes II : Skillchain Enhancers																			
 	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
 	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
-	sets.Flourish["Wild Flourish"] = set_combine(sets.Flourish, { })									-- Readies target for Skillchain
-					
-	-- Flourishes III : Weapon Skill Buffs
-	sets.Flourish["Climactic Flourish"] = set_combine(sets.Flourish, { })								-- Forces Critical Hit(s) on the next attack(s) 
-	sets.Flourish["Striking Flourish"] = set_combine(sets.Flourish, { })								-- Forces a Double Attack on the next swing 
-	sets.Flourish["Ternary Flourish"] = set_combine(sets.Flourish, { })									-- Forces a Triple Attack on the next swing
 
 	-------------------------------------------------------------------------------
 	----------- Jigs duration can be increased using various equipment. ----------- 
@@ -443,7 +437,6 @@ function get_sets()
 	sets.JA["Quickstep"] = sets.Step
 	sets.JA["Box Step"] = sets.Step
 	sets.JA["Stutter Step"] = sets.Step
-	sets.JA["Feather Step"] = sets.Step
 
 	sets.Samba = set_combine(sets.Idle.DT, {})
 
