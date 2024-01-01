@@ -62,8 +62,8 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear="Eabani Earring",
 		right_ear="Sanare Earring",
-		left_ring={ name="Moonlight Ring", bag="wardrobe3"},
-		right_ring={ name="Moonlight Ring", bag="wardrobe4"},
+		left_ring="Purity Ring",
+		right_ring="Defending Ring",
 		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 
@@ -178,6 +178,76 @@ function get_sets()
 	sets.JA["Bully"] = {}
 	sets.JA["Larceny"] = {}
 
+	-- Dancer JA Section
+
+	-------------------------------------------------------------------------------
+	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
+	-------------------------------------------------------------------------------
+	sets.Flourish = set_combine(sets.Idle.DT, {})
+
+	-- Flourishes I : Monster Control																	
+	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
+	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
+	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
+
+	-- Flourishes II : Skillchain Enhancers																			
+	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
+	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
+
+	-------------------------------------------------------------------------------
+	----------- Jigs duration can be increased using various equipment. ----------- 
+	-------------------------------------------------------------------------------
+	sets.Jig = set_combine(sets.Idle.DT, { })
+
+	sets.Jig["Spectral Jig"] = sets.Jig
+	sets.Jig["Chocobo Jig"] = sets.Jig
+
+	-------------------------------------------------------------------------------
+	----- Step Accuracy depends on your melee hit rate (including your normal -----
+	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
+	-- bonus, which can be further enhanced through various pieces of equipment, -- 
+	----------------------------- merits, and Presto. -----------------------------
+	-------------------------------------------------------------------------------
+
+	sets.Step = set_combine(sets.OffenseMode.DT, {})
+	
+	sets.JA["Quickstep"] = sets.Step
+	sets.JA["Box Step"] = sets.Step
+	sets.JA["Stutter Step"] = sets.Step
+
+	sets.Samba = set_combine(sets.Idle.DT, {})
+
+	sets.Samba["Haste Samba"] = set_combine(sets.Idle, {})
+    sets.Samba["Drain Samba"] = {}
+    sets.Samba["Drain Samba II"] = {}
+	sets.Samba["Aspir Samba"] = {}
+
+	-------------------------------------------------------------------------------
+	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
+	-------------------------------------------------------------------------------
+	sets.Waltz = set_combine(sets.OffenseMode.DT, {
+		ammo="Yamarang", -- 5%
+		head="Malignance Chapeau",
+		body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10%
+		hands="Slither Gloves +1", -- 5%
+		legs="Dashing Subligar", -- 10%
+		feet="Malignance Boots",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
+		left_ear="Eabani Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ring="Defending Ring",
+		left_ring="Moonlight Ring",
+		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}) -- 30% Potency
+
+	sets.Waltz["Curing Waltz"] = sets.Waltz
+	sets.Waltz["Curing Waltz II"] = sets.Waltz
+	sets.Waltz["Curing Waltz III"] = sets.Waltz
+	sets.Waltz["Divine Waltz"] = sets.Waltz
+	sets.Waltz["Healing Waltz"] = sets.Waltz
+
+
 	--Default WS set base
 	sets.WS = {
 		ammo="Yetshila +1",
@@ -204,7 +274,7 @@ function get_sets()
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Karieyh Ring +1",
-		right_ring="Epaminondas's Ring",
+		right_ring="Cornelia's Ring",
 		back={ name="Toutatis's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 	--WS Sets
