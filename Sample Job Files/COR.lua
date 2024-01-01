@@ -41,7 +41,7 @@ state.JobMode:set('Standard')
 elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
 -- load addons
-send_command('lua l autocor')
+--send_command('lua l autocor')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -368,6 +368,78 @@ function get_sets()
 		right_ring="Luzaf's Ring", -- 16 yalm range
 	}
 
+	-- Dancer JA Section
+
+	-------------------------------------------------------------------------------
+	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
+	-------------------------------------------------------------------------------
+	sets.Flourish = set_combine(sets.Idle.DT, {})
+
+	-- Flourishes I : Monster Control																	
+	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
+	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
+	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
+
+	-- Flourishes II : Skillchain Enhancers																			
+	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
+	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
+
+	-------------------------------------------------------------------------------
+	----------- Jigs duration can be increased using various equipment. ----------- 
+	-------------------------------------------------------------------------------
+	sets.Jig = set_combine(sets.Idle.DT, { })
+
+	sets.Jig["Spectral Jig"] = sets.Jig
+	sets.Jig["Chocobo Jig"] = sets.Jig
+
+	-------------------------------------------------------------------------------
+	----- Step Accuracy depends on your melee hit rate (including your normal -----
+	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
+	-- bonus, which can be further enhanced through various pieces of equipment, -- 
+	----------------------------- merits, and Presto. -----------------------------
+	-------------------------------------------------------------------------------
+
+	sets.Step = set_combine(sets.OffenseMode.DT, {})
+	
+	sets.JA["Quickstep"] = sets.Step
+	sets.JA["Box Step"] = sets.Step
+	sets.JA["Stutter Step"] = sets.Step
+
+	sets.Samba = set_combine(sets.Idle.DT, {})
+
+	sets.Samba["Haste Samba"] = {}
+    sets.Samba["Drain Samba"] = {}
+    sets.Samba["Drain Samba II"] = {}
+	sets.Samba["Aspir Samba"] = {}
+
+	-------------------------------------------------------------------------------
+	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
+	-------------------------------------------------------------------------------
+	sets.Waltz = set_combine(sets.OffenseMode.DT, {
+		ammo="Yamarang", -- 5
+		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
+		hands="Slither Gloves +1", -- 5
+		legs="Dashing Subligar", -- 10
+	}) -- 30% Potency
+
+	sets.Waltz["Curing Waltz"] = sets.Waltz
+	sets.Waltz["Curing Waltz II"] = sets.Waltz
+	sets.Waltz["Curing Waltz III"] = sets.Waltz
+	sets.Waltz["Divine Waltz"] = sets.Waltz
+	sets.Waltz["Healing Waltz"] = sets.Waltz
+
+	--Base Set used for all rolls
+	sets.PhantomRoll = set_combine(sets.Idle, {
+		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
+		sub={ name="Nusku Shield", priority=2},
+		range="Compensator", -- 20 sec Duration
+		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
+		hands="Chasseur's Gants +3", --60 sec Duration
+		neck="Regal Necklace", -- 20 sec Duration
+		right_ring="Luzaf's Ring", -- 16 yalm range
+		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 30 sec Duration
+	})
+
 	--Base Set used for all rolls
 	sets.PhantomRoll = set_combine(sets.Idle, {
 		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
@@ -422,7 +494,7 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
-		left_ring="Regal Ring",
+		left_ring="Cornelia's Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
@@ -459,7 +531,6 @@ function get_sets()
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
 		right_ear="Crematio Earring",
-		left_ring="Dingir Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
@@ -584,7 +655,7 @@ function self_command_custom(command)
 end
 
 function user_file_unload()
-	send_command('lua u autocor')
+	--send_command('lua u autocor')
 end
 
 function check_buff_JA()
