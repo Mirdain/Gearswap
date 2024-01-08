@@ -281,9 +281,6 @@ function get_sets()
 	
 	})
 
-	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
-	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
-
 	-- Quick Draw Gear Sets
 	sets.QuickDraw = {}
 
@@ -370,75 +367,20 @@ function get_sets()
 
 	-- Dancer JA Section
 
-	-------------------------------------------------------------------------------
-	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
-	-------------------------------------------------------------------------------
 	sets.Flourish = set_combine(sets.Idle.DT, {})
 
-	-- Flourishes I : Monster Control																	
-	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
-	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
-	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
-
-	-- Flourishes II : Skillchain Enhancers																			
-	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
-	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
-
-	-------------------------------------------------------------------------------
-	----------- Jigs duration can be increased using various equipment. ----------- 
-	-------------------------------------------------------------------------------
 	sets.Jig = set_combine(sets.Idle.DT, { })
 
-	sets.Jig["Spectral Jig"] = sets.Jig
-	sets.Jig["Chocobo Jig"] = sets.Jig
-
-	-------------------------------------------------------------------------------
-	----- Step Accuracy depends on your melee hit rate (including your normal -----
-	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
-	-- bonus, which can be further enhanced through various pieces of equipment, -- 
-	----------------------------- merits, and Presto. -----------------------------
-	-------------------------------------------------------------------------------
-
 	sets.Step = set_combine(sets.OffenseMode.DT, {})
-	
-	sets.JA["Quickstep"] = sets.Step
-	sets.JA["Box Step"] = sets.Step
-	sets.JA["Stutter Step"] = sets.Step
 
 	sets.Samba = set_combine(sets.Idle.DT, {})
 
-	sets.Samba["Haste Samba"] = {}
-    sets.Samba["Drain Samba"] = {}
-    sets.Samba["Drain Samba II"] = {}
-	sets.Samba["Aspir Samba"] = {}
-
-	-------------------------------------------------------------------------------
-	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
-	-------------------------------------------------------------------------------
 	sets.Waltz = set_combine(sets.OffenseMode.DT, {
 		ammo="Yamarang", -- 5
 		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
 		hands="Slither Gloves +1", -- 5
 		legs="Dashing Subligar", -- 10
 	}) -- 30% Potency
-
-	sets.Waltz["Curing Waltz"] = sets.Waltz
-	sets.Waltz["Curing Waltz II"] = sets.Waltz
-	sets.Waltz["Curing Waltz III"] = sets.Waltz
-	sets.Waltz["Divine Waltz"] = sets.Waltz
-	sets.Waltz["Healing Waltz"] = sets.Waltz
-
-	--Base Set used for all rolls
-	sets.PhantomRoll = set_combine(sets.Idle, {
-		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
-		sub={ name="Nusku Shield", priority=2},
-		range="Compensator", -- 20 sec Duration
-		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
-		hands="Chasseur's Gants +3", --60 sec Duration
-		neck="Regal Necklace", -- 20 sec Duration
-		right_ring="Luzaf's Ring", -- 16 yalm range
-		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 30 sec Duration
-	})
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = set_combine(sets.Idle, {
@@ -596,8 +538,8 @@ end
 
 --Adjust custom precast actions
 function pretarget_custom(spell,action)
-
 end
+
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
@@ -619,8 +561,6 @@ function midcast_custom(spell)
 	if spell.id == 123 or spell.type == 'CorsairRoll' then -- Double up and bypass weapon check
 		equipSet = set_combine(equipSet, sets.PhantomRoll)
 	end
-
-
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -651,7 +591,6 @@ end
 
 --Function is called when a self command is issued
 function self_command_custom(command)
-
 end
 
 function user_file_unload()
@@ -675,7 +614,6 @@ end
 
 function check_buff_SP()
 	buff = 'None'
-	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
 

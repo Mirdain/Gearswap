@@ -15,7 +15,7 @@ Lockstyle_List = {1,2,6,12}
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "14"
 MacroBook = "2"  -- Sub Job macro pallets can be defined in the sub_job_change_custom function below
-MacroSet = "1"
+MacroSet = "12"
 
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
@@ -403,58 +403,20 @@ function get_sets()
 
 	-- Dancer JA Section
 
-	-------------------------------------------------------------------------------
-	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
-	-------------------------------------------------------------------------------
 	sets.Flourish = set_combine(sets.Idle.DT, {})
 
-	-- Flourishes I : Monster Control																	
-	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
-	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
-	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
-
-	-- Flourishes II : Skillchain Enhancers																			
-	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
-	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
-
-	-------------------------------------------------------------------------------
-	----------- Jigs duration can be increased using various equipment. ----------- 
-	-------------------------------------------------------------------------------
 	sets.Jig = set_combine(sets.Idle.DT, { })
 
-	sets.Jig["Spectral Jig"] = sets.Jig
-	sets.Jig["Chocobo Jig"] = sets.Jig
-
-	-------------------------------------------------------------------------------
-	----- Step Accuracy depends on your melee hit rate (including your normal -----
-	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
-	-- bonus, which can be further enhanced through various pieces of equipment, -- 
-	----------------------------- merits, and Presto. -----------------------------
-	-------------------------------------------------------------------------------
-
-	sets.Step = set_combine(sets.Idle.DT, {})
-	
-	sets.JA["Quickstep"] = sets.Step
-	sets.JA["Box Step"] = sets.Step
-	sets.JA["Stutter Step"] = sets.Step
+	sets.Step = set_combine(sets.OffenseMode.DT, {})
 
 	sets.Samba = set_combine(sets.Idle.DT, {})
 
-	sets.Samba["Haste Samba"] = {}
-    sets.Samba["Drain Samba"] = {}
-    sets.Samba["Drain Samba II"] = {}
-	sets.Samba["Aspir Samba"] = {}
-
-	-------------------------------------------------------------------------------
-	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
-	-------------------------------------------------------------------------------
-	sets.Waltz = set_combine(sets.Idle.DT, {})
-
-	sets.Waltz["Curing Waltz"] = sets.Waltz
-	sets.Waltz["Curing Waltz II"] = sets.Waltz
-	sets.Waltz["Curing Waltz III"] = sets.Waltz
-	sets.Waltz["Divine Waltz"] = sets.Waltz
-	sets.Waltz["Healing Waltz"] = sets.Waltz
+	sets.Waltz = set_combine(sets.OffenseMode.DT, {
+		ammo="Yamarang", -- 5
+		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
+		hands="Slither Gloves +1", -- 5
+		legs="Dashing Subligar", -- 10
+	}) -- 30% Potency
 
 	-- Base Weapon Skill set
 	sets.WS = {
