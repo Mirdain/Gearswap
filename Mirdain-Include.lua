@@ -218,7 +218,7 @@ Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','D
 Storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
 
-Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'}
+Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'}
 Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 'Banish', 'Banish II', 'Banish III', 'Banishga', 'Banishga II',}
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
@@ -257,7 +257,8 @@ indicolure = M('Indi-Acumen', 'Indi-Attunement', 'Indi-Barrier', 'Indi-STR', 'In
              'Indi-Poison', 'Indi-Precision', 'Indi-Refresh', 'Indi-Regen', 'Indi-Slip', 'Indi-Slow', 'Indi-Torpor', 'Indi-Vex', 'Indi-Voidance', 'Indi-Wilt')
 
 areas = {}
-elemental_ws = S{}
+
+Elemental_WS = S{}
 
 -- City areas for town gear and behavior.
 areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Port Windurst","Windurst Waters","Windurst Woods","Windurst Walls","Heavens Tower","Port San d'Oria","Northern San d'Oria",
@@ -471,46 +472,132 @@ function precastequip(spell)
 	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
 		equipSet = sets.WS
-		if equipSet[spell.english] then		
-			equipSet = set_combine(equipSet, equipSet[spell.english])
-			if state.OffenseMode.value == 'ACC' then
-				--Augments the WS set built for ACC
-				info( '['..spell.english..'] Set with Accuracy')
-				equipSet = set_combine(equipSet, sets.WS.ACC)
-			elseif state.OffenseMode.value == 'PDL' then
-				--Augments the WS set for PDL
-				--info('Type of WS is ['..spell.skill..']')
-				if spell.skill == "Marksmanship" or spell.skill == "Archery" then
-					info( '['..spell.english..'] Set with Physical Damage Limit (Ranged)')
-					equipSet = set_combine(equipSet, sets.WS.PDL.RA)
+		local message = ''
+		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
+			if equipSet[spell.english] then	
+				-- Set is defined
+				equipSet = set_combine(equipSet, sets.WS.RA)
+				equipSet = set_combine(equipSet, equipSet[spell.english])
+				-- Augment the specified WS
+				if state.OffenseMode.value == 'ACC' then
+					equipSet = set_combine(equipSet, sets.WS.RA.ACC)
+					message = '['..spell.english..'] Set with Accuracy (Ranged)'
+				elseif state.OffenseMode.value == 'PDL' then
+					equipSet = set_combine(equipSet, sets.WS.RA.PDL)
+					message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
+				elseif state.OffenseMode.value == 'SB' then
+					equipSet = set_combine(equipSet, sets.WS.RA.RA)
+					message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
+				elseif state.OffenseMode.value == 'CRIT' then
+					equipSet = set_combine(equipSet, sets.WS.RA.CRIT)
+					message = '['..spell.english..'] Set with Critical Hit (Ranged)'
 				else
-					info( '['..spell.english..'] Set with Physical Damage Limit')
-					equipSet = set_combine(equipSet, sets.WS.PDL)
+					message = '['..spell.english..'] Set'
 				end
-			elseif state.OffenseMode.value == 'SB' then
-				--Augments the WS set for PDL
-				info( '['..spell.english..'] Set with Subtle Blow')
-				equipSet = set_combine(equipSet, sets.WS.SB)
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
+				end
 			else
-				info( '['..spell.english..'] Set')
+				-- Generic
+				equipSet = set_combine(equipSet, sets.WS.RA)
+				if state.OffenseMode.value == 'ACC' then
+					equipSet = set_combine(equipSet, sets.WS.RA.ACC)
+					message = 'Using Default WS Set with Accuracy (Ranged)'
+				elseif state.OffenseMode.value == 'PDL' then
+					equipSet = set_combine(equipSet, sets.WS.RA.PDL)
+					message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
+				elseif state.OffenseMode.value == 'SB' then
+					equipSet = set_combine(equipSet, sets.WS.RA.SB)
+					message = 'Using Default WS Set with Subtle Blow (Ranged)'
+				elseif state.OffenseMode.value == 'CRIT' then
+					equipSet = set_combine(equipSet, sets.WS.RA.CRIT)
+					message = 'Using Default WS Set with Critical Hit (Ranged)'
+				else
+					message = 'Using Default WS Set (Ranged)'
+				end
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 3 (Ranged)'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 2 (Ranged)'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 1 (Ranged)'
+				end
 			end
 		else
-			if state.OffenseMode.value == 'ACC' then
-				info('Using Default WS Set with Accuracy')
-				equipSet = set_combine(equipSet, sets.WS.ACC)
-			elseif state.OffenseMode.value == 'PDL' and state.JobMode.value ~= 'Ranged' then
-				info('Using Default WS Set with Physical Damage Limit')
-				equipSet = set_combine(equipSet, sets.WS.PDL)
-			elseif state.OffenseMode.value == 'PDL' and state.JobMode.value == 'Ranged' then
-				info('Using Default WS Set with Physical Damage Limit (Ranged)')
-				equipSet = set_combine(equipSet, sets.WS.PDL.RA)
-			elseif state.OffenseMode.value == 'SB' then
-				info('Using Default WS Set with Subtle Blow')
-				equipSet = set_combine(equipSet, sets.WS.SB)
+			if equipSet[spell.english] then	
+				-- Set is defined
+				equipSet = set_combine(equipSet, equipSet[spell.english])
+				-- Augment the specified WS
+				if state.OffenseMode.value == 'ACC' then
+					equipSet = set_combine(equipSet, sets.WS.ACC)
+					message = '['..spell.english..'] Set with Accuracy'
+				elseif state.OffenseMode.value == 'PDL' then
+					equipSet = set_combine(equipSet, sets.WS.PDL)
+					message = '['..spell.english..'] Set with Physical Damage Limit'
+				elseif state.OffenseMode.value == 'SB' then
+					equipSet = set_combine(equipSet, sets.WS.SB)
+					message = '['..spell.english..'] Set with Subtle Blow'
+				elseif state.OffenseMode.value == 'CRIT' then
+					equipSet = set_combine(equipSet, sets.WS.CRIT)
+					message = '['..spell.english..'] Set with Critical Hit'
+				else
+					message = '['..spell.english..'] Set'
+				end
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 3'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM2[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 2'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath 1'
+				end
 			else
-				info('Using Default WS Set')
+				-- Generic
+				equipSet = set_combine(equipSet, sets.WS)
+				if state.OffenseMode.value == 'ACC' then
+					equipSet = set_combine(equipSet, sets.WS.ACC)
+					message = 'Using Default WS Set with Accuracy'
+				elseif state.OffenseMode.value == 'PDL' then
+					equipSet = set_combine(equipSet, sets.WS.PDL)
+					message = 'Using Default WS Set with Physical Damage Limit'
+				elseif state.OffenseMode.value == 'SB' then
+					equipSet = set_combine(equipSet, sets.WS.SB)
+					message = 'Using Default WS Set with Subtle Blow'
+				elseif state.OffenseMode.value == 'CRIT' then
+					equipSet = set_combine(equipSet, sets.WS.CRIT)
+					message = 'Using Default WS Set with Critical Hit'
+				else
+					message = 'Using Default WS Set'
+				end
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 3'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM2[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 2'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath 1'
+				end
 			end
 		end
+		info(message)
 		-- Check if an Obi or Orpheus is to be Equiped
 		equipSet = Elemental_check(equipSet, spell)
 	-- Ranged attack
@@ -520,10 +607,6 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
 		elseif buffactive[581] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
-		end
-		if state.OffenseMode.value == 'ACC' then
-			--Augments the set built for ACC
-			equipSet = set_combine(equipSet, sets.Precast.RA.ACC)
 		end
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
@@ -586,7 +669,7 @@ function precastequip(spell)
 		else
 			equipSet = set_combine(equipSet, sets.Precast.FastCast)
 			if spell.skill == 'Enhancing Magic' then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+				equipSet = set_combine(equipSet, sets.Precast.Enhancing)
 			end
 		end
 	-- BlackMagic
@@ -620,7 +703,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			info('Waltz not set for ['..spell.english..']')
+			info('Using Default Waltz Set')
 		end
 	-- Jig
 	elseif spell.type == 'Jig' then
@@ -629,7 +712,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			info('Jig not set for ['..spell.english..']')
+			info('Using Default Jig Set')
 		end
 	-- Samba
 	elseif spell.type == 'Samba' then
@@ -638,7 +721,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			info('Samba not set for ['..spell.english..']')
+			info('Using Default Samba Set')
 		end
 	-- Step
 	elseif spell.type == 'Step' then
@@ -647,7 +730,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			info('Step not set for ['..spell.english..']')
+			info('Using Default Step Set')
 		end
 	-- Flourishes
 	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
@@ -656,7 +739,7 @@ function precastequip(spell)
 			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			info('Flourish not set for ['..spell.english..']')
+			info('Using Default Flourish Set')
 		end
 	-- BardSong
 	elseif spell.type == 'BardSong' then
@@ -733,7 +816,7 @@ function precastequip(spell)
 		end
 	end
 	-- Check that proper ammo is available if the action requires it
-	if spell.skill == "Marksmanship" or spell.skill == "Archery" or spell.action_type == 'Ranged Attack' then
+	if spell.skill == "Marksmanship" or spell.skill == "Archery" then
 		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
 			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 		end
@@ -785,27 +868,40 @@ function midcastequip(spell)
 	--Default gearset
 	equipSet = {}
 	if spell.action_type == 'Ranged Attack' then
-		equipSet = sets.Midcast.RA
+		equipSet = set_combine(sets.Midcast, sets.Midcast.RA)
+		-- Augment the specified WS
 		if state.OffenseMode.value == 'ACC' then
-			--Augments the RA set built for ACC
 			equipSet = set_combine(equipSet, sets.Midcast.RA.ACC)
+			message = 'Ranged Attack with Accuracy '
 		elseif state.OffenseMode.value == 'PDL' then
-			--Augments the RA set built for PDL
 			equipSet = set_combine(equipSet, sets.Midcast.RA.PDL)
+			message = 'Ranged Attack with Physical Damage Limit'
+		elseif state.OffenseMode.value == 'SB' then
+			equipSet = set_combine(equipSet, sets.Midcast.RA.SB)
+			message = 'Ranged Attack with Subtle Blow'
 		elseif state.OffenseMode.value == 'CRIT' then
-			--Augments the RA set built for CRIT
 			equipSet = set_combine(equipSet, sets.Midcast.RA.CRIT)
+			message = 'Ranged Attack with Critical Hit'
+		else
+			message = 'Ranged Attack Set'
 		end
+		-- Buffs
 		if buffactive['Triple Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
-			info('Using Triple Shot Set')
+			message = 'Using Triple Shot Set'
 		elseif buffactive['Double Shot'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.DoubleShot)
-			info('Using Double Shot Set')
+			message = 'Using Double Shot Set'
 		elseif buffactive['Barrage'] then 
 			equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
-			info('[Barrage] Set')
+			message = 'Using Barrage Set'
 		end
+		-- Check for AM3
+		if buffactive[272] and am3_WS:contains(spell.name) then
+			equipSet = set_combine(equipSet, sets.WS.RA.AM3)
+			message = 'Ranged Attack with Aftermath (Ranged)'
+		end
+		info(message)
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Midcast
@@ -1369,7 +1465,8 @@ function choose_set()
 	log('Choose Set Ran')
 	-- Combat Checks
 	if player.status == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+		equipSet = set_combine(equipSet, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+
 		if DualWield == false then
 			if TwoHand == false then
 				equipSet = set_combine(equipSet, sets.Weapons.Shield)
@@ -1377,6 +1474,16 @@ function choose_set()
 		else
 			equipSet = set_combine(equipSet, sets.DualWield)
 		end
+
+		-- Check if AM3 is active
+		if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.OffenseMode.AM3[state.WeaponMode.value])
+		elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
+		elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
+		end
+
 		-- Check if TreasureMode is activew
 		if state.TreasureMode.value ~= 'None' then
 			-- Equip TH gear if mob is not marked as tagged
@@ -1390,6 +1497,7 @@ function choose_set()
 				equipSet = set_combine(equipSet, sets.TreasureHunter)
 			end
 		end
+
 	-- Idle sets
 	else
 		-- Weapon Checks
@@ -1624,8 +1732,8 @@ function self_command(cmd)
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 		equip(set_combine(choose_set(),choose_set_custom()))
 	-- Toggles the current player stances
-	elseif command:contains('modechange') then
-		if command == 'modechange' then
+	elseif command:contains('offensemode') then
+		if command == 'offensemode' then
 			for i,v in ipairs(state.OffenseMode) do
 				if state.OffenseMode.value == v then
 					if state.OffenseMode.value ~= state.OffenseMode[#state.OffenseMode] then
@@ -1946,12 +2054,12 @@ function jobsetup(LockStylePallet,MacroBook,MacroSet)
 	send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
 	';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 
-	send_command('bind f12 gs c ModeChange')
+	send_command('bind f12 gs c OffenseMode')
 	send_command('bind f11 gs c TH')
 	send_command('bind f10 gs c AutoBuff')
 	send_command('bind f9 gs c WeaponMode')
-	send_command('bind ^f12 gs c jobmode')
-	send_command('bind ^f11 gs c jobmode2')
+	send_command('bind ^f12 gs c JobMode')
+	send_command('bind ^f11 gs c JobMode2')
 
 	local maxWidth = 40
 	windower.add_to_chat(8,'Stance - '..string.format('[%s]','F12'))
@@ -2402,7 +2510,7 @@ end
 
 function Elemental_check(equipSet, spell)
 	-- This function swaps in the Orpheus or Hachirin as needed
-	if elemental_ws:contains(spell.name) and spell.type == 'WeaponSkill' or spell.type == 'BlackMagic' then
+	if Elemental_WS:contains(spell.name) and spell.type == 'WeaponSkill' or spell.type == 'BlackMagic' then
 		-- Matching double weather (w/o day conflict).
 		if spell.element == world.weather_element and world.weather_intensity == 2 then
 			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
