@@ -604,7 +604,7 @@ function precastequip(spell)
 					equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 1'
 				elseif buffactive['Aftermath'] and sets.WS.AM[state.WeaponMode.value] then
-					equipSet = set_combine(equipSet, sets.WS.AM.[state.WeaponMode.value])
+					equipSet = set_combine(equipSet, sets.WS.AM[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath'
 				end
 			end
