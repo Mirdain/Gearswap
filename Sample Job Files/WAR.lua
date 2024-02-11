@@ -152,13 +152,21 @@ function get_sets()
 	sets.OffenseMode.CRIT = {}
 
 	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
-	sets.OffenseMode.AM1 = {}
-	sets.OffenseMode.AM2 = {}
-	sets.OffenseMode.AM3 = {}
+	--If you don't specify a weapon mode it will use it regardless of Mythic,Empy,Relic,Aeonic
 
+	sets.OffenseMode.AM = {}  -- This is for Relic AM only
+	sets.OffenseMode.AM1 = {} -- All AM1 Types
+	sets.OffenseMode.AM2 = {} -- All AM2 Types
+	sets.OffenseMode.AM3 = {} -- All AM3 Types
+
+	-- This is how you specify a Weapon Mode AM set by Weapon Mode (examples)
+	sets.OffenseMode.AM['Bravura'] = {}
 	sets.OffenseMode.AM1['Ukonvasara'] = {}
 	sets.OffenseMode.AM2['Ukonvasara'] = {}
 	sets.OffenseMode.AM3['Ukonvasara'] = {}
+	sets.OffenseMode.AM3['Farsha'] = {}
+	sets.OffenseMode.AM1['Conqueror'] = {}
+	sets.OffenseMode.AM2['Laphria'] = {}
 
 	sets.DualWield = {
 		waist="Reiki Yotai",
@@ -321,16 +329,16 @@ function get_sets()
 	sets.WS.PDL.RA = {}
 
 	--These set are used when a weaponskill is used with that level of aftermath with the correct weapon
-	--They Augment any built weaponskill set
+	--They Augment any built weaponskill set - Same formatting as the OffenseModes
+	sets.WS.AM = {}
 	sets.WS.AM1 = {}
 	sets.WS.AM2 = {}
 	sets.WS.AM3 = {}
-
 	sets.WS.AM1['Ukonvasara'] = {}
 	sets.WS.AM2['Ukonvasara'] = {}
 	sets.WS.AM3['Ukonvasara'] = {}
 
-	-- Set these
+	sets.WS.AM.RA = {}
 	sets.WS.AM1.RA = {}
 	sets.WS.AM2.RA = {}
 	sets.WS.AM3.RA = {}
