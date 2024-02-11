@@ -504,6 +504,9 @@ function precastequip(spell)
 				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
+				elseif buffactive['Aftermath'] and sets.WS.AM.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath (Ranged)'
 				end
 			else
 				-- Generic
@@ -533,6 +536,9 @@ function precastequip(spell)
 				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 1 (Ranged)'
+				elseif buffactive['Aftermath'] and sets.WS.AM.RA[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath (Ranged)'
 				end
 			end
 		else
@@ -565,6 +571,9 @@ function precastequip(spell)
 				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath 1'
+				elseif buffactive['Aftermath'] and sets.WS.AM[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM[state.WeaponMode.value])
+					message = '['..spell.english..'] Set with Aftermath'
 				end
 			else
 				-- Generic
@@ -594,6 +603,9 @@ function precastequip(spell)
 				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 1'
+				elseif buffactive['Aftermath'] and sets.WS.AM[state.WeaponMode.value] then
+					equipSet = set_combine(equipSet, sets.WS.AM.[state.WeaponMode.value])
+					message = 'Using Default WS Set with Aftermath'
 				end
 			end
 		end
@@ -1482,6 +1494,8 @@ function choose_set()
 			equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
 		elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1[state.WeaponMode.value] then
 			equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
+		elseif buffactive['Aftermath'] and sets.OffenseMode.AM[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.OffenseMode.AM[state.WeaponMode.value])
 		end
 
 		-- Check if TreasureMode is activew
