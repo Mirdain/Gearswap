@@ -1,4 +1,3 @@
-
 --Mirdain
 
 -- Load and initialize the include file.
@@ -21,17 +20,24 @@ Random_Lockstyle = false
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
+-- This determines if a WS set is augmented with a sash
+Elemental_WS = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blade', 'Burning Blade', 'Sanguine Blade', 'Energy Drain','Energy Steal','Cyclone','Gust Slash'}
+
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','PDL','ACC','DT','PDT','MEVA','CRIT')
+
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
 
 --Weapons options
-state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge')
+state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge', 'Ukonvasara','Unlocked')
 state.WeaponMode:set('Chango')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
+
 	-- Weapon setup
 	sets.Weapons = {}
 
@@ -55,12 +61,21 @@ function get_sets()
 		main={ name="Ternion Dagger +1", augments={'Path: A',}},
 		sub="Naegling",
 	}
+	sets.Weapons['Ukonvasara'] = {
+		main={ name="Chango", augments={'Path: A',}},
+		sub="Utu Grip",
+	}
+	-- This stops GS from chaning weapons (Abyssea Proc etc)
+	sets.Weapons['Unlocked'] ={
+		main={ name="Chango", augments={'Path: A',}},
+		sub="Utu Grip",
+	}
 	-- This is used when you do not have dual wield and is not a two handed weapon
 	sets.Weapons.Shield = {
 		sub="Blurred Shield +1",
 	}
 
-	-- Standard Idle set with -DT, Refresh, Regen and movement gear
+	-- Base set for when the player is not engaged or casting.  Other sets build off this set
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
 		head="Sakpata's Helm",
@@ -76,6 +91,10 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
+
+	sets.Idle.DT = {}
+	sets.Idle.PDT = {}
+	sets.Idle.MEVA = {}
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -94,6 +113,7 @@ function get_sets()
 	--28% Job Trait
 	--5% Merits
 
+	-- Sets the base equipset for OffenseMode
 	sets.OffenseMode = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
@@ -110,36 +130,49 @@ function get_sets()
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {
+	sets.OffenseMode.TP = {}
 
-	})
-
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
+	sets.OffenseMode.DT = {
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets",
 		legs="Sakpata's Cuisses",
 		feet="Sakpata's Leggings",
-	})
+	}
 
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT, {
+	sets.OffenseMode.PDL = {
 		ammo="Crepuscular Pebble",
 		right_ring="Sroda Ring",
-	})
+	}
 
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
+	--This set is used when OffenseMode is ACC and Enaged
+	sets.OffenseMode.ACC = {}
 
-	})
+	--This set is used when OffenseMode is CRIT and Engaged
+	sets.OffenseMode.CRIT = {}
+
+	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
+	sets.OffenseMode.AM1 = {}
+	sets.OffenseMode.AM2 = {}
+	sets.OffenseMode.AM3 = {}
+
+	sets.OffenseMode.AM1['Ukonvasara'] = {}
+	sets.OffenseMode.AM2['Ukonvasara'] = {}
+	sets.OffenseMode.AM3['Ukonvasara'] = {}
 
 	sets.DualWield = {
 		waist="Reiki Yotai",
 		right_ear="Eabani Earring",
 	}
 
-	sets.Precast = set_combine(sets.Idle, {
-	
-	})
+	sets.Precast = set_combine(sets.Idle, {})
+
+	-- For Cure Cast Time reduction
+	sets.Precast.Cure = {}
+
+	-- For Enhancing Cast Time reduction
+	sets.Precast.Enhancing = {}
+
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb", --2
@@ -152,6 +185,9 @@ function get_sets()
 		left_ring="Prolix Ring", -- 2
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
 	} --44%
+
+	-- For instant casts (Like Raises/Reraise)
+	sets.Precast.QuickMagic = {}
 
 	sets.Precast.Enmity = {
 		ammo="Sapience Orb", -- 2
@@ -167,10 +203,17 @@ function get_sets()
 		right_ring="Eihwaz Ring", --5
 	} --91
 
+	sets.Precast['Utsusemi: Ichi'] = {}
+	sets.Precast['Utsusemi: Ni'] = {}
+
+	-- Ranged Attack
+	sets.Precast.RA = {}
+    sets.Precast.RA.ACC = {}
+	sets.Precast.RA.Flurry = {}
+	sets.Precast.RA.Flurry_II = {}
+
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
@@ -180,16 +223,46 @@ function get_sets()
 		left_ear="Magnetic Earring", --8
 		waist="Audumbla Sash", --10
 	}
-	-- Cure Set
-	sets.Midcast.Cure = {}
-	-- Enhancing Skill
+
+	-- Enhancing
 	sets.Midcast.Enhancing = {}
-	-- High MACC for landing spells
+	sets.Midcast.Enhancing.Others = {}
+	
+	-- Enfeebling
 	sets.Midcast.Enfeebling = {}
+	-- Skill Based ('Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga')
+	sets.Midcast.Enfeebling.MACC = {}
+	-- Potency Basted ('Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II')
+	sets.Midcast.Enfeebling.Potency = {}
+	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga', 'Bind', 'Bind II')
+	sets.Midcast.Enfeebling.Duration = {}
+
+	-- Ranged Attack Gear (Normal Midshot)
+    sets.Midcast.RA = {}
+    sets.Midcast.RA.ACC = {}
+    sets.Midcast.RA.PDL = {}
+	sets.Midcast.RA.CRIT = {}
+	sets.Midcast.RA.AM3 = {}
+
+	-- Healing
+	sets.Midcast.Cure = {}
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {})
+	sets.Midcast.Regen = {}
+
+	-- Dancer JA
+	sets.Flourish = set_combine(sets.Idle.DT, {})
+	sets.Jig = set_combine(sets.Idle.DT, {})
+	sets.Step = set_combine(sets.OffenseMode.DT, {})
+	sets.Waltz = set_combine(sets.OffenseMode.DT, {})
+
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
 	}
+	sets.Midcast['Utsusemi: Ichi'] = {}
+	sets.Midcast['Utsusemi: Ni'] = {}
+
+	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Mighty Strikes"] = {}
 	sets.JA["Berserk"] = {body="Pumm. Lorica +3"}
@@ -197,7 +270,7 @@ function get_sets()
 	sets.JA["Defender"] = {}
 	sets.JA["Aggressor"] = {}
 	sets.JA["Provoke"] = sets.Precast.Enmity
-	sets.JA["Tomahawk"] = {}
+	sets.JA["Tomahawk"] = {ammo="Thr. Tomahawk",} -- Need to add feet
 	sets.JA["Retaliation"] = {}
 	sets.JA["Restraint"] = {}
 	sets.JA["Blood Rage"] = {}
@@ -214,22 +287,14 @@ function get_sets()
 		neck={ name="War. Beads +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Thrud Earring",
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Epaminondas's Ring",
-		right_ring="Karieyh Ring +1",
+		right_ear="Boii Earring +1",
+		left_ring="Karieyh Ring +1",
+		right_ring="Cornelia's Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}}
 	}
+	sets.WS.RA = {}
 
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = set_combine(sets.WS, {
-
-	})
-
-	sets.WS.WSD = set_combine(sets.WS, {
-
-	})
-
-	sets.WS.CRIT = set_combine(sets.WS, {
+	sets.WS.CRIT = {
 		ammo="Yetshila +1",
 		head={ name="Blistering Sallet +1", augments={'Path: A',}},
 		body="Hjarrandi Breast.",
@@ -240,7 +305,38 @@ function get_sets()
 		left_ring="Niqmaddu Ring",
 		right_ring="Sroda Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	})
+	}
+	sets.WS.CRIT.RA = {}
+
+	sets.WS.WSD = {}
+	sets.WS.WSD.RA = {}
+
+	sets.WS.ACC = {}
+	sets.WS.ACC.RA = {}
+
+	sets.WS.SB = {}
+	sets.WS.SB.RA = {}
+
+	sets.WS.PDL = {}
+	sets.WS.PDL.RA = {}
+
+	--These set are used when a weaponskill is used with that level of aftermath with the correct weapon
+	--They Augment any built weaponskill set
+	sets.WS.AM1 = {}
+	sets.WS.AM2 = {}
+	sets.WS.AM3 = {}
+
+	sets.WS.AM1['Ukonvasara'] = {}
+	sets.WS.AM2['Ukonvasara'] = {}
+	sets.WS.AM3['Ukonvasara'] = {}
+
+	-- Set these
+	sets.WS.AM1.RA = {}
+	sets.WS.AM2.RA = {}
+	sets.WS.AM3.RA = {}
+	sets.WS.AM1.RA['Ukonvasara'] = {}
+	sets.WS.AM2.RA['Ukonvasara'] = {}
+	sets.WS.AM3.RA['Ukonvasara'] = {}
 
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}
@@ -269,12 +365,13 @@ function get_sets()
 	sets.WS["Sanguine Blade"] = {}
 	sets.WS["Requiescat"] = {}
 
+	--Polearm
 	sets.WS["Impulse Drive"] = sets.WS.CRIT
 
 	sets.TreasureHunter = {
-	    head={ name="Valorous Mask", augments={'"Dbl.Atk."+1','"Occult Acumen"+8','"Treasure Hunter"+1','Accuracy+18 Attack+18',}},
-	    hands={ name="Valorous Mitts", augments={'MND+8','Pet: Accuracy+15 Pet: Rng. Acc.+15','"Treasure Hunter"+2','Mag. Acc.+13 "Mag.Atk.Bns."+13',}},
+		ammo="Per. Lucky Egg",
 		waist="Chaac Belt",
+		body="Volte Jupon",
 	}
 
 end
