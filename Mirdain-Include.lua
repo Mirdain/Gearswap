@@ -495,16 +495,16 @@ function precastequip(spell)
 					message = '['..spell.english..'] Set'
 				end
 				-- Check if Aftermath is active
-				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
-				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
-				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
-				elseif buffactive['Aftermath'] and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath (Ranged)'
 				end
@@ -527,16 +527,16 @@ function precastequip(spell)
 					message = 'Using Default WS Set (Ranged)'
 				end
 				-- Check if Aftermath is active
-				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 3 (Ranged)'
-				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 2 (Ranged)'
-				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath 1 (Ranged)'
-				elseif buffactive['Aftermath'] and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
+				elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
 					message = 'Using Default WS Set with Aftermath (Ranged)'
 				end
