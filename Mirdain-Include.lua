@@ -908,11 +908,22 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
 			message = 'Using Barrage Set'
 		end
-		-- Check for AM3
-		if buffactive[272] and am3_WS:contains(spell.name) then
-			equipSet = set_combine(equipSet, sets.WS.RA.AM3)
-			message = 'Ranged Attack with Aftermath (Ranged)'
+
+		-- Check if Aftermath is active
+		if buffactive['Aftermath: Lv.3'] and sets.Midcast.AM3 and sets.Midcast.AM3.RA and sets.Midcast.AM3.RA[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.Midcast.AM3.RA[state.WeaponMode.value])
+			message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
+		elseif buffactive['Aftermath: Lv.2'] and sets.Midcast.AM2 and sets.Midcast.AM2.RA and sets.Midcast.AM2.RA[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.Midcast.AM2.RA[state.WeaponMode.value])
+			message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
+		elseif buffactive['Aftermath: Lv.1'] and sets.Midcast.AM1 and sets.Midcast.AM1.RA and sets.Midcast.AM1.RA[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.Midcast.AM1.RA[state.WeaponMode.value])
+			message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
+		elseif buffactive['Aftermath'] and sets.Midcast.AM and sets.Midcast.AM.RA and sets.Midcast.AM.RA[state.WeaponMode.value] then
+			equipSet = set_combine(equipSet, sets.Midcast.AM.RA[state.WeaponMode.value])
+			message = '['..spell.english..'] Set with Aftermath (Ranged)'
 		end
+
 		info(message)
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
