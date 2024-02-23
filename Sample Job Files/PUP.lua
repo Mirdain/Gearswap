@@ -44,16 +44,20 @@ function get_sets()
 
 	sets.Weapons['God Hands'] = {
 		main="Godhands",
+		range={ name="Neo Animator", augments={'Path: A',}},
+		ammo="Automat. Oil +3",
 	}
 
 	sets.Weapons['Club'] = {
-		main="Warp Cudgel",
+
+	}
+
+	sets.Weapons['Pole'] = {
+
 	}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
-	    main="Godhands",
-		ammo="Crepuscular Pebble",
 		head="Nyame Helm",
 		body="Nyame Mail",
 		hands="Nyame Gauntlets",
@@ -67,6 +71,9 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
+
+	sets.Idle.Pet = {}
+
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Hermes' Sandals",
@@ -81,16 +88,15 @@ function get_sets()
 	}
 
 	sets.OffenseMode = {
-		ammo="Crepuscular Pebble",
 		head="Malignance Chapeau",
-		body="Malignance Tabard",
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
 		hands="Malignance Gloves",
-		legs="Malignance Tights",
+		legs="Mpaca's Hose",
 		feet="Malignance Boots",
 		neck="Combatant's Torque",
-		waist="Moonbow Belt",
-		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear="Telos Earring",
+		waist="Moonbow Belt +1",
+		left_ear="Mache Earring +1",
+		right_ear={ name="Kara. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','"Store TP"+4',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
 		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
@@ -116,41 +122,61 @@ function get_sets()
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 50% in either I or II
-	sets.OffenseMode.SB = {
-
-	}
+	sets.OffenseMode.SB = {}
 
 	sets.Precast = {}
+
 	-- Used for Magic Spells
-	sets.Precast.FastCast = {
+	sets.Precast.FastCast = {}
 
-	}
-
-	sets.Precast.Enmity = {
-
-	}
+	sets.Precast.Enmity = {}
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
 
+	sets.Pet_Midcast = {}
+	sets.Pet_Midcast['Bone Crusher'] = {}
+
+	-- Job Abilities
 	sets.JA = {}
+	sets.JA['Overdrive'] = set_combine(sets.Idle, {})
+	sets.JA['Activate'] = set_combine(sets.Idle, {})
+	sets.JA['Repair'] = set_combine(sets.Idle, {})
+	sets.JA['Role Reversal'] = set_combine(sets.Idle, {})
+	sets.JA['Ventriloquy'] = set_combine(sets.Idle, {})
+	sets.JA['Tactical Switch'] = set_combine(sets.Idle, {})
+	sets.JA['Cooldown'] = set_combine(sets.Idle, {})
+	sets.JA['Deus Ex Automata'] = set_combine(sets.Idle, {})
+	sets.JA['Maintenance'] = set_combine(sets.Idle, {})
+	sets.JA['Heady Artifice'] = set_combine(sets.Idle, {})
+
+	-- Pet commands
+	sets.JA['Deploy'] = set_combine(sets.Idle, {})
+	sets.JA['Deactivate'] = set_combine(sets.Idle, {})
+	sets.JA['Retrieve'] = set_combine(sets.Idle, {})
+	sets.JA.Maneuver = set_combine(sets.Idle, {})
+
 	sets.JA["Berserk"] = {}
 	sets.JA["Warcry"] = {}
 	sets.JA["Defender"] = {}
 	sets.JA["Aggressor"] = {}
 	sets.JA["Provoke"] = sets.Precast.Enmity
 
-
 	--Default WS set base
-	sets.WS = set_combine(sets.TP, {
+	sets.WS = {
 		head="Mpaca's Cap",
 		body={ name="Mpaca's Doublet", augments={'Path: A',}},
 		hands="Mpaca's Gloves",
 		legs="Mpaca's Hose",
 		feet="Mpaca's Boots",
-	})
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Moonbow Belt +1",
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
+		right_ear={ name="Kara. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','"Store TP"+4',}},
+		left_ring="Regal Ring",
+		right_ring="Niqmaddu Ring",
+		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}
 
 	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
 
@@ -174,7 +200,6 @@ function get_sets()
 	sets.WS["Tornado Kick"] = set_combine(sets.WS,{})
 	sets.WS["Victory Smite"] = set_combine(sets.WS,{})
 	sets.WS["Shijin Spiral"] = set_combine(sets.WS,{})
-	sets.Charm =  set_combine(sets.OffenseMode.DT, {})
 
 	sets.TreasureHunter = {
 
@@ -198,7 +223,9 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-
+	if spell.name:contains('Maneuver') then
+		equipSet = sets.JA.Maneuver
+	end
 	return equipSet
 end
 -- Augment basic equipment sets
