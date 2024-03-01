@@ -61,6 +61,18 @@ Ammo_Warning_Limit = 99
 -- Required gear set.  Expand this in the job file when defining sets.
 sets.TreasureHunter = {}
 
+-- Default gearsets. Expand this in the job file when defining sets.
+sets.WS = {}
+sets.JA = {}
+sets.PhantomRoll = {}
+sets.QuickDraw = {}
+sets.Precast = {}
+sets.Waltz = {}
+sets.Jig = {}
+sets.Samba = {}
+sets.Step = {}
+sets.Flourish = {}
+
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
 state.OffenseMode:options('TP','ACC','DT','PDL')
