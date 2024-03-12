@@ -5,8 +5,8 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "11"
-MacroBook = "12"
+LockStylePallet = "20"
+MacroBook = "20"
 MacroSet = "1"
 
 -- Use "gs c food" to use the specified food item 
@@ -21,8 +21,11 @@ Random_Lockstyle = false
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
+
 --Set default mode (TP,ACC,DT)
-state.OffenseMode:set('TP')
+state.OffenseMode:set('DT')
 
 -- Set to true to run organizer on job changes
 Organizer = false
@@ -99,13 +102,30 @@ function get_sets()
 
 	sets.OffenseMode = {}
 	-- Base TP set
-	sets.OffenseMode.TP = {}
+	sets.OffenseMode.TP = {
+
+	}
 	-- Set to use when Dual Wielding
 	sets.OffenseMode.TP.DW = {}
 	-- TP set when in -Damage Taken mode
 	sets.OffenseMode.DT = {}
 	-- TP set to use when mode is in accuracy
 	sets.OffenseMode.ACC = {}
+	--This set is used when OffenseMode is PDL and Enaged
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
+		head="Azimuth Hood +3",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet="Azimuth Gaiters +3",
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+		left_ear="Crep. Earring",
+		right_ear="Telos Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+	})
 
 	-- Precast Sets
 	sets.Precast = {}
@@ -198,15 +218,15 @@ function get_sets()
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="Ea Hat +1",
 		body="Ea Houppe. +1",
-		hands={ name="Agwu's Gages", augments={'Path: A',}},
+		hands="Azimuth Gloves +3",
 		legs="Azimuth Tights +3",
-		feet="Agwu's Pigaches",
+		feet="Azimuth Gaiters +3",
 		neck="Mizu. Kubikazari",
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Regal Earring",
 		right_ear="Malignance Earring",
 		left_ring="Freke Ring",
-		right_ring="Jhakri Ring",
+		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 	-- Used for Burst Mode
@@ -280,6 +300,8 @@ function get_sets()
 		feet="Azimuth Gaiters +3", -- 11/11
 	})
 
+	sets.Pet_Midcast = {}
+
 	-- Will be used to keep max HP of Luopan when casting spells but switches when below 70% to the Idle.Pet set.
 	sets.Luopan = {
 		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
@@ -316,7 +338,21 @@ function get_sets()
 	sets.JA["Entrust"] = {}
 
 	-- Base WS set
-	sets.WS = {}
+	sets.WS = {
+	    range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Telos Earring",
+		left_ring="Epaminondas's Ring",
+		right_ring="Cornelia's Ring",
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 	-- Set to equip when charmed
@@ -446,6 +482,6 @@ end
 Cycle_Time = 5
 function Cycle_Timer()
 	if player.status == "Idle" then
-		equip(set_combine(choose_set(),choose_set_custom()))
+		--equip(set_combine(choose_set(),choose_set_custom()))
 	end
 end
