@@ -100,6 +100,9 @@ function get_sets()
 	-- Ammo Selection
 	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills
+	Ammo.Bullet.CRIT = "Chrono Bullet"		-- Critical Hit Mode
+	Ammo.Bullet.PDL = "Chrono Bullet"		-- Physical Damage Mode
+	Ammo.Bullet.SB = "Chrono Bullet"		-- Subtle Blow Mode
 	Ammo.Bullet.MAB = "Living Bullet"		-- Magical Weaponskills
 	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
 	Ammo.Bullet.QD = "Hauksbok Bullet"		-- Quick Draw
@@ -241,13 +244,13 @@ function get_sets()
 		ammo=Ammo.Bullet.RA,
 		head="Ikenga's Hat",
 		body="Ikenga's Vest",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		hands="Ikenga's Gloves",
+		legs="Ikenga's Trousers",
+		feet="Ikenga's Clogs",
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
-		right_ear="Crep. Earring",
+		right_ear="Chas. Earring +1",
 		left_ring="Ilabrat Ring",
 		right_ring="Crepuscular Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
@@ -269,12 +272,11 @@ function get_sets()
 
 	-- Ranged CRIT
 	sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-		left_ring="Sroda Ring",
-		head="Ikenga's Hat",
-		body="Ikenga's Vest",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		head="Meghanada Visor +2",
+		body="Nisroch Jerkin",
+		feet="Osh. Leggings +1",
+		waist="K. Kachina Belt +1",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
     })
 
 	sets.Utsusemi = set_combine(sets.Idle, {
@@ -425,6 +427,7 @@ function get_sets()
     sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +3"})
     sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +3"})
 
+	-- Melee Base set
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
 		head={ name="Nyame Helm", augments={'Path: B',}},
@@ -441,31 +444,31 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	-- Ranged Base Set
 	sets.WS.RA = set_combine (sets.WS, {
 		body="Laksa. Frac +3",
 		hands="Chasseur's Gants +3",
-		left_ring="Regal Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	-- Accuracy set used in OffenseMode.ACC
-	sets.WS.ACC = set_combine(sets.WS, {
-	})
+	sets.WS.ACC = set_combine(sets.WS, { })
+	sets.WS.ACC.RA = set_combine(sets.WS.RA, { })
 
 	-- Equipment to augment the Melee WS for Physical Damage Limit (Capped Attack)
 	sets.WS.PDL = set_combine(sets.WS, {
 		left_ring="Sroda Ring",
 	})
-
-	-- Equipment to augment the Ranged WS for Physical Damage Limit (Capped Attack)
-	sets.WS.PDL.RA = set_combine(sets.WS, {
+	sets.WS.PDL.RA = set_combine(sets.WS.RA, {
 		left_ring="Sroda Ring",
 		head="Ikenga's Hat",
-		body="Ikenga's Vest",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		legs="Ikenga's Trousers",
+		feet="Ikenga's Clogs",
 	})
+
+	-- Critical Hit set used in OffenseMode.SB
+	sets.WS.CRIT = set_combine(sets.WS, { })
+	sets.WS.CRIT.RA = set_combine(sets.WS.RA, { })
 
 	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.Bullet.MAB,
@@ -477,11 +480,11 @@ function get_sets()
 	})
 
 	sets.WS.MACC = set_combine(sets.WS.MAB, {
-		ammo=Ammo.Bullet.MACC,
+
 	})
 
 	sets.WS.WSD = set_combine(sets.WS, {
-		ammo=Ammo.Bullet.WS,
+
 	})
 
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
@@ -623,6 +626,11 @@ function Job_Mode_Check(equipSet)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
 	end
+	if DualWield == false then
+		if TwoHand == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
+	end
 	return equipSet
 end
 
@@ -631,6 +639,11 @@ function PDL_Type_Check()
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	end
+	if DualWield == false then
+		if TwoHand == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
 	end
 	return equipSet
 end
