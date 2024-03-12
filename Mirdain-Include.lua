@@ -486,22 +486,21 @@ function precastequip(spell)
 		equipSet = sets.WS
 		local message = ''
 		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
+			-- Set is defined
 			if equipSet[spell.english] then	
-				-- Set is defined
-				equipSet = set_combine(equipSet, sets.WS.RA)
 				equipSet = set_combine(equipSet, equipSet[spell.english])
 				-- Augment the specified WS
 				if state.OffenseMode.value == 'ACC' then
-					equipSet = set_combine(equipSet, sets.WS.RA.ACC)
+					equipSet = set_combine(equipSet, sets.WS.ACC.RA)
 					message = '['..spell.english..'] Set with Accuracy (Ranged)'
 				elseif state.OffenseMode.value == 'PDL' then
-					equipSet = set_combine(equipSet, sets.WS.RA.PDL)
+					equipSet = set_combine(equipSet, sets.WS.PDL.RA)
 					message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
 				elseif state.OffenseMode.value == 'SB' then
-					equipSet = set_combine(equipSet, sets.WS.RA.RA)
+					equipSet = set_combine(equipSet, sets.WS.SB.RA)
 					message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
 				elseif state.OffenseMode.value == 'CRIT' then
-					equipSet = set_combine(equipSet, sets.WS.RA.CRIT)
+					equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
 					message = '['..spell.english..'] Set with Critical Hit (Ranged)'
 				else
 					message = '['..spell.english..'] Set'
@@ -522,18 +521,17 @@ function precastequip(spell)
 				end
 			else
 				-- Generic
-				equipSet = set_combine(equipSet, sets.WS.RA)
 				if state.OffenseMode.value == 'ACC' then
-					equipSet = set_combine(equipSet, sets.WS.RA.ACC)
+					equipSet = set_combine(equipSet, sets.WS.ACC.RA)
 					message = 'Using Default WS Set with Accuracy (Ranged)'
 				elseif state.OffenseMode.value == 'PDL' then
-					equipSet = set_combine(equipSet, sets.WS.RA.PDL)
+					equipSet = set_combine(equipSet, sets.WS.PDL.RA)
 					message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
 				elseif state.OffenseMode.value == 'SB' then
-					equipSet = set_combine(equipSet, sets.WS.RA.SB)
+					equipSet = set_combine(equipSet, sets.WS.SB.RA)
 					message = 'Using Default WS Set with Subtle Blow (Ranged)'
 				elseif state.OffenseMode.value == 'CRIT' then
-					equipSet = set_combine(equipSet, sets.WS.RA.CRIT)
+					equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
 					message = 'Using Default WS Set with Critical Hit (Ranged)'
 				else
 					message = 'Using Default WS Set (Ranged)'
