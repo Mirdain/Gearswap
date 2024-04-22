@@ -52,7 +52,6 @@ function get_sets()
 	}
 
 	sets.Weapons['Unlocked'] = {
-		main="Idris",
 		sub="Genmei Shield",
 	}
 
@@ -62,6 +61,7 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
+		main="Daybreak",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head="Azimuth Hood +3", -- 11/11
 		body="Azimuth Coat +3",
@@ -274,7 +274,8 @@ function get_sets()
 	}
 	-- Indi Duration
 	sets.Geomancy = {}
-		sets.Geomancy.Indi = {
+
+	sets.Geomancy.Indi = {
 		main={ name="Idris", augments={'Path: A',}},
 		sub="Genmei Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
@@ -291,9 +292,11 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
+
 	sets.Geomancy.Indi.Entrust = set_combine(sets.Geomancy.Indi, {
 
 	})
+
 	-- Geo Potency
 	sets.Geomancy.Geo = set_combine( sets.Geomancy.Indi, {
 		legs={ name="Nyame Flanchard", augments={'Path: B',}}, -- 8/8
