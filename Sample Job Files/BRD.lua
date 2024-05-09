@@ -13,7 +13,7 @@ MacroSet = "1"
 Food = "Tropical Crepe"
 
 --Modes for specific to bard
-state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Kraken Mode')
+state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Kraken Mode','Staff')
 state.WeaponMode:set('Mordant Rime')
 
 elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
@@ -61,6 +61,11 @@ function get_sets()
 		sub={ name="Fusetto +2", augments={'TP Bonus +1000',}},
 	}
 
+	sets.Weapons['Staff'] = {
+		main="Xoanon",
+		sub="Alber Strap",
+	}
+
 	sets.Weapons['Eviceration'] = {
 		main='Tauret',
 		sub="Crepuscular Knife",
@@ -95,10 +100,10 @@ function get_sets()
 	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
 	Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
 	Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
-	Instrument.MAB = {  name="Linos", augments={'Mag. Acc.+10 "Mag.Atk.Bns."+10','Weapon skill damage +3%','INT+8',} }
+	Instrument.MAB = {  name="Linos", augments={'Mag.Atk.Bns."+15','Weapon skill damage +3%','INT+8',} }
 
 	-- HP/MP Balancing Goal
-	-- HP: 2200 MP: 550
+	-- HP: 2200 MP: 550 
 
 	-- Standard Idle set
 	sets.Idle = {
@@ -365,37 +370,27 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Ishvara Earring",
 		right_ear="Regal Earring",
-		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		left_ring="Cornelia's Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	-- Equipment to augment the Melee WS for Physical Damage Limit (Capped Attack)
 	sets.WS.PDL = set_combine(sets.WS, {
-		left_ring="Sroda Ring",
+		right_ring="Sroda Ring",
 	})
 
 	--The following sets augment the WS base set
 	sets.WS.WSD = set_combine(sets.WS, {
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		left_ring="Rufescent Ring",
-		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	sets.WS.MAB = set_combine(sets.WS, {
 		range=Instrument.MAB,
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Regal Earring",
-		left_ring="Shiva Ring +1",
-		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
@@ -413,7 +408,7 @@ function get_sets()
 	})
 
 	sets.WS["Savage Blade"] =  set_combine(sets.WS.WSD, {
-		left_ring="Sroda Ring",
+		right_ring="Sroda Ring",
 	})
 
 	sets.WS["Mordant Rime"] = set_combine(sets.WS, {
@@ -423,9 +418,6 @@ function get_sets()
 	sets.WS["Eviceration"] = sets.WS.CRIT
 
 	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
-	    head="Nyame Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
 	})
 
 	sets.WS["Burning Blade"] = sets.WS.MAB
@@ -434,6 +426,10 @@ function get_sets()
 	})
 	sets.WS["Shining Strike"] = set_combine( sets.WS.MAB, {
 		right_ring="Weather. Ring",
+	})
+
+	sets.WS["Shell Crusher"] = set_combine( sets.WS.WSD, {
+		right_ring="Sroda Ring",
 	})
 
 	sets.Charm = set_combine( sets.Idle, {

@@ -18,6 +18,9 @@ AutoItem = false
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
 
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
+
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
@@ -34,15 +37,15 @@ BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','B
 BlueTank = S{}
 
 --Weapons specific to Blue Mage
-state.WeaponMode:options('Almace','Naegling','Cleave')
-state.WeaponMode:set('Cleave')
+state.WeaponMode:options('Almace','Naegling','Black Halo','Cleave')
+state.WeaponMode:set('Black Halo')
 
 --Enable JobMode for UI
 UI_Name = 'Mode'
 
 --Modes for specific to Blue Mage
 state.JobMode:options('AoE','Melee')
-state.JobMode:set('AoE')
+state.JobMode:set('Melee')
 
 function get_sets()
 
@@ -60,6 +63,11 @@ function get_sets()
 		main="Naegling",
 		sub="Zantetsuken",
 		--sub={ name="Machaera +2", augments={'TP Bonus +1000',}},
+	}
+
+	sets.Weapons['Black Halo'] = {
+	    main="Maxentius",
+		sub="Bunzi's Rod",
 	}
 
 	sets.Weapons['Cleave'] = {
@@ -85,7 +93,7 @@ function get_sets()
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Stikini Ring +1",
-		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 
 	sets.Movement = {
@@ -103,19 +111,18 @@ function get_sets()
 	sets.OffenseMode = {}
 
 	sets.OffenseMode.TP = {
-		ammo="Ginsen",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet="Malignance Boots",
-		neck="Lissome Necklace",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
 		left_ear="Crep. Earring",
 		right_ear="Telos Earring",
 		left_ring="Epona's Ring",
-		right_ring="Chirich Ring +1",
-		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2",},
+		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
 	sets.OffenseMode.DT = set_combine ( sets.OffenseMode.TP, {
@@ -124,10 +131,28 @@ function get_sets()
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
+		left_ring="Defending Ring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	})
 
 	sets.OffenseMode.ACC = set_combine ( sets.OffenseMode.DT,{
 	
+	})
+
+	sets.OffenseMode.PDL = set_combine ( sets.OffenseMode.DT,{
+	
+	})
+
+	sets.OffenseMode.MEVA = set_combine ( sets.OffenseMode.DT,{
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		neck="Warder's Charm +1",
+	})
+
+	sets.OffenseMode.SB = set_combine ( sets.OffenseMode.TP,{
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
 	})
 
 	sets.DualWield = {
@@ -163,6 +188,20 @@ function get_sets()
 	sets.JA["Efflux"] = {}
 	sets.JA["Unbridled Learning"] = {}
 	sets.JA["Unbridled Wisdom"] = {}
+
+	-- Dancer JA Section
+
+	sets.Flourish = set_combine(sets.Idle.DT, {})
+	sets.Jig = set_combine(sets.Idle.DT, { })
+	sets.Step = set_combine(sets.OffenseMode.DT, {})
+	sets.Samba = set_combine(sets.Idle.DT, {})
+	sets.Waltz = set_combine(sets.OffenseMode.DT, {
+		ammo="Yamarang", -- 5
+		body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
+		hands="Slither Gloves +1", -- 5
+		legs="Dashing Subligar", -- 10
+	}) -- 30% Potency
+
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
@@ -270,17 +309,33 @@ function get_sets()
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck="Fotia Gorget",
-		waist="Fotia Belt",
+		neck={ name="Mirage Stole +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Odr Earring",
-		left_ring="Epona's Ring",
-		right_ring="Epaminondas's Ring",
-		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		right_ear="Ishvara Earring",
+		left_ring="Epaminondas's Ring",
+		right_ring="Cornelia's Ring",
+		back={ name="Rosmerta's Cape", augments={'MND+20','Accuracy+20 Attack+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
+
+	sets.WS['Black Halo'] = {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head="Hashishin Kavuk +3",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Mirage Stole +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Ishvara Earring",
+		left_ring="Epaminondas's Ring",
+		right_ring="Cornelia's Ring",
+		back={ name="Rosmerta's Cape", augments={'MND+20','Accuracy+20 Attack+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
 
 	-- Note that the Mote library will unlock these gear spots when used.
 	sets.TreasureHunter = {
@@ -311,7 +366,11 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-
+	if spell.type == 'WeaponSkill' then
+		if state.OffenseMode.value == "MEVA" then
+			equipSet = set_combine(equipSet, { neck="Warder's Charm +1", })
+		end
+	end
 	return equipSet
 end
 -- Augment basic equipment sets

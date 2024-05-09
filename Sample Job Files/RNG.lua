@@ -14,8 +14,8 @@ Lockstyle_List = {1,2,6,12}
 
 --Set to ingame lockstyle and Macro Book/Set
 LockStylePallet = "14"
-MacroBook = "2"  -- Sub Job macro pallets can be defined in the sub_job_change_custom function below
-MacroSet = "12"
+MacroBook = "12"  -- Sub Job macro pallets can be defined in the sub_job_change_custom function below
+MacroSet = "1"
 
 -- Use "gs c food" to use the specified food item 
 Food = "Sublime Sushi"
@@ -107,7 +107,6 @@ function get_sets()
 	sets.Weapons['Dolichenus'] = {
 		main="Dolichenus",
 		sub="Crepuscular Knife",
-		range={ name="Fail-Not", augments={'Path: A',}},
 	}
 
 	sets.Weapons.Melee = {
@@ -121,7 +120,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Shield = {
-		sub={ name="Nusku Shield",},
+		sub="Nusku Shield",
 	}
 
 	-- Ammo Selection - will choose based off equiped weapon
@@ -139,7 +138,7 @@ function get_sets()
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
 	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
-	Ammo.Arrow.WSD = "Hauksbok Arrow"			-- Physical Weaponskills (not consumed)
+	Ammo.Arrow.WSD = "Chrono Arrow"			-- Physical Weaponskills (not consumed)
 	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
@@ -251,8 +250,7 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is CRIT and Engaged
-	--Change the sets.OffenseMode.XXX to what you want while engaged - default is DT and shooting is seperate build below for AM3
-	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.DT, {
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode[state.OffenseMode.value], {
 
 	})
 
@@ -342,9 +340,9 @@ function get_sets()
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
 		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		waist="K. Kachina Belt +1",
+		waist="Yemaya Belt",
 		left_ear="Telos Earring",
-		right_ear="Enervating Earring",
+		right_ear="Crep. Earring",
 		left_ring="Crepuscular Ring",
 		right_ring="Ilabrat Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}},
@@ -358,16 +356,18 @@ function get_sets()
 	-- Ranged Attack Gear (Physical Damage Limit)
     sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
 	    head="Ikenga's Hat",
+		body="Amini Caban +3",
 		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
     })
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
 		head="Meghanada Visor +2",
-		body="Nisroch Jerkin",
+		body="Amini Caban +3",
+		waist="K. Kachina Belt +1",
+		left_ear="Odr Earring",
 		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
 		feet="Osh. Leggings +1",
-		right_ring="Ilabrat Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
     })
 
@@ -418,6 +418,8 @@ function get_sets()
 		legs="Dashing Subligar", -- 10
 	}) -- 30% Potency
 
+	sets.PhantomRoll = {}
+
 	-- Base Weapon Skill set
 	sets.WS = {
 		ammo = Ammo.WS,
@@ -431,16 +433,54 @@ function get_sets()
 	}
 
 	-- Weapon Skill Damage
-	sets.WS.WSD = set_combine(sets.WS, {
+	sets.WS.RA = set_combine(sets.WS, {
 		ammo=Ammo.WSD,
-		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
+		head="Orion Beret +3",
+		body="Amini Caban +3",
 		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
 		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Enervating Earring",
+		left_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
+
+	-- Subtle Blow set used in OffenseMode.SB
+	sets.WS.SB = set_combine(sets.WS, { })
+	sets.WS.SB.RA = set_combine(sets.WS.RA, { })
+
+	-- Physical Damage Limit set used in OffenseMode.PDL
+	sets.WS.PDL = set_combine(sets.WS, { })
+	sets.WS.PDL.RA = set_combine(sets.WS.RA, { 
+
+	})
+
+	-- Accuracy set used in OffenseMode.ACC
+	sets.WS.ACC = set_combine(sets.WS, { })
+	sets.WS.ACC.RA = set_combine(sets.WS.RA, {
+		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
+	})
+
+	-- Critical Hit set used in OffenseMode.SB
+	sets.WS.CRIT = set_combine(sets.WS, { })
+	sets.WS.CRIT.RA = set_combine(sets.WS.RA, { 
+		Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
+	})
+
+	-- Weapon Skill Damage (Melee)
+	sets.WS.WSD = set_combine(sets.WS, {
+		ammo=Ammo.WSD,
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Ishvara Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Cornelia's Ring",
@@ -460,44 +500,33 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%','Damage taken-5%',}}, -- Finish Cape
 	})
 
-	-- Physical Damage Limit set used in OffenseMode.PDL
-	sets.WS.PDL = set_combine(sets.WS, {
-	
-	})
-
-	-- Accuracy set used in OffenseMode.ACC
-	sets.WS.ACC = set_combine(sets.WS, {
-		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
-	})
 
 	-- Gun Weaponskills
 	sets.WS["Hot Shot"] = set_combine(sets.WS.MAB, {})
-	sets.WS["Split Shot"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Sniper Shot"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Slug Shot"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Blast Shot"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Heavy Shot"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Detonator"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Numbing Shot"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Split Shot"] = set_combine(sets.WS.RA, {})
+	sets.WS["Sniper Shot"] = set_combine(sets.WS.RA, {})
+	sets.WS["Slug Shot"] = set_combine(sets.WS.RA, {})
+	sets.WS["Blast Shot"] = set_combine(sets.WS.RA, {})
+	sets.WS["Heavy Shot"] = set_combine(sets.WS.RA, {})
+	sets.WS["Detonator"] = set_combine(sets.WS.RA, {})
+	sets.WS["Numbing Shot"] = set_combine(sets.WS.RA, {})
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
 		-- Get Cremation Earring since doesn't scale with TP
 	})
-	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Coronach"] = set_combine(sets.WS.WSD, {
-		right_ear="Sherida Earring",
-	})
+	sets.WS["Last Stand"] = set_combine(sets.WS.RA, {})
+	sets.WS["Coronach"] = set_combine(sets.WS.RA, { })
 
 	-- Archery Weaponskills
 	sets.WS["Flaming Arrow"] = set_combine(sets.WS.MAB, {})
-	sets.WS["Piercing Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Dulling Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Sidewinder"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Blast Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Arching Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Refulgent Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Jishnu's Radiance"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Apex Arrow"] = set_combine(sets.WS.WSD, {})
-	sets.WS["Namas Arrow"] = set_combine(sets.WS.WSD, {})
+	sets.WS["Piercing Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Dulling Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Sidewinder"] = set_combine(sets.WS.RA, {})
+	sets.WS["Blast Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Arching Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Refulgent Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Jishnu's Radiance"] = set_combine(sets.WS.RA, {})
+	sets.WS["Apex Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Namas Arrow"] = set_combine(sets.WS.RA, {})
 
 	-- Sword Weaponskills
 	sets.WS["Fast Blade"] = set_combine(sets.WS.WSD, {})
@@ -640,6 +669,11 @@ function Job_Mode_Check(equipSet)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
 	end
+	if DualWield == false then
+		if TwoHand == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
+	end
 	return equipSet
 end
 
@@ -648,6 +682,11 @@ function PDL_Type_Check()
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	end
+	if DualWield == false then
+		if TwoHand == false then
+			equipSet = set_combine(equipSet, sets.Weapons.Shield)
+		end
 	end
 	return equipSet
 end

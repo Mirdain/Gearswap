@@ -28,7 +28,7 @@ state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Corsair
-state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge')
+state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Savage Blade 2', 'Aeolian Edge', 'Evisceration')
 state.WeaponMode:set('Death Penalty')
 
 --Enable JobMode for UI.
@@ -58,7 +58,19 @@ function get_sets()
 
 	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub="Blurred Knife +1",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
+		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
+	}
+
+	sets.Weapons['Savage Blade 2'] = {
+		main="Naegling",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
+		range={ name="Fomalhaut", augments={'Path: A',}},
+	}
+
+	sets.Weapons['Evisceration'] = {
+		main="Tauret",
+		sub="Crepuscular Knife",
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 

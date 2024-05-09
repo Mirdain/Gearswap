@@ -54,7 +54,7 @@ function get_sets()
 
 	-- Will swap weapons based off sets below
 	sets.Weapons['Unlocked'] = {
-		main="Daybreak",
+		
 	}
 
 	sets.Weapons.Shield = {
@@ -67,6 +67,7 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
+		main="Daybreak",
 		ammo="Staunch Tathlum +1", --  3/3
 		head="Bunzi's Hat", -- 7/7
 		body="Ebers Bliaut +3",
@@ -206,7 +207,7 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
     }
 	-- For AoE cure
-	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",}) -- Need to complete
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",})
 
 	-- For Cura - foucs on DT
 	sets.Midcast.Cura = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",})
@@ -293,7 +294,8 @@ function get_sets()
 	}
 
 	sets.Midcast["Erase"] = set_combine(sets.Midcast, {
-		main="Yagrush"
+		main="Yagrush",
+		neck={ name="Clr. Torque +2", augments={'Path: A',}},
 	})
 
 	sets.Midcast["Esuna"] = set_combine(sets.Midcast, {
