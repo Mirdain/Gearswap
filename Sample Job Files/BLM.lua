@@ -52,16 +52,16 @@ function get_sets()
 	--Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
-		head="Nyame Helm",
-		body={ name="Amalric Doublet +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		hands={ name="Merlinic Dastanas", augments={'STR+14','INT+4','"Refresh"+2','Accuracy+15 Attack+15',}},
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
-		neck={ name="Loricate Torque +1", augments={'Path: A',}},
-		waist="Fucho-no-Obi",
-		left_ear="Sanare Earring",
+		head="Wicce Petasos +3", --11
+		body="Wicce Coat +3",
+		hands="Wicce Gloves +3", --13
+		legs="Wicce Chausses +3",
+		feet="Wicce Sabots +3", --11 (removed while moving)
+		neck={ name="Loricate Torque +1", augments={'Path: A',}}, --6
+		waist="Carrier's Sash",
+		left_ear="Lugalbanda Earring",
 		right_ear="Etiolation Earring",
-		left_ring="Defending Ring",
+		left_ring="Defending Ring", --10
 		right_ring="Stikini Ring +1",
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
     }
@@ -97,7 +97,7 @@ function get_sets()
 		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+27','"Fast Cast"+6','INT+2','Mag. Acc.+8',}}, -- 14
 		body={ name="Merlinic Jubbah", augments={'Mag. Acc.+23','"Fast Cast"+7','"Mag.Atk.Bns."+14',}}, -- 13
 		hands={ name="Merlinic Dastanas", augments={'"Fast Cast"+7','"Mag.Atk.Bns."+5',}}, -- 7
-		legs={ name="Lengo Pants", augments={'INT+10','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Refresh"+1',}}, --5
+		legs="Agwu's Slops", -- 7
 		feet={ name="Merlinic Crackows", augments={'"Fast Cast"+7','CHR+10','Mag. Acc.+8',}}, -- 12
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}}, 
 		waist="Embla Sash", -- 5
@@ -151,10 +151,10 @@ function get_sets()
 	sets.Midcast.Enhancing = {
 		main="Daybreak",
 		sub="Ammurapi Shield",
-		ammo="Hydrocera",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
 		body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +10',}},
-		hands={ name="Telchine Gloves", augments={'Pet: DEF+18','"Cure" potency +8%','Enh. Mag. eff. dur. +10',}},
+		hands={ name="Telchine Gloves", augments={'Mag. Evasion+24','"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		legs={ name="Telchine Braconi", augments={'Enh. Mag. eff. dur. +10',}},
 		feet={ name="Telchine Pigaches", augments={'Enh. Mag. eff. dur. +10',}},
 		neck="Incanter's Torque",
@@ -169,16 +169,16 @@ function get_sets()
 	sets.Midcast.Enfeebling = {
 	    main="Daybreak",
 		sub="Ammurapi Shield",
-		ammo="Hydrocera",
-		head="Ea Hat +1",
-		body="Ea Houppe. +1",
-		hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-		legs="Ea Slops +1",
-		feet="Nyame Sollerets",
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		head="Wicce Petasos +3",
+		body="Wicce Coat +3",
+		hands="Wicce Gloves +3",
+		legs="Wicce Chausses +3",
+		feet="Wicce Sabots +3",
 		neck="Incanter's Torque",
 		waist="Luminary Sash",
 		left_ear="Malignance Earring",
-		right_ear="Digni. Earring",
+		right_ear="Wicce Earring +1",
 		left_ring="Weather. Ring",
 		right_ring="Stikini Ring +1",
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
@@ -186,11 +186,11 @@ function get_sets()
 
 	sets.Midcast.Nuke = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head="Ea Hat +1",
-		body="Ea Houppe. +1",
-		hands="Agwu's Gages",
-		legs="Ea Slops +1",
-		feet={ name="Agwu's Pigaches", augments={'Path: A',}},
+		head="Wicce Petasos +3",
+		body="Wicce Coat +3",
+		hands="Wicce Gloves +3",
+		legs="Wicce Chausses +3",
+		feet="Wicce Sabots +3",
 		neck={ name="Src. Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
@@ -232,21 +232,7 @@ function get_sets()
 	})
 
 	-- Aspir Set
-	sets.Midcast.Aspir = {
-		ammo="Pemphredo Tathlum",
-		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
-		body={ name="Merlinic Jubbah", augments={'"Drain" and "Aspir" potency +11','Mag. Acc.+6','"Mag.Atk.Bns."+4',}},
-		hands="Geo. Mitaines +3",
-		legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+27','"Drain" and "Aspir" potency +10','CHR+10','"Mag.Atk.Bns."+4',}},
-		feet={ name="Merlinic Crackows", augments={'Mag. Acc.+11 "Mag.Atk.Bns."+11','"Drain" and "Aspir" potency +9','MND+10','Mag. Acc.+13','"Mag.Atk.Bns."+13',}},
-		neck="Erra Pendant",
-		waist="Fucho-no-Obi",
-		left_ear="Regal Earring",
-		right_ear="Digni. Earring",
-		left_ring="Evanescence Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
-	}
+	sets.Midcast.Aspir = {}
 
 	sets.WS = {}
 
@@ -269,9 +255,7 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
-	sets.TreasureHunter = {
-
-	}
+	sets.TreasureHunter = { }
 
 end
 
