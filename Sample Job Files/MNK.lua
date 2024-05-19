@@ -22,7 +22,7 @@ Random_Lockstyle = false
 Lockstyle_List = {1,2,6,12}
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP modes
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
 
 --Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
@@ -51,10 +51,15 @@ function get_sets()
 
 	sets.Weapons['Pole'] = {
 		main="Malignance Pole",
+		sub="Alber Strap",
 	}
 
 	sets.Weapons['Club'] = {
 		main="Warp Cudgel",
+	}
+
+	sets.Weapons.Sleep = {
+		--main="Varga Purnikawa",
 	}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
@@ -124,19 +129,26 @@ function get_sets()
 	    ammo="Crepuscular Pebble",
 	})
 
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	})
+
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
 	-- MNK gets 35 Native Subtle Blow
-	-- Cap is 75% - 50% in either I or II
-	sets.SubtleBlow = {
+	-- Cap is 75% - 40% in either I or II
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {
+		head="Malignance Chapeau",
+		hands="Malignance Gloves",
+		feet="Malignance Boots",
+		right_ring="Defending Ring",
 		waist="Moonbow Belt +1", -- SB II 15
 		left_ear="Sherida Earring", -- SB II 5
-		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
 		left_ring="Niqmaddu Ring", -- SB II 5
-	} -- 35+11% SB I + %30 SB II = 76 (Over Cap)
+		-- Need 15 SB
+		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
+		body="Ken. Samue +1", -- 12
+	}) -- 35+15% SB I + %25 SB II = 75
 
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.TP, sets.SubtleBlow, {
-
-	})
 
 	sets.Precast = {}
 	-- Used for Magic Spells
@@ -184,7 +196,6 @@ function get_sets()
 	sets.JA["Focus"] = {}
 	sets.JA["Dodge"] = {}
 	sets.JA["Chakra"] = {
-	    main={ name="Verethragna", augments={'Path: A',}},
 		ammo="Crepuscular Pebble",
 		head={ name="Nyame Helm", augments={'Path: B',}},
 		body={ name="Nyame Mail", augments={'Path: B',}},
@@ -212,24 +223,33 @@ function get_sets()
 
 	--Default WS set base
 	sets.WS = { -- VS Base with Impetus Down
-		ammo="Knobkierrie",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- Need Aug'd
-		body="Ken. Samue +1",
-		hands={ name="Ryuo Tekko +1", augments={'STR+12','DEX+12','Accuracy+20',}},
-		legs={ name="Mpaca's Hose", augments={'Path: A',}},
-		feet="Ken. Sune-Ate +1", -- Need Aug a Herc Feet
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head="Mpaca's Cap",
+		body="Mpaca's Doublet",
+		hands="Mpaca's Gloves",
+		legs="Mpaca's Hose",
+		feet="Mpaca's Boots",
 		neck="Fotia Gorget",
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
-		right_ear="Odr Earring",
+		right_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
 
-	sets.WS.SB = set_combine( sets.WS, sets.SubtleBlow ,{ -- This maximize SB
-		-- Belt SB II - 25%
-		-- Legs and Feet over cap 
+	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
+		-- 35% SB I for MNK
+		-- Belt SB II 15%
+		-- Mpaca Legs -- SB II 5%
+		-- Earring / Ring SB II 10%
+		-- Need 10% SB
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	})
+
+	sets.WS.MEVA = set_combine( sets.WS, { -- This maximize SB
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		left_ring="Defending Ring",
 	})
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -272,11 +292,6 @@ function get_sets()
 	sets.WS["Tornado Kick"] = sets.WS.Kicks
 	sets.WS["Victory Smite"] = set_combine(sets.WS,{})
 	sets.WS["Shijin Spiral"] = set_combine(sets.WS,{
-		head="Ken. Jinpachi +1",
-		body="Ken. Samue +1",
-		hands="Ken. Tekko +1",
-		legs="Ken. Hakama +1",
-		feet="Ken. Sune-Ate +1",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}}
 	})
 
@@ -289,6 +304,11 @@ function get_sets()
 	sets.Impetus.DT = {
 		body="Bhikku Cyclas +3",
 		right_ring="Defending Ring",
+	}
+
+	-- Impetus for the WS sets
+	sets.Impetus.WS = {
+		body="Bhikku Cyclas +3",
 	}
 
 	sets.Boost = {
@@ -326,6 +346,9 @@ function precast_custom(spell)
 		if buffactive.Impetus then
 			equipSet = sets.Impetus
 		end	
+		if state.OffenseMode.value == "MEVA" then
+			equipSet = set_combine(equipSet, { neck="Warder's Charm +1", })
+		end
 	end
 	return equipSet
 end
