@@ -67,11 +67,13 @@ sets.JA = {}
 sets.PhantomRoll = {}
 sets.QuickDraw = {}
 sets.Precast = {}
+sets.Midcast = {}
 sets.Waltz = {}
 sets.Jig = {}
 sets.Samba = {}
 sets.Step = {}
 sets.Flourish = {}
+sets.Pet_Midcast = {}
 
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
@@ -565,6 +567,9 @@ function precastequip(spell)
 				elseif state.OffenseMode.value == 'SB' then
 					equipSet = set_combine(equipSet, sets.WS.SB)
 					message = '['..spell.english..'] Set with Subtle Blow'
+				elseif state.OffenseMode.value == 'MEVA' then
+					equipSet = set_combine(equipSet, sets.WS.MEVA)
+					message = '['..spell.english..'] Set with Magic Evasion'
 				elseif state.OffenseMode.value == 'CRIT' then
 					equipSet = set_combine(equipSet, sets.WS.CRIT)
 					message = '['..spell.english..'] Set with Critical Hit'
@@ -771,8 +776,12 @@ function precastequip(spell)
 			-- Song Count
 			if SongCount:contains(spell.name) then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Count})
+		    -- Equip Marsyas
 			elseif spell.name == "Honor March" then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Honor})
+		    -- Equip Loughnashade
+			elseif spell.name == "Aria of Passion" then
+				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Aria})
 			else
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Potency})
 			end
@@ -781,22 +790,25 @@ function precastequip(spell)
 			info('Nitro Mode')
 			-- Song Count for Dummy Songs
 			if SongCount:contains(spell.name) then
-				info( '['..spell.english..'] Set (Song Count - Daurdabla)')
+				info( '['..spell.english..'] Set (Song Count)')
 				equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
 			-- Equip Marsyas
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(sets.Midcast, {range=Instrument.Honor})
+				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Honor})
+			-- Equip Loughnashade
+			elseif spell.name == "Aria of Passion" then
+				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Aria})
 			-- Equip Harp
 			elseif spell.name:contains('Horde') then
-				info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
+				info( '['..spell.english..'] Set (AOE Sleep)')
 				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 			-- Normal Enfeebles
 			elseif EnfeebleSong:contains(spell.english) then
-				info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
+				info( '['..spell.english..'] Set (Enfeebling)')
 				equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 			-- Augment the buff songs
 			else
-				info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
+				info( '['..spell.english..'] Set (Potency)')
 				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
 			end
 		end
@@ -1129,22 +1141,25 @@ function midcastequip(spell)
 			info( '['..spell.english..'] Set')
 		-- Song Count
 		elseif SongCount:contains(spell.name) then
-			info( '['..spell.english..'] Set (Song Count - Daurdabla)')
+			info( '['..spell.english..'] Set (Song Count)')
 			equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
 		-- Equip Marsyas
 		elseif spell.name == "Honor March" then
 			equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Honor})
+		-- Equip Loughnashade
+		elseif spell.name == "Aria of Passion" then
+				equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Aria})
 		-- AoE Sleep
 		elseif spell.name:contains('Horde') then
-			info( '['..spell.english..'] Set (AOE Sleep - Daurdabla)')
+			info( '['..spell.english..'] Set (AOE Sleep)')
 			equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 		-- Normal Enfeebles
 		elseif EnfeebleSong:contains(spell.english) then
-			info( '['..spell.english..'] Set (Enfeebling - Gjallarhorn)')
+			info( '['..spell.english..'] Set (Enfeebling)')
 			equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 		-- Augment the buff songs
 		else
-			info( '['..spell.english..'] Set (Buff - Gjallarhorn)')
+			info( '['..spell.english..'] Set (Potency)')
 			equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Potency})
 		end
 	-- BlueMagic
@@ -1980,7 +1995,8 @@ function equip_song_gear(spell)
 	elseif string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude
 	elseif string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude
 	elseif string.find(spell.english,'Dirge') then equipSet = sets.Midcast.Dirge
-	elseif string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente 
+	elseif string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente
+    elseif string.find(spell.english,'Aria') then equipSet = sets.Midcast.Aria
 	end
 	return equipSet
 end
