@@ -94,6 +94,7 @@ function get_sets()
 	Instrument.Count = { name="Daurdabla" }
 	Instrument.Potency = { name="Gjallarhorn" }
 	Instrument.Honor = { name="Marsyas" }
+	Instrument.Aria = { name="Loughnashade" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }
 	Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','Phys. dmg. taken -4%','HP+20',} }
 	Instrument.TP = { name="Linos", augments={'Accuracy+20','"Store TP"+4','Quadruple Attack +3',} }
@@ -117,7 +118,7 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/3
 		right_ear="Sanare Earring",
-		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2}, -- 5/5 (over capped due to movement gear)
+		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2}, -- 5/5 (over capped due to movement gear)
 		right_ring="Shadow Ring",
 		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Mag. Evasion+15',}},
     } -- PDT 60%%, MDT 56%
@@ -128,8 +129,8 @@ function get_sets()
 	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -147,15 +148,15 @@ function get_sets()
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
 		left_ear="Crep. Earring", -- swapped out with Dual Wield
 		right_ear="Telos Earring",
-		left_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=2},
-		right_ring={ name="Chirich Ring +1", bag="wardrobe3", priority=1},
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
 		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		left_ring={ name="Moonlight ring", bag="wardrobe2", priority=2},
-		right_ring={ name="Moonlight Ring", bag="wardrobe3", priority=1},
+		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -258,8 +259,8 @@ function get_sets()
 		waist="Embla Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Etiolation Earring",
-		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
-		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
+		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
+		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Curaga Set (different rules than cure)
@@ -290,8 +291,8 @@ function get_sets()
 		waist={ name="Obstin. Sash", augments={'Path: A',}},
 		left_ear="Regal Earring",
 		right_ear="Crep. Earring",
-		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
-		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
+		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
+		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	-- Bard Specific Sets
@@ -321,6 +322,7 @@ function get_sets()
     sets.Midcast.Etude = {head="Mousai Turban +1"}
 	sets.Midcast.Dirge = {}
 	sets.Midcast.Sirvente = {}
+	sets.Midcast.Aria = {}
 
 
 	sets.Utsusemi = set_combine(sets.Idle, {
