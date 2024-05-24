@@ -28,7 +28,7 @@ state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Corsair
-state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Savage Blade 2', 'Aeolian Edge', 'Evisceration')
+state.WeaponMode:options('Fomalhaut','Death Penalty', 'Savage Blade', 'Aeolian Edge', 'Evisceration')
 state.WeaponMode:set('Death Penalty')
 
 --Enable JobMode for UI.
@@ -60,12 +60,6 @@ function get_sets()
 		main="Naegling",
 		sub={ name="Gleti's Knife", augments={'Path: A',}},
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
-	}
-
-	sets.Weapons['Savage Blade 2'] = {
-		main="Naegling",
-		sub={ name="Gleti's Knife", augments={'Path: A',}},
-		range={ name="Fomalhaut", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Evisceration'] = {
@@ -257,12 +251,12 @@ function get_sets()
 		head="Ikenga's Hat",
 		body="Ikenga's Vest",
 		hands="Ikenga's Gloves",
-		legs="Ikenga's Trousers",
+		legs="Chas. Culottes +3",
 		feet="Ikenga's Clogs",
 		neck="Iskur Gorget",
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
-		right_ear="Chas. Earring +1",
+		right_ear="Crep. Earring",
 		left_ring="Ilabrat Ring",
 		right_ring="Crepuscular Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
@@ -582,12 +576,18 @@ end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
 	equipSet = {}
+	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
+	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -600,6 +600,9 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
+	if state.JobMode.value == 'Ranged' and new == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -633,20 +636,6 @@ function check_buff_SP()
 end
 
 function Job_Mode_Check(equipSet)
-	if state.JobMode.value == 'Melee' then
-		equipSet = set_combine(equipSet, sets.Weapons.Melee)
-	elseif state.JobMode.value == 'Ranged' then
-		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
-	end
-	if DualWield == false then
-		if TwoHand == false then
-			equipSet = set_combine(equipSet, sets.Weapons.Shield)
-		end
-	end
-	return equipSet
-end
-
-function PDL_Type_Check()
 	if state.JobMode.value == 'Melee' then
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then

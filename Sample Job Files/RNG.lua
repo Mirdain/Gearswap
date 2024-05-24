@@ -336,15 +336,15 @@ function get_sets()
     sets.Midcast.RA = set_combine(sets.Midcast, {
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body="Ikenga's Vest",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		hands="Amini Glove. +3",
+		legs="Amini Bragues +3",
+		feet="Ikenga's Clogs",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
 		right_ear="Crep. Earring",
-		left_ring="Crepuscular Ring",
-		right_ring="Ilabrat Ring",
+		left_ring="Ilabrat Ring",
+		right_ring="Crepuscular Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}},
     }) -- With Recycle Merits 101 Recycle for TP bonus and Ammo Save
 
@@ -357,7 +357,8 @@ function get_sets()
     sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
 	    head="Ikenga's Hat",
 		body="Amini Caban +3",
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
+		hands="Ikenga's Gloves",
+		legs="Ikenga's Trousers",
     })
 
 	-- Ranged Attack Gear (Critical Build)
@@ -373,9 +374,10 @@ function get_sets()
 
 	-- Ranged Attack Gear (Double Shot Midshot)
 	sets.Midcast.RA.DoubleShot = set_combine(sets.Midcast.RA, {
-	    head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
-		hands="Oshosi Gloves +1",
+		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body={ name="Arc. Jerkin +3", augments={'Enhances "Snapshot" effect',}},
+		legs="Osh. Trousers +1",
+		hands="Oshosi Gloves +1",
 		feet="Osh. Leggings +1",
     })
 
@@ -429,7 +431,12 @@ function get_sets()
 		legs="Nyame Flanchard",
 		feet="Nyame Sollerets",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		left_ring="Epaminondas's Ring",
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Enervating Earring",
+		left_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}}, -- Add Melee Cape
 	}
 
 	-- Weapon Skill Damage
@@ -437,13 +444,13 @@ function get_sets()
 		ammo=Ammo.WSD,
 		head="Orion Beret +3",
 		body="Amini Caban +3",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet="Amini Bottillons +3",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="Fotia Belt",
 		left_ear="Ishvara Earring",
-		right_ear="Enervating Earring",
+		right_ear="Telos Earring",
 		left_ring="Cornelia's Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
@@ -598,6 +605,9 @@ end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
+	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -610,7 +620,7 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
+	if state.JobMode.value == 'Ranged' and new == "Engaged" then
 		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
 	end
 	equipSet = Job_Mode_Check(equipSet)
@@ -664,20 +674,6 @@ function Smart_Ammo ()
 end
 
 function Job_Mode_Check(equipSet)
-	if state.JobMode.value == 'Melee' then
-		equipSet = set_combine(equipSet, sets.Weapons.Melee)
-	elseif state.JobMode.value == 'Ranged' then
-		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
-	end
-	if DualWield == false then
-		if TwoHand == false then
-			equipSet = set_combine(equipSet, sets.Weapons.Shield)
-		end
-	end
-	return equipSet
-end
-
-function PDL_Type_Check()
 	if state.JobMode.value == 'Melee' then
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then
