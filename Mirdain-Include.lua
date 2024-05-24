@@ -140,6 +140,8 @@ Ammo.Bolt = {}
 gs_status = {}
 gs_status = texts.new("",settings.Display_Box)
 
+All_Buffs = res.buffs
+
 -- UI for displaying the current states
 function display_box_update()
 	width = 20
@@ -488,6 +490,7 @@ function precastequip(spell)
 		equipSet = sets.WS
 		local message = ''
 		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
+			equipSet = set_combine(equipSet, sets.WS.RA)
 			-- Set is defined
 			if equipSet[spell.english] then	
 				equipSet = set_combine(equipSet, equipSet[spell.english])
@@ -633,6 +636,8 @@ function precastequip(spell)
 		if buffactive[265] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
 		elseif buffactive[581] then
+			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
+		elseif buffactive[228] then
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
 		end
 	-- JobAbility
@@ -2269,7 +2274,7 @@ windower.raw_register_event('zone change', on_zone_change_for_th)
 -------------------------------------------------------------------------------------------------------------------
 
 windower.register_event('gain buff', function(id)
-    local name = res.buffs[id].english
+    local name = All_Buffs[id].english
 	if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
 		if player.inventory['Remedy'] ~= nil then
 			if AutoItem == true then
@@ -2303,9 +2308,6 @@ windower.register_event('gain buff', function(id)
 	elseif id == 10 then
 		log("Stunned - Checking Gear")
 		equip(set_combine(choose_set(),choose_set_custom()))
-	elseif id == 17 then
-		log("Charmed - Checking Gear")
-		equip(set_combine(choose_set(),choose_set_custom(),sets.Charm))
 	elseif id == 15 then
 		info('DOOOOOOM!!!')
 		equip(sets.Cursna_Received)
@@ -2323,7 +2325,7 @@ windower.register_event('gain buff', function(id)
 end)
 
 windower.register_event('lose buff', function(id)
-    local name = res.buffs[id].english
+    local name = All_Buffs[id].english
 	local gain = false
 	if id == 15 then
 		enable('neck','lring','rring','waist')
@@ -2355,7 +2357,7 @@ function cancel(...)
 	local buffs = {}
 	for _,v in pairs(windower.ffxi.get_player().buffs) do
 		for _,r in pairs(status_id_tab) do
-			if windower.wc_match(res.buffs[v][language],r) or windower.wc_match(tostring(v),r) then
+			if windower.wc_match(All_Buffs[v][language],r) or windower.wc_match(tostring(v),r) then
 				cancel_buff(v)
 				break
 			end
