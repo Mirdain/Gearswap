@@ -239,7 +239,7 @@ Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
 BlueACC = S{'Cruel Joke','Dream Flower'}
-BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace'}
+BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace','Restoral'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{}
 
@@ -445,32 +445,9 @@ function pretargetcheck(spell,action)
 			end
 		end
 	end
-	--Used to fire a script
-	if spell.name == "Poison" then
-		info('Dancing Chains')
-		if player.main_job == "RDM" then
-			send_command('exec CP/RDM')
-		elseif player.main_job == "GEO" then
-			send_command('exec CP/GEO')
-		elseif player.main_job == "SCH" then
-			send_command('exec CP/SCH')
-		elseif player.main_job == "BRD" then
-			send_command('exec CP/BRD')
-		elseif player.main_job == "RNG" then
-			send_command('exec CP/RNG')
-		elseif player.main_job == "BLM" then
-			send_command('exec CP/BLM')
-		elseif player.main_job == "DRG" then
-			send_command('exec CP/DRG')
-		elseif player.main_job == "BLU" then
-			send_command('exec CP/BLU')
-		elseif player.main_job == "WAR" then
-			send_command('exec CP/WAR')
-		elseif player.main_job == "SMN" then
-			send_command('exec CP/SMN')
-		end
-		cancel_spell()
-		return
+	--Equip body
+	if spell.name == "Impact" then
+		equip({head=empty}) -- Test if availible
 	end
 end
 
@@ -487,10 +464,9 @@ function precastequip(spell)
 	equipSet = {}
 	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
-		equipSet = sets.WS
 		local message = ''
+		equipSet = sets.WS
 		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
-			equipSet = set_combine(equipSet, sets.WS.RA)
 			-- Set is defined
 			if equipSet[spell.english] then	
 				equipSet = set_combine(equipSet, equipSet[spell.english])
@@ -870,8 +846,8 @@ function precastequip(spell)
 		log('Precast set equiping Offense Mode Gear')
 	end
 	--Swap in bard song weapons
-	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		equipSet = set_combine(equipSet, sets.Weapons.Songs)
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' and not buffactive['Nightingale'] then
+		equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Precast)
 		if DualWield == false then
 			if TwoHand == false then
 				equipSet = set_combine(equipSet, sets.Weapons.Shield)
@@ -886,15 +862,22 @@ function precastequip(spell)
 	if spell.name == "Dispelga" then
 		equipSet = set_combine(equipSet, {main="Daybreak"})
 	end
+
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english], {head=empty, body="Crepuscular Cloak",})
-		equip(equipSet) -- Test if availible
-		if player.equipment.body ~= "Crepuscular Cloak" then
-			log("body not found - equiping Twilight (Precast)")
-			equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english], {head=empty, body="Twilight Cloak",})
-		end
+		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
+		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+
+		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
+		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+
+		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
+
+		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
 	end
+
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
 end
@@ -907,6 +890,7 @@ function midcastequip(spell)
 	--Default gearset
 	equipSet = {}
 	if spell.action_type == 'Ranged Attack' then
+		local message = ''
 		equipSet = set_combine(sets.Midcast, sets.Midcast.RA)
 		-- Augment the specified WS
 		if state.OffenseMode.value == 'ACC' then
@@ -950,7 +934,6 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.AM.RA[state.WeaponMode.value])
 			message = '['..spell.english..'] Set with Aftermath (Ranged)'
 		end
-
 		info(message)
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
@@ -1279,7 +1262,7 @@ function midcastequip(spell)
 	end
 	--Swap in bard song weapons
 	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-		equipSet = set_combine(equipSet, sets.Weapons.Songs)
+		equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
 		if DualWield == false then
 			if TwoHand == false then
 				equipSet = set_combine(equipSet, sets.Weapons.Shield)
@@ -1296,12 +1279,17 @@ function midcastequip(spell)
 	end
 	--Equip body
 	if spell.name == "Impact" then
-		equipSet = set_combine(equipSet, sets.Midcast, sets.Midcast.Nuke, equipSet[spell.english], {head=empty, body="Crepuscular Cloak",})
-		equip(equipSet) -- Test if availible
-		if player.equipment.body ~= "Crepuscular Cloak" then
-			log("body not found - equiping Twilight (Midcast)")
-			equipSet = set_combine(equipSet, sets.Midcast, sets.Midcast.Nuke, equipSet[spell.english], {head=empty, body="Twilight Cloak",})
-		end
+		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
+		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+
+		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
+		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+
+		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
+
+		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
 	end
 	-- Built equipset to return
 	return equipSet
