@@ -236,7 +236,7 @@ function get_sets()
 	
 	});
 
-	--Used for elemental Bar Magic Spells
+	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
 	    main="Beneficus",
 		head="Ebers Cap +3",
@@ -248,7 +248,19 @@ function get_sets()
 		feet="Ebers Duckbills +3",
 	})
 
-	--Used for elemental Bar Magic Spells
+	--'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'
+	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {
+	    main="Beneficus",
+		head="Ebers Cap +3",
+		body="Ebers Bliaut +3",
+		hands="Ebers Mitts +3",
+		left_ear="Andoaa Earring",
+		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
+		feet="Ebers Duckbills +3",
+	})
+
+	--'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
 	    hands="Inyan. Dastanas +2",
 		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
