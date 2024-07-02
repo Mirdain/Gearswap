@@ -222,8 +222,6 @@ function get_sets()
 		feet={ name="Pursuer's Gaiters", augments={'Rng.Acc.+10','"Rapid Shot"+10','"Recycle"+15',}} -- 0/10
     }) -- Totals 35/73
 
-	sets.Precast.RA.ACC = {}
-
 	-- Fast Cast for Magic
 	sets.Precast.FastCast = {
 	    head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, -- 14
@@ -262,6 +260,22 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     }
 
+	sets.Midcast.RA.ACC = {}
+
+	-- Ranged PDL
+	sets.Midcast.RA.PDL = {
+		left_ring="Sroda Ring",
+    }
+
+	-- Ranged CRIT
+	sets.Midcast.RA.CRIT = {
+		head="Meghanada Visor +2",
+		body="Nisroch Jerkin",
+		feet="Osh. Leggings +1",
+		waist="K. Kachina Belt +1",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
+    }
+
 	-- Ranged Attack Gear (Triple Shot Midshot)
 	sets.Midcast.RA.TripleShot = set_combine(sets.Midcast.RA, {
         head="Oshosi Mask +1", -- Missing
@@ -270,20 +284,6 @@ function get_sets()
         legs="Osh. Trousers +1", -- Missing
         feet="Osh. Leggings +1", --3
     }) --28
-
-	-- Ranged PDL
-	sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
-		left_ring="Sroda Ring",
-    })
-
-	-- Ranged CRIT
-	sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-		head="Meghanada Visor +2",
-		body="Nisroch Jerkin",
-		feet="Osh. Leggings +1",
-		waist="K. Kachina Belt +1",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
-    })
 
 	sets.Utsusemi = set_combine(sets.Idle, {
 	
@@ -373,22 +373,11 @@ function get_sets()
 		right_ring="Luzaf's Ring", -- 16 yalm range
 	}
 
-	-- Dancer JA Section
-
-	sets.Flourish = set_combine(sets.Idle.DT, {})
-
-	sets.Jig = set_combine(sets.Idle.DT, { })
-
-	sets.Step = set_combine(sets.OffenseMode.DT, {})
-
-	sets.Samba = set_combine(sets.Idle.DT, {})
-
 	sets.Waltz = set_combine(sets.OffenseMode.DT, {
 		ammo="Yamarang", -- 5
-		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
 		hands="Slither Gloves +1", -- 5
 		legs="Dashing Subligar", -- 10
-	}) -- 30% Potency
+	}) -- 20% Potency
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = set_combine(sets.Idle, {
@@ -450,31 +439,31 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	-- Ranged Base Set
-	sets.WS.RA = set_combine (sets.WS, {
+	-- Ranged Base Set (Augments the sets.WS)
+	sets.WS.RA = {
 		body="Laksa. Frac +3",
 		hands="Chasseur's Gants +3",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	})
+	}
 
-	-- Accuracy set used in OffenseMode.ACC
-	sets.WS.ACC = set_combine(sets.WS, { })
-	sets.WS.ACC.RA = set_combine(sets.WS.RA, { })
+	-- Accuracy sets used in OffenseMode.ACC
+	sets.WS.ACC = {}
+	sets.WS.ACC.RA = {}
 
-	-- Equipment to augment the Melee WS for Physical Damage Limit (Capped Attack)
-	sets.WS.PDL = set_combine(sets.WS, {
+	-- Equipment to augment WS for Physical Damage Limit (Capped Attack)
+	sets.WS.PDL = {
 		left_ring="Sroda Ring",
-	})
-	sets.WS.PDL.RA = set_combine(sets.WS.RA, {
+	}
+	sets.WS.PDL.RA = {
 		left_ring="Sroda Ring",
 		head="Ikenga's Hat",
 		legs="Ikenga's Trousers",
 		feet="Ikenga's Clogs",
-	})
+	}
 
-	-- Critical Hit set used in OffenseMode.SB
-	sets.WS.CRIT = set_combine(sets.WS, { })
-	sets.WS.CRIT.RA = set_combine(sets.WS.RA, { })
+	-- Critical Hit set used in OffenseMode.CRIT
+	sets.WS.CRIT = { }
+	sets.WS.CRIT.RA = { }
 
 	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.Bullet.MAB,
@@ -485,13 +474,20 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.WS.MACC = set_combine(sets.WS.MAB, {
+	--These set are used when a weaponskill is used with that level of aftermath with the correct weapon
+	--They Augment any built weaponskill set - Same formatting as the OffenseModes
+	sets.WS.AM = {}
+	sets.WS.AM1 = {}
+	sets.WS.AM2 = {}
+	sets.WS.AM3 = {}
 
-	})
-
-	sets.WS.WSD = set_combine(sets.WS, {
-
-	})
+	sets.WS.AM.RA = {}
+	sets.WS.AM1.RA = {}
+	sets.WS.AM2.RA = {}
+	sets.WS.AM3.RA = {}
+	sets.WS.AM1.RA['Armageddon'] = {}
+	sets.WS.AM2.RA['Armageddon'] = {}
+	sets.WS.AM3.RA['Armageddon'] = {}
 
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
 
