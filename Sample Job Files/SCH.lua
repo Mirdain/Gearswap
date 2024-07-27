@@ -4,7 +4,7 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "12"
+LockStylePallet = "13"
 MacroBook = "19"
 MacroSet = "1"
 
@@ -71,7 +71,7 @@ function get_sets()
 		left_ear="Lugalbanda Earring",
 		right_ear={ name="Etiolation Earring", priority=1}, -- 0/3
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe3"}, -- +1 Refresh
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
     } -- 57 PDT / 58 MDT
 
@@ -96,16 +96,30 @@ function get_sets()
 	}
 
 	-- Sets are used for when player is engaged
-	sets.OffenseMode = {}
+	sets.OffenseMode = {
+		ammo="Staunch Tathlum +1",
+		head="Arbatel Bonnet +3",
+		body="Arbatel Gown +3",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs="Arbatel Pants +3",
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Grunfeld Rope",
+		left_ear="Crep. Earring",
+		right_ear="Telos Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
+	}
 
 	-- Base TP set
-	sets.OffenseMode.TP = {}
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, { })
 
 	-- TP set when in -Damage Taken mode
-	sets.OffenseMode.DT = {}
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, { })
 
 	-- TP set to use when mode is in accuracy
-	sets.OffenseMode.ACC = {}
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, { })
 
 	-- Set to use when Dual Wielding
 	sets.DualWield = {}
@@ -114,22 +128,21 @@ function get_sets()
 	sets.Precast = {}
 
 	sets.Precast.FastCast = {
-		-- 10 from staff (Arts is 10%)
+		-- 10 FC from Musa staff 
 		ammo="Hasty Pinion +1", -- 2% Haste
-		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
-		body="Zendik Robe", -- 13% FC, 4% Haste
+		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
+		body="Pinga Tunic +1", -- 15% FC, Haste
 		hands="Acad. Bracers +3", -- 9% FC, 3% Haste
-		legs="Agwu's Slops", -- 7% FC, 5% Haste
-		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
+		legs="Pinga Pants +1", -- 13% FC, 5% Haste
+		feet={ name="Peda. Loafers +3", augments={'Enhances "Stormsurge" effect',}},
 		neck="Voltsurge Torque", -- 4% FC
-		--neck={ name="Unmoving Collar +1", augments={'Path: A',}},
 		waist="Embla Sash", -- 5% FC
 		left_ear="Malignance Earring", -- 4% FC
 		right_ear="Etiolation Earring", -- 1% FC
 		left_ring="Weather. Ring", -- 5% FC
 		right_ring="Kishar Ring", -- 4% FC
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10% FC
-	} -- 82 Fastcast, 
+	} -- 80 Fastcast, 
 
 	-- Used for Raises and Cures
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
@@ -138,6 +151,12 @@ function get_sets()
 		right_ring="Lebeche Ring", -- 2
 	    back="Perimede Cape", -- 4
 	})
+
+	-- Swaps for Grimoire Fast Cast (Should be over 80% FC)
+	sets.Precast.Grimoire = {
+		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
+		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
+	}
 
 	-- Job Abilities
 	sets.JA = {}
@@ -200,7 +219,7 @@ function get_sets()
 		left_ear="Mimir Earring",
 		right_ear={ name="Etiolation Earring", priority=1},
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe3"},
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
 	-- High MACC for landing spells
@@ -264,16 +283,16 @@ function get_sets()
 		sub="Ammurapi Shield",
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
-		body="Agwu's Robe",
+		body="Arbatel Gown +3",
 		hands={ name="Agwu's Gages", augments={'Path: A',}},
-		legs="Agwu's Slops",
+		legs={ name="Agwu's Slops", augments={'Path: A',}},
 		feet="Arbatel Loafers +3",
 		neck={ name="Argute Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
-		left_ear="Malignance Earring",
-		right_ear="Regal Earring",
-		left_ring="Mujin Band",
-		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		left_ear="Regal Earring",
+		right_ear="Malignance Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Freke Ring",
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
@@ -313,9 +332,21 @@ function get_sets()
 		feet="Arbatel Loafers +3",
 	}
 
+	sets.Storms = {
+		feet="Arbatel Loafers +3", -- Pedagogy Loafers +3
+	}
+
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
+		ammo="Hasty Pinion +1",
+		head="Arbatel Bonnet +3",
+		body="Arbatel Gown +3",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs="Arbatel Pants +3",
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		waist="Siegel Sash",
+		left_ring="Defending Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		neck="Nodens Gorget",
 		left_ear="Earthcry Earring",
 	})
@@ -338,7 +369,21 @@ function get_sets()
 	
 	})
 
-	sets.WS = {}
+	sets.WS = {
+		ammo="Oshasha's Treatise",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Sanctity Necklace",
+		waist="Eschan Stone",
+		left_ear="Crep. Earring",
+		right_ear="Telos Earring",
+		left_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
+	}
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 	sets.WS.WSD = {}
@@ -370,7 +415,13 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-
+	if spell.type == "WhiteMagic" and (buffactive["Light Arts"] or buffactive["Addendum: White"]) then 
+		log("Grimoire Set (White)")
+		equipSet = set_combine(equipSet, sets.Precast.Grimoire)
+	elseif spell.type == "BlackMagic" and (buffactive["Dark Arts"] or buffactive["Addendum: Black"]) then
+		log("Grimoire Set (Dark)")
+		equipSet = set_combine(equipSet, sets.Precast.Grimoire)
+	end
 	return equipSet
 end
 
