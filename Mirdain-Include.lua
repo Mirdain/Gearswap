@@ -50,6 +50,10 @@ is_moving = false
 is_Buffing = false
 is_first_time_load = true
 
+last_skillchain_id = 0
+last_skillchain_time = os.clock()
+last_skillchain_elements = {}
+
 Time_Out = false
 
 --Variable to monitor during debug mode
@@ -210,7 +214,7 @@ function log (msg)
 end
 
 function info (msg)
-	if settings.info == true then
+	if msg and settings.info == true then
 		windower.add_to_chat(8,''..msg..'')
 	end
 end
@@ -256,8 +260,10 @@ Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thund
 Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water'}
 Debuff_BPs = S{'Mewing Lullaby','Eerie Eye','Lunar Cry','Lunar Roar','Nightmare','Pavor Nocturnus','Ultimate Terror','Somnolence','Slowga','Tidal Roar','Diamond Storm','Sleepga','Shock Squall'}
 Debuff_Rage_BPs = S{'Moonlit Charge','Tail Whip'}
+
 Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'}
 Status_Bar = S{'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'}
+
 Magic_BPs_NoTP = S{'Holy Mist','Nether Blast','Aerial Blast','Searing Light','Diamond Dust','Earthen Fury','Zantetsuken','Tidal Wave','Judgment Bolt','Inferno','Howling Moon','Ruinous Omen','Night Terror','Thunderspark'}
 Magic_BPs_TP = S{'Impact','Conflag Strike','Level ? Holy','Lunar Bay'}
 Merit_BPs = S{'Meteor Strike','Geocrush','Grand Fall','Wind Blade','Heavenly Strike','Thunderstorm'}
@@ -444,10 +450,6 @@ function pretargetcheck(spell,action)
 				end
 			end
 		end
-	end
-	--Equip body
-	if spell.name == "Impact" then
-		equip({head=empty}) -- Test if availible
 	end
 end
 
@@ -858,25 +860,6 @@ function precastequip(spell)
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
-	--Equip on main hand
-	if spell.name == "Dispelga" then
-		equipSet = set_combine(equipSet, {main="Daybreak"})
-	end
-
-	--Equip body
-	if spell.name == "Impact" then
-		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
-		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
-		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
-
-		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
-		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
-		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
-
-		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
-
-		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
-	end
 
 	-- Final equipSet built to return.  This is not the final set as custom Job can Augment
 	return equipSet
@@ -1110,10 +1093,13 @@ function midcastequip(spell)
 			info('Enfeebling Magic Set - Magic Accuracy')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 		else
-			-- If Auto Burst mode is turned on it will use the equip set for Bursting
-			if state.BurstMode.value ~= 'OFF' then
-				info('Burst Set')
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
+			if spell.target.id == last_skillchain_id and last_skillchain_time - os.clock() < 8 then
+				local element = res.spells[spell.id].element
+				local element_name = res.elements[element].en
+				if last_skillchain_elements[element_name] then
+					info("Burst Detected - Equiping Burst Set")
+					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
+				end
 			else
 				info('Nuke Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
@@ -1243,6 +1229,7 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.Summon)
 		end
 	end
+
 	-- Auto-cancel existing buffs
 	if spell.name=="Stoneskin" and buffactive["Stoneskin"] then
 		send_command('cancel 37;')
@@ -1251,6 +1238,7 @@ function midcastequip(spell)
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		send_command('wait .5;cancel 66;')
 	end
+
 	-- Weapon Checks for midcast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
@@ -1260,6 +1248,7 @@ function midcastequip(spell)
 		end
 		log('Midcast set equiping Offense Mode Gear')
 	end
+
 	--Swap in bard song weapons
 	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 		equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
@@ -1269,28 +1258,12 @@ function midcastequip(spell)
 			end
 		end
 	end
+
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
 	end
-	--Equip on main hand
-	if spell.name == "Dispelga" then
-		equipSet = set_combine(equipSet, {main="Daybreak"})
-	end
-	--Equip body
-	if spell.name == "Impact" then
-		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
-		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
-		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
 
-		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
-		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
-		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
-
-		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
-
-		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
-	end
 	-- Built equipset to return
 	return equipSet
 end
@@ -1330,6 +1303,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precast(spell)
+	equipSet = {}
 	if buffactive['Sleep'] then
 		cancel_spell()	
 		log('Cancel Spell - Player is asleep')
@@ -1362,9 +1336,30 @@ function precast(spell)
 		cancel_spell()
 		return
 	end
-	equipSet = {}
+
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
+
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+
+	--Equip body
+	if spell.name == "Impact" then
+		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
+		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+
+		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
+		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+
+		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
+
+		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
+	end
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
  end
@@ -1377,6 +1372,27 @@ function midcast(spell)
 	equipSet = {}
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
+
+	--Equip on main hand
+	if spell.name == "Dispelga" then
+		equipSet = set_combine(equipSet, {main="Daybreak"})
+	end
+
+	--Equip body
+	if spell.name == "Impact" then
+		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
+		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+
+		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
+		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+
+		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
+
+		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
+	end
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
 	-- You passed the checks - player will begin action
@@ -2437,6 +2453,7 @@ windower.register_event('action', function (data)
 		local targets = data.targets
 		local ability = {}
 		log('cat='..data.category..',param='..data.param)
+
 		if data.actor_id == player.id then
 			-- Ranged attack finish
 			if data.category == 2 then
@@ -2488,6 +2505,7 @@ windower.register_event('action', function (data)
 				end
 			end
 		end
+
 		-- Any Spells
 		-- Casting Spell
 		if data.category == 8 then
@@ -2515,10 +2533,16 @@ windower.register_event('action', function (data)
 					end
 				end
 			end
+
 		--Casting finish
-		elseif data.category == 4 and data.param == 20 then
-			--log('Cursna Finished')
+		elseif data.category == 4 then
+			if data.param == 20 then
+				--log('Cursna Finished')
+			else
+				run_burst(data)
+			end
 		end
+
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
@@ -2538,6 +2562,7 @@ windower.register_event('action', function (data)
 			end
 			cleanup_tagged_mobs()
 		end
+
 	end
 end)
 
@@ -2579,5 +2604,83 @@ function round(num, numDecimalPlaces)
 	if num ~= nil then
 	  local mult = 10^(numDecimalPlaces or 0)
 	  return math.floor(num * mult + 0.5) / mult
+	end
+end
+
+local skillchains = {
+	[288] = {id=288,english='Light',elements={'Light','Thunder','Wind','Fire'}},
+	[289] = {id=289,english='Darkness',elements={'Dark','Ice','Water','Earth'}},
+	[290] = {id=290,english='Gravitation',elements={'Dark','Earth'}},
+	[291] = {id=291,english='Fragmentation',elements={'Thunder','Wind'}},
+	[292] = {id=292,english='Distortion',elements={'Ice','Water'}},
+	[293] = {id=293,english='Fusion',elements={'Light','Fire'}},
+	[294] = {id=294,english='Compression',elements={'Dark'}},
+	[295] = {id=295,english='Liquefaction',elements={'Fire'}},
+	[296] = {id=296,english='Induration',elements={'Ice'}},
+	[297] = {id=297,english='Reverberation',elements={'Water'}},
+	[298] = {id=298,english='Transfixion', elements={'Light'}},
+	[299] = {id=299,english='Scission',elements={'Earth'}},
+	[300] = {id=300,english='Detonation',elements={'Wind'}},
+	[301] = {id=301,english='Impaction',elements={'Thunder'}},
+	[385] = {id=385,english='Light',elements={'Light','Thunder','Wind','Fire'}},
+	[386] = {id=386,english='Darkness',elements={'Dark','Ice','Water','Earth'}},
+	[387] = {id=387,english='Gravitation',elements={'Dark','Earth'}},
+	[388] = {id=388,english='Fragmentation',elements={'Thunder','Wind'}},
+	[389] = {id=389,english='Distortion',elements={'Ice','Water'}},
+	[390] = {id=390,english='Fusion',elements={'Light','Fire'}},
+	[391] = {id=391,english='Compression',elements={'Dark'}},
+	[392] = {id=392,english='Liquefaction',elements={'Fire'}},
+	[393] = {id=393,english='Induration',elements={'Ice'}},
+	[394] = {id=394,english='Reverberation',elements={'Water'}},
+	[395] = {id=395,english='Transfixion', elements={'Light'}},
+	[396] = {id=396,english='Scission',elements={'Earth'}},
+	[397] = {id=397,english='Detonation',elements={'Wind'}},
+	[398] = {id=398,english='Impaction',elements={'Thunder'}},
+	[767] = {id=767,english='Radiance',elements={'Light','Thunder','Wind','Fire'}},
+	[768] = {id=768,english='Umbra',elements={'Dark','Ice','Water','Earth'}},
+	[769] = {id=769,english='Radiance',elements={'Light','Thunder','Wind','Fire'}},
+	[770] = {id=770,english='Umbra',elements={'Dark','Ice','Water','Earth'}},
+}
+
+function run_burst(data)
+
+	local action = data.targets[1].actions[1]
+
+	if (action.add_effect_message > 287 and action.add_effect_message < 302) -- Normal SC DMG
+	or (action.add_effect_message > 384 and action.add_effect_message < 399) -- SC Heals
+	or (action.add_effect_message > 766 and action.add_effect_message < 771) -- Umbra/Radiance
+	then
+
+		local t = windower.ffxi.get_mob_by_id(data.targets[1].id)
+
+		-- valid party target and within range
+		if t and t.spawn_type == 16 and t.distance:sqrt() < 21 then
+
+			-- Update the enemy to track
+			last_skillchain_id = t.id
+			last_skillchain_time = os.clock()
+			last_skillchain_elements = {}
+			log('Skillchain detected')
+
+			-- get the type of skillchain
+			local skillchain = skillchains[action.add_effect_message]
+
+			-- Find the elements
+			for index, element in pairs(skillchain.elements) do
+				last_skillchain_elements[element] = element
+			end
+
+			log(last_skillchain_elements)
+
+		end
+	elseif data.category == 3 and data.param ~= 0 then
+		local t = windower.ffxi.get_mob_by_id(data.targets[1].id)
+		-- This is used to stop bursting if a ws happened to close the window
+		if t and t.id == last_skillchain_id then
+			log('Skillchain is closed for ['..last_skillchain_id..']')
+			last_skillchain_elements = {}
+			last_skillchain_id = 0
+			last_skillchain_time = 0
+		end
 	end
 end
