@@ -2541,8 +2541,11 @@ windower.register_event('action', function (data)
 			else
 				run_burst(data)
 			end
-		end
 
+		elseif packet.category == 3 and packet.param ~= 0 then
+			run_burst(data)
+
+		end
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
