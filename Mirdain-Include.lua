@@ -2656,8 +2656,12 @@ function run_burst(data)
 	or (action.add_effect_message > 384 and action.add_effect_message < 399) -- SC Heals
 	or (action.add_effect_message > 766 and action.add_effect_message < 771) -- Umbra/Radiance
 	then
-
+		
+		log('There was a skillchain')
+		
 		local t = windower.ffxi.get_mob_by_id(data.targets[1].id)
+
+		log(t.spawn_type)
 
 		-- valid party target and within range
 		if t and t.spawn_type == 16 and t.distance:sqrt() < 21 then
