@@ -1093,11 +1093,11 @@ function midcastequip(spell)
 			info('Enfeebling Magic Set - Magic Accuracy')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 		else
-			if spell.target.id == last_skillchain_id and last_skillchain_time - os.clock() < 8 then
+			if spell.target.id == last_skillchain_id and os.clock() - last_skillchain_time > 8 then
 				local element = res.spells[spell.id].element
 				local element_name = res.elements[element].en
 				if last_skillchain_elements[element_name] then
-					info("Burst Detected - Equiping Burst Set")
+					info("Burst Detected - Using the Burst Set")
 					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
 				end
 			else
@@ -2648,8 +2648,6 @@ local skillchains = {
 }
 
 function run_burst(data)
-
-	log('Run Burst Called')
 	local action = data.targets[1].actions[1]
 
 	if (action.add_effect_message > 287 and action.add_effect_message < 302) -- Normal SC DMG
