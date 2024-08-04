@@ -51,7 +51,7 @@ is_Buffing = false
 is_first_time_load = true
 
 last_skillchain_id = 0
-last_skillchain_time = os.clock()
+last_skillchain_time = 0
 last_skillchain_elements = {}
 
 Time_Out = false
@@ -1093,7 +1093,7 @@ function midcastequip(spell)
 			info('Enfeebling Magic Set - Magic Accuracy')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 		else
-			if spell.target.id == last_skillchain_id and os.clock() - last_skillchain_time > 8 then
+			if spell.target.id == last_skillchain_id and os.clock() - last_skillchain_time < 8 then
 				local element = res.spells[spell.id].element
 				local element_name = res.elements[element].en
 				if last_skillchain_elements[element_name] then
