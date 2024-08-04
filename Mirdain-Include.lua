@@ -2506,6 +2506,7 @@ windower.register_event('action', function (data)
 			end
 		end
 
+
 		-- Any Spells
 		-- Casting Spell
 		if data.category == 8 then
@@ -2534,6 +2535,9 @@ windower.register_event('action', function (data)
 				end
 			end
 
+		elseif data.category == 3 and data.param ~= 0 then
+			run_burst(data)
+
 		--Casting finish
 		elseif data.category == 4 then
 			if data.param == 20 then
@@ -2542,10 +2546,8 @@ windower.register_event('action', function (data)
 				run_burst(data)
 			end
 
-		elseif data.category == 3 and data.param ~= 0 then
-			run_burst(data)
-
 		end
+
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
@@ -2647,6 +2649,7 @@ local skillchains = {
 
 function run_burst(data)
 
+	log('Run Burst Called')
 	local action = data.targets[1].actions[1]
 
 	if (action.add_effect_message > 287 and action.add_effect_message < 302) -- Normal SC DMG
