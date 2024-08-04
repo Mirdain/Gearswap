@@ -2542,7 +2542,7 @@ windower.register_event('action', function (data)
 				run_burst(data)
 			end
 
-		elseif packet.category == 3 and packet.param ~= 0 then
+		elseif data.category == 3 and data.param ~= 0 then
 			run_burst(data)
 
 		end
