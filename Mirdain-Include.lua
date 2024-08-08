@@ -2613,10 +2613,10 @@ function round(num, numDecimalPlaces)
 end
 
 local skillchains = {
-	[288] = {id=288,english='Light',elements={'Light','Thunder','Wind','Fire'}},
+	[288] = {id=288,english='Light',elements={'Light','Lightning','Wind','Fire'}},
 	[289] = {id=289,english='Darkness',elements={'Dark','Ice','Water','Earth'}},
 	[290] = {id=290,english='Gravitation',elements={'Dark','Earth'}},
-	[291] = {id=291,english='Fragmentation',elements={'Thunder','Wind'}},
+	[291] = {id=291,english='Fragmentation',elements={'Lightning','Wind'}},
 	[292] = {id=292,english='Distortion',elements={'Ice','Water'}},
 	[293] = {id=293,english='Fusion',elements={'Light','Fire'}},
 	[294] = {id=294,english='Compression',elements={'Dark'}},
@@ -2626,11 +2626,11 @@ local skillchains = {
 	[298] = {id=298,english='Transfixion', elements={'Light'}},
 	[299] = {id=299,english='Scission',elements={'Earth'}},
 	[300] = {id=300,english='Detonation',elements={'Wind'}},
-	[301] = {id=301,english='Impaction',elements={'Thunder'}},
-	[385] = {id=385,english='Light',elements={'Light','Thunder','Wind','Fire'}},
+	[301] = {id=301,english='Impaction',elements={'Lightning'}},
+	[385] = {id=385,english='Light',elements={'Light','Lightning','Wind','Fire'}},
 	[386] = {id=386,english='Darkness',elements={'Dark','Ice','Water','Earth'}},
 	[387] = {id=387,english='Gravitation',elements={'Dark','Earth'}},
-	[388] = {id=388,english='Fragmentation',elements={'Thunder','Wind'}},
+	[388] = {id=388,english='Fragmentation',elements={'Lightning','Wind'}},
 	[389] = {id=389,english='Distortion',elements={'Ice','Water'}},
 	[390] = {id=390,english='Fusion',elements={'Light','Fire'}},
 	[391] = {id=391,english='Compression',elements={'Dark'}},
@@ -2640,10 +2640,10 @@ local skillchains = {
 	[395] = {id=395,english='Transfixion', elements={'Light'}},
 	[396] = {id=396,english='Scission',elements={'Earth'}},
 	[397] = {id=397,english='Detonation',elements={'Wind'}},
-	[398] = {id=398,english='Impaction',elements={'Thunder'}},
-	[767] = {id=767,english='Radiance',elements={'Light','Thunder','Wind','Fire'}},
+	[398] = {id=398,english='Impaction',elements={'Lightning'}},
+	[767] = {id=767,english='Radiance',elements={'Light','Lightning','Wind','Fire'}},
 	[768] = {id=768,english='Umbra',elements={'Dark','Ice','Water','Earth'}},
-	[769] = {id=769,english='Radiance',elements={'Light','Thunder','Wind','Fire'}},
+	[769] = {id=769,english='Radiance',elements={'Light','Lightning','Wind','Fire'}},
 	[770] = {id=770,english='Umbra',elements={'Dark','Ice','Water','Earth'}},
 }
 
