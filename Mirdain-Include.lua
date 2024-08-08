@@ -1235,6 +1235,8 @@ function midcastequip(spell)
 		send_command('cancel 37;')
 	elseif spell.name=="Sneak" and buffactive["Sneak"] and spell.target.type=="SELF" then
 		send_command('cancel 71;')
+	elseif spell.name=="Spectral Jig" and buffactive["Sneak"] then
+		send_command('cancel 71;')
 	elseif spell.name=="Utsusemi: Ichi" and buffactive["Copy Image"] then
 		send_command('wait .5;cancel 66;')
 	end
