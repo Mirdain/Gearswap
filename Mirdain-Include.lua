@@ -838,6 +838,7 @@ function precastequip(spell)
 			do_bullet_checks(spell, spellMap, eventArgs, equipSet)
 		end
 	end
+
 	-- Weapon Checks for precast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
@@ -847,15 +848,17 @@ function precastequip(spell)
 		end
 		log('Precast set equiping Offense Mode Gear')
 	end
+
 	--Swap in bard song weapons
-	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' and not buffactive['Nightingale'] then
-		equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Precast)
+	if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
+		equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
 		if DualWield == false then
 			if TwoHand == false then
 				equipSet = set_combine(equipSet, sets.Weapons.Shield)
 			end
 		end
 	end
+
 	-- If TH mode is on - check if new mob and then equip TH gear
 	if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 		equipSet = set_combine(equipSet, sets.TreasureHunter)
