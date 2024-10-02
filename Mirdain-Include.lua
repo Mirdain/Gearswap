@@ -78,6 +78,7 @@ sets.Samba = {}
 sets.Step = {}
 sets.Flourish = {}
 sets.Pet_Midcast = {}
+sets.Weapons = {}
 
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
@@ -111,18 +112,6 @@ state.JobMode = M{['description']='Job Specific Mode'}
 state.JobMode:options('OFF','ON')
 state.JobMode:set('OFF')
 
---Burst specific mode
-state.BurstMode = {}
-state.BurstMode = M{['description']='Burst Specific Mode'}
-state.BurstMode:options('ON','OFF')
-state.BurstMode:set('ON')
-
---Ranged Attack mode
-state.RAMode = {}
-state.RAMode = M{['description']='Ranged Attack Mode'}
-state.RAMode:options('Bullet','Arrow','Bolt')
-state.RAMode:set('Bullet')
-
 --Job specific modes
 state.JobMode2 = {}
 state.JobMode2 = M{['description']='Job Specific Mode'}
@@ -145,6 +134,10 @@ gs_status = {}
 gs_status = texts.new("",settings.Display_Box)
 
 All_Buffs = res.buffs
+All_WS = res.weapon_skills
+All_Abilities = res.job_abilities
+All_Spells = res.spells
+All_Items = res.items
 
 -- UI for displaying the current states
 function display_box_update()
@@ -152,7 +145,6 @@ function display_box_update()
 	dialog = {}
 	dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
 	dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
-	dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
 	dialog[4] = {description = 'DPS', value = state.WeaponMode.value}
 	if UI_Name ~= "" then
 		dialog[5] = {description = UI_Name, value = state.JobMode.value}
@@ -288,8 +280,6 @@ areas.Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Por
 	"Mhaura","Rabao","Norg","Kazham","Eastern Adoulin","Western Adoulin","Celennia Memorial Library","Mog Garden","Leafallia"
 }
 
-TaggingCategories = S{1,2,3,4,6,11,14} -- For TH handling, which event IDs to register for tagging
-
 -------------------------------------------------------------------------------------------------------------------
 -- This function is called from the default GearSwap Function "pretarget" to validate the user action
 -------------------------------------------------------------------------------------------------------------------
@@ -300,59 +290,67 @@ function pretargetcheck(spell,action)
 		cancel_spell()
 		return
 	end
+
 	-- Status Ailment Check
+	if buffactive['Sleep'] then
+
+		cancel_spell()	
+		log('Cancel Spell - Player is asleep')
+	end
+
 	if buffactive['Stun'] then
 		cancel_spell()	
 		equip(sets.Idle)
 		return
 		log('Cancel Spell - Player is stunned')
 	end
+
 	if buffactive['KO'] then
 		cancel_spell()
 		return
 		log('Cancel Spell - Player is dead')
 	end
+
 	if buffactive['Petrification'] then
 		cancel_spell()	
 		return
 		log('Cancel Spell - Player is dead')
 	end
+
 	if buffactive['Charm'] then
 		cancel_spell()
 		equip(sets.Idle)
 		return
 		log('Cancel Spell - Player is dead')
 	end
+
 	if buffactive['Terror'] then
 		cancel_spell()
 		equip(sets.Idle)
 		return
 		log('Cancel Spell - Player is dead')
 	end
-	if not buffactive['Muddle'] then
+
+	if AutoItem == true and not buffactive['Muddle'] then
 		-- Auto Remedy --
 		if buffactive['Paralysis'] and spell.type == 'JobAbility' then
 			if player.inventory['Remedy'] ~= nil then
 				cancel_spell()
-				if AutoItem == true then
-					send_command('input /item "Remedy" <me>')
-					log('Cancel Spell - Using Items')
-				end
+				send_command('input /item "Remedy" <me>')
+				log('Cancel Spell - Using Items')
 			end
 		end
 		if spell.action_type == 'Magic' and buffactive['Silence'] then
 			if player.inventory['Remedy'] ~= nil then
 				cancel_spell()			
-				if AutoItem == true then
-					send_command('input /item "Remedy" <me>')
-					log('Cancel Spell - Using Items')
-				end
+				send_command('input /item "Remedy" <me>')
+				log('Cancel Spell - Using Items')
 			end
 		end											
 	end
+
 	--Weapon Skill checks
 	if spell.type == 'WeaponSkill' then
-		local ws_used = res.weapon_skills:with('en',spell.english)
 		--Stop gear swap when you can't WS
 		if player.tp < 1000 then
 			cancel_spell()
@@ -364,23 +362,28 @@ function pretargetcheck(spell,action)
 			info('Can\'t Weapon Skill due to amnesia.')
 			return
 		end
+
 	--Cancel ability due to abilty not ready
 	elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 		local abil_recasts_table = windower.ffxi.get_ability_recasts()
-		local ability_time = abil_recasts_table[spell.recast_id]/60
+		local ability_time = abil_recasts_table[spell.recast_id] / 60
 		local min = math.floor(ability_time)
-		local sec = (ability_time - min)*60
+		local sec = (ability_time - min) * 60
 		if ability_time > 0 then
-			info(''..spell.name..' ['..string.format("%02d:%02d",min,sec)..']')
+			info(''..spell.name..' ['..string.format("%d.%02d",min,sec)..']')
 			cancel_spell()
 			return
 		end
+
+	-- Spell type requires a recast timer
 	elseif RecastTimers:contains(spell.type) then
 		--Cancel certain actions (Defined by RecastTimers) if not ready
 		local spell_recasts = windower.ffxi.get_spell_recasts()
-		local spell_time = spell_recasts[spell.recast_id]/100
+		local spell_time = spell_recasts[spell.recast_id] / 60
+		local min = math.floor(spell_time)
+		local sec = (spell_time - min) * 60
 		if spell_time > 0 then
-			info(''..spell.name..' ['..spell_time..']')
+			info(''..spell.name..' ['..string.format("%d.%02d",min,sec)..']')
 			cancel_spell()
 			return
 		end
@@ -399,7 +402,7 @@ function pretargetcheck(spell,action)
 				change_target('<me>')
 			end
 		elseif spell.target.type ~= null then
-			local cast_spell = res.spells:with('name', spell.name)
+			local cast_spell = All_Spells:with('name', spell.name)
 			log('['..tostring(cast_spell.targets)..']')
 			-- Self Target spells
 			if cast_spell.targets == '{Self}' then
@@ -458,12 +461,15 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function precastequip(spell)
+
 	--Cancel for SMN if Avatar is mid action and Item use
     if (pet.isvalid and pet_midaction()) or spell.type=="Item" then
         return
     end
+
 	--Default gearset
 	equipSet = {}
+
 	-- WeaponSkill
 	if spell.type == 'WeaponSkill' then
 		local message = ''
@@ -557,6 +563,7 @@ function precastequip(spell)
 				else
 					message = '['..spell.english..'] Set'
 				end
+
 				-- Check if Aftermath is active
 				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
@@ -571,6 +578,7 @@ function precastequip(spell)
 					equipSet = set_combine(equipSet, sets.WS.AM[state.WeaponMode.value])
 					message = '['..spell.english..'] Set with Aftermath'
 				end
+
 			else
 				-- Generic
 				equipSet = set_combine(equipSet, sets.WS)
@@ -589,6 +597,7 @@ function precastequip(spell)
 				else
 					message = 'Using Default WS Set'
 				end
+
 				-- Check if Aftermath is active
 				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
 					equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
@@ -608,16 +617,18 @@ function precastequip(spell)
 		info(message)
 		-- Check if an Obi or Orpheus is to be Equiped
 		equipSet = Elemental_check(equipSet, spell)
+
 	-- Ranged attack
 	elseif spell.action_type == 'Ranged Attack' then
 		equipSet = sets.Precast.RA
-		if buffactive[265] then
+		if buffactive[265] then -- Flurry
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
-		elseif buffactive[581] then
+		elseif buffactive[581] then -- Flurry II
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
-		elseif buffactive[228] then
+		elseif buffactive[228] then -- Embrava
 			equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
 		end
+
 	-- JobAbility
 	elseif spell.type == 'JobAbility' then
 		equipSet = sets.JA
@@ -630,10 +641,12 @@ function precastequip(spell)
 		else
 			info('JA not set for ['..spell.english..']')
 		end
+
 		if state.TreasureMode.value ~= 'None' and spell.english == "Provoke" then
 			equipSet = set_combine(equipSet, sets.TreasureHunter)
 			info('['..spell.english..'] Set with Treasure Hunter')
 		end
+
 	-- CorsairRoll
 	elseif spell.type == 'CorsairRoll' then
 		equipSet = sets.PhantomRoll
@@ -643,6 +656,7 @@ function precastequip(spell)
 		else
 			info('Roll not set')
 		end
+
 	-- CorsairShot
 	elseif spell.type == 'CorsairShot' then
 		equipSet = sets.QuickDraw
@@ -652,6 +666,7 @@ function precastequip(spell)
 		else
 			info('Quick Draw not set')
 		end
+
 	-- Ninjutsu
     elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Precast
@@ -668,6 +683,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Precast
@@ -682,6 +698,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.Enhancing)
 			end
 		end
+
 	-- BlackMagic
 	elseif spell.type == 'BlackMagic' then
 		equipSet = sets.Precast
@@ -694,6 +711,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
 	-- SummonerPact
 	elseif spell.type == 'SummonerPact' then
 		equipSet = sets.Precast
@@ -706,6 +724,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
 	-- Waltz
 	elseif spell.type == 'Waltz' then
 		equipSet = sets.Waltz
@@ -715,6 +734,7 @@ function precastequip(spell)
 		else
 			info('Using Default Waltz Set')
 		end
+
 	-- Jig
 	elseif spell.type == 'Jig' then
 		equipSet = sets.Jig
@@ -724,6 +744,7 @@ function precastequip(spell)
 		else
 			info('Using Default Jig Set')
 		end
+
 	-- Samba
 	elseif spell.type == 'Samba' then
 		equipSet = sets.Samba
@@ -733,6 +754,7 @@ function precastequip(spell)
 		else
 			info('Using Default Samba Set')
 		end
+
 	-- Step
 	elseif spell.type == 'Step' then
 		equipSet = sets.Step
@@ -742,6 +764,7 @@ function precastequip(spell)
 		else
 			info('Using Default Step Set')
 		end
+
 	-- Flourishes
 	elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
 		equipSet = sets.Flourish
@@ -751,6 +774,7 @@ function precastequip(spell)
 		else
 			info('Using Default Flourish Set')
 		end
+
 	-- BardSong
 	elseif spell.type == 'BardSong' then
 		equipSet = sets.Precast
@@ -795,6 +819,7 @@ function precastequip(spell)
 				equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
 			end
 		end
+
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Precast
@@ -807,6 +832,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Precast
@@ -819,6 +845,7 @@ function precastequip(spell)
 				equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
 			end
 		end
+
 	-- Trust
 	elseif spell.type == 'Trust' then
 		equipSet = sets.Precast
@@ -832,6 +859,7 @@ function precastequip(spell)
 			end
 		end
 	end
+
 	-- Check that proper ammo is available if the action requires it
 	if spell.skill == "Marksmanship" or spell.skill == "Archery" then
 		if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
@@ -875,6 +903,7 @@ end
 function midcastequip(spell)
 	--Default gearset
 	equipSet = {}
+
 	if spell.action_type == 'Ranged Attack' then
 		local message = ''
 		equipSet = set_combine(sets.Midcast, sets.Midcast.RA)
@@ -921,6 +950,7 @@ function midcastequip(spell)
 			message = '['..spell.english..'] Set with Aftermath (Ranged)'
 		end
 		info(message)
+
 	-- Ninjutsu
 	elseif spell.type == 'Ninjutsu' then
 		equipSet = sets.Midcast
@@ -945,6 +975,7 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
 			info('Nuke set')
 		end
+
 	-- WhiteMagic
 	elseif spell.type == 'WhiteMagic' then
 		equipSet = sets.Midcast
@@ -1057,6 +1088,7 @@ function midcastequip(spell)
 			-- No type found and use default Midcast
 			info('Midcast not set')
 		end
+
 	-- Black Magic
 	elseif spell.type == 'BlackMagic' then
 		equipSet = sets.Midcast
@@ -1109,6 +1141,7 @@ function midcastequip(spell)
 			end
 			equipSet = Elemental_check(equipSet, spell)
 		end
+
 	-- Bard Song
 	elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
 		equipSet = sets.Midcast
@@ -1139,6 +1172,7 @@ function midcastequip(spell)
 			info( '['..spell.english..'] Set (Potency)')
 			equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Potency})
 		end
+
 	-- BlueMagic
 	elseif spell.type == 'BlueMagic' then
 		equipSet = sets.Midcast
@@ -1171,6 +1205,7 @@ function midcastequip(spell)
 			equipSet = set_combine(equipSet, sets.Diffusion)
 			info('Diffusion Augment')
 		end
+
 	-- Geomancy
 	elseif spell.type == 'Geomancy' then
 		equipSet = sets.Midcast
@@ -1195,9 +1230,11 @@ function midcastequip(spell)
 		else
 			info('Midcast not set')
 		end
+
 	-- Trust
 	elseif spell.type == 'Trust' then
 		equipSet = sets.Midcast
+
 	-- BloodPactRage and BloodPactWard
 	elseif spell.type=="BloodPactWard" or spell.type=="BloodPactRage" then
 		equipSet = sets.Midcast
@@ -1213,6 +1250,7 @@ function midcastequip(spell)
 		else
 			equipSet = {}
 		end
+
 	-- Elemental Siphon
 	elseif spell.name=="Elemental Siphon" then
 		equipSet = sets.Midcast
@@ -1222,6 +1260,7 @@ function midcastequip(spell)
 		else
 			equipSet = set_combine(equipSet, sets.Midcast.SummoningMagic)
 		end
+
 	-- Summon Avatar
 	elseif spell.type=="SummonerPact" then
 		equipSet = sets.Midcast
@@ -1293,10 +1332,6 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 function pretarget(spell,action)
-	if buffactive['Sleep'] then
-		cancel_spell()	
-		log('Cancel Spell - Player is asleep')
-	end
 	--Calls the function in the include file for basic checks
 	pretargetcheck(spell,action)
 	--Calls the job specific function
@@ -1309,19 +1344,16 @@ end
 
 function precast(spell)
 	equipSet = {}
-	if buffactive['Sleep'] then
-		cancel_spell()	
-		log('Cancel Spell - Player is asleep')
-	end
 	-- action is started
 	if is_Buffing == true then
 		info('Player is Buffing')
 		cancel_spell()
 		return
 	end
+
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
-			local cast_spell = res.spells:with('name', spell.name)
+			local cast_spell = All_Spells:with('name', spell.name)
 			-- assume 80% FC
 			SpellCastTime = cast_spell.cast_time *.2 + 2.5
 			-- Spell not delay set to default 2 sec
@@ -1345,25 +1377,7 @@ function precast(spell)
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(precastequip (spell), precast_custom(spell))
 
-	--Equip on main hand
-	if spell.name == "Dispelga" then
-		equipSet = set_combine(equipSet, {main="Daybreak"})
-	end
-
-	--Equip body
-	if spell.name == "Impact" then
-		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
-		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
-		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
-
-		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
-		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
-		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
-
-		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
-
-		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
-	end
+	equipSet = check_equipment_spells(spell, equipSet)
 
 	-- here is where gear is actually equipped
 	equip(equipSet)
@@ -1375,33 +1389,42 @@ function precast(spell)
 
 function midcast(spell)
 	equipSet = {}
+
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
 
-	--Equip on main hand
+	equipSet = check_equipment_spells(spell, equipSet)
+
+	-- here is where gear is actually equipped
+	equip(equipSet)
+
+	-- You passed the checks - player will begin action
+	is_Busy = true
+end
+
+function check_equipment_spells(spell, equipSet)
+
+	--Equip weapon for Dispelga
 	if spell.name == "Dispelga" then
 		equipSet = set_combine(equipSet, {main="Daybreak"})
 	end
 
-	--Equip body
+	--Equip body for Impact
 	if spell.name == "Impact" then
 		local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
-		 or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
-		 or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+			or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+			or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
 
 		local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
-		 or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
-		 or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+			or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+			or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
 
 		if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
 
 		if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
 	end
 
-	-- here is where gear is actually equipped
-	equip(equipSet)
-	-- You passed the checks - player will begin action
-	is_Busy = true
+	return equipSet
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1410,11 +1433,14 @@ end
 
 function aftercast(spell)
 	equipSet = {}
+
 	--Generate the correct set from the include file and custom function
 	equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
+
 	-- here is where gear is actually equipped
 	equip(equipSet)
-	-- Begin Rest Process - Spells have a hard delay where the JA's have a small delay
+
+	-- Begin Reset Process - Spells have a hard delay where the JA's have a small delay
 	if RecastTimers:contains(spell.type) then
 		SpellCastTime = 2.5
 	elseif spell.action_type == 'Ranged Attack' then
@@ -1455,28 +1481,7 @@ end
 
 function pet_change(pet,gain)
 	equipSet = {}
-	if gain == false and player.main_job == 'SMN' then
-		if not buffactive["Astral Conduit"] then
-			avatar = "None"
-			command_BP = 'None'
-		else
-			-- Avatar died during AFAC
-		end
-	else
-		avatar = pet.name
-		-- Default Offensive Blood Pacts
-		if pet.name=='Ifrit' then
-			command_BP = 'Flaming Crush'
-		elseif pet.name=='Siren' then
-			command_BP = 'Flaming Crush'
-		elseif pet.name=='Ramuh' then
-			command_BP = 'Volt Strike'
-		elseif pet.name=='Cait Sith' then
-			command_BP = 'Mewing Lulluby'
-		else
-			command_BP = 'None'
-		end
-	end
+	-- A new pet is found
 	equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
 	equip(equipSet)
 end
@@ -1487,12 +1492,15 @@ end
 
 function pet_midcast(spell)
 	equipSet = sets.Pet_Midcast
+
+	-- Specific sets are defined
 	if equipSet[spell.english] then
 		equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
 		info('['..spell.english..'] Set')
 	else
 		equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 	end
+
 	-- Weapon Checks for midcast
 	-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 	if state.WeaponMode.value ~= "Unlocked" then
@@ -1523,8 +1531,10 @@ function choose_set()
 	if buffactive['Sleep'] then
 		return
 	end
+
 	equipSet = {}
 	log('Choose Set Ran')
+
 	-- Combat Checks
 	if player.status == "Engaged" then
 		equipSet = set_combine(equipSet, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
@@ -1593,23 +1603,21 @@ end
 function check_buff()
 	-- Auto Buff is on and not in a town
 	if state.AutoBuff.value ~= 'OFF' and is_Busy == false and not areas.Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
+		-- Set defaults
 		command_JA = 'None'	
 		command_SP = 'None'
-		command_BP = 'None'
+
 		command_JA = check_buff_JA()
 		if not is_moving then
 			command_SP = check_buff_SP()
 		end
-		if player.main_job == 'SMN' then
-			command_BP = check_buff_BP()
-		end
+
 		if command_JA ~= 'None' and not buffactive['Amnesia'] then
 			command_JA_execute()
 		elseif command_SP ~= 'None' then
 			command_SP_execute()
-		elseif command_BP ~= 'None' and not buffactive['Amnesia'] then
-			command_BP_execute()
 		end
+
 	end
 end
 
@@ -1947,7 +1955,7 @@ end
 
 -- Functin used to exectue Job Abilities
 function command_JA_execute()
-	local cast_ability = res.job_abilities:with('name', command_JA)
+	local cast_ability = All_Abilities:with('name', command_JA)
 	local target = ''
 	if tostring(cast_ability.targets) == "{Self}" then
 		target = '<me>'
@@ -1962,7 +1970,7 @@ end
 
 -- Functin used to exectue Spells
 function command_SP_execute()
-	local cast_spell = res.spells:with('name', command_SP)
+	local cast_spell = All_Spells:with('name', command_SP)
 	local spell_cast_time = cast_spell.cast_time
 	local target = ''
 	if tostring(cast_spell.targets) == '{Self}' then
@@ -1974,12 +1982,6 @@ function command_SP_execute()
 	end
 	--log('input /ma "'..command_SP..'" '..target..'')
 	send_command('input /ma "'..command_SP..'" '..target..'')
-end
-
--- Functin used to exectue Blood Pacts
-function command_BP_execute()
-	--log('input /ma "'..command_BP..'" <t>')
-	send_command('input /pet "'..command_BP..'" <bt>')
 end
 
 -- Used for Escha Temp and Zerg
@@ -2016,7 +2018,7 @@ function equip_song_gear(spell)
 end
 
 function use_enchantment(item)
-    local item_table = res.items:with('enl',item) or res.items:with('en',item)
+    local item_table = All_Items:with('enl',item) or All_Items:with('en',item)
     if item_table == nil or not item_table.targets:contains('Self') then
         info("Invalid item.")
         return
@@ -2057,43 +2059,6 @@ windower.register_event('chat message', function(message,sender,mode,gm)
     end
 
 end)
-
-function mouse_event(type, x, y, delta, blocked)
-    local lines = gs_status:text():count('\n') + 1
-    local _, _y = gs_status:extents()
-    local pos_y = y - settings.Display_Box.pos.y
-    local off_y = _y / lines
-    local upper = 1
-    local lower = off_y
-    if gs_status:hover(x, y) then
-	    for row, button in ipairs(buttons) do
-            if pos_y > upper and pos_y < lower then
-                if type == 2 then
-
-					if row == 1 then
-						windower.send_command('gs c modechange')
-					elseif row == 2 then
-						windower.send_command('gs c th')
-					elseif row == 3 then
-						windower.send_command('gs c autobuff')
-					elseif row == 4 then
-						windower.send_command('gs c weaponmode')
-					elseif row == 5 then
-						windower.send_command('gs c jobmode')
-					else
-						
-					end
-					log('Button Clicked - Row: ['..tostring(row)..']')
-                    return true
-                end
-            end
-            upper = lower
-            lower = lower + off_y
-        end
-    end
-end
-
---windower.register_event('mouse', mouse_event)
 
 -- Unbind Keys when the file is unloaded
 function file_unload(file_name)
@@ -2182,30 +2147,18 @@ function two_hand_check()
 end
 
 
--------------------------------------------------------------------------------------------------------------------
--- BELOW IS FROM MOTE TREASURE HUNTER TRACKER
--- ADDING DUE TO FACT YOU NEEDING TO BE ENGAGED TO HIT TREASURE HUNTER LOCKSET
--- CHANGED TO ALLOW ANY ENMITY GENERATING ACTION EQUIPING THE SET AND TRACK THE MOB
--------------------------------------------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------------------------------------------
--- Setup vars and events when first running the include.
--------------------------------------------------------------------------------------------------------------------
-
 -- Ensure base tables are defined
-th_info = th_info or {}
+th_info = {}
 
--- Tracking vars for TH.
+-- Tracking vars for TH
 th_info.tagged_mobs = T{}
 th_info.last_player_target_index = 0
-state.th_gear_is_locked = false
 
 -- On changing targets, attempt to add TH gear.
 function on_target_change_for_th(new_index, old_index)
     -- Only care about changing targets while we're engaged, either manually or via current target death.
-    if player.status == 'Engaged' then
-        -- If  the current player.target is the same as the new mob then we're actually
-        -- engaged with it.
+    if player.status == 'Engaged' and state.TreasureMode.value ~= 'None' then
+        -- If  the current player.target is the same as the new mob then we're actually engaged with it.
         -- If it's different than the last known mob, then we've actually changed targets.
         if player.target.index == new_index and new_index ~= th_info.last_player_target_index then
             th_info.last_player_target_index = player.target.index
@@ -2216,9 +2169,11 @@ end
 
 -- This function removes mobs from our tracking table when they die.
 function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
-    if id == 0x29 then
+	-- Action Packet
+    if id == 0x29 and state.TreasureMode.value ~= 'None' then
         local target_id = data:unpack('I',0x09)
         local message_id = data:unpack('H',0x19)%32768
+
         -- Remove mobs that die from our tagged mobs list.
         if th_info.tagged_mobs[target_id] then
             -- 6 == actor defeats target
@@ -2240,10 +2195,6 @@ function on_zone_change_for_th(new_zone, old_zone)
 	state.AutoBuff:set('OFF')
 end
 
--------------------------------------------------------------------------------------------------------------------
--- Extra utility functions.
--------------------------------------------------------------------------------------------------------------------
-
 -- Remove mobs that we've marked as tagged with TH if we haven't seen any activity from or on them
 -- for over 3 minutes.  This is to handle deagros, player deaths, or other random stuff where the
 -- mob is lost, but doesn't die.
@@ -2252,6 +2203,7 @@ function cleanup_tagged_mobs()
     -- remove them from the tagged mobs list.
     local current_time = os.clock()
     local remove_mobs = S{}
+
     -- Search list and flag old entries.
     for target_id,action_time in pairs(th_info.tagged_mobs) do
         local time_since_last_action = current_time - action_time
@@ -2260,16 +2212,12 @@ function cleanup_tagged_mobs()
             if settings.debug then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
         end
     end
+
     -- Clean out mobs flagged for removal.
     for mob_id,_ in pairs(remove_mobs) do
         th_info.tagged_mobs[mob_id] = nil
     end
 end
-
--------------------------------------------------------------------------------------------------------------------
--- Event function registration calls.
--- Can call these now that the above functions have been defined.
--------------------------------------------------------------------------------------------------------------------
 
 -- Register events to allow us to manage TH application.
 windower.register_event('target change', on_target_change_for_th)
@@ -2385,31 +2333,35 @@ end
 mov = {x=0, y=0, z=0}
 
 windower.register_event('prerender',function()
-	if player.status == "Dead" then
-		return
-	end
-	if player.status == "Engaged dead" then
-		return
-	end
+
 	local now = os.clock()
-	if is_Busy == true then
-		if now - Spellstart > SpellCastTime then
-			-- Action timed out
-			is_Busy = false
-		end
-	end
+
+	-- Spell timed out
+	if is_Busy == true and now - Spellstart > SpellCastTime then is_Busy = false end
+
+	-- 4 second cycle timer
 	if now - UpdateTime1 > 4 then
 		dual_wield_check()
+		cleanup_tagged_mobs()
 		UpdateTime1 = now
 	end
+
 	if now - UpdateTime2 > .25 then
-		local position = windower.ffxi.get_mob_by_id(player.id)
+		UpdateTime2 = now
+
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
+
+		-- Go no farther as you are dead
+		if player.status == "Dead" or player.status == "Engaged dead" then return end
+
+		local position = windower.ffxi.get_mob_by_id(player.id)
+
 		-- Status Ailment Check
 		if not buffactive['Paralysis'] and not buffactive['Silence'] and not buffactive['Sleep'] and not buffactive['Muddle'] then
 			check_buff()
-		end									
+		end		
+		
 		if position and not buffactive['Mounted'] and not buffactive['Sleep'] then
 			local movement = math.sqrt( (position.x-mov.x)^2 + (position.y-mov.y)^2 + (position.z-mov.z)^2 ) > 0.5
 			if movement and not is_moving then
@@ -2427,14 +2379,16 @@ windower.register_event('prerender',function()
 			mov.y = position.y
 			mov.z = position.z
 		end
-		UpdateTime2 = now
 	end
+
+	-- Used for periodic updates
 	if Cycle_Time then
 		if now - UpdateTime3 > Cycle_Time then
 			Cycle_Timer()
 			UpdateTime3 = now
 		end
 	end
+
 end)
 
 -- Section used to determine if player is performing an action
@@ -2511,7 +2465,6 @@ windower.register_event('action', function (data)
 			end
 		end
 
-
 		-- Any Spells
 		-- Casting Spell
 		if data.category == 8 then
@@ -2555,6 +2508,7 @@ windower.register_event('action', function (data)
 
 		-- If player takes action, adjust TH tagging information
 		if state.TreasureMode.value ~= 'None' then
+			local TaggingCategories = S{1,2,3,4,6,11,14} -- For TH handling, which event IDs to register for tagging
 			if data.actor_id == player.id and windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc and TaggingCategories:contains(data.category) then
 				if not th_info.tagged_mobs[data.targets[1].id] and settings.debug then
 					add_to_chat(123,'Mob '..data.targets[1].id..' hit. Adding to tagged mobs table.')
@@ -2570,7 +2524,6 @@ windower.register_event('action', function (data)
 					th_info.tagged_mobs[data.targets[1].id] = os.clock()
 				end
 			end
-			cleanup_tagged_mobs()
 		end
 
 	end
