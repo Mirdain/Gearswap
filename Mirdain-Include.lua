@@ -79,6 +79,7 @@ sets.Step = {}
 sets.Flourish = {}
 sets.Pet_Midcast = {}
 sets.Weapons = {}
+sets.Idle = {}
 
 --Modes for Melee
 state.OffenseMode = M{['description']='Melee Mode'}
@@ -117,6 +118,12 @@ state.JobMode2 = {}
 state.JobMode2 = M{['description']='Job Specific Mode'}
 state.JobMode2:options('OFF','ON')
 state.JobMode2:set('OFF')
+
+--Ranged Attack mode
+state.RAMode = {}
+state.RAMode = M{['description']='Ranged Attack Mode'}
+state.RAMode:options('Bullet','Arrow','Bolt')
+state.RAMode:set('Bullet')
 
 --State for Ammunition check
 state.warned = M(false)
