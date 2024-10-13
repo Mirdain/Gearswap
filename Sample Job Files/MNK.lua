@@ -97,7 +97,7 @@ function get_sets()
 	sets.OffenseMode.TP = {
 		ammo="Coiste Bodhar",
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body="Ken. Samue +1",
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs="Bhikku Hose +3",
 		feet="Anch. Gaiters +3",
@@ -105,17 +105,17 @@ function get_sets()
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
 		right_ear={ name="Schere Earring", augments={'Path: A',}},
-		left_ring="Niqmaddu Ring",
+		left_ring="Lehko's Ring",
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
+
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		feet="Malignance Boots",
+		head={ name="Mpaca's Cap", augments={'Path: A',}},
+		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
 	})
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
 	    head="Ken. Jinpachi +1",
@@ -136,18 +136,15 @@ function get_sets()
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
 	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 40% in either I or II
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {
-		head="Malignance Chapeau",
-		hands="Malignance Gloves",
-		feet="Malignance Boots",
-		right_ring="Defending Ring",
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.TP, {
+		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
 		waist="Moonbow Belt +1", -- SB II 15
 		left_ear="Sherida Earring", -- SB II 5
-		left_ring="Niqmaddu Ring", -- SB II 5
-		-- Need 15 SB
+		--left_ring="Niqmaddu Ring", -- SB II 5
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 8
+		ammo="Coiste Bodhar", -- SB 3
 		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
-		body="Ken. Samue +1", -- 12
-	}) -- 35+15% SB I + %25 SB II = 75
+	}) -- 35 + 14% SB I + %25 SB II = 74 one under
 
 
 	sets.Precast = {}
@@ -160,13 +157,13 @@ function get_sets()
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, --6
 		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}}, --6
 		neck="Voltsurge Torque", --4
-		waist="Kasiri Belt",
+		waist={ name="Plat. Mog. Belt", priority=2},
 		left_ear="Etiolation Earring", --1
 		right_ear="Loquac. Earring", --2
 		left_ring="Prolix Ring", --3
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+		right_ring="Rahab Ring", -- 2
 		back={ name="Segomo's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, --10
-	} -- FC 64
+	} -- FC 66
 
 	sets.Enmity = {
 	    ammo="Sapience Orb", -- 2
@@ -244,7 +241,12 @@ function get_sets()
 		-- Mpaca Legs -- SB II 5%
 		-- Earring / Ring SB II 10%
 		-- Need 10% SB
-		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		waist="Moonbow Belt +1", -- SB II 15
+		left_ear="Sherida Earring", -- SB II 5
+		--left_ring="Niqmaddu Ring", -- SB II 5
+		legs="Mpaca's Hose",
+		ammo="Coiste Bodhar", -- SB 3
+		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
 	})
 
 	sets.WS.MEVA = set_combine( sets.WS, { -- This maximize SB
@@ -268,7 +270,7 @@ function get_sets()
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
 		right_ear="Odr Earring",
-		left_ring="Niqmaddu Ring",
+		--left_ring="Niqmaddu Ring",
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
@@ -303,7 +305,6 @@ function get_sets()
 	-- Impetus for the DT stance (need more PDT)
 	sets.Impetus.DT = {
 		body="Bhikku Cyclas +3",
-		right_ring="Defending Ring",
 	}
 
 	-- Impetus for the WS sets
