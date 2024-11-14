@@ -234,6 +234,10 @@ Enfeeble_Acc = S{'Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Dra
 Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II'}
 Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga','Bind','Bind II'}
 
+Dark_Acc = S{'Death','Bio','Bio II','Bio III','Kaustra','Stun'}
+Dark_Absorb = S{'Absorb-ACC','Absorb-AGI','Absorb-Attri','Absorb-CHR','Absorb-DEX','Absorb-INT','Absorb-MND','Absorb-STR','Absorb-TP','Absorb-VIT','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III'}
+Dark_Enhancing = S{'Dread Spikes','Endark','Endark II','Klimaform','Tractor'}
+
 Storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
 
@@ -253,7 +257,9 @@ SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II'
 
 SongCount = S{"Knight's Minne", "Knight's Minne II", "Army's Paeon", "Army's Paeon II", "Army's Paeon III", "Army's Paeon IV", "Fowl Aubade", "Herb Pastoral", 
 			"Shining Fantasia", "Scop's Operetta", "Puppet's Operetta", "Gold Capriccio", "Warding Round", "Goblin Gavotte"}
+
 EnfeeblingNinjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni', 'Kurayami: Ichi', 'Dokumori: Ichi', 'Aisha: Ichi', 'Yurin: Ichi'}
+
 Mage_Job = S{'BLM','RDM','WHM','BRD','BLU','GEO','SCH','NIN','PLD','RUN','DRK','SMN'}
 Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thunder','Crimson Howl','Lightning Armor','Ecliptic Growl','Glittering Ruby','Earthen Ward','Hastega','Noctoshield','Ecliptic Howl','Dream Shroud','Earthen Armor','Fleet Wind','Inferno Howl','Heavenward Howl','Hastega II','Soothing Current','Crystal Blessing'}
 Buff_BPs_Healing = S{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water'}
@@ -409,7 +415,7 @@ function pretargetcheck(spell,action)
 				change_target('<me>')
 			end
 		elseif spell.target.type ~= null then
-			local cast_spell = All_Spells:with('name', spell.name)
+			local cast_spell = All_Spells[spell.id]
 			log('['..tostring(cast_spell.targets)..']')
 			-- Self Target spells
 			if cast_spell.targets == '{Self}' then
@@ -1126,11 +1132,26 @@ function midcastequip(spell)
 				info('Enfeebling Magic Set')
 				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
 			end
+		-- Dark Magic
+		elseif spell.skill == 'Dark Magic' then
+			if Dark_Acc:contains(spell.name) then 
+				info('Dark Magic Set - Magic Accuracy')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.MACC)
+			elseif Dark_Absorb:contains(spell.name) then
+				info('Absorb Magic Set - Potency')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Absorb)
+			elseif Dark_Enhancing:contains(spell.name) then
+				info('Dark Enhancing Magic Set - Duration')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Enhancing)
+			else
+				info('Dark Magic Set')
+				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark)
+			end
 		-- Enhancing Magic
 		elseif spell.skill == 'Enhancing Magic' then
 			info('Enhancing Magic Set')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
-		-- Enfeelbing Elemental Magic
+		-- Enfeebling Elemental Magic
 		elseif Elemental_Magic_Enfeeble:contains(spell.name) then
 			info('Enfeebling Magic Set - Magic Accuracy')
 			equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
@@ -1360,7 +1381,7 @@ function precast(spell)
 
 	if is_Busy == false then
 		if RecastTimers:contains(spell.type) then
-			local cast_spell = All_Spells:with('name', spell.name)
+			local cast_spell = All_Spells[spell.id]
 			-- assume 80% FC
 			SpellCastTime = cast_spell.cast_time *.2 + 2.5
 			-- Spell not delay set to default 2 sec
@@ -2129,26 +2150,17 @@ end
 
 function two_hand_check()
 	equipset = set_combine(choose_set(),choose_set_custom())
-	local Main_Weapon = nil
-	if type(equipset.main) == "table" then
-		Main_Weapon = equipset.main.name
-	else
-		Main_Weapon = equipset.main
-	end
+	TwoHand = false
+	local Main_Weapon = res.items:with('en',player.equipment.main)
 	if Main_Weapon then
-		if Main_Weapon == 'none' or Main_Weapon == '' then
-			log('No weapon detected')
-			TwoHand = false
+		log('Weapon:['..Main_Weapon.en..']')
+		local Skill_type = Main_Weapon.skill 
+		if Skill_type == 6 or Skill_type == 8 or Skill_type == 4 or Skill_type == 12 or Skill_type == 10 then
+			log('Two Handed Weapon Type: ['..Skill_type..']')
+			TwoHand = true
 		else
-			log('Weapon:['..Main_Weapon..']')
-			local Skill_type = res.items:with('en', Main_Weapon).skill 
-			if Skill_type == 6 or Skill_type == 8 or Skill_type == 4 or Skill_type == 12 or Skill_type == 10 then
-				log('Two Handed Weapon Type: ['..Skill_type..']')
-				TwoHand = true
-			else
-				log('One Handed Weapon Type: ['..Skill_type..']')
-				TwoHand = false
-			end
+			log('One Handed Weapon Type: ['..Skill_type..']')
+			TwoHand = false
 		end
 	end
 end
