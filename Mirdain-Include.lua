@@ -21,7 +21,6 @@ if settings.visible == true then gs_status:show() end
 local gs_debug = texts.new("",settings.Debug_Box)
 if settings.debug == true then gs_debug:show() end
 
-local now = os.clock()
 local DualWield = false
 local TwoHand = false
 
@@ -2482,7 +2481,7 @@ end)
 
 function main_engine()
 
-	now = os.clock()
+	local now = os.clock()
 
 	-- Spell timed out
 	if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
