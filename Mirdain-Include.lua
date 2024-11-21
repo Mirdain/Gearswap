@@ -2509,12 +2509,12 @@ function main_engine()
 		if movement and not is_moving then
 			if player.status ~= "Engaged" then
 				is_moving = true
-				windower.send_command('input /echo Moving! Status: '..player.status..'')
+				--windower.send_command('input /echo Moving! Status: '..player.status..'')
 				windower.send_command("gs c update auto")
 			end
 		elseif not movement and is_moving then
 			is_moving = false
-			windower.send_command('input /echo Stopped Moving! Status: '..player.status..'')
+			--windower.send_command('input /echo Stopped Moving! Status: '..player.status..'')
 			windower.send_command("gs c update auto")
 		end
 		Location.x = position.x
