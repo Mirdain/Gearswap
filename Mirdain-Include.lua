@@ -44,8 +44,6 @@ local UpdateTime1 = os.clock()
 local UpdateTime2 = os.clock()
 local Location = {x=0, y=0, z=0}
 
-local Time_Out = false
-
 -- Tracking vars for TH
 local th_info = {}
 th_info.tagged_mobs = T{}
@@ -108,7 +106,6 @@ local Cities = S{"Ru'Lude Gardens","Upper Jeuno","Lower Jeuno","Port Jeuno","Por
 	"Southern San d'Oria","Chateau d'Oraguille","Port Bastok","Bastok Markets","Bastok Mines","Metalworks","Aht Urhgan Whitegate","The Colosseum","Tavnazian Safehold","Nashmau","Selbina",
 	"Mhaura","Rabao","Norg","Kazham","Eastern Adoulin","Western Adoulin","Celennia Memorial Library","Mog Garden","Leafallia"}
 
-local Engine_Running = false
 local Language = windower.ffxi.get_info().language:lower()
 
 local skillchains = {
@@ -236,7 +233,6 @@ Random_Lockstyle = false
 Lockstyle_List = {}
 Elemental_WS = S{'Aeolian Edge','Seraph Blade','Shining Blade','Red Lotus Blade','Burning Blade','Sanguine Blade','Energy Drain','Energy Steal',
 	'Cyclone','Gust Slash','Leaden Salute','Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
-
 
 -- UI for displaying the current states
 function display_box_update()
@@ -2542,10 +2538,5 @@ function main_engine()
 
 end
 
--- Begin the sync process
-windower.register_event('time change', function(newTime, oldTime)
-	if not Engine_Running then 
-		main_engine() 
-		Engine_Running = true 
-	end
-end)
+-- Start the engine with a 5 sec delay
+coroutine.schedule(main_engine, 5)
