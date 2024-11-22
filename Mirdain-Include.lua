@@ -2288,6 +2288,10 @@ do
 	end
 
 	function main_engine()
+
+		-- wait 250ms before next check
+		coroutine.schedule(main_engine, 1/5)
+
 		-- Update the UI
 		gs_status:text(display_box_update())
 		gs_debug:text(debug_box_update())
@@ -2339,9 +2343,6 @@ do
 				UpdateTime2 = now
 			end
 		end
-
-		-- wait 250ms before next check
-		coroutine.schedule(main_engine, 1/5)
 	end
 
 	-- Register event section
