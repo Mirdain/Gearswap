@@ -79,7 +79,7 @@ function get_sets()
 		left_ear="Hearty Earring",
 		right_ear="Ebers Earring +1", -- 5/5
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}, priority=1}, -- 5/5
     }
 
@@ -243,7 +243,7 @@ function get_sets()
 		body="Ebers Bliaut +3",
 		hands="Ebers Mitts +3",
 		left_ear="Andoaa Earring",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
 		feet="Ebers Duckbills +3",
 	})
@@ -255,7 +255,7 @@ function get_sets()
 		body="Ebers Bliaut +3",
 		hands="Ebers Mitts +3",
 		left_ear="Andoaa Earring",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
 		feet="Ebers Duckbills +3",
 	})
@@ -263,7 +263,7 @@ function get_sets()
 	--'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
 	    hands="Inyan. Dastanas +2",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
 	})
@@ -283,7 +283,7 @@ function get_sets()
 		left_ear="Regal Earring",
 		right_ear="Malignance Earring",
 		left_ring="Kishar Ring",
-		right_ring="Stikini Ring +1",
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Damage taken-5%',}},
 	}
 
@@ -363,7 +363,7 @@ function get_sets()
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Etiolation Earring",
 		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
 	}
 	-- Specific gear for spells
@@ -469,4 +469,16 @@ end
 -- Function is called when the job lua is unloaded
 function user_file_unload()
 
+end
+
+--Function used to automate Job Ability use - Checked first
+function check_buff_JA()
+	buff = 'None'
+	return buff
+end
+
+--Function used to automate Spell use
+function check_buff_SP()
+	buff = 'None'
+	return buff
 end

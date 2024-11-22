@@ -13,18 +13,16 @@ MacroSet = "1"
 Food = "Tropical Crepe"
 
 --Modes for specific to bard
-state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Kraken Mode','Staff')
+state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Staff')
 state.WeaponMode:set('Mordant Rime')
 
-elemental_ws = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
+Elemental_WS = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
 
 --Default to DT Mode
 state.OffenseMode:set('TP')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
-send_command('bind f10 gs c songbuff')
-
 
 function get_sets()
 
@@ -44,11 +42,6 @@ function get_sets()
 	sets.Weapons['Shining Strike'] = {
 		main="Daybreak",
 		sub="Crepuscular Knife",
-	}
-
-	sets.Weapons['Kraken Mode'] = {
-		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Kraken Club",
 	}
 
 	sets.Weapons['Shining Blade'] = {
@@ -79,6 +72,12 @@ function get_sets()
 	sets.Weapons.Songs = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
 		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+	}
+
+	sets.Weapons.Songs.Precast = {
+	}
+
+	sets.Weapons.Songs.Midcast = {
 	}
 
 	sets.Weapons.Shield = {
@@ -177,7 +176,7 @@ function get_sets()
 
 	sets.Precast = {}
 
-		-- Used for Magic Spells
+	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		range=Instrument.FastCast, -- 6
 		head="Bunzi's Hat", -- 10
@@ -225,8 +224,8 @@ function get_sets()
 	})
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
-	sets.Midcast.DummySongs = set_combine(sets.Midcast, {
-		feet="Bunzi's Sabots",
+	sets.Midcast.DummySongs = set_combine(sets.Idle, {
+
 	})
 
 	-- Cure Set
@@ -304,6 +303,7 @@ function get_sets()
 		hands="Brioso Cuffs +3",
 		legs="Inyanga Shalwar +2",
 	})
+
 	sets.Midcast.Finale = {}
 	sets.Midcast.Requiem = {}
 	sets.Midcast.Elegy = {}
@@ -372,7 +372,7 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Ishvara Earring",
 		right_ear="Regal Earring",
-		left_ring="Cornelia's Ring",
+		right_ring="Sroda Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
@@ -496,10 +496,7 @@ function status_change_custom(new,old)
 end
 --Function is called when a self command is issued
 function self_command_custom(command)
-	-- Calls the Bard Dummy Song function
-	if command == 'songbuff' then
-		dummy_songs()
-	end
+
 end
 
 function check_buff_SP()
@@ -517,43 +514,4 @@ end
 -- Function is called when the job lua is unloaded
 function user_file_unload()
 
-end
-
--- Function to prebuff Dummy Songs
-function dummy_songs()
-	info('Song Buff Begin')
-	state.AutoBuff:set('ON')
-	send_command("input /ma \"Army's Paeon IV\" <me>")
-	coroutine.schedule(player_buffing,.05)
-	coroutine.schedule(song2,5.5)
-	coroutine.schedule(song3,11)
-	coroutine.schedule(song4,16.5)
-end
-
-function song2()
-	is_Buffing = false
-	send_command("input /ma \"Army's Paeon III\" <me>")
-	coroutine.schedule(player_buffing,.05)
-end
-
-function song3()
-	is_Buffing = false
-	send_command("input /ma \"Army's Paeon II\" <me>")
-	coroutine.schedule(player_buffing,.05)
-end
-
-function song4()
-	is_Buffing = false
-	send_command("input /ma \"Army's Paeon\" <me>")
-	coroutine.schedule(player_buffing,.05)
-	coroutine.schedule(songbuff,5.5)
-end
-
-function songbuff()
-	state.AutoBuff:set('OFF')
-	is_Buffing = false
-end
-
-function player_buffing ()
-	is_Buffing = true
 end

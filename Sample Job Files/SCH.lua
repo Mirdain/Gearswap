@@ -71,7 +71,7 @@ function get_sets()
 		left_ear="Lugalbanda Earring",
 		right_ear={ name="Etiolation Earring", priority=1}, -- 0/3
 		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
-		right_ring={name="Stikini Ring +1", bag="wardrobe3"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
     } -- 57 PDT / 58 MDT
 
@@ -494,4 +494,16 @@ end
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
+end
+
+--Function used to automate Job Ability use - Checked first
+function check_buff_JA()
+	buff = 'None'
+	return buff
+end
+
+--Function used to automate Spell use
+function check_buff_SP()
+	buff = 'None'
+	return buff
 end

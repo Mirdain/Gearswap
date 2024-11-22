@@ -87,14 +87,16 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear="Eabani Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
+		left_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=3},
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 
 	sets.Idle.DT = {}
 	sets.Idle.PDT = {}
-	sets.Idle.MEVA = {}
+	sets.Idle.MEVA = set_combine(sets.Idle,{
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},	
+	})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -104,8 +106,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -118,38 +120,57 @@ function get_sets()
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
 		body="Dagon Breast.",
-		hands="Sakpata's Gauntlets",
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs="Pumm. Cuisses +3",
 		feet="Pumm. Calligae +3",
 		neck={ name="War. Beads +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear="Telos Earring",
+		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
 		left_ring="Niqmaddu Ring",
-		right_ring="Moonlight Ring",
+		right_ring="Chirich Ring +1",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	sets.OffenseMode.TP = {}
+	sets.OffenseMode.TP = set_combine( sets.OffenseMode, {
 
-	sets.OffenseMode.DT = {
+	})
+
+	sets.OffenseMode.DT = set_combine( sets.OffenseMode, {
 		head="Sakpata's Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets",
 		legs="Sakpata's Cuisses",
 		feet="Sakpata's Leggings",
-	}
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
+	})
 
-	sets.OffenseMode.PDL = {
+	sets.OffenseMode.PDL = set_combine( sets.OffenseMode, {
 		ammo="Crepuscular Pebble",
 		right_ring="Sroda Ring",
-	}
+	})
 
 	--This set is used when OffenseMode is ACC and Enaged
 	sets.OffenseMode.ACC = {}
 
 	--This set is used when OffenseMode is CRIT and Engaged
 	sets.OffenseMode.CRIT = {}
+
+	sets.OffenseMode.MEVA = {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
+		right_ear="Boii Earring +1",
+		left_ring="Moonlight Ring",
+		right_ring="Lehko's Ring",
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}
 
 	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
 	--If you don't specify a weapon mode it will use it regardless of Mythic,Empy,Relic,Aeonic
@@ -297,27 +318,31 @@ function get_sets()
 		left_ear="Thrud Earring",
 		right_ear="Boii Earring +1",
 		left_ring="Karieyh Ring +1",
-		right_ring="Cornelia's Ring",
+		right_ring="Regal Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}}
 	}
 	sets.WS.RA = {}
 
+	sets.WS.WSD = {}
+	sets.WS.WSD.RA = {}
+
+	-- Modes
 	sets.WS.CRIT = {
 		ammo="Yetshila +1",
-		head={ name="Blistering Sallet +1", augments={'Path: A',}},
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
 		body="Hjarrandi Breast.",
-		hands="Sakpata's Gauntlets",
-		legs="Sakpata's Cuisses",
-		feet="Sakpata's Leggings",
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
+		right_ear="Boii Earring +1",
 		left_ring="Niqmaddu Ring",
-		right_ring="Sroda Ring",
+		right_ring="Lehko's Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	sets.WS.CRIT.RA = {}
-
-	sets.WS.WSD = {}
-	sets.WS.WSD.RA = {}
 
 	sets.WS.ACC = {}
 	sets.WS.ACC.RA = {}
@@ -375,6 +400,20 @@ function get_sets()
 
 	--Polearm
 	sets.WS["Impulse Drive"] = sets.WS.CRIT
+	sets.WS["Leg Sweep"] = {
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
+		left_ring="Karieyh Ring +1",
+		right_ring="Regal Ring",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
 
 	sets.TreasureHunter = {
 		ammo="Per. Lucky Egg",

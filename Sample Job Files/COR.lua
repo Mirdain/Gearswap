@@ -64,7 +64,7 @@ function get_sets()
 
 	sets.Weapons['Evisceration'] = {
 		main="Tauret",
-		sub="Crepuscular Knife",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
@@ -88,7 +88,7 @@ function get_sets()
 	}
 
 	sets.Weapons.Melee = {
-		sub="Blurred Knife +1",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 	}
 
 	sets.Weapons.Ranged = {
@@ -230,7 +230,7 @@ function get_sets()
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+7','"Fast Cast"+6',}},  -- 6
 		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}}, -- 8
 		neck="Voltsurge Torque", -- 4
-		waist="Eschan Stone",
+		waist="Plat. Mog. Belt",
 		left_ear="Loquac. Earring", -- 2
 		right_ear="Etiolation Earring", -- 1
 		left_ring="Lebeche Ring",
@@ -244,7 +244,7 @@ function get_sets()
 	})
 
 	-- Ranged Attack Gear (Normal Midshot)
-    sets.Midcast.RA = {
+    sets.Midcast.RA = set_combine(sets.Midcast, {
 		ammo=Ammo.Bullet.RA,
 		head="Ikenga's Hat",
 		body="Ikenga's Vest",
@@ -258,23 +258,28 @@ function get_sets()
 		left_ring="Ilabrat Ring",
 		right_ring="Crepuscular Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-    }
+    })
 
-	sets.Midcast.RA.ACC = {}
+	sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
+	
+	})
 
 	-- Ranged PDL
-	sets.Midcast.RA.PDL = {
+	sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
 		left_ring="Sroda Ring",
-    }
+    })
 
 	-- Ranged CRIT
-	sets.Midcast.RA.CRIT = {
-		head="Meghanada Visor +2",
-		body="Nisroch Jerkin",
+	sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
+		head={ name="Ikenga's Hat", augments={'Path: A',}},
 		feet="Osh. Leggings +1",
+		legs="Ikenga's Trousers",
 		waist="K. Kachina Belt +1",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		right_ear="Chas. Earring +1",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
-    }
+    })
 
 	-- Ranged Attack Gear (Triple Shot Midshot)
 	sets.Midcast.RA.TripleShot = set_combine(sets.Midcast.RA, {
@@ -441,29 +446,49 @@ function get_sets()
 
 	-- Ranged Base Set (Augments the sets.WS)
 	sets.WS.RA = {
-		body="Laksa. Frac +3",
+		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
+		body={ name="Ikenga's Vest", augments={'Path: A',}},
 		hands="Chasseur's Gants +3",
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Ishvara Earring",
+		left_ring="Cornelia's Ring",
+		right_ring="Dingir Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
 	-- Accuracy sets used in OffenseMode.ACC
-	sets.WS.ACC = {}
-	sets.WS.ACC.RA = {}
+	sets.WS.ACC = set_combine(sets.WS, {
+	
+	})
+
+	sets.WS.ACC.RA = set_combine(sets.WS, {
+	
+	})
 
 	-- Equipment to augment WS for Physical Damage Limit (Capped Attack)
-	sets.WS.PDL = {
+	sets.WS.PDL = set_combine(sets.WS, {
 		left_ring="Sroda Ring",
-	}
-	sets.WS.PDL.RA = {
+	})
+
+	sets.WS.PDL.RA = set_combine(sets.WS, {
 		left_ring="Sroda Ring",
 		head="Ikenga's Hat",
 		legs="Ikenga's Trousers",
 		feet="Ikenga's Clogs",
-	}
+	})
 
 	-- Critical Hit set used in OffenseMode.CRIT
-	sets.WS.CRIT = { }
-	sets.WS.CRIT.RA = { }
+	sets.WS.CRIT = set_combine(sets.WS, { 
+	
+	})
+
+	sets.WS.CRIT.RA = set_combine(sets.WS, {
+
+	})
 
 	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.Bullet.MAB,
@@ -489,6 +514,35 @@ function get_sets()
 	sets.WS.AM2.RA['Armageddon'] = {}
 	sets.WS.AM3.RA['Armageddon'] = {}
 
+	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	})
+
+	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
+		left_ring="Sroda Ring",
+	})
+
+	sets.WS["Fast Blade"] = set_combine(sets.WS, {})
+	sets.WS["Burning Blade"] = set_combine(sets.WS, {})
+	sets.WS["Flat Blade"] = set_combine(sets.WS, {})
+	sets.WS["Shining Blade"] = set_combine(sets.WS, {})
+	sets.WS["Circle Blade"] = set_combine(sets.WS, {})
+	sets.WS["Spirits Within"] = set_combine(sets.WS, {})
+	sets.WS["Requiescat"] = set_combine(sets.WS, {})
+
+	-- Ranged WS
+	sets.WS["Hot Shot"] = set_combine(sets.WS, sets.WS.RA, {})
+	sets.WS["Split Shot"] = set_combine(sets.WS, sets.WS.RA, {})
+	sets.WS["Sniper Shot"] = set_combine(sets.WS, sets.WS.RA, {})
+	sets.WS["Numbing Shot"] = set_combine(sets.WS, sets.WS.RA, {})
+	sets.WS["Slug Shot"] = set_combine(sets.WS, sets.WS.RA, {
+		
+	})
+
+	sets.WS["Last Stand"] = set_combine(sets.WS, sets.WS.RA, {
+
+	})
+
 	sets.WS["Wildfire"] = set_combine(sets.WS.MAB, {
 
 	})
@@ -499,33 +553,6 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		waist="Svelt. Gouriz +1",   -- Changes based off elemental function
 	})
-
-	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
-		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-	})
-
-	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
-		left_ring="Sroda Ring",
-	})
-
-	sets.WS["Last Stand"] = set_combine(sets.WS.WSD, sets.WS.RA, {
-		neck="Fotia Gorget",
-		waist="Fotia Belt",
-	})
-
-	-- Uses Default WS set
-	sets.WS["Hot Shot"] = set_combine(sets.WS, {})
-	sets.WS["Split Shot"] = set_combine(sets.WS, {})
-	sets.WS["Sniper Shot"] = set_combine(sets.WS, {})
-	sets.WS["Slug Shot"] = set_combine(sets.WS, {})
-	sets.WS["Numbing Shot"] = set_combine(sets.WS, {})
-	sets.WS["Fast Blade"] = set_combine(sets.WS, {})
-	sets.WS["Burning Blade"] = set_combine(sets.WS, {})
-	sets.WS["Flat Blade"] = set_combine(sets.WS, {})
-	sets.WS["Shining Blade"] = set_combine(sets.WS, {})
-	sets.WS["Circle Blade"] = set_combine(sets.WS, {})
-	sets.WS["Spirits Within"] = set_combine(sets.WS, {})
-	sets.WS["Requiescat"] = set_combine(sets.WS, {})
 
 	sets.TreasureHunter = {
 		waist="Chaac Belt",

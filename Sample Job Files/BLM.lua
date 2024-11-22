@@ -4,7 +4,7 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "12"
+LockStylePallet = "14"
 MacroBook = "20"
 MacroSet = "1"
 
@@ -75,7 +75,7 @@ function get_sets()
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
 	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -99,7 +99,7 @@ function get_sets()
 		hands={ name="Merlinic Dastanas", augments={'"Fast Cast"+7','"Mag.Atk.Bns."+5',}}, -- 7
 		legs="Agwu's Slops", -- 7
 		feet={ name="Merlinic Crackows", augments={'"Fast Cast"+7','CHR+10','Mag. Acc.+8',}}, -- 12
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}}, 
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1}, 
 		waist="Embla Sash", -- 5
 		left_ear="Malignance Earring", -- 4
 		right_ear="Etiolation Earring", -- 1
@@ -186,22 +186,22 @@ function get_sets()
 
 	sets.Midcast.Nuke = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-		head="Wicce Petasos +3",
+		head="Ea Hat +1",
 		body="Wicce Coat +3",
-		hands="Wicce Gloves +3",
+		hands={ name="Agwu's Gages", augments={'Path: A',}},
 		legs="Wicce Chausses +3",
 		feet="Wicce Sabots +3",
 		neck={ name="Src. Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
-		right_ear="Regal Earring",
+		right_ear="Wicce Earring +1",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Freke Ring",
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-		left_ring="Mujin Band",
+		--left_ring="Mujin Band",
 	})
 
 	-- Misc Sets
@@ -282,7 +282,7 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 	if spell.skill == 'Elemental Magic' and not Elemental_Magic_Enfeeble:contains(spell.name) then
-		if player.MPP < 50 then
+		if player.MPP < 30 then
 			windower.add_to_chat(8,'Recover MP!')
 			equipSet = sets.MP_Recover
 		end
@@ -342,12 +342,14 @@ function user_file_unload()
 
 end
 
+--Function used to automate Job Ability use - Checked first
 function check_buff_JA()
 	buff = 'None'
 	--local ja_recasts = windower.ffxi.get_ability_recasts()
 	return buff
 end
 
+--Function used to automate Spell use
 function check_buff_SP()
 	buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
