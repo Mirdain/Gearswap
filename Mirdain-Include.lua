@@ -125,6 +125,7 @@ do
 
 	local DualWield = false
 	local TwoHand = false
+	local reloading = true
 
 	local SpellCastTime = 0
 	local Spellstart = os.clock()
@@ -236,6 +237,13 @@ do
 
 	-- UI for displaying the current states
 	function display_box_update()
+
+		if not state.OffenseMode.value then info('return') return end
+		if not state.TreasureMode.value then info('return') return end
+		if not state.WeaponMode.value then info('return') return end
+		if not state.JobMode.value then info('return') return end
+		if not state.JobMode2.value then info('return') return end
+
 		width = 20
 		dialog = {}
 		dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
@@ -252,7 +260,9 @@ do
 			lines:insert(v.description ..string.format('[%s]',tostring(v.value)):lpad(' ',width-string.len(tostring(v.description))))
 		end
 		local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
+		-- Pad each entry
 		for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
+
 		gs_status:text(lines:concat('\n'))
 	end
 
@@ -2046,7 +2056,7 @@ do
 
 	-- Command to Lock Style and Set the correct macros
 	function jobsetup(LockStylePallet,MacroBook,MacroSet)
-		if Random_Lockstyle == true then
+		if Random_Lockstyle then
 			LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 		end
 
@@ -2071,6 +2081,7 @@ do
 		if UI_Name2 ~= '' then
 			windower.add_to_chat(8,UI_Name2..' - '..string.format('[%s]','Ctrl + F11'))
 		end
+
 	end
 
 	-- Called when the player's subjob changes.
@@ -2140,8 +2151,8 @@ do
 
 	-- Clear out the entire tagged mobs table when zoning.
 	function on_zone_change_for_th(new_zone, old_zone)
-		Unlock ()
-		if settings.debug then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
+		Unlock()
+		if settings.debug then windower.add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
 		th_info.tagged_mobs:clear()
 		-- Turn off for zones
 		state.AutoBuff:set('OFF')
@@ -2161,7 +2172,7 @@ do
 			local time_since_last_action = current_time - action_time
 			if time_since_last_action > 180 then
 				remove_mobs:add(target_id)
-				if settings.debug then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
+				if settings.debug then windower.add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
 			end
 		end
 
@@ -2288,21 +2299,20 @@ do
 	end
 
 	function main_engine()
-
-		-- wait 250ms before next check
-		coroutine.schedule(main_engine, 1/5)
+		local now = os.clock()
 
 		-- Update the UI
-		gs_status:text(display_box_update())
-		gs_debug:text(debug_box_update())
-
-		local now = os.clock()
+		if gs_status:visible() then display_box_update() end
+		if gs_debug:visible() then debug_box_update() end
 
 		-- Spell timed out
 		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
 
+		-- wait 250ms before next check
+		coroutine.schedule(main_engine, 1/5)
+
 		-- Go no farther as you are dead
-		if player.status == "Dead" or player.status == "Engaged dead" then return end
+		if not player or player.status == "Dead" or player.status == "Engaged dead" then return end
 
 		-- Status Ailment Check
 		if not buffactive['Paralysis'] and not buffactive['Silence'] and not buffactive['Sleep'] and not buffactive['Muddle'] then
