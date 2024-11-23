@@ -118,10 +118,10 @@ do
 	local settings = config.load(default)
 
 	local gs_status = texts.new("",settings.Display_Box)
-	if settings.visible == true then gs_status:show() end
+	if settings.visible then gs_status:show() end
 
 	local gs_debug = texts.new("",settings.Debug_Box)
-	if settings.debug == true then gs_debug:show() end
+	if settings.debug then gs_debug:show() end
 
 	local DualWield = false
 	local TwoHand = false
@@ -237,17 +237,11 @@ do
 
 	-- UI for displaying the current states
 	function display_box_update()
-
-		if not state.OffenseMode.value then info('return') return end
-		if not state.TreasureMode.value then info('return') return end
-		if not state.WeaponMode.value then info('return') return end
-		if not state.JobMode.value then info('return') return end
-		if not state.JobMode2.value then info('return') return end
-
 		width = 20
 		dialog = {}
 		dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
 		dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
+		dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
 		dialog[4] = {description = 'DPS', value = state.WeaponMode.value}
 		if UI_Name ~= "" then
 			dialog[5] = {description = UI_Name, value = state.JobMode.value}
@@ -262,7 +256,6 @@ do
 		local maxWidth = math.max(1, table.reduce(lines, function(a, b) return math.max(a, #b) end, '1'))
 		-- Pad each entry
 		for i,line in ipairs(lines) do lines[i] = lines[i]:rpad(' ', maxWidth) end
-
 		gs_status:text(lines:concat('\n'))
 	end
 
@@ -1644,11 +1637,11 @@ do
 			command_JA = 'None'	
 			command_SP = 'None'
 
-			command_JA = check_buff_JA()
 			if not is_moving then
 				command_SP = check_buff_SP()
 			end
 
+			command_JA = check_buff_JA()
 			if command_JA ~= 'None' and not buffactive['Amnesia'] then
 				command_JA_execute()
 			elseif command_SP ~= 'None' then
@@ -1750,7 +1743,7 @@ do
 
 	function self_command(cmd)
 		-- Updates the TH status
-		command = cmd:lower()
+		local command = cmd:lower()
 		if command == 'update auto' then
 			equip(set_combine(choose_set(),choose_set_custom()))
 		-- Toggles the TH state
@@ -1758,6 +1751,7 @@ do
 			state.TreasureMode:cycle()
 			info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 			equip(set_combine(choose_set(),choose_set_custom()))
+			display_box_update()
 		-- Toggles the Auto Buff function off/on
 		elseif command:contains('autobuff') then
 			if command == 'autobuff' then
@@ -1770,6 +1764,7 @@ do
 				info('Auto Buff is ['..state.AutoBuff.value..']')
 				equip(set_combine(choose_set(),choose_set_custom()))
 			end
+			display_box_update()
 		-- Shuts down instnace
 		elseif command == 'shutdown' then
 			send_command('terminate')
@@ -1786,6 +1781,7 @@ do
 			else
 				gs_status:show()
 				settings.visible = true
+				display_box_update()
 				add_to_chat(80,'The UI is now shown')
 			end
 		elseif command == 'debug' then
@@ -1842,6 +1838,7 @@ do
 						info('Offense Mode: ['..state.OffenseMode.value..']')
 						self_command_custom(command)
 						equip(set_combine(choose_set(),choose_set_custom()))
+						display_box_update()
 						return
 					end
 				end
@@ -1852,6 +1849,7 @@ do
 				info('Offense Mode: ['..state.OffenseMode.value..']')
 				self_command_custom(command)
 				equip(set_combine(choose_set(),choose_set_custom()))
+				display_box_update()
 				return
 			end
 		elseif command:contains('weaponmode') then
@@ -1867,6 +1865,7 @@ do
 						self_command_custom(command)
 						two_hand_check()
 						equip(set_combine(choose_set(),choose_set_custom()))
+						display_box_update()
 						return
 					end
 				end
@@ -1878,6 +1877,7 @@ do
 				self_command_custom(command)
 				two_hand_check()
 				equip(set_combine(choose_set(),choose_set_custom()))
+				display_box_update()
 				return
 			end
 		elseif command:contains('jobmode') then
@@ -1892,6 +1892,7 @@ do
 						info(UI_Name..': ['..state.JobMode.value..']')
 						self_command_custom(command)
 						equip(set_combine(choose_set(),choose_set_custom()))
+						display_box_update()
 						return
 					end
 				end
@@ -1902,6 +1903,7 @@ do
 				info(UI_Name..': ['..state.JobMode.value..']')
 				self_command_custom(command)
 				equip(set_combine(choose_set(),choose_set_custom()))
+				display_box_update()
 				return
 			end
 		elseif command:contains('jobmode2') then
@@ -1916,6 +1918,7 @@ do
 						info(UI_Name2..': ['..state.JobMode2.value..']')
 						self_command_custom(command)
 						equip(set_combine(choose_set(),choose_set_custom()))
+						display_box_update()
 						return
 					end
 				end
@@ -1926,6 +1929,7 @@ do
 				info(UI_Name2..': ['..state.JobMode2.value..']')
 				self_command_custom(command)
 				equip(set_combine(choose_set(),choose_set_custom()))
+				display_box_update()
 				return
 			end
 		-- This profile mode is used to load a Silmaril profile and execute a script
@@ -1944,7 +1948,7 @@ do
 			smModePath = table.concat(modes, '/', 2, #modes)
 			windower.send_command('exec '..smModePath..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		elseif command == 'food' then
-			windower.send_command('input /item "'..Food..'" <me>')
+			windower.input.chat('/item "'..Food..'" <me>')
 		-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
 		elseif command:startswith('use') then
 			use_enchantment(command:slice(5))
@@ -1966,7 +1970,7 @@ do
 			target = '<me>'
 		end
 		--log('input /ja "'..command_JA..'" '..target..'')
-		send_command('input /ja "'..command_JA..'" '..target..'')
+		windower.input.chat('/ja "'..command_JA..'" '..target..'')
 	end
 
 	-- Functin used to exectue Spells
@@ -1982,13 +1986,13 @@ do
 			target = '<me>'
 		end
 		--log('input /ma "'..command_SP..'" '..target..'')
-		send_command('input /ma "'..command_SP..'" '..target..'')
+		windower.input.chat('/ma "'..command_SP..'" '..target..'')
 	end
 
 	-- Used for Escha Temp and Zerg
 	function escha_temps()
 		info('Escha Temps')
-		send_command("input /item \"Monarch's Drink\" <me>;wait 2.5;input /item \"Braver's Drink\" <me>;wait 2.5;input /item \"Fighter's Drink\" <me>;wait 2.5;input /item \"Champion's Drink\" <me>;wait 2.5;input /item \"Soldier's Drink\" <me>;wait 2.5;input /item \"Barbarian's Drink\" <me>")
+		windower.send_command("input /item \"Monarch's Drink\" <me>;wait 2.5;input /item \"Braver's Drink\" <me>;wait 2.5;input /item \"Fighter's Drink\" <me>;wait 2.5;input /item \"Champion's Drink\" <me>;wait 2.5;input /item \"Soldier's Drink\" <me>;wait 2.5;input /item \"Barbarian's Drink\" <me>")
 	end
 
 	-- Determines correct gear for the songs
@@ -2060,7 +2064,7 @@ do
 			LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 		end
 
-		send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+		windower.send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
 		';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
 
 		send_command('bind f12 gs c OffenseMode')
@@ -2081,18 +2085,17 @@ do
 		if UI_Name2 ~= '' then
 			windower.add_to_chat(8,UI_Name2..' - '..string.format('[%s]','Ctrl + F11'))
 		end
-
 	end
 
 	-- Called when the player's subjob changes.
 	function sub_job_change(new, old)
-		send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
+		windower.send_command('wait 8;input /lockstyleset '..LockStylePallet..';')
 		sub_job_change_custom()
 	end
 
 	-- Check if you have the dual wield trait
 	function dual_wield_check()
-		current_abilities = windower.ffxi.get_abilities()
+		local current_abilities = windower.ffxi.get_abilities()
 		if table.contains(current_abilities.job_traits,18) then -- Dual Wield trait
 			DualWield = true
 		else
@@ -2101,8 +2104,8 @@ do
 	end
 
 	function two_hand_check()
-		equipset = set_combine(choose_set(),choose_set_custom())
 		TwoHand = false
+		local equipset = set_combine(choose_set(),choose_set_custom())
 		local Main_Weapon = res.items:with('en',player.equipment.main)
 		if Main_Weapon then
 			log('Weapon:['..Main_Weapon.en..']')
@@ -2301,14 +2304,13 @@ do
 	function main_engine()
 		local now = os.clock()
 
-		-- Update the UI
-		if gs_status:visible() then display_box_update() end
-		if gs_debug:visible() then debug_box_update() end
+		-- Update the debug UI if visible
+		if settings.debug then debug_box_update() end
 
 		-- Spell timed out
 		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
 
-		-- wait 250ms before next check
+		-- wait 200ms before next check
 		coroutine.schedule(main_engine, 1/5)
 
 		-- Go no farther as you are dead
@@ -2326,12 +2328,12 @@ do
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
-					--windower.send_command('input /echo Moving! Status: '..player.status..'')
+					--windower.input.chat('/echo Moving! Status: '..player.status..'')
 					windower.send_command("gs c update auto")
 				end
 			elseif not movement and is_moving then
 				is_moving = false
-				--windower.send_command('input /echo Stopped Moving! Status: '..player.status..'')
+				--windower.input.chat('/echo Stopped Moving! Status: '..player.status..'')
 				windower.send_command("gs c update auto")
 			end
 			Location.x = position.x
@@ -2550,4 +2552,5 @@ do
 
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 5)
+	coroutine.schedule(display_box_update, 2)
 end
