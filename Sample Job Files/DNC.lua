@@ -9,7 +9,7 @@ MacroBook = "6"
 MacroSet = "1"
 
 --Uses Items Automatically
-AutoItem = true
+AutoItem = false
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = true
@@ -475,6 +475,24 @@ end
 
 function Weapon_Check(equipSet)
 	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
+
+	return equipSet
+end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
 
 	return equipSet
 end

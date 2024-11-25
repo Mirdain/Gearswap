@@ -25,7 +25,7 @@ Lockstyle_List = {1,2,6,12}
 state.OffenseMode:set('DT')
 
 --Weapons options
-state.WeaponMode:options('Aeneas','Naegling')
+state.WeaponMode:options('Aeneas','Naegling','Evisceration')
 state.WeaponMode:set('Aeneas')
 
 -- Initialize Player
@@ -44,6 +44,11 @@ function get_sets()
 	sets.Weapons['Naegling'] = {
 		main="Naegling",
 		sub="Crepuscular Knife",
+	}
+
+	sets.Weapons['Evisceration'] = {
+		main="Tauret",
+		sub={ name="Aeneas", augments={'Path: A',}},
 	}
 
 	sets.Weapons.Sleep = {
@@ -328,4 +333,22 @@ end
 -- This function is called when the job file is unloaded
 function user_file_unload()
 
+end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
+
+	return equipSet
 end

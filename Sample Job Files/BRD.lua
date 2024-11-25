@@ -515,3 +515,21 @@ end
 function user_file_unload()
 
 end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end

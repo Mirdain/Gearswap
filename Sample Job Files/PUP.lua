@@ -5,8 +5,8 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "3"
-MacroBook = "7"
+LockStylePallet = "19"
+MacroBook = "19"
 MacroSet = "1"
 
 --Uses Items Automatically
@@ -16,7 +16,7 @@ AutoItem = false
 Food = "Sublime Sushi"
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB') -- ACC effects WS and TP modes
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
@@ -88,11 +88,11 @@ function get_sets()
 	}
 
 	sets.OffenseMode = {
-		head="Malignance Chapeau",
+		head="Mpaca's Cap",
 		body={ name="Mpaca's Doublet", augments={'Path: A',}},
-		hands="Malignance Gloves",
+		hands="Mpaca's Gloves",
 		legs="Mpaca's Hose",
-		feet="Malignance Boots",
+		feet="Mpaca's Boots",
 		neck="Combatant's Torque",
 		waist="Moonbow Belt +1",
 		left_ear="Mache Earring +1",
@@ -119,10 +119,30 @@ function get_sets()
 
 	})
 
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.TP,{
+		neck="Warder's Charm +1",
+	})
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	-- MNK gets 35 Native Subtle Blow
 	-- Cap is 75% - 50% in either I or II
-	sets.OffenseMode.SB = {}
+	sets.OffenseMode.SB = 
+	{
+		-- Belt SB II 15%
+		-- Mpaca Legs SB II 5%
+		-- Ring SB II 5%
+		-- Earring SB I 6%
+		head="Volte Tiara", -- 6%
+		body="Malignance Tabard",
+		hands="Volte Mittens", -- 6%
+		legs="Mpaca's Hose", -- 5%
+		feet="Volte Spats", -- 6%
+		waist="Moonbow Belt +1", -- 15%
+		left_ear="Mache Earring +1",
+		right_ear="Kara. Earring +1", -- 6%
+		left_ring="Niqmaddu Ring", -- 5%
+		right_ring="Chirich Ring +1", -- 10%
+		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}
 
 	sets.Precast = {}
 
@@ -165,14 +185,14 @@ function get_sets()
 	--Default WS set base
 	sets.WS = {
 		head="Mpaca's Cap",
-		body={ name="Mpaca's Doublet", augments={'Path: A',}},
+		body="Mpaca's Doublet",
 		hands="Mpaca's Gloves",
 		legs="Mpaca's Hose",
 		feet="Mpaca's Boots",
-		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		neck="Fotia Gorget",
 		waist="Moonbow Belt +1",
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear={ name="Kara. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','"Store TP"+4',}},
+		right_ear="Mache Earring +1",
 		left_ring="Regal Ring",
 		right_ring="Niqmaddu Ring",
 		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
@@ -225,6 +245,10 @@ function precast_custom(spell)
 	equipSet = {}
 	if spell.name:contains('Maneuver') then
 		equipSet = sets.JA.Maneuver
+	elseif spell.type == 'WeaponSkill' then
+		if state.OffenseMode.value == "MEVA" then
+			equipSet = { neck="Warder's Charm +1", }
+		end
 	end
 	return equipSet
 end

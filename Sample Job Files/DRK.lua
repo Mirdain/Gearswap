@@ -5,7 +5,7 @@
 include('Mirdain-Include')
 
 --Set to ingame lockstyle and Macro Book/Set
-LockStylePallet = "13"
+LockStylePallet = "15"
 MacroBook = "2"
 MacroSet = "1"
 
@@ -29,7 +29,7 @@ state.OffenseMode:options('DT','TP','PDL','ACC','SB') -- ACC effects WS and TP m
 state.OffenseMode:set('DT')
 
 --Weapon Modes
-state.WeaponMode:options('Scythe','Great Sword','Sword','Club')
+state.WeaponMode:options('Scythe','Great Sword','Sword','Club','Axe')
 state.WeaponMode:set('Scythe')
 
 -- Initialize Player
@@ -40,7 +40,7 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Scythe'] = {
-		--main={ name="Trishula", augments={'Path: A',}},
+		main="Anguta",
 		sub="Utu Grip",
 	}
 
@@ -51,11 +51,21 @@ function get_sets()
 
 	sets.Weapons['Sword'] = {
 		main="Naegling",
-		sub="Blurred Shield +1",
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Club'] = {
 		main={ name="Loxotic Mace +1", augments={'Path: A',}},
+		sub="Blurred Shield +1",
+	}
+
+	sets.Weapons['Axe'] = {
+		main="Dolichenus",
+		sub={ name="Ternion Dagger +1", augments={'Path: A',}},
+	}
+
+	sets.Weapons.Shield = 
+	{
 		sub="Blurred Shield +1",
 	}
 

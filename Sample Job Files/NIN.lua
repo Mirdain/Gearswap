@@ -25,7 +25,7 @@ Lockstyle_List = {1,2,6,12}
 state.OffenseMode:set('DT')
 
 --Modes for specific to Ninja
-state.WeaponMode:options('Kannagi','Naegling','Karambit','Aeolian Edge','Abyssea')
+state.WeaponMode:options('Kannagi','Savage Blade','Karambit','Aeolian Edge','Abyssea')
 state.WeaponMode:set('Kannagi')
 
 elemental_ws = S{'Aeolian Edge', 'Blade: Teki', 'Blade: To','Blade: Chi','Blade: Ei','Blade: Yu'}
@@ -43,9 +43,9 @@ function get_sets()
 		sub="Gokotai",
 	}
 
-	sets.Weapons['Naegling'] = {
+	sets.Weapons['Savage Blade'] = {
 		main="Naegling",
-		sub="Gokotai",
+		sub="Blurred Knife +1",
 	}
 
 	sets.Weapons['Karambit'] = {
@@ -114,7 +114,7 @@ function get_sets()
 		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Telos Earring",
-		right_ear="Odr Earring",
+		right_ear="Hattori Earring +1",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
 		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
@@ -148,20 +148,25 @@ function get_sets()
 	sets.Precast = {}
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb",
-		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}},
-		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}},
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}},
-		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}},
-		neck="Voltsurge Torque",
-		waist="Tempus Fugit",
-		left_ear="Etiolation Earring",
-		right_ear="Tuisto Earring",
-		left_ring="Kishar Ring",
-		right_ring="Prolix Ring",
-		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
+		ammo="Sapience Orb", -- 2
+		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}}, --13
+		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+47',}}, -- 9
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
+		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, -- 6
+		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}}, -- 6
+		neck="Voltsurge Torque", -- 4
+		waist="Plat. Mog. Belt",
+		left_ear="Etiolation Earring", -- 1
+		right_ear="Loquac. Earring", -- 2
+		left_ring="Kishar Ring", -- 4
+		right_ring="Rahab Ring", -- 2
+		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}}, -- 10
+	} -- 67
+
+	sets.Precast.Utsusemi = {
+		neck="Magoraga Beads", -- 10 FC (+6)
 	}
+
 	sets.Precast.QuickMagic = {
 
 	}
@@ -334,6 +339,22 @@ function get_sets()
 		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	sets.WS["Savage Blade"] = {
+	    ammo="Oshasha's Treatise",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Ishvara Earring",
+		left_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Andartia's Mantle", augments={'AGI+20','Accuracy+20 Attack+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
 	sets.TreasureHunter = {
 	    head="Volte Cap",
 		body="Volte Jupon",
@@ -432,4 +453,22 @@ function Cycle_Timer()
 		sets.Movement = set_combine(sets.Movement, sets.Movement.Day)
 		log('Day Feet')
 	end
+end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
+
+	return equipSet
 end
