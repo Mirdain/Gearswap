@@ -1604,9 +1604,10 @@ do
 
 		-- Idle sets
 		else
+			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value])
 			-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 			if state.WeaponMode.value ~= "Unlocked" then
-				equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
 				if DualWield == false and TwoHand == false then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
