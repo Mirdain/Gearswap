@@ -1604,10 +1604,12 @@ do
 
 		-- Idle sets
 		else
-			-- Weapon Checks
-			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-			if DualWield == false and TwoHand == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+			if state.WeaponMode.value ~= "Unlocked" then
+				equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+				if DualWield == false and TwoHand == false then
+					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				end
 			end
 			--Pet specific checks
 			if pet.isvalid then
@@ -1861,9 +1863,9 @@ do
 						else
 							state.WeaponMode:set(state.WeaponMode[1])
 						end
+						two_hand_check()
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
 						self_command_custom(command)
-						two_hand_check()
 						equip(set_combine(choose_set(),choose_set_custom()))
 						display_box_update()
 						return
@@ -1873,9 +1875,9 @@ do
 				local mode = {}
 				mode = string.split(cmd," ",2)
 				state.WeaponMode:set(mode[2])
+				two_hand_check()
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
 				self_command_custom(command)
-				two_hand_check()
 				equip(set_combine(choose_set(),choose_set_custom()))
 				display_box_update()
 				return
@@ -1960,7 +1962,7 @@ do
 
 	-- Functin used to exectue Job Abilities
 	function command_JA_execute()
-		local cast_ability = res.job_abilities:with('name', command_JA)
+		local cast_ability = res.job_abilities:with('en', command_JA)
 		local target = ''
 		if tostring(cast_ability.targets) == "{Self}" then
 			target = '<me>'
@@ -1975,7 +1977,7 @@ do
 
 	-- Functin used to exectue Spells
 	function command_SP_execute()
-		local cast_spell = res.spells:with('name', command_SP)
+		local cast_spell = res.spells:with('en', command_SP)
 		local spell_cast_time = cast_spell.cast_time
 		local target = ''
 		if tostring(cast_spell.targets) == '{Self}' then
@@ -2024,7 +2026,7 @@ do
 
 	function use_enchantment(item)
 		local SlotList = {"main","sub","range","ammo","head","body","hands","legs","feet","neck","waist","lear","rear","left_ring","right_ring","back"}
-		local item_table = res.items:with('enl',item) or res.items:with('en',item)
+		local item_table = res.items:with('en',item) or res.items:with('en',item)
 		if item_table == nil or not item_table.targets:contains('Self') then
 			info("Invalid item.")
 			return
@@ -2064,8 +2066,8 @@ do
 			LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 		end
 
-		windower.send_command('wait 15;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
-		';wait 1;input /macro set '..MacroSet..';gs validate;gs c two_hand_check;gs c update auto;wait 2;input /echo Change Complete')
+		windower.send_command('wait 10;gs c two_hand_check;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
+		';wait 1;input /macro set '..MacroSet..';gs validate;gs c update auto;wait 2;input /echo Change Complete')
 
 		send_command('bind f12 gs c OffenseMode')
 		send_command('bind f11 gs c TH')
@@ -2104,9 +2106,9 @@ do
 	end
 
 	function two_hand_check()
-		TwoHand = false
-		local equipset = set_combine(choose_set(),choose_set_custom())
-		local Main_Weapon = res.items:with('en',player.equipment.main)
+		local weapon_name = sets.Weapons[state.WeaponMode.value]['main']
+		if type(weapon_name) == "table" then weapon_name = sets.Weapons[state.WeaponMode.value]['main'].name end
+		local Main_Weapon = res.items:with('en',weapon_name)
 		if Main_Weapon then
 			log('Weapon:['..Main_Weapon.en..']')
 			local Skill_type = Main_Weapon.skill 
@@ -2117,6 +2119,9 @@ do
 				log('One Handed Weapon Type: ['..Skill_type..']')
 				TwoHand = false
 			end
+		else
+			log('Weapon Not Found')
+			TwoHand = false
 		end
 	end
 
@@ -2363,7 +2368,7 @@ do
 	windower.raw_register_event('zone change', on_zone_change_for_th)
 
 	windower.register_event('gain buff', function(id)
-		local name = res.buffs[id].english
+		local name = res.buffs[id].en
 		if id == 6 and (Mage_Job:contains(player.main_job) or Mage_Job:contains(player.sub_job)) then
 			if player.inventory['Remedy'] ~= nil then
 				if AutoItem == true then
@@ -2414,7 +2419,7 @@ do
 	end)
 
 	windower.register_event('lose buff', function(id)
-		local name = res.buffs[id].english
+		local name = res.buffs[id].en
 		local gain = false
 		if id == 15 then
 			enable('neck','lring','rring','waist')
