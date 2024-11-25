@@ -1964,7 +1964,7 @@ do
 			smModePath = table.concat(modes, '/', 2, #modes)
 			windower.send_command('exec '..smModePath..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		elseif command == 'food' then
-			windower.input.chat('/item "'..Food..'" <me>')
+			windower.chat.input('/item "'..Food..'" <me>')
 		-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
 		elseif command:startswith('use') then
 			use_enchantment(command:slice(5))
@@ -1986,7 +1986,7 @@ do
 			target = '<me>'
 		end
 		--log('input /ja "'..command_JA..'" '..target..'')
-		windower.input.chat('/ja "'..command_JA..'" '..target..'')
+		windower.chat.input('/ja "'..command_JA..'" '..target..'')
 	end
 
 	-- Functin used to exectue Spells
@@ -2002,7 +2002,7 @@ do
 			target = '<me>'
 		end
 		--log('input /ma "'..command_SP..'" '..target..'')
-		windower.input.chat('/ma "'..command_SP..'" '..target..'')
+		windower.chat.input('/ma "'..command_SP..'" '..target..'')
 	end
 
 	-- Used for Escha Temp and Zerg
@@ -2347,12 +2347,12 @@ do
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
-					--windower.input.chat('/echo Moving! Status: '..player.status..'')
+					--windower.chat.input('/echo Moving! Status: '..player.status..'')
 					windower.send_command("gs c update auto")
 				end
 			elseif not movement and is_moving then
 				is_moving = false
-				--windower.input.chat('/echo Stopped Moving! Status: '..player.status..'')
+				--windower.chat.input('/echo Stopped Moving! Status: '..player.status..'')
 				windower.send_command("gs c update auto")
 			end
 			Location.x = position.x
