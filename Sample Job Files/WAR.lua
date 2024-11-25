@@ -67,8 +67,7 @@ function get_sets()
 	}
 	-- This stops GS from chaning weapons (Abyssea Proc etc)
 	sets.Weapons['Unlocked'] ={
-		main={ name="Chango", augments={'Path: A',}},
-		sub="Utu Grip",
+
 	}
 	-- This is used when you do not have dual wield and is not a two handed weapon
 	sets.Weapons.Shield = {
