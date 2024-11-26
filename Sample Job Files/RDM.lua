@@ -395,6 +395,18 @@ function get_sets()
 		legs="Leth. Fuseau +3",
 	})
 
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
+
+	})
+
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
 	sets.Midcast.Nuke = {
 		sub="Ammurapi Shield",
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
