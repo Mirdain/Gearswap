@@ -2332,7 +2332,7 @@ do
 		local now = os.clock()
 
 		-- Make sure not update faster than .2 seconds
-		if now - main_engine_time < .2 then log('Speed Limit') return end
+		if now - main_engine_time < .1 then log('Speed Limit') return end
 
 		-- Update the debug UI if visible
 		if settings.debug then debug_box_update() end
