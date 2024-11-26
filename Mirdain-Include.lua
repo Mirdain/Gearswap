@@ -19,6 +19,7 @@ sets.Pet_Midcast = {}
 sets.Weapons = {}
 sets.Idle = {}
 sets.TreasureHunter = {}
+sets.Idle.Resting = {}
 
 state = state or {}
 
@@ -1636,6 +1637,9 @@ do
 			-- Equip movement gear
 			if is_moving then
 				equipSet = set_combine(equipSet, sets.Movement)
+			end
+			if player.status == "Resting" then
+				equipSet = set_combine(equipSet, sets.Idle.Resting)
 			end
 		end
 		return equipSet
