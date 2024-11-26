@@ -2040,7 +2040,7 @@ do
 
 	function use_enchantment(item)
 		local SlotList = {"main","sub","range","ammo","head","body","hands","legs","feet","neck","waist","lear","rear","left_ring","right_ring","back"}
-		local item_table = res.items:with('en',item) or res.items:with('en',item)
+		local item_table = res.items:with('enl',item) or res.items:with('en',item)
 		if item_table == nil or not item_table.targets:contains('Self') then
 			info("Invalid item.")
 			return
