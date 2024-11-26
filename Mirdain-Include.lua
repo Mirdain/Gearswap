@@ -196,6 +196,7 @@ do
 	local UpdateTime1 = os.clock()
 	local UpdateTime2 = os.clock()
 	local Location = {x=0, y=0, z=0}
+	local main_engine_time = os.clock()
 
 	-- Tracking vars for TH
 	local th_info = {}
@@ -1571,9 +1572,7 @@ do
 
 	function choose_set()
 
-		if buffactive['Sleep'] then
-			return
-		end
+		if buffactive['Sleep'] then return end
 
 		equipSet = {}
 		log('Choose Set Ran')
@@ -2060,7 +2059,11 @@ do
 		enable(slot)
 		equip({[slot]=item_table.en})
 		disable(slot)
-		windower.send_command('wait '..item_table.cast_delay + 3 ..';input /item "'..item_table.en..'" <me>;wait '..item_table.cast_time - .5 ..';gs enable '..slot)
+		local delay = item_table.cast_delay + item_table.cast_time + .5
+		log(delay)
+		windower.send_command('wait '..item_table.cast_delay + 3 ..';input /item "'..item_table.en..'" <me>')
+		coroutine.schedule(Unlock, delay)
+		coroutine.schedule(choose_set, delay)
 	end
 
 	-- Unbind Keys when the file is unloaded
@@ -2231,11 +2234,12 @@ do
 		windower.packets.inject_outgoing(0xF1,string.char(0xF1,0x04,0,0,id%256,math.floor(id/256),0,0)) -- Inject the cancel packet
 	end
 
-	function Unlock ()
+	function Unlock()
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
+
 	end
 
-	function Lock ()
+	function Lock()
 		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	end
 
@@ -2323,14 +2327,14 @@ do
 	function main_engine()
 		local now = os.clock()
 
+		-- Make sure not update faster than .2 seconds
+		if now - main_engine_time < .2 then log('Speed Limit') return end
+
 		-- Update the debug UI if visible
 		if settings.debug then debug_box_update() end
 
 		-- Spell timed out
 		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
-
-		-- wait 200ms before next check
-		coroutine.schedule(main_engine, 1/5)
 
 		-- Go no farther as you are dead
 		if not player or player.status == "Dead" or player.status == "Engaged dead" then return end
@@ -2347,13 +2351,13 @@ do
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
-					--windower.chat.input('/echo Moving! Status: '..player.status..'')
 					windower.send_command("gs c update auto")
+					--windower.chat.input('/echo Moving! Status: '..player.status..'')
 				end
 			elseif not movement and is_moving then
 				is_moving = false
-				--windower.chat.input('/echo Stopped Moving! Status: '..player.status..'')
 				windower.send_command("gs c update auto")
+				--windower.chat.input('/echo Stopped Moving! Status: '..player.status..'')
 			end
 			Location.x = position.x
 			Location.y = position.y
@@ -2374,11 +2378,15 @@ do
 				UpdateTime2 = now
 			end
 		end
+
+		main_engine_time = os.clock()
+
 	end
 
 	-- Register event section
 	windower.register_event('target change', on_target_change_for_th)
 	windower.raw_register_event('incoming chunk', on_incoming_chunk_for_th)
+	windower.raw_register_event('outgoing chunk', main_engine)
 	windower.raw_register_event('zone change', on_zone_change_for_th)
 
 	windower.register_event('gain buff', function(id)
@@ -2436,14 +2444,12 @@ do
 		local name = res.buffs[id].en
 		local gain = false
 		if id == 15 then
-			enable('neck','lring','rring','waist')
-			equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
-			equip(equipSet)
+			Unlock()
+			equip(set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain)))
 			info('Unlocking Cursna Received Gear')
 		elseif id == 2 then
-			enable('main','range')
-			equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
-			equip(equipSet)
+			Unlock()
+			equip(set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain)))
 			info('Unlocking Sleep Gear')
 		end 
 	end)
@@ -2503,12 +2509,14 @@ do
 					elseif data.param == 28787 then
 						log('Item Use Interupted')
 						Unlock()
+						equip(set_combine(choose_set(), choose_set_custom()))
 					end
 				-- Item use Finished
 				elseif data.category == 5 then
 					if data.param == 4154 then
 						log('Item Use Finished')
 						Unlock()
+						equip(set_combine(choose_set(), choose_set_custom()))
 					end
 				-- Casting Start
 				elseif data.category == 8 then
