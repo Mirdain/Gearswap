@@ -958,6 +958,7 @@ do
 			else
 				message = 'Ranged Attack Set'
 			end
+
 			-- Buffs
 			if buffactive['Triple Shot'] then 
 				equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
@@ -1568,80 +1569,6 @@ do
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
-	-- This function is called to determine correct sets and not a built in gearswap call
-	-------------------------------------------------------------------------------------------------------------------
-
-	function choose_set()
-
-		if buffactive['Sleep'] then return end
-
-		equipSet = {}
-		log('Choose Set Ran')
-
-		-- Combat Checks
-		if player.status == "Engaged" then
-			equipSet = set_combine(equipSet, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-
-			if DualWield == false then
-				if TwoHand == false then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
-				end
-			else
-				equipSet = set_combine(equipSet, sets.DualWield)
-			end
-
-			-- Check if AM3 is active
-			if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM3[state.WeaponMode.value])
-			elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
-			elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
-			elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM[state.WeaponMode.value])
-			end
-
-			-- Check if TreasureMode is activew
-			if state.TreasureMode.value ~= 'None' then
-				-- Equip TH gear if mob is not marked as tagged
-				if not th_info.tagged_mobs[player.target.id] then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
-				-- Equip TH gear if TreasureMode is Fulltime
-				elseif state.TreasureMode.value == 'Fulltime' then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
-				-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
-				elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
-				end
-			end
-
-		-- Idle sets
-		else
-			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-			if DualWield == false and TwoHand == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
-			end
-			--Pet specific checks
-			if pet.isvalid then
-				--Augment built set for Perp cost
-				equipSet = set_combine(equipSet, sets.Idle.Pet)
-			end
-			-- Equip Sublimation gear
-			if buffactive[187] then
-				equipSet = set_combine(equipSet, sets.Idle.Sublimation)
-			end
-			-- Equip movement gear
-			if is_moving then
-				equipSet = set_combine(equipSet, sets.Movement)
-			end
-			if player.status == "Resting" then
-				equipSet = set_combine(equipSet, sets.Idle.Resting)
-			end
-		end
-		return equipSet
-	end
-
-	-------------------------------------------------------------------------------------------------------------------
 	-- This function is called to determine if there are current buffs to be used
 	-------------------------------------------------------------------------------------------------------------------
 
@@ -1851,8 +1778,7 @@ do
 							state.OffenseMode:set(state.OffenseMode[1])
 						end
 						info('Offense Mode: ['..state.OffenseMode.value..']')
-						self_command_custom(command)
-						equip(set_combine(choose_set(),choose_set_custom()))
+						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -1862,8 +1788,7 @@ do
 				mode = string.split(cmd," ",2)
 				state.OffenseMode:set(mode[2])
 				info('Offense Mode: ['..state.OffenseMode.value..']')
-				self_command_custom(command)
-				equip(set_combine(choose_set(),choose_set_custom()))
+				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
@@ -1878,8 +1803,7 @@ do
 						end
 						two_hand_check()
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
-						self_command_custom(command)
-						equip(set_combine(choose_set(),choose_set_custom()))
+						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -1890,8 +1814,7 @@ do
 				state.WeaponMode:set(mode[2])
 				two_hand_check()
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
-				self_command_custom(command)
-				equip(set_combine(choose_set(),choose_set_custom()))
+				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
@@ -1905,8 +1828,7 @@ do
 							state.JobMode:set(state.JobMode[1])
 						end
 						info(UI_Name..': ['..state.JobMode.value..']')
-						self_command_custom(command)
-						equip(set_combine(choose_set(),choose_set_custom()))
+						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -1916,8 +1838,7 @@ do
 				mode = string.split(cmd," ",2)
 				state.JobMode:set(mode[2])
 				info(UI_Name..': ['..state.JobMode.value..']')
-				self_command_custom(command)
-				equip(set_combine(choose_set(),choose_set_custom()))
+				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
@@ -1931,8 +1852,7 @@ do
 							state.JobMode2:set(state.JobMode2[1])
 						end
 						info(UI_Name2..': ['..state.JobMode2.value..']')
-						self_command_custom(command)
-						equip(set_combine(choose_set(),choose_set_custom()))
+						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -1942,8 +1862,7 @@ do
 				mode = string.split(cmd," ",2)
 				state.JobMode2:set(mode[2])
 				info(UI_Name2..': ['..state.JobMode2.value..']')
-				self_command_custom(command)
-				equip(set_combine(choose_set(),choose_set_custom()))
+				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
@@ -2576,6 +2495,87 @@ do
 
 		end
 	end)
+
+	-------------------------------------------------------------------------------------------------------------------
+	-- This function is called to determine correct sets and not a built in gearswap call
+	-------------------------------------------------------------------------------------------------------------------
+
+	function choose_set()
+
+		if buffactive['Sleep'] then return end
+
+		equipSet = {}
+		log('Choose Set Ran')
+
+		-- Combat Checks
+		if player.status == "Engaged" then
+			equipSet = set_combine(equipSet, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+
+			if state.JobMode.value == "Ranged" then
+				log('Ranged Mode')
+				equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+			end
+
+			if DualWield == false then
+				if TwoHand == false then
+					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				end
+			else
+				equipSet = set_combine(equipSet, sets.DualWield)
+			end
+
+			-- Check if AM3 is active
+			if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
+				equipSet = set_combine(equipSet, sets.OffenseMode.AM3[state.WeaponMode.value])
+			elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
+				equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
+			elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
+				equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
+			elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
+				equipSet = set_combine(equipSet, sets.OffenseMode.AM[state.WeaponMode.value])
+			end
+
+			-- Check if TreasureMode is activew
+			if state.TreasureMode.value ~= 'None' then
+				-- Equip TH gear if mob is not marked as tagged
+				if not th_info.tagged_mobs[player.target.id] then
+					equipSet = set_combine(equipSet, sets.TreasureHunter)
+				-- Equip TH gear if TreasureMode is Fulltime
+				elseif state.TreasureMode.value == 'Fulltime' then
+					equipSet = set_combine(equipSet, sets.TreasureHunter)
+				-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
+				elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
+					equipSet = set_combine(equipSet, sets.TreasureHunter)
+				end
+			end
+
+
+
+		-- Idle sets
+		else
+			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+			if DualWield == false and TwoHand == false then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			end
+			--Pet specific checks
+			if pet.isvalid then
+				--Augment built set for Perp cost
+				equipSet = set_combine(equipSet, sets.Idle.Pet)
+			end
+			-- Equip Sublimation gear
+			if buffactive[187] then
+				equipSet = set_combine(equipSet, sets.Idle.Sublimation)
+			end
+			-- Equip movement gear
+			if is_moving then
+				equipSet = set_combine(equipSet, sets.Movement)
+			end
+			if player.status == "Resting" then
+				equipSet = set_combine(equipSet, sets.Idle.Resting)
+			end
+		end
+		return equipSet
+	end
 
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 5)
