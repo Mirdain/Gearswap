@@ -200,6 +200,18 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
+
+	})
+
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
 		--left_ring="Mujin Band",
 	})
@@ -281,7 +293,7 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if spell.skill == 'Elemental Magic' and not Elemental_Magic_Enfeeble:contains(spell.name) then
+	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
 		if player.MPP < 30 then
 			windower.add_to_chat(8,'Recover MP!')
 			equipSet = sets.MP_Recover
