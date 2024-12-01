@@ -1413,6 +1413,7 @@ do
 			end
 			-- Spell timer counter
 			Spellstart = os.clock()
+			is_Busy = true
 		else
 			log('Player is Busy ['..spell.english..']')
 			cancel_spell()
@@ -2240,7 +2241,7 @@ do
 		local now = os.clock()
 
 		-- Spell timed out
-		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
+		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false SpellCastTime = 0 end
 
 		-- Make sure not update faster than .2 seconds
 		if now - main_engine_time < .1 then log('Speed Limit') return end
@@ -2412,22 +2413,18 @@ do
 				if data.category == 2 then
 					if data.param == 26739 then 
 						log('Player finished Shooting') 
-						is_Busy = false 
 					end
 				--Casting finish
 				elseif data.category == 4 then
 					log('Casting Finished')
-					is_Busy = false
 				-- Item Use
 				elseif data.category == 9 then
 					if data.param == 24931 then
 						log('Item use')
-						is_Busy = true
 					elseif data.param == 28787 then
 						log('Item Use Interupted')
 						Unlock()
 						equip(set_combine(choose_set(), choose_set_custom()))
-						is_Busy = false
 					end
 				-- Item use Finished
 				elseif data.category == 5 then
@@ -2435,26 +2432,21 @@ do
 						log('Item Use Finished')
 						Unlock()
 						equip(set_combine(choose_set(), choose_set_custom()))
-						is_Busy = false
 					end
 				-- Casting Start
 				elseif data.category == 8 then
 					if data.param == 28787 then
 						log('Spell Interupt')
 						equip(set_combine(choose_set(),choose_set_custom()))
-						is_Busy = false
 					elseif data.param == 24931 then
 						log('Casting Spell')
-						is_Busy = true
 					end
 				-- Ranged attack start
 				elseif data.category == 12 then
 					if data.param == 24931 then
 						log(''..player.name ..' is Shooting')
-						is_Busy = true
 					elseif data.param == 28787 then
 						log('Shooting is interrupted')
-						is_Busy = false
 					end
 				end
 
