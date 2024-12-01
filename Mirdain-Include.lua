@@ -1396,7 +1396,7 @@ do
 	function precast(spell)
 		equipSet = {}
 
-		if is_Busy == false then
+		if not is_Busy then
 			if RecastTimers:contains(spell.type) then
 				local cast_spell = res.spells[spell.id]
 				-- assume 80% FC
@@ -1442,9 +1442,6 @@ do
 
 		-- here is where gear is actually equipped
 		equip(equipSet)
-
-		-- You passed the checks - player will begin action
-		is_Busy = true
 	end
 
 	function check_equipment_spells(spell, equipSet)
@@ -1502,7 +1499,7 @@ do
 
 	function buff_change(name,gain)
 		equipSet = {}
-		if is_Busy == false then
+		if not is_Busy then
 			--calls the include file and custom on a buff change
 			equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
 			equip(equipSet)
@@ -1963,7 +1960,6 @@ do
 			info("Invalid item.")
 			return
 		end
-		is_Busy = true
 		local slot =''
 		if item_table.slots:contains(0) then
 			slot = 'main'
@@ -2155,7 +2151,6 @@ do
 
 	function Unlock()
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
-
 	end
 
 	function Lock()
@@ -2207,8 +2202,6 @@ do
 		
 			local t = windower.ffxi.get_mob_by_id(data.targets[1].id)
 
-			log(t.spawn_type)
-
 			-- valid party target and within range
 			if t and t.spawn_type == 16 and t.distance:sqrt() < 21 then
 
@@ -2246,14 +2239,14 @@ do
 	function main_engine()
 		local now = os.clock()
 
+		-- Spell timed out
+		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
+
 		-- Make sure not update faster than .2 seconds
 		if now - main_engine_time < .1 then log('Speed Limit') return end
 
 		-- Update the debug UI if visible
 		if settings.debug then debug_box_update() end
-
-		-- Spell timed out
-		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false end
 
 		-- Go no farther as you are dead
 		if not player or player.status == "Dead" or player.status == "Engaged dead" then return end
@@ -2417,18 +2410,24 @@ do
 			if data.actor_id == player.id then
 				-- Ranged attack finish
 				if data.category == 2 then
-					if data.param == 26739 then log('Player finished Shooting') end
+					if data.param == 26739 then 
+						log('Player finished Shooting') 
+						is_Busy = false 
+					end
 				--Casting finish
 				elseif data.category == 4 then
 					log('Casting Finished')
+					is_Busy = false
 				-- Item Use
 				elseif data.category == 9 then
 					if data.param == 24931 then
 						log('Item use')
+						is_Busy = true
 					elseif data.param == 28787 then
 						log('Item Use Interupted')
 						Unlock()
 						equip(set_combine(choose_set(), choose_set_custom()))
+						is_Busy = false
 					end
 				-- Item use Finished
 				elseif data.category == 5 then
@@ -2436,21 +2435,26 @@ do
 						log('Item Use Finished')
 						Unlock()
 						equip(set_combine(choose_set(), choose_set_custom()))
+						is_Busy = false
 					end
 				-- Casting Start
 				elseif data.category == 8 then
 					if data.param == 28787 then
 						log('Spell Interupt')
 						equip(set_combine(choose_set(),choose_set_custom()))
+						is_Busy = false
 					elseif data.param == 24931 then
 						log('Casting Spell')
+						is_Busy = true
 					end
 				-- Ranged attack start
 				elseif data.category == 12 then
 					if data.param == 24931 then
 						log(''..player.name ..' is Shooting')
+						is_Busy = true
 					elseif data.param == 28787 then
 						log('Shooting is interrupted')
+						is_Busy = false
 					end
 				end
 
@@ -2469,7 +2473,6 @@ do
 						end
 					end
 				end
-
 			end
 
 			-- Casting Spell
