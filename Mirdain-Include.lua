@@ -722,7 +722,7 @@ do
 		-- WhiteMagic
 		elseif spell.type == 'WhiteMagic' then
 			equipSet = sets.Precast
-			if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Cura') or spell.name:contains('Cure') or spell.name:contains('Reraise') then
+			if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
 			elseif equipSet[spell.english] then
 				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
@@ -2160,7 +2160,7 @@ do
 
 	function Elemental_check(equipSet, spell)
 		-- This function swaps in the Orpheus or Hachirin as needed
-		if Elemental_WS:contains(spell.name) and spell.type == 'WeaponSkill' or spell.type == 'BlackMagic' then
+		if (Elemental_WS:contains(spell.name) and spell.type == 'WeaponSkill') or spell.type == 'BlackMagic' then
 			-- Matching double weather (w/o day conflict).
 			if spell.element == world.weather_element and world.weather_intensity == 2 then
 				equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
