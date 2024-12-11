@@ -99,11 +99,11 @@ function get_sets()
 		legs="Eri. Leg Guards +3", -- 13/13
 		feet="Erilaz Greaves +3", -- 11/11
 		neck={ name="Futhark Torque +2", augments={'Path: A',}}, -- 7/7
-		waist="Carrier's Sash",
+		waist="Plat. Mog. Belt",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1}, -- 3/5
 		right_ear="Sanare Earring", -- Upgrade to +1/+2 Earring
-		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		left_ring={name="Moonlight Ring", bag="wardrobe1", priority=4},
+		right_ring={name="Moonlight Ring", bag="wardrobe2", priority=5},
 		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Damage taken-5%',}}, -- 5/5
     } -- 75 PDT / 58 MDT		3571 HP/ 1149 MP
 
@@ -119,11 +119,9 @@ function get_sets()
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 		head="Erilaz Galea +3",
 		body="Runeist Coat +3",
-		waist="Carrier's Sash",
-		left_ear="Tuisto Earring",
+		waist="Plat. Mog. Belt",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1}, -- 3/5
 		right_ear="Sanare Earring",
-		left_ring={name="Moonlight Ring", bag="wardrobe1", priority=4},
-		right_ring={name="Moonlight Ring", bag="wardrobe2", priority=5},
 	})
 
 	sets.Idle.DT = set_combine( sets.Idle, {
@@ -134,6 +132,20 @@ function get_sets()
 		left_ring={name="Moonlight Ring", bag="wardrobe1", priority=4},
 		right_ring={name="Moonlight Ring", bag="wardrobe2", priority=5},
 	})
+
+	-- Set is used for midcast during MEVA OffenseMode
+	sets.MEVA = {
+		ammo="Staunch Tathlum +1",
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		body="Runeist Coat +3",
+		hands="Erilaz Gauntlets +3", -- 11/11
+		legs="Eri. Leg Guards +3", -- 13/13
+		feet="Erilaz Greaves +3", -- 11/11
+		waist="Plat. Mog. Belt",
+		left_ring={name="Moonlight Ring", bag="wardrobe1", priority=4},
+		right_ring={name="Moonlight Ring", bag="wardrobe2", priority=5},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1}, -- 3/5
+	}
 
 	-- This gear will be equiped when the player is moving and not engaged
 	sets.Movement = {
@@ -238,14 +250,14 @@ function get_sets()
 		head="Rune. Bandeau +3", -- 14
 		body="Erilaz Surcoat +3", -- 13
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
-		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, -- 6
-		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}, priority=5}, -- 8
+		legs={ name="Futhark Trousers +3", augments={'Enhances "Inspire" effect',}},
+		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}, priority=2}, -- 8
 		neck="Voltsurge Torque",
 		waist={ name="Plat. Mog. Belt", priority=1},
-		right_ear={ name="Etiolation Earring", priority=1},
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
+		right_ear={ name="Etiolation Earring", priority=3},
+		left_ear={ name="Tuisto Earring", priority=4},
 		left_ring="Kishar Ring", -- 4
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=4},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=5},
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
 	} --65 FC
 
@@ -417,6 +429,11 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 	equipSet = set_combine(equipSet, Embolden_Check(spell))
+
+	if state.OffenseMode.value == 'MEVA' then
+		equipSet = set_combine(equipSet, sets.MEVA)
+	end
+
 	return equipSet
 end
 -- Augment basic equipment sets
