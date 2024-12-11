@@ -1819,30 +1819,6 @@ do
 				display_box_update()
 				return
 			end
-		elseif command:contains('jobmode') then
-			if command == 'jobmode' then
-				for i,v in ipairs(state.JobMode) do
-					if state.JobMode.value == v then
-						if state.JobMode.value ~= state.JobMode[#state.JobMode] then
-							state.JobMode:set(state.JobMode[i+1])
-						else
-							state.JobMode:set(state.JobMode[1])
-						end
-						info(UI_Name..': ['..state.JobMode.value..']')
-						windower.send_command("gs c update auto")
-						display_box_update()
-						return
-					end
-				end
-			else
-				local mode = {}
-				mode = string.split(cmd," ",2)
-				state.JobMode:set(mode[2])
-				info(UI_Name..': ['..state.JobMode.value..']')
-				windower.send_command("gs c update auto")
-				display_box_update()
-				return
-			end
 		elseif command:contains('jobmode2') then
 			if command == 'jobmode2' then
 				for i,v in ipairs(state.JobMode2) do
@@ -1863,6 +1839,30 @@ do
 				mode = string.split(cmd," ",2)
 				state.JobMode2:set(mode[2])
 				info(UI_Name2..': ['..state.JobMode2.value..']')
+				windower.send_command("gs c update auto")
+				display_box_update()
+				return
+			end
+		elseif command:contains('jobmode') then
+			if command == 'jobmode' then
+				for i,v in ipairs(state.JobMode) do
+					if state.JobMode.value == v then
+						if state.JobMode.value ~= state.JobMode[#state.JobMode] then
+							state.JobMode:set(state.JobMode[i+1])
+						else
+							state.JobMode:set(state.JobMode[1])
+						end
+						info(UI_Name..': ['..state.JobMode.value..']')
+						windower.send_command("gs c update auto")
+						display_box_update()
+						return
+					end
+				end
+			else
+				local mode = {}
+				mode = string.split(cmd," ",2)
+				state.JobMode:set(mode[2])
+				info(UI_Name..': ['..state.JobMode.value..']')
 				windower.send_command("gs c update auto")
 				display_box_update()
 				return
