@@ -955,6 +955,9 @@ do
 			elseif state.OffenseMode.value == 'CRIT' then
 				equipSet = set_combine(equipSet, sets.Midcast.RA.CRIT)
 				message = 'Ranged Attack with Critical Hit'
+			elseif state.OffenseMode.value == 'True Shot' then
+				equipSet = set_combine(equipSet, sets.Midcast.RA['True Shot'])
+				message = 'Ranged Attack with True Shot'
 			else
 				message = 'Ranged Attack Set'
 			end
@@ -1884,10 +1887,9 @@ do
 		-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
 		elseif command:startswith('use') then
 			use_enchantment(command:slice(5))
-		else
-			--use below for custom Job commands
-			self_command_custom(command)
 		end
+		--use below for custom Job commands
+		self_command_custom(command)
 	end
 
 	-- Functin used to exectue Job Abilities
