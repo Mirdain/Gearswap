@@ -1465,9 +1465,10 @@ do
 				or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
 				or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
 
-			if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",}) end
-
-			if Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
+			-- Crepuscular Cloak Found
+			if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",})
+			-- Twilight Cloak Found
+			elseif Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
 		end
 
 		return equipSet
@@ -2043,11 +2044,12 @@ do
 	function two_hand_check()
 		local weapon_name = sets.Weapons[state.WeaponMode.value]['main']
 		if type(weapon_name) == "table" then weapon_name = sets.Weapons[state.WeaponMode.value]['main'].name end
+		log(weapon_name)
 		local Main_Weapon = res.items:with('en',weapon_name)
 		if Main_Weapon then
 			log('Weapon:['..Main_Weapon.en..']')
 			local Skill_type = Main_Weapon.skill 
-			if Skill_type == 6 or Skill_type == 8 or Skill_type == 4 or Skill_type == 12 or Skill_type == 10 then
+			if Skill_type == 4 or Skill_type == 6 or Skill_type == 7 or Skill_type == 8 or Skill_type == 10 or Skill_type == 12 then
 				log('Two Handed Weapon Type: ['..Skill_type..']')
 				TwoHand = true
 			else
