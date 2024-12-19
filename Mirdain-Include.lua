@@ -87,6 +87,7 @@ command_JA = "None"
 command_SP = "None"
 command_BP = "None"
 
+is_Busy = false
 AutoItem = false
 Cycle_Time = false
 Random_Lockstyle = false
@@ -185,7 +186,6 @@ do
 	local SpellCastTime = 0
 	local Spellstart = os.clock()
 
-	local is_Busy = false
 	local is_Pianissimo = false
 	local is_moving = false
 	local is_first_time_load = true
@@ -493,7 +493,6 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function precastequip(spell)
-
 		--Cancel for SMN if Avatar is mid action and Item use
 		if (pet.isvalid and pet_midaction()) or spell.type == "Item" then
 			return
@@ -905,9 +904,14 @@ do
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 		if state.WeaponMode.value ~= "Unlocked" then
-			equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-			if TwoHand == false and DualWield == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			if state.WeaponMode.value == "Locked" then
+				equipSet = set_combine(equipSet, { main = player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				log(equipSet)
+			else
+				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				if TwoHand == false and DualWield == false then
+					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				end
 			end
 			log('Precast set equiping Offense Mode Gear')
 		end
@@ -1337,12 +1341,17 @@ do
 			send_command('wait .5;cancel 66;')
 		end
 
-		-- Weapon Checks for midcast
+		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 		if state.WeaponMode.value ~= "Unlocked" then
-			equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-			if TwoHand == false and DualWield == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			if state.WeaponMode.value == "Locked" then
+				equipSet = set_combine(equipSet, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				log(equipSet)
+			else
+				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				if TwoHand == false and DualWield == false then
+					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				end
 			end
 			log('Midcast set equiping Offense Mode Gear')
 		end
@@ -1539,7 +1548,6 @@ do
 
 	function pet_midcast(spell)
 		equipSet = sets.Pet_Midcast
-
 		-- Specific sets are defined
 		if equipSet[spell.english] then
 			equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
@@ -1548,15 +1556,21 @@ do
 			equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
 		end
 
-		-- Weapon Checks for midcast
+		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
 		if state.WeaponMode.value ~= "Unlocked" then
-			equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-			if TwoHand == false and DualWield == false then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+			if state.WeaponMode.value == "Locked" then
+				equipSet = set_combine(equipSet, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				log(equipSet)
+			else
+				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				if TwoHand == false and DualWield == false then
+					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				end
 			end
 			log('Midcast set equiping Offense Mode Gear')
 		end
+
 		equip(equipSet)
 	end
 
@@ -1566,6 +1580,7 @@ do
 
 	function pet_aftercast(spell)
 		equipSet = {}
+		log('Pet After Cast')
 		equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
 		equip(equipSet)
 	end
@@ -2042,23 +2057,24 @@ do
 	end
 
 	function two_hand_check()
-		local weapon_name = sets.Weapons[state.WeaponMode.value]['main']
-		if type(weapon_name) == "table" then weapon_name = sets.Weapons[state.WeaponMode.value]['main'].name end
-		log(weapon_name)
-		local Main_Weapon = res.items:with('en',weapon_name)
-		if Main_Weapon then
-			log('Weapon:['..Main_Weapon.en..']')
-			local Skill_type = Main_Weapon.skill 
-			if Skill_type == 4 or Skill_type == 6 or Skill_type == 7 or Skill_type == 8 or Skill_type == 10 or Skill_type == 12 then
-				log('Two Handed Weapon Type: ['..Skill_type..']')
-				TwoHand = true
+		if sets.Weapons[state.WeaponMode.value] and sets.Weapons[state.WeaponMode.value]['main'] then
+			local weapon_name = sets.Weapons[state.WeaponMode.value]['main']
+			if type(weapon_name) == "table" then weapon_name = sets.Weapons[state.WeaponMode.value]['main'].name end
+			local Main_Weapon = res.items:with('en',weapon_name)
+			if Main_Weapon then
+				log('Weapon:['..Main_Weapon.en..']')
+				local Skill_type = Main_Weapon.skill 
+				if Skill_type == 4 or Skill_type == 6 or Skill_type == 7 or Skill_type == 8 or Skill_type == 10 or Skill_type == 12 then
+					log('Two Handed Weapon Type: ['..Skill_type..']')
+					TwoHand = true
+				else
+					log('One Handed Weapon Type: ['..Skill_type..']')
+					TwoHand = false
+				end
 			else
-				log('One Handed Weapon Type: ['..Skill_type..']')
+				log('Weapon Not Found')
 				TwoHand = false
 			end
-		else
-			log('Weapon Not Found')
-			TwoHand = false
 		end
 	end
 
@@ -2248,7 +2264,7 @@ do
 		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false SpellCastTime = 0 end
 
 		-- Make sure not update faster than .2 seconds
-		if now - main_engine_time < .1 then log('Speed Limit') return end
+		if now - main_engine_time < .1 then return end
 
 		-- Update the debug UI if visible
 		if settings.debug then debug_box_update() end
@@ -2297,7 +2313,6 @@ do
 		end
 
 		main_engine_time = os.clock()
-
 	end
 
 	-- Register event section
