@@ -158,7 +158,7 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Telos Earring",
 		right_ear="Crep. Earring",
-		left_ring="Chirich Ring +1",
+		left_ring="Lehko's Ring",
 		right_ring="Epona's Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
@@ -385,7 +385,7 @@ function get_sets()
 	}) -- 20% Potency
 
 	--Base Set used for all rolls
-	sets.PhantomRoll = set_combine(sets.Idle, {
+	sets.PhantomRoll = {
 		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
 		sub={ name="Nusku Shield", priority=2},
 		range="Compensator", -- 20 sec Duration
@@ -394,52 +394,52 @@ function get_sets()
 		neck="Regal Necklace", -- 20 sec Duration
 		right_ring="Luzaf's Ring", -- 16 yalm range
 		back={ name="Camulus's Mantle", augments={'HP+60','HP+20','"Snapshot"+10',}}, -- 30 sec Duration
-	})
+	}
 
-	sets.PhantomRoll['Fighter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Monk\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Healer\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Wizard\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Warlock\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Rogue\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Gallant\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Chaos Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Beast Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Choral Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Hunter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Samurai Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Ninja Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Drachen Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Evoker\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Magus\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Corsair\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Puppet Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Dancer\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Scholar\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Bolter\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll["Caster\'s Roll"] = set_combine(sets.PhantomRoll, {legs="Chas. Culottes +3",})
-	sets.PhantomRoll["Tactician\'s Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +3"})
-	sets.PhantomRoll["Allies\' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +3"})
-	sets.PhantomRoll['Miser\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Companion\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Avenger\'s Roll'] = sets.PhantomRoll
-	sets.PhantomRoll['Naturalist\'s Roll'] = sets.PhantomRoll
-    sets.PhantomRoll["Courser\'s Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +3"})
-    sets.PhantomRoll["Blitzer\'s Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +3"})
+	sets.PhantomRoll["Fighter's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Monk's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Healer's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Wizard's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Warlock's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Rogue's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Gallant's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Chaos Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Beast Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Choral Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Hunter's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Samurai Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Ninja Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Drachen Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Evoker's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Magus's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Corsair's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Puppet Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Dancer's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Scholar's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Bolter's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Caster's Roll"] = set_combine(sets.PhantomRoll, {legs="Chas. Culottes +3",})
+	sets.PhantomRoll["Tactician's Roll"] = set_combine(sets.PhantomRoll, {body="Chasseur's Frac +3"})
+	sets.PhantomRoll["Allies' Roll"] = set_combine(sets.PhantomRoll, {hands="Chasseur's Gants +3"})
+	sets.PhantomRoll["Miser's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Companion's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Avenger's Roll"] = sets.PhantomRoll
+	sets.PhantomRoll["Naturalist's Roll"] = sets.PhantomRoll
+    sets.PhantomRoll["Courser's Roll"] = set_combine(sets.PhantomRoll, {feet="Chass. Bottes +3"})
+    sets.PhantomRoll["Blitzer's Roll"] = set_combine(sets.PhantomRoll, {head="Chass. Tricorne +3"})
 
 	-- Melee Base set
 	sets.WS = {
 		ammo=Ammo.Bullet.WS,
 		head={ name="Nyame Helm", augments={'Path: B',}},
 		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		hands="Chasseur's Gants +3",
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Comm. Charm +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
-		left_ring="Cornelia's Ring",
+		left_ring="Regal Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
@@ -455,7 +455,7 @@ function get_sets()
 		waist="Fotia Belt",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
-		left_ring="Cornelia's Ring",
+		left_ring="Regal Ring",
 		right_ring="Dingir Ring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
