@@ -909,7 +909,7 @@ do
 				log(equipSet)
 			else
 				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-				if TwoHand == false and DualWield == false then
+				if not TwoHand and not DualWield then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
 			end
@@ -919,8 +919,8 @@ do
 		--Swap in bard song weapons
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
-			if DualWield == false then
-				if TwoHand == false then
+			if not DualWield then
+				if not TwoHand then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
 			end
@@ -1349,7 +1349,7 @@ do
 				log(equipSet)
 			else
 				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-				if TwoHand == false and DualWield == false then
+				if not TwoHand and not DualWield then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
 			end
@@ -1359,8 +1359,8 @@ do
 		--Swap in bard song weapons
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
-			if DualWield == false then
-				if TwoHand == false then
+			if not DualWield then
+				if not TwoHand then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
 			end
@@ -1564,7 +1564,7 @@ do
 				log(equipSet)
 			else
 				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
-				if TwoHand == false and DualWield == false then
+				if not TwoHand and not DualWield then
 					equipSet = set_combine(equipSet, sets.Weapons.Shield)
 				end
 			end
@@ -2530,10 +2530,8 @@ do
 				equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
 			end
 
-			if DualWield == false then
-				if TwoHand == false then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
-				end
+			if not DualWield and not TwoHand then
+				equipSet = set_combine(equipSet, sets.Weapons.Shield)
 			else
 				equipSet = set_combine(equipSet, sets.DualWield)
 			end
@@ -2541,22 +2539,28 @@ do
 			-- Check if AM3 is active
 			if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
 				equipSet = set_combine(equipSet, sets.OffenseMode.AM3[state.WeaponMode.value])
+
 			elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
 				equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
+
 			elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
 				equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
+
 			elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
 				equipSet = set_combine(equipSet, sets.OffenseMode.AM[state.WeaponMode.value])
 			end
 
 			-- Check if TreasureMode is activew
 			if state.TreasureMode.value ~= 'None' then
+
 				-- Equip TH gear if mob is not marked as tagged
 				if not th_info.tagged_mobs[player.target.id] then
 					equipSet = set_combine(equipSet, sets.TreasureHunter)
+
 				-- Equip TH gear if TreasureMode is Fulltime
 				elseif state.TreasureMode.value == 'Fulltime' then
 					equipSet = set_combine(equipSet, sets.TreasureHunter)
+
 				-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
 				elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
 					equipSet = set_combine(equipSet, sets.TreasureHunter)
@@ -2568,30 +2572,37 @@ do
 		-- Idle sets
 		else
 			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
-			if DualWield == false and TwoHand == false then
+
+			if not DualWield and not TwoHand then
 				equipSet = set_combine(equipSet, sets.Weapons.Shield)
 			end
+
 			--Pet specific checks
 			if pet.isvalid then
 				--Augment built set for Perp cost
 				equipSet = set_combine(equipSet, sets.Idle.Pet)
 			end
+
 			-- Equip Sublimation gear
 			if buffactive[187] then
 				equipSet = set_combine(equipSet, sets.Idle.Sublimation)
 			end
+
 			-- Equip movement gear
 			if is_moving then
 				equipSet = set_combine(equipSet, sets.Movement)
 			end
+
 			if player.status == "Resting" then
 				equipSet = set_combine(equipSet, sets.Idle.Resting)
 			end
+
 		end
 		return equipSet
 	end
 
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 5)
-	coroutine.schedule(display_box_update, 2)
+	coroutine.schedule(dual_wield_check, 5)
+	coroutine.schedule(display_box_update, 5)
 end
