@@ -10,6 +10,10 @@ sets.PhantomRoll = {}
 sets.QuickDraw = {}
 sets.Precast = {}
 sets.Midcast = {}
+sets.Midcast.Dark = {}
+sets.Midcast.Dark.MACC = {}
+sets.Midcast.Dark.Absorb = {}
+sets.Midcast.Dark.Enhancing = {}
 sets.Waltz = {}
 sets.Jig = {}
 sets.Samba = {}
@@ -668,7 +672,12 @@ do
 			equipSet = sets.JA
 			if equipSet[spell.english] then
 				equipSet = set_combine(equipSet, equipSet[spell.english])
+				--Summon the correct jug pet
+				if spell.name == 'Bestial Loyalty' or spell.name == 'Call Beast' then
+					equipSet = set_combine(equipSet, sets.Jugs[state.JobMode.value])
+				end
 				info('['..spell.english..'] Set')
+
 			elseif spell.id == 123 then -- Double Up
 				equipSet = set_combine(equipSet, sets.PhantomRoll)
 				info('['..spell.english..'] Set')
@@ -1408,6 +1417,9 @@ do
 	function precast(spell)
 		equipSet = {}
 
+		-- Spell timed out
+		if is_Busy and os.clock() - Spellstart > SpellCastTime then is_Busy = false SpellCastTime = 0 end
+
 		if not is_Busy then
 			if RecastTimers:contains(spell.type) then
 				local cast_spell = res.spells[spell.id]
@@ -1421,7 +1433,7 @@ do
 				SpellCastTime = 1.1
 			else
 				-- Set duration of JA/WS
-				SpellCastTime = 1.05
+				SpellCastTime = 1
 			end
 			-- Spell timer counter
 			Spellstart = os.clock()
@@ -1502,7 +1514,7 @@ do
 		elseif spell.action_type == 'Ranged Attack' then
 			SpellCastTime = 1.1
 		else
-			SpellCastTime = .05
+			SpellCastTime = 0
 		end
 		Spellstart = os.clock()
 	end
