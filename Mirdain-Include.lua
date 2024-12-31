@@ -3,27 +3,158 @@
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
--- Default gearsets. Expand this in the job file when defining sets.
-sets.WS = {}
-sets.JA = {}
-sets.PhantomRoll = {}
-sets.QuickDraw = {}
+-- Weapons
+sets.Weapons = {}
+sets.Weapons.Sleep = {}
+sets.Weapons.Shield = {}
+sets.Weapons.Songs = {}
+sets.Weapons.Songs.Midcast = {}
+
+-- Precast
 sets.Precast = {}
+sets.Precast.FastCast = {}
+sets.Precast.FastCast.Enhancing = {}
+sets.Precast.Cure = {}
+sets.Precast.QuickMagic = {}
+sets.Precast.Utsusemi = {}
+sets.Precast.RA = {}
+sets.Precast.RA.Flurry = {}
+sets.Precast.RA.Flurry_II = {}
+sets.Precast.Songs = {}
+
+--Weaponskills
+sets.WS = {}
+sets.WS.ACC =  {}
+sets.WS.ACC.RA = {}
+sets.WS.PDL = {}
+sets.WS.PDL.RA = {}
+sets.WS.SB = {}
+sets.WS.SB.RA = {}
+sets.WS.CRIT = {}
+sets.WS.CRIT.RA = {}
+sets.WS.MEVA = {}
+sets.WS.MEVA.RA = {}
+sets.WS.AM = {}
+sets.WS.AM.RA = {}
+sets.WS.AM1 = {}
+sets.WS.AM1.RA = {}
+sets.WS.AM2 = {}
+sets.WS.AM2.RA = {}
+sets.WS.AM3 = {}
+sets.WS.AM3.RA = {}
+
+-- Midcast
 sets.Midcast = {}
+sets.Midcast.RA = {}
+sets.Midcast.RA.ACC = {}
+sets.Midcast.RA.PDL = {}
+sets.Midcast.RA.SB = {}
+sets.Midcast.RA.CRIT = {}
+sets.Midcast.RA['True Shot'] = {}
+sets.Midcast.RA.TripleShot = {}
+sets.Midcast.RA.DoubleShot = {}
+sets.Midcast.RA.Barrage = {}
+sets.Midcast.DummySongs = {}
+sets.Midcast.Enfeebling = {}
+
+-- Midcast for Ranged Attacks and Aftermath
+sets.Midcast.AM = {}
+sets.Midcast.AM.RA = {}
+sets.Midcast.AM1 = {}
+sets.Midcast.AM1.RA = {}
+sets.Midcast.AM2 = {}
+sets.Midcast.AM2.RA = {}
+sets.Midcast.AM3 = {}
+sets.Midcast.AM3.RA = {}
+
+sets.Midcast.SIRD = {}
+sets.Midcast.Nuke = {}
+sets.Midcast.Burst = {}
+sets.Midcast.Cure = {}
+sets.Midcast.Curaga = {}
+sets.Midcast.Cura = {}
+sets.Midcast.Regen = {}
+sets.Midcast.Enhancing = {}
+sets.Midcast.Enhancing.Others = {}
+sets.Midcast.Refresh = {}
+sets.Midcast.Enhancing.Gain = {}
+sets.Midcast.Enhancing.Elemental = {}
+sets.Midcast.Enhancing.Status = {}
+sets.Midcast.Enhancing.Skill = {}
+sets.Midcast.Enfeebling = {}
+sets.Midcast.Enfeebling.MACC = {}
+sets.Midcast.Enfeebling.Potency = {}
+sets.Midcast.Enfeebling.Duration = {}
+sets.Midcast.Aspir = {}
+sets.Midcast.Drain = {}
 sets.Midcast.Dark = {}
 sets.Midcast.Dark.MACC = {}
 sets.Midcast.Dark.Absorb = {}
 sets.Midcast.Dark.Enhancing = {}
+sets.Midcast.Skill = {}
+sets.Midcast.ACC = {}
+sets.Midcast.BP = {}
+sets.Midcast.SummoningMagic = {}
+sets.Midcast.Summon = {}
+
+-- Bard Midcast
+sets.Midcast.Finale = {}
+sets.Midcast.Lullaby = {}
+sets.Midcast.Threnody = {}
+sets.Midcast.Elegy = {}
+sets.Midcast.Requiem = {}
+sets.Midcast.March = {}
+sets.Midcast.Minuet = {}
+sets.Midcast.Madrigal = {}
+sets.Midcast.Ballad = {}
+sets.Midcast.Scherzo = {}
+sets.Midcast.Mazurka = {}
+sets.Midcast.Paeon = {}
+sets.Midcast.Carol = {}
+sets.Midcast.Minne = {}
+sets.Midcast.Mambo = {}
+sets.Midcast.Etude = {}
+sets.Midcast.Prelude = {}
+sets.Midcast.Dirge ={}
+sets.Midcast.Sirvente = {}
+sets.Midcast.Aria = {}
+
+-- State sets
+sets.Idle = {}
+sets.Idle.Pet = {}
+sets.Idle.Sublimation = {}
+sets.Idle.Resting = {}
+sets.OffenseMode = {}
+sets.OffenseMode.Ranged = {}
+sets.OffenseMode.AM = {}
+sets.OffenseMode.AM1 = {}
+sets.OffenseMode.AM2 = {}
+sets.OffenseMode.AM3 = {}
+
+
+-- Other Sets
 sets.Waltz = {}
 sets.Jig = {}
 sets.Samba = {}
 sets.Step = {}
 sets.Flourish = {}
-sets.Pet_Midcast = {}
-sets.Weapons = {}
-sets.Idle = {}
+sets.Jugs = {}
+sets.PhantomRoll = {}
 sets.TreasureHunter = {}
-sets.Idle.Resting = {}
+sets.QuickDraw = {}
+sets.JA = {}
+sets.Storms = {}
+sets.Enmity = {}
+sets.Diffusion = {}
+sets.Geomancy = {}
+sets.Geomancy.Geo = {}
+sets.Geomancy.Indi = {}
+sets.Geomancy.Indi.Entrust = {}
+sets.Pet_Midcast = {}
+sets.DualWield = {}
+sets.Cursna_Received = {}
+sets.Movement = {}
+
 
 state = state or {}
 
@@ -523,6 +654,9 @@ do
 					elseif state.OffenseMode.value == 'SB' then
 						equipSet = set_combine(equipSet, sets.WS.SB.RA)
 						message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
+				    elseif state.OffenseMode.value == 'MEVA' then
+						equipSet = set_combine(equipSet, sets.WS.MEVA.RA)
+						message = '['..spell.english..'] Set with Magic Evasion (Ranged)'
 					elseif state.OffenseMode.value == 'CRIT' then
 						equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
 						message = '['..spell.english..'] Set with Critical Hit (Ranged)'
@@ -554,6 +688,9 @@ do
 					elseif state.OffenseMode.value == 'SB' then
 						equipSet = set_combine(equipSet, sets.WS.SB.RA)
 						message = 'Using Default WS Set with Subtle Blow (Ranged)'
+					elseif state.OffenseMode.value == 'MEVA' then
+						equipSet = set_combine(equipSet, sets.WS.MEVA.RA)
+						message = 'Using Default WS Set with Magic Evasion (Ranged)'
 					elseif state.OffenseMode.value == 'CRIT' then
 						equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
 						message = 'Using Default WS Set with Critical Hit (Ranged)'
@@ -841,7 +978,7 @@ do
 				-- Song Count for Dummy Songs
 				if SongCount:contains(spell.name) then
 					info( '['..spell.english..'] Set (Song Count)')
-					equipSet = set_combine(sets.Midcast.DummySongs, {range=Instrument.Count})
+					equipSet = set_combine(sets.Midcast, sets.Midcast.DummySongs, {range=Instrument.Count})
 				-- Equip Marsyas
 				elseif spell.name == "Honor March" then
 					equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Honor})
@@ -2613,8 +2750,170 @@ do
 		return equipSet
 	end
 
+	-- List of all the possible tables to use
+	function validate_sets()
+
+		-- Weapons
+		if not sets.Weapons then sets.Weapons = {} end
+		if not sets.Weapons.Sleep then sets.Weapons.Sleep = {} end
+		if not sets.Weapons.Shield then sets.Weapons.Shield = {} end
+		if not sets.Weapons.Songs then sets.Weapons.Songs = {} end
+		if not sets.Weapons.Songs.Midcast then sets.Weapons.Songs.Midcast = {} end
+
+		-- Precast
+		if not sets.Precast then sets.Precast = {} end
+		if not sets.Precast.FastCast then sets.Precast.FastCast = {} end
+		if not sets.Precast.FastCast.Enhancing then sets.Precast.FastCast.Enhancing = {} end
+		if not sets.Precast.Cure then sets.Precast.Cure = {} end
+		if not sets.Precast.QuickMagic then sets.Precast.QuickMagic = {} end
+		if not sets.Precast.Utsusemi then sets.Precast.Utsusemi = {} end
+		if not sets.Precast.Songs then sets.Precast.Songs = {} end
+
+		if not sets.Precast.RA then sets.Precast.RA = {} end
+		if not sets.Precast.RA.Flurry then sets.Precast.RA.Flurry = {} end
+		if not sets.Precast.RA.Flurry_II then sets.Precast.RA.Flurry_II = {} end
+
+		--Weaponskills
+		if not sets.WS then sets.WS = {} end
+		if not sets.WS.ACC then sets.WS.ACC =  {} end
+		if not sets.WS.ACC.RA then sets.WS.ACC.RA = {} end
+		if not sets.WS.PDL then sets.WS.PDL = {} end
+		if not sets.WS.PDL.RA then sets.WS.PDL.RA = {} end
+		if not sets.WS.SB then sets.WS.SB = {} end
+		if not sets.WS.SB.RA then sets.WS.SB.RA = {} end
+		if not sets.WS.CRIT then sets.WS.CRIT = {} end
+		if not sets.WS.CRIT.RA then sets.WS.CRIT.RA = {} end
+		if not sets.WS.MEVA then sets.WS.MEVA = {} end
+		if not sets.WS.MEVA.RA then sets.WS.MEVA.RA = {} end
+		if not sets.WS.AM then sets.WS.AM = {} end
+		if not sets.WS.AM.RA then sets.WS.AM.RA = {} end
+		if not sets.WS.AM1 then sets.WS.AM1 = {} end
+		if not sets.WS.AM1.RA then sets.WS.AM1.RA = {} end
+		if not sets.WS.AM2 then sets.WS.AM2 = {} end
+		if not sets.WS.AM2.RA then sets.WS.AM2.RA = {} end
+		if not sets.WS.AM3 then sets.WS.AM3 = {} end
+		if not sets.WS.AM3.RA then sets.WS.AM3.RA = {} end
+
+		-- Midcast
+		if not sets.Midcast then sets.Midcast = {} end
+
+		if not sets.Midcast.RA then sets.Midcast.RA = {} end
+		if not sets.Midcast.RA.ACC then sets.Midcast.RA.ACC = {} end
+		if not sets.Midcast.RA.PDL then sets.Midcast.RA.PDL = {} end
+		if not sets.Midcast.RA.SB then sets.Midcast.RA.SB = {} end
+		if not sets.Midcast.RA.CRIT then sets.Midcast.RA.CRIT = {} end
+		if not sets.Midcast.RA['True Shot'] then sets.Midcast.RA['True Shot'] = {} end
+		if not sets.Midcast.RA.TripleShot then sets.Midcast.RA.TripleShot = {} end
+		if not sets.Midcast.RA.DoubleShot then sets.Midcast.RA.DoubleShot = {} end
+		if not sets.Midcast.RA.Barrage then sets.Midcast.RA.Barrage = {} end
+
+		if not sets.Midcast.Enfeebling then sets.Midcast.Enfeebling = {} end
+		if not sets.Midcast.Enfeebling.MACC then sets.Midcast.Enfeebling.MACC = {} end
+		if not sets.Midcast.Enfeebling.Potency then sets.Midcast.Enfeebling.Potency = {} end
+		if not sets.Midcast.Enfeebling.Duration then sets.Midcast.Enfeebling.Duration = {} end
+
+
+		-- Midcast for Ranged Attacks and Aftermath
+		if not sets.Midcast.AM then sets.Midcast.AM = {} end
+		if not sets.Midcast.AM.RA then sets.Midcast.AM.RA = {} end
+		if not sets.Midcast.AM1 then sets.Midcast.AM1 = {} end
+		if not sets.Midcast.AM1.RA then sets.Midcast.AM1.RA = {} end
+		if not sets.Midcast.AM2 then sets.Midcast.AM2 = {} end
+		if not sets.Midcast.AM2.RA then sets.Midcast.AM2.RA = {} end
+		if not sets.Midcast.AM3 then sets.Midcast.AM3 = {} end
+		if not sets.Midcast.AM3.RA then sets.Midcast.AM3.RA = {} end
+
+		if not sets.Midcast.SIRD then sets.Midcast.SIRD = {} end
+		if not sets.Midcast.Nuke then sets.Midcast.Nuke = {} end
+		if not sets.Midcast.Burst then sets.Midcast.Burst = {} end
+		if not sets.Midcast.Cure then sets.Midcast.Cure = {} end
+		if not sets.Midcast.Curaga then sets.Midcast.Curaga = {} end
+		if not sets.Midcast.Cura then sets.Midcast.Cura = {} end
+		if not sets.Midcast.Regen then sets.Midcast.Regen = {} end
+		if not sets.Midcast.AM then sets.Midcast.Refresh = {} end
+		if not sets.Midcast.Enhancing then sets.Midcast.Enhancing = {} end
+		if not sets.Midcast.Enhancing.Others then sets.Midcast.Enhancing.Others = {} end
+		if not sets.Midcast.Enhancing.Gain then sets.Midcast.Enhancing.Gain = {} end
+		if not sets.Midcast.Enhancing.Elemental then sets.Midcast.Enhancing.Elemental = {} end
+		if not sets.Midcast.Enhancing.Status then sets.Midcast.Enhancing.Status = {} end
+		if not sets.Midcast.Enhancing.Skill then sets.Midcast.Enhancing.Skill = {} end
+
+		if not sets.Midcast.Aspir then sets.Midcast.Aspir = {} end
+		if not sets.Midcast.Drain then sets.Midcast.Drain = {} end
+		if not sets.Midcast.Dark then sets.Midcast.Dark = {} end
+		if not sets.Midcast.Dark.MACC then sets.Midcast.Dark.MACC = {} end
+		if not sets.Midcast.Dark.Absorb then sets.Midcast.Dark.Absorb = {} end
+		if not sets.Midcast.Dark.Enhancing then sets.Midcast.Dark.Enhancing = {} end
+		if not sets.Midcast.Skill then sets.Midcast.Skill = {} end
+		if not sets.Midcast.ACC then sets.Midcast.ACC = {} end
+		if not sets.Midcast.BP then sets.Midcast.BP = {} end
+		if not sets.Midcast.SummoningMagic then sets.Midcast.SummoningMagic = {} end
+		if not sets.Midcast.Summon then sets.Midcast.Summon = {} end
+
+		-- Bard Midcast
+		if not sets.Midcast.DummySongs then sets.Midcast.DummySongs = {} end
+		if not sets.Midcast.Finale then sets.Midcast.Finale = {} end
+		if not sets.Midcast.Lullaby then sets.Midcast.Lullaby = {} end
+		if not sets.Midcast.Threnody then sets.Midcast.Threnody = {} end
+		if not sets.Midcast.Elegy then sets.Midcast.Elegy = {} end
+		if not sets.Midcast.Requiem then sets.Midcast.Requiem = {} end
+		if not sets.Midcast.March then sets.Midcast.March = {} end
+		if not sets.Midcast.Minuet then sets.Midcast.Minuet = {} end
+		if not sets.Midcast.Madrigal then sets.Midcast.Madrigal = {} end
+		if not sets.Midcast.Ballad then sets.Midcast.Ballad = {} end
+		if not sets.Midcast.Scherzo then sets.Midcast.Scherzo = {} end
+		if not sets.Midcast.Mazurka then sets.Midcast.Mazurka = {} end
+		if not sets.Midcast.Paeon then sets.Midcast.Paeon = {} end
+		if not sets.Midcast.Carol then sets.Midcast.Carol = {} end
+		if not sets.Midcast.Minne then sets.Midcast.Minne = {} end
+		if not sets.Midcast.Mambo then sets.Midcast.Mambo = {} end
+		if not sets.Midcast.Etude then sets.Midcast.Etude = {} end
+		if not sets.Midcast.Prelude then sets.Midcast.Prelude = {} end
+		if not sets.Midcast.Dirge then sets.Midcast.Dirge ={} end
+		if not sets.Midcast.Sirvente then sets.Midcast.Sirvente = {} end
+		if not sets.Midcast.Aria then sets.Midcast.Aria = {} end
+
+		-- State sets
+		if not sets.Idle then sets.Idle = {} end
+		if not sets.Idle.Pet then sets.Idle.Pet = {} end
+		if not sets.Idle.Sublimation then sets.Idle.Sublimation = {} end
+		if not sets.Idle.Resting then sets.Idle.Resting = {} end
+		if not sets.OffenseMode then sets.OffenseMode = {} end
+		if not sets.OffenseMode.Ranged then sets.OffenseMode.Ranged = {} end
+		if not sets.OffenseMode.AM then sets.OffenseMode.AM = {} end
+		if not sets.OffenseMode.AM1 then sets.OffenseMode.AM1 = {} end
+		if not sets.OffenseMode.AM2 then sets.OffenseMode.AM2 = {} end
+		if not sets.OffenseMode.AM3 then sets.OffenseMode.AM3 = {} end
+
+
+		-- Other Sets
+		if not sets.JA then sets.JA = {} end
+		if not sets.Waltz then sets.Waltz = {} end
+		if not sets.Jig then sets.Jig = {} end
+		if not sets.Samba then sets.Samba = {} end
+		if not sets.Step then sets.Step = {} end
+		if not sets.Flourish then sets.Flourish = {} end
+		if not sets.Jugs then sets.Jugs = {} end
+		if not sets.PhantomRoll then sets.PhantomRoll = {} end
+		if not sets.TreasureHunter then sets.TreasureHunter = {} end
+		if not sets.QuickDraw then sets.QuickDraw = {} end
+
+		if not sets.Storms then sets.Storms = {} end
+		if not sets.Enmity then sets.Enmity = {} end
+		if not sets.Diffusion then sets.Diffusion = {} end
+		if not sets.Geomancy then sets.Geomancy = {} end
+		if not sets.Geomancy.Geo then sets.Geomancy.Geo = {} end
+		if not sets.Geomancy.Indi then sets.Geomancy.Indi = {} end
+		if not sets.Geomancy.Entrust then sets.Geomancy.Indi.Entrust = {} end
+		if not sets.Pet_Midcast then sets.Pet_Midcast = {} end
+		if not sets.DualWield then sets.DualWield = {} end
+		if not sets.Cursna_Received then sets.Cursna_Received = {} end
+		if not sets.Movement then sets.Movement = {} end
+	end
+
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 5)
 	coroutine.schedule(dual_wield_check, 5)
 	coroutine.schedule(display_box_update, 5)
+	coroutine.schedule(validate_sets, 4)
 end
