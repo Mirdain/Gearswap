@@ -2180,7 +2180,7 @@ do
 		';wait 1;input /macro set '..MacroSet..';gs validate;gs c update auto;wait 2;input /echo Change Complete')
 
 		send_command('bind f12 gs c OffenseMode')
-		send_command('bind f11 gs c TH')
+		send_command('bind f11 gs c TreasureHunter')
 		send_command('bind f10 gs c AutoBuff')
 		send_command('bind f9 gs c WeaponMode')
 		send_command('bind ^f12 gs c JobMode')
