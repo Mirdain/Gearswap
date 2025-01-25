@@ -1811,7 +1811,7 @@ do
 
 			-- Low ammo warning.
 			if spell.type ~= 'CorsairShot' and state.warned.value == false and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
-				local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' on '..player.name..' *****'
+				local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' *****'
 				local border = ""
 				for i = 2, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
@@ -1835,7 +1835,7 @@ do
 			local available_shihei = player.inventory['Shihei']
 			local shihei_warning_level = 50
 			if available_shihei.count < shihei_warning_level  then
-				local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x on '..player.name..' *****'
+				local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x *****'
 				local border = "" for i = 1, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
 				add_to_chat(167, border)
@@ -1855,11 +1855,21 @@ do
 		if command == 'update auto' then
 			equip(set_combine(choose_set(),choose_set_custom()))
 		-- Toggles the TH state
-		elseif command == "th" then
-			state.TreasureMode:cycle()
-			info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
-			equip(set_combine(choose_set(),choose_set_custom()))
-			display_box_update()
+		elseif command:contains('treasurehunter') then
+			if command == "treasurehunter" then
+				state.TreasureMode:cycle()
+				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
+				equip(set_combine(choose_set(),choose_set_custom()))
+				display_box_update()
+				return
+			else
+				local mode = {}
+				mode = string.split(cmd," ",2)
+				state.TreasureMode:set(mode[2])
+				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
+				display_box_update()
+				return
+			end
 		-- Toggles the Auto Buff function off/on
 		elseif command:contains('autobuff') then
 			if command == 'autobuff' then
@@ -2550,7 +2560,7 @@ do
  
 		-- Example Use
 		if message:contains('hqzerg') then
-
+			windower.send_command('sm on')
 		end 
 	end)
 
