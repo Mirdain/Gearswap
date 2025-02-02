@@ -154,7 +154,11 @@ sets.Pet_Midcast = {}
 sets.DualWield = {}
 sets.Cursna_Received = {}
 sets.Movement = {}
-
+sets.Ready = {}
+sets.Ready.Magic = {}
+sets.Ready.TP = {}
+sets.Ready.Debuff = {}
+sets.Ready.Standard = {}
 
 state = state or {}
 
@@ -282,6 +286,54 @@ Enfeebling_Ninjitsu = S{'Jubaku: Ichi','Kurayami: Ni', 'Hojo: Ichi', 'Hojo: Ni',
 
 Elemental_Bar = S{'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'}
 Status_Bar = S{'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'}
+
+-- Standard Ready Moves
+Ready_Standard = S{'Sic','Whirl Claws','Dust Cloud','Foot Kick','Sheep Song','Sheep Charge','Lamb Chop',
+    'Rage','Head Butt','Scream','Dream Flower','Wild Oats','Leaf Dagger','Claw Cyclone','Razor Fang',
+    'Roar','Gloeosuccus','Palsy Pollen','Soporific','Cursed Sphere','Venom','Geist Wall','Toxic Spit',
+    'Numbing Noise','Nimble Snap','Cyclotail','Spoil','Rhino Guard','Rhino Attack','Power Attack',
+    'Hi-Freq Field','Sandpit','Sandblast','Venom Spray','Mandibular Bite','Metallic Body','Bubble Shower',
+    'Bubble Curtain','Scissor Guard','Big Scissors','Grapple','Spinning Top','Double Claw','Filamented Hold',
+    'Frog Kick','Queasyshroom','Silence Gas','Numbshroom','Spore','Dark Spore','Shakeshroom','Blockhead',
+    'Secretion','Fireball','Tail Blow','Plague Breath','Brain Crush','Infrasonics','??? Needles',
+    'Needleshot','Chaotic Eye','Blaster','Scythe Tail','Ripper Fang','Chomp Rush','Intimidate','Recoil Dive',
+    'Water Wall','Snow Cloud','Wild Carrot','Sudden Lunge','Spiral Spin','Noisome Powder','Wing Slap',
+    'Beak Lunge','Suction','Drainkiss','Acid Mist','TP Drainkiss','Back Heel','Jettatura','Choke Breath',
+    'Fantod','Charged Whisker','Purulent Ooze','Corrosive Ooze','Tortoise Stomp','Harden Shell','Aqua Breath',
+    'Sensilla Blades','Tegmina Buffet','Molting Plumage','Swooping Frenzy','Pentapeck','Sweeping Gouge',
+    'Zealous Snort','Somersault ','Tickling Tendrils','Stink Bomb','Nectarous Deluge','Nepenthic Plunge',
+    'Pecking Flurry','Pestilent Plume','Foul Waters','Spider Web','Sickle Slash','Crossthrash','Predatory Glare',
+	'Hoof Volley','Nihility Song','Frenzied Rage','Venom Shower','Mega Scissors','Fluid Toss','Fluid Spread',
+	'Digest','Rhinowrecker'}
+
+-- List of Magic-based Ready moves
+Ready_Magic = S{'Dust Cloud','Sheep Song','Scream','Dream Flower','Roar','Gloeosuccus','Palsy Pollen',
+	'Soporific','Cursed Sphere','Venom','Geist Wall','Toxic Spit','Numbing Noise','Spoil','Hi-Freq Field',
+	'Sandpit','Sandblast','Venom Spray','Bubble Shower','Filamented Hold','Queasyshroom','Silence Gas',
+	'Numbshroom','Spore','Dark Spore','Shakeshroom','Fireball','Plague Breath','Infrasonics','Chaotic Eye',
+	'Blaster','Intimidate','Snow Cloud','Noisome Powder','TP Drainkiss','Jettatura','Charged Whisker',
+	'Purulent Ooze','Corrosive Ooze','Aqua Breath','Molting Plumage','Stink Bomb','Nectarous Deluge',
+	'Nepenthic Plunge','Pestilent Plume','Foul Waters','Spider Web'}
+
+-- List of TP based Ready moves
+Ready_TP = S{'Sic','Somersault','Dust Cloud','Foot Kick','Sheep Song','Sheep Charge','Lamb Chop',
+	'Rage','Head Butt','Scream','Dream Flower','Wild Oats','Leaf Dagger','Claw Cyclone','Razor Fang','Roar',
+	'Gloeosuccus','Palsy Pollen','Soporific','Cursed Sphere','Geist Wall','Numbing Noise','Frogkick',
+	'Nimble Snap','Cyclotail','Spoil','Rhino Guard','Rhino Attack','Hi-Freq Field','Sandpit','Sandblast',
+	'Mandibular Bite','Metallic Body','Bubble Shower','Bubble Curtain','Scissor Guard','Grapple','Spinning Top',
+	'Double Claw','Filamented Hold','Spore','Blockhead','Secretion','Fireball','Tail Blow','Plague Breath',
+	'Brain Crush','Infrasonics','Needleshot','Chaotic Eye','Blaster','Ripper Fang','Intimidate','Recoil Dive',
+	'Water Wall','Snow Cloud','Wild Carrot','Sudden Lunge','Noisome Powder','Wing Slap','Beak Lunge','Suction',
+	'Drainkiss','Acid Mist','TP Drainkiss','Back Heel','Jettatura','Choke Breath','Fantod','Charged Whisker',
+	'Purulent Ooze','Corrosive Ooze','Tortoise Stomp','Harden Shell','Aqua Breath','Sensilla Blades',
+	'Tegmina Buffet','Sweeping Gouge','Zealous Snort','Tickling Tendrils','Pecking Flurry',
+	'Pestilent Plume','Foul Waters','Spider Web'}
+
+-- Magic ACC Based Ready moves
+Ready_Debuff = S{'Dust Cloud','Sheep Song','Scream','Dream Flower','Roar','Gloeosuccus','Palsy Pollen',
+    'Soporific','Geist Wall','Numbing Noise','Spoil','Hi-Freq Field','Sandpit','Sandblast','Filamented Hold',
+	'Spore','Fireball','Infrasonics','Chaotic Eye','Blaster','Intimidate','Noisome Powder','TP Drainkiss',
+	'Jettatura','Purulent Ooze','Corrosive Ooze','Pestilent Plume','Spider Web','Nihility Song'}
 
 UI_Name = ''
 UI_Name2 = ''
@@ -1455,6 +1507,11 @@ do
 				equipSet = {}
 			end
 
+		-- Monster
+		elseif spell.type == 'Monster' then
+			equipSet = sets.Ready
+			info( '[Ready] Set ')
+
 		-- Elemental Siphon
 		elseif spell.name == "Elemental Siphon" then
 			equipSet = sets.Midcast
@@ -1699,10 +1756,10 @@ do
 		equipSet = sets.Pet_Midcast
 		-- Specific sets are defined
 		if equipSet[spell.english] then
-			equipSet = set_combine(choose_set(), equipSet[spell.english], pet_midcast_custom(spell))
+			equipSet = set_combine(equipSet, equipSet[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			equipSet = set_combine(choose_set(), pet_midcast_custom(spell))
+			equipSet = set_combine(equipSet, choose_set(), pet_midcast_custom(spell))
 		end
 
 		-- Weapon Checks for precast
@@ -1710,7 +1767,6 @@ do
 		if state.WeaponMode.value ~= "Unlocked" then
 			if state.WeaponMode.value == "Locked" then
 				equipSet = set_combine(equipSet, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
-				log(equipSet)
 			else
 				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
 				if not TwoHand and not DualWield then
@@ -1719,7 +1775,6 @@ do
 			end
 			log('Midcast set equiping Offense Mode Gear')
 		end
-
 		equip(equipSet)
 	end
 
@@ -2030,6 +2085,7 @@ do
 						info(UI_Name..': ['..state.JobMode.value..']')
 						windower.send_command("gs c update auto")
 						display_box_update()
+						self_command_custom(command)
 						return
 					end
 				end
@@ -2040,6 +2096,7 @@ do
 				info(UI_Name..': ['..state.JobMode.value..']')
 				windower.send_command("gs c update auto")
 				display_box_update()
+				self_command_custom(command)
 				return
 			end
 		-- This profile mode is used to load a Silmaril profile and execute a script
