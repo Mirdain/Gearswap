@@ -54,7 +54,6 @@ function get_sets()
 	sets.Jugs['BlackbeardRandy'] = {ammo="Meaty Broth"}
 	sets.Jugs['ScissorlegXerin'] = {ammo="Spicy Broth"}
 
-
 	-- Weapon setup
 	sets.Weapons = {}
 
@@ -89,7 +88,11 @@ function get_sets()
 		back={ name="Artio's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
     }
 
-	sets.Idle.Pet = {}
+	sets.Idle.Pet = set_combine(sets.Idle,{
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+	    right_ear={ name="Nukumi Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+13','Mag. Acc.+13','Pet: "Dbl. Atk."+6',}},
+		left_ring="C. Palug Ring",
+	})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -150,6 +153,11 @@ function get_sets()
 		waist="Reiki Yotai",
 	}
 
+	-- Ready JA command
+	sets.Ready = {
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	}
+
 	sets.Precast = {}
 
 	-- Used for Magic Spells
@@ -160,22 +168,30 @@ function get_sets()
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {})
 
+	-- Pet Moves
+
+	-- Default
 	sets.Pet_Midcast = {
-		sub="Agwu's Axe",
-		ammo="Voluspa Tathlum",
-		head="Nuk. Cabasset +3",
-		neck="Bst. Collar +2",
-		ear1="Sroda Earring",
-		ear2="Nukumi Earring +1",
-		body="Nukumi Gausape +3",
-		hands="Nukumi Manoplas +3",
-		ring1="Varar Ring +1",
-		ring2="C. Palug Ring",
-		waist="Incarnation Sash",
-		legs="Tot. Trousers +3",
-		feet="Tot. Gaiters +3"
+		waist="Gishdubar Sash",
 	}
-	sets.Pet_Midcast['Bone Crusher'] = {}
+
+	-- TP based Ready moves
+	sets.Pet_Midcast.TP = {
+		left_ear="Eabani Earring",
+	}
+
+	-- Magic Attack Bonus Ready moves
+	sets.Pet_Midcast.MAB = {
+		right_ring="Epona's Ring",
+	}
+
+	-- Debuff moves that need MACC
+	sets.Pet_Midcast.MACC = {
+		right_ear="Crep. Earring",
+	}
+
+	-- Example for a specific move
+	-- sets.Pet_Midcast['TP Drainkiss'] = set_combine(sets.Pet_Midcast.MACC, { })
 
 	-- Job Abilities
 	sets.JA = {}
@@ -292,7 +308,24 @@ end
 -- Called during a pet midcast
 function pet_midcast_custom(spell)
 	equipSet = {}
-
+		local message = 'Pet Not Set'
+		if Ready_Standard[spell.name] then
+			equipSet = set_combine(equipSet, sets.Pet_Midcast)
+			message = 'Pet Standard Set'
+		end
+		if Ready_TP[spell.name] then
+			equipSet = set_combine(equipSet, sets.Pet_Midcast.TP)
+			message = 'Pet TP Set'
+		end
+		if Ready_Magic[spell.name] then
+			equipSet = set_combine(equipSet, sets.Pet_Midcast.MAB)
+			message = 'Pet Magic Set'
+		end
+		if Ready_Debuff[spell.name] then
+			equipSet = set_combine(equipSet, sets.Pet_Midcast.MACC)
+			message = 'Pet Magic Accuracy Set'
+		end
+		info(message)
 	return equipSet
 end
 
