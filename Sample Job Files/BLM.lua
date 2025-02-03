@@ -40,12 +40,12 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Nuke'] ={
-		main={ name="Marin Staff +1", augments={'Path: A',}},
+		main={ name="Mpaca's Staff", augments={'Path: A',}},
 		sub="Enki Strap",
 	}
 
 	sets.Weapons['Unlocked'] ={
-		main={ name="Marin Staff +1", augments={'Path: A',}},
+		main={ name="Mpaca's Staff", augments={'Path: A',}},
 		sub="Enki Strap",
 	}
 
@@ -200,6 +200,10 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
+		left_ring="Mujin Band",
+	})
+
 	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
 
 	})
@@ -212,9 +216,7 @@ function get_sets()
 
 	})
 
-	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-		--left_ring="Mujin Band",
-	})
+
 
 	-- Misc Sets
 	sets.Midcast.CuragaSet = sets.Midcast.Cure
@@ -286,16 +288,16 @@ function pretarget_custom(spell,action)
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
 		if player.MPP < 30 then
-			windower.add_to_chat(8,'Recover MP!')
+			windower.add_to_chat(8,'Player Less than 30% MP - Recover MP!')
 			equipSet = sets.MP_Recover
 		end
 	end
@@ -303,43 +305,43 @@ function midcast_custom(spell)
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 function pet_change_custom(pet,gain)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
@@ -356,14 +358,14 @@ end
 
 --Function used to automate Job Ability use - Checked first
 function check_buff_JA()
-	buff = 'None'
+	local buff = 'None'
 	--local ja_recasts = windower.ffxi.get_ability_recasts()
 	return buff
 end
 
 --Function used to automate Spell use
 function check_buff_SP()
-	buff = 'None'
+	local buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
