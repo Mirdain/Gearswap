@@ -439,8 +439,8 @@ do
 
 	-- UI for displaying the current states
 	function display_box_update()
-		width = 20
-		dialog = {}
+		local width = 20
+		local dialog = {}
 		dialog[1] = {description = 'Stance', value = state.OffenseMode.value}
 		dialog[2] = {description = 'TH Mode', value = state.TreasureMode.value}
 		dialog[3] = {description = 'Auto Buff', value = state.AutoBuff.value}
@@ -451,7 +451,7 @@ do
 		if UI_Name2 ~= "" then
 			dialog[6] = {description = UI_Name2, value = state.JobMode2.value}
 		end
-		lines = T{}
+		local lines = T{}
 		for k, v in next, dialog do
 			lines:insert(v.description ..string.format('[%s]',tostring(v.value)):lpad(' ',width-string.len(tostring(v.description))))
 		end
@@ -463,7 +463,7 @@ do
 
 	-- Used to help debug issues
 	function debug_box_update()
-		lines = T{}
+		local lines = T{}
 		lines:insert('is_Busy' ..string.format('[%s]',tostring(is_Busy)):lpad(' ',12))
 		lines:insert('is_Moving' ..string.format('[%s]',tostring(is_moving)):lpad(' ',10))
 		lines:insert('DualWield' ..string.format('[%s]',tostring(DualWield)):lpad(' ',10))
@@ -676,7 +676,7 @@ do
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
-	-- This function is called from the default GearSwap Function "precast" to build an equipset
+	-- This function is called from the default GearSwap Function "precast" to build an built_set
 	-------------------------------------------------------------------------------------------------------------------
 
 	function precastequip(spell)
@@ -686,103 +686,103 @@ do
 		end
 
 		--Default gearset
-		equipSet = {}
+		local built_set = {}
 
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then
 			local message = ''
-			equipSet = sets.WS
+			built_set = sets.WS
 			if spell.skill == "Marksmanship" or spell.skill == "Archery" then
 				-- Set is defined
-				if equipSet[spell.english] then	
-					equipSet = set_combine(equipSet, equipSet[spell.english])
+				if built_set[spell.english] then	
+					built_set = set_combine(built_set, built_set[spell.english])
 					-- Augment the specified WS
 					if state.OffenseMode.value == 'ACC' then
-						equipSet = set_combine(equipSet, sets.WS.ACC.RA)
+						built_set = set_combine(built_set, sets.WS.ACC.RA)
 						message = '['..spell.english..'] Set with Accuracy (Ranged)'
 					elseif state.OffenseMode.value == 'PDL' then
-						equipSet = set_combine(equipSet, sets.WS.PDL.RA)
+						built_set = set_combine(built_set, sets.WS.PDL.RA)
 						message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
 					elseif state.OffenseMode.value == 'SB' then
-						equipSet = set_combine(equipSet, sets.WS.SB.RA)
+						built_set = set_combine(built_set, sets.WS.SB.RA)
 						message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
 				    elseif state.OffenseMode.value == 'MEVA' then
-						equipSet = set_combine(equipSet, sets.WS.MEVA.RA)
+						built_set = set_combine(built_set, sets.WS.MEVA.RA)
 						message = '['..spell.english..'] Set with Magic Evasion (Ranged)'
 					elseif state.OffenseMode.value == 'CRIT' then
-						equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
+						built_set = set_combine(built_set, sets.WS.CRIT.RA)
 						message = '['..spell.english..'] Set with Critical Hit (Ranged)'
 					else
 						message = '['..spell.english..'] Set'
 					end
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
 					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
 					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
 					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath (Ranged)'
 					end
 				else
 					-- Generic
 					if state.OffenseMode.value == 'ACC' then
-						equipSet = set_combine(equipSet, sets.WS.ACC.RA)
+						built_set = set_combine(built_set, sets.WS.ACC.RA)
 						message = 'Using Default WS Set with Accuracy (Ranged)'
 					elseif state.OffenseMode.value == 'PDL' then
-						equipSet = set_combine(equipSet, sets.WS.PDL.RA)
+						built_set = set_combine(built_set, sets.WS.PDL.RA)
 						message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
 					elseif state.OffenseMode.value == 'SB' then
-						equipSet = set_combine(equipSet, sets.WS.SB.RA)
+						built_set = set_combine(built_set, sets.WS.SB.RA)
 						message = 'Using Default WS Set with Subtle Blow (Ranged)'
 					elseif state.OffenseMode.value == 'MEVA' then
-						equipSet = set_combine(equipSet, sets.WS.MEVA.RA)
+						built_set = set_combine(built_set, sets.WS.MEVA.RA)
 						message = 'Using Default WS Set with Magic Evasion (Ranged)'
 					elseif state.OffenseMode.value == 'CRIT' then
-						equipSet = set_combine(equipSet, sets.WS.CRIT.RA)
+						built_set = set_combine(built_set, sets.WS.CRIT.RA)
 						message = 'Using Default WS Set with Critical Hit (Ranged)'
 					else
 						message = 'Using Default WS Set (Ranged)'
 					end
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM3.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 3 (Ranged)'
 					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM2.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 2 (Ranged)'
 					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM1.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 1 (Ranged)'
 					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM.RA[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath (Ranged)'
 					end
 				end
 			else
-				if equipSet[spell.english] then	
+				if built_set[spell.english] then	
 					-- Set is defined
-					equipSet = set_combine(equipSet, equipSet[spell.english])
+					built_set = set_combine(built_set, built_set[spell.english])
 					-- Augment the specified WS
 					if state.OffenseMode.value == 'ACC' then
-						equipSet = set_combine(equipSet, sets.WS.ACC)
+						built_set = set_combine(built_set, sets.WS.ACC)
 						message = '['..spell.english..'] Set with Accuracy'
 					elseif state.OffenseMode.value == 'PDL' then
-						equipSet = set_combine(equipSet, sets.WS.PDL)
+						built_set = set_combine(built_set, sets.WS.PDL)
 						message = '['..spell.english..'] Set with Physical Damage Limit'
 					elseif state.OffenseMode.value == 'SB' then
-						equipSet = set_combine(equipSet, sets.WS.SB)
+						built_set = set_combine(built_set, sets.WS.SB)
 						message = '['..spell.english..'] Set with Subtle Blow'
 					elseif state.OffenseMode.value == 'MEVA' then
-						equipSet = set_combine(equipSet, sets.WS.MEVA)
+						built_set = set_combine(built_set, sets.WS.MEVA)
 						message = '['..spell.english..'] Set with Magic Evasion'
 					elseif state.OffenseMode.value == 'CRIT' then
-						equipSet = set_combine(equipSet, sets.WS.CRIT)
+						built_set = set_combine(built_set, sets.WS.CRIT)
 						message = '['..spell.english..'] Set with Critical Hit'
 					else
 						message = '['..spell.english..'] Set'
@@ -790,33 +790,33 @@ do
 
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 3'
 					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2  and sets.WS.AM2[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM2[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM2[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 2'
 					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1  and sets.WS.AM1[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM1[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath 1'
 					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath'
 					end
 
 				else
 					-- Generic
-					equipSet = set_combine(equipSet, sets.WS)
+					built_set = set_combine(built_set, sets.WS)
 					if state.OffenseMode.value == 'ACC' then
-						equipSet = set_combine(equipSet, sets.WS.ACC)
+						built_set = set_combine(built_set, sets.WS.ACC)
 						message = 'Using Default WS Set with Accuracy'
 					elseif state.OffenseMode.value == 'PDL' then
-						equipSet = set_combine(equipSet, sets.WS.PDL)
+						built_set = set_combine(built_set, sets.WS.PDL)
 						message = 'Using Default WS Set with Physical Damage Limit'
 					elseif state.OffenseMode.value == 'SB' then
-						equipSet = set_combine(equipSet, sets.WS.SB)
+						built_set = set_combine(built_set, sets.WS.SB)
 						message = 'Using Default WS Set with Subtle Blow'
 					elseif state.OffenseMode.value == 'CRIT' then
-						equipSet = set_combine(equipSet, sets.WS.CRIT)
+						built_set = set_combine(built_set, sets.WS.CRIT)
 						message = 'Using Default WS Set with Critical Hit'
 					else
 						message = 'Using Default WS Set'
@@ -824,66 +824,66 @@ do
 
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM3[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 3'
 					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM2[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM2[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 2'
 					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM1[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM1[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath 1'
 					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM[state.WeaponMode.value] then
-						equipSet = set_combine(equipSet, sets.WS.AM[state.WeaponMode.value])
+						built_set = set_combine(built_set, sets.WS.AM[state.WeaponMode.value])
 						message = 'Using Default WS Set with Aftermath'
 					end
 				end
 			end
 
 			-- Check if an Obi or Orpheus is to be Equiped
-			equipSet = Elemental_check(equipSet, spell)
+			built_set =  set_combine(built_set, elemental_check(spell))
 
 			info(message)
 
 		-- Ranged attack
 		elseif spell.action_type == 'Ranged Attack' then
-			equipSet = sets.Precast.RA
+			built_set = sets.Precast.RA
 
 			if buffactive[265] then -- Flurry
-				equipSet = set_combine(equipSet, sets.Precast.RA.Flurry)
+				built_set = set_combine(built_set, sets.Precast.RA.Flurry)
 			elseif buffactive[581] then -- Flurry II
-				equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
+				built_set = set_combine(built_set, sets.Precast.RA.Flurry_II)
 			elseif buffactive[228] then -- Embrava
-				equipSet = set_combine(equipSet, sets.Precast.RA.Flurry_II)
+				built_set = set_combine(built_set, sets.Precast.RA.Flurry_II)
 			end
 
 		-- JobAbility
 		elseif spell.type == 'JobAbility' then
-			equipSet = sets.JA
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.JA
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				--Summon the correct jug pet
 				if spell.name == 'Bestial Loyalty' or spell.name == 'Call Beast' then
-					equipSet = set_combine(equipSet, sets.Jugs[state.JobMode.value])
+					built_set = set_combine(built_set, sets.Jugs[state.JobMode.value])
 				end
 				info('['..spell.english..'] Set')
 
 			elseif spell.id == 123 then -- Double Up
-				equipSet = set_combine(equipSet, sets.PhantomRoll)
+				built_set = set_combine(built_set, sets.PhantomRoll)
 				info('['..spell.english..'] Set')
 			else
 				info('JA not set for ['..spell.english..']')
 			end
 
 			if state.TreasureMode.value ~= 'None' and spell.english == "Provoke" then
-				equipSet = set_combine(equipSet, sets.TreasureHunter)
+				built_set = set_combine(built_set, sets.TreasureHunter)
 				info('['..spell.english..'] Set with Treasure Hunter')
 			end
 
 		-- CorsairRoll
 		elseif spell.type == 'CorsairRoll' then
-			equipSet = sets.PhantomRoll
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.PhantomRoll
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info( '['..spell.english..'] Set ')
 			else
 				info('Roll not set')
@@ -891,9 +891,9 @@ do
 
 		-- CorsairShot
 		elseif spell.type == 'CorsairShot' then
-			equipSet = sets.QuickDraw
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.QuickDraw
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info( '['..spell.english..'] Set')
 			else
 				info('Quick Draw not set')
@@ -901,67 +901,67 @@ do
 
 		-- Ninjutsu
 		elseif spell.type == 'Ninjutsu' then
-			equipSet = sets.Precast
+			built_set = sets.Precast
 			do_Utsu_checks(spell)
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info('['..spell.english..'] Precast Set')
 			elseif UtsusemiSpell:contains(spell.name) then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.QuickMagic, sets.Precast.Utsusemi)
+				built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.QuickMagic, sets.Precast.Utsusemi)
 				info('['..spell.english..'] Quick Magic Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.FastCast.Enhancing)
 				end
 			end
 
 		-- WhiteMagic
 		elseif spell.type == 'WhiteMagic' then
-			equipSet = sets.Precast
+			built_set = sets.Precast
 			if spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
-			elseif equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+				built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.Cure, sets.Precast.QuickMagic)
+			elseif built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.Enhancing)
 				end
 			end
 
 		-- BlackMagic
 		elseif spell.type == 'BlackMagic' then
-			equipSet = sets.Precast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			built_set = sets.Precast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
 			end
 
 		-- SummonerPact
 		elseif spell.type == 'SummonerPact' then
-			equipSet = sets.Precast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			built_set = sets.Precast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
 			end
 
 		-- Waltz
 		elseif spell.type == 'Waltz' then
-			equipSet = sets.Waltz
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.Waltz
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Waltz Set')
@@ -969,9 +969,9 @@ do
 
 		-- Jig
 		elseif spell.type == 'Jig' then
-			equipSet = sets.Jig
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.Jig
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Jig Set')
@@ -979,9 +979,9 @@ do
 
 		-- Samba
 		elseif spell.type == 'Samba' then
-			equipSet = sets.Samba
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.Samba
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Samba Set')
@@ -989,9 +989,9 @@ do
 
 		-- Step
 		elseif spell.type == 'Step' then
-			equipSet = sets.Step
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.Step
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Step Set')
@@ -999,9 +999,9 @@ do
 
 		-- Flourishes
 		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
-			equipSet = sets.Flourish
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equipSet[spell.english])
+			built_set = sets.Flourish
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Flourish Set')
@@ -1009,20 +1009,20 @@ do
 
 		-- BardSong
 		elseif spell.type == 'BardSong' then
-			equipSet = sets.Precast
+			built_set = sets.Precast
 			-- Normal Song Casting
 			if not buffactive['Nightingale'] then
 				-- Song Count
 				if SongCount:contains(spell.name) then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Count})
+					built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Count})
 				-- Equip Marsyas
 				elseif spell.name == "Honor March" then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Honor})
+					built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Honor})
 				-- Equip Loughnashade
 				elseif spell.name == "Aria of Passion" then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Aria})
+					built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Aria})
 				else
-					equipSet = set_combine(equipSet, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Potency})
+					built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.Songs, {range=Instrument.Potency})
 				end
 			-- NiTro Songs (Midcast Sets)
 			else 
@@ -1030,64 +1030,64 @@ do
 				-- Song Count for Dummy Songs
 				if SongCount:contains(spell.name) then
 					info( '['..spell.english..'] Set (Song Count)')
-					equipSet = set_combine(sets.Midcast, sets.Midcast.DummySongs, {range=Instrument.Count})
+					built_set = set_combine(sets.Midcast, sets.Midcast.DummySongs, {range=Instrument.Count})
 				-- Equip Marsyas
 				elseif spell.name == "Honor March" then
-					equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Honor})
+					built_set = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Honor})
 				-- Equip Loughnashade
 				elseif spell.name == "Aria of Passion" then
-					equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Aria})
+					built_set = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Aria})
 				-- Equip Harp
 				elseif spell.name:contains('Horde') then
 					info( '['..spell.english..'] Set (AOE Sleep)')
-					equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
+					built_set = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 				-- Normal Enfeebles
 				elseif Enfeebling_Song:contains(spell.english) then
 					info( '['..spell.english..'] Set (Enfeebling)')
-					equipSet = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
+					built_set = set_combine(sets.Midcast, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 				-- Augment the buff songs
 				else
 					info( '['..spell.english..'] Set (Potency)')
-					equipSet = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
+					built_set = set_combine(sets.Midcast, equip_song_gear(spell), {range=Instrument.Potency})
 				end
 			end
 
 		-- BlueMagic
 		elseif spell.type == 'BlueMagic' then
-			equipSet = sets.Precast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			built_set = sets.Precast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
 			end
 
 		-- Geomancy
 		elseif spell.type == 'Geomancy' then
-			equipSet = sets.Precast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			built_set = sets.Precast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
 			end
 
 		-- Trust
 		elseif spell.type == 'Trust' then
-			equipSet = sets.Precast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Precast.FastCast, equipSet[spell.english])
+			built_set = sets.Precast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				equipSet = set_combine(equipSet, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast)
 				if spell.skill == 'Enhancing Magic' then
-					equipSet = set_combine(equipSet, sets.Precast.FastCast.Enhancing)
+					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
 			end
 		end
@@ -1095,20 +1095,20 @@ do
 		-- Check that proper ammo is available if the action requires it
 		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
 			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
-				do_bullet_checks(spell, equipSet)
+				do_bullet_checks(spell, built_set)
 			end
 		end
 
 		-- Weapon Checks for precast
-		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" then
 			if state.WeaponMode.value == "Locked" then
-				equipSet = set_combine(equipSet, { main = player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
-				log(equipSet)
+				built_set = set_combine(built_set, { main = player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				log(built_set)
 			else
-				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 				if not TwoHand and not DualWield then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+					built_set = set_combine(built_set, sets.Weapons.Shield)
 				end
 			end
 			log('Precast set equiping Offense Mode Gear')
@@ -1116,49 +1116,49 @@ do
 
 		--Swap in bard song weapons
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-			equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
+			built_set = set_combine(built_set, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
 			if not DualWield then
 				if not TwoHand then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+					built_set = set_combine(built_set, sets.Weapons.Shield)
 				end
 			end
 		end
 
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
-			equipSet = set_combine(equipSet, sets.TreasureHunter)
+			built_set = set_combine(built_set, sets.TreasureHunter)
 		end
 
-		-- Final equipSet built to return.  This is not the final set as custom Job can Augment
-		return equipSet
+		-- Final built_set built to return.  This is not the final set as custom Job can Augment
+		return built_set
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
-	-- This function is called from the default GearSwap Function "midcast" to build an equipset
+	-- This function is called from the default GearSwap Function "midcast" to build an built_set
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcastequip(spell)
 		--Default gearset
-		equipSet = {}
+		local built_set = {}
 
 		if spell.action_type == 'Ranged Attack' then
 			local message = ''
-			equipSet = set_combine(sets.Midcast, sets.Midcast.RA)
+			built_set = set_combine(sets.Midcast, sets.Midcast.RA)
 			-- Augment the specified WS
 			if state.OffenseMode.value == 'ACC' then
-				equipSet = set_combine(equipSet, sets.Midcast.RA.ACC)
+				built_set = set_combine(built_set, sets.Midcast.RA.ACC)
 				message = 'Ranged Attack with Accuracy '
 			elseif state.OffenseMode.value == 'PDL' then
-				equipSet = set_combine(equipSet, sets.Midcast.RA.PDL)
+				built_set = set_combine(built_set, sets.Midcast.RA.PDL)
 				message = 'Ranged Attack with Physical Damage Limit'
 			elseif state.OffenseMode.value == 'SB' then
-				equipSet = set_combine(equipSet, sets.Midcast.RA.SB)
+				built_set = set_combine(built_set, sets.Midcast.RA.SB)
 				message = 'Ranged Attack with Subtle Blow'
 			elseif state.OffenseMode.value == 'CRIT' then
-				equipSet = set_combine(equipSet, sets.Midcast.RA.CRIT)
+				built_set = set_combine(built_set, sets.Midcast.RA.CRIT)
 				message = 'Ranged Attack with Critical Hit'
 			elseif state.OffenseMode.value == 'True Shot' then
-				equipSet = set_combine(equipSet, sets.Midcast.RA['True Shot'])
+				built_set = set_combine(built_set, sets.Midcast.RA['True Shot'])
 				message = 'Ranged Attack with True Shot'
 			else
 				message = 'Ranged Attack Set'
@@ -1166,94 +1166,94 @@ do
 
 			-- Buffs
 			if buffactive['Triple Shot'] then 
-				equipSet = set_combine(equipSet, sets.Midcast.RA.TripleShot)
+				built_set = set_combine(built_set, sets.Midcast.RA.TripleShot)
 				message = 'Using Triple Shot Set'
 			elseif buffactive['Double Shot'] then 
-				equipSet = set_combine(equipSet, sets.Midcast.RA.DoubleShot)
+				built_set = set_combine(built_set, sets.Midcast.RA.DoubleShot)
 				message = 'Using Double Shot Set'
 			elseif buffactive['Barrage'] then 
-				equipSet = set_combine(equipSet, sets.Midcast.RA.Barrage)
+				built_set = set_combine(built_set, sets.Midcast.RA.Barrage)
 				message = 'Using Barrage Set'
 			end
 
 			-- Check if Aftermath is active
 			if buffactive['Aftermath: Lv.3'] and sets.Midcast.AM3 and sets.Midcast.AM3.RA and sets.Midcast.AM3.RA[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.Midcast.AM3.RA[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Midcast.AM3.RA[state.WeaponMode.value])
 				message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
 			elseif buffactive['Aftermath: Lv.2'] and sets.Midcast.AM2 and sets.Midcast.AM2.RA and sets.Midcast.AM2.RA[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.Midcast.AM2.RA[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Midcast.AM2.RA[state.WeaponMode.value])
 				message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
 			elseif buffactive['Aftermath: Lv.1'] and sets.Midcast.AM1 and sets.Midcast.AM1.RA and sets.Midcast.AM1.RA[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.Midcast.AM1.RA[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Midcast.AM1.RA[state.WeaponMode.value])
 				message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
 			elseif buffactive['Aftermath'] and sets.Midcast.AM and sets.Midcast.AM.RA and sets.Midcast.AM.RA[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.Midcast.AM.RA[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Midcast.AM.RA[state.WeaponMode.value])
 				message = '['..spell.english..'] Set with Aftermath (Ranged)'
 			end
 			info(message)
 
 		-- Ninjutsu
 		elseif spell.type == 'Ninjutsu' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Gear Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			-- Utsusemi Spells
 			elseif UtsusemiSpell:contains(spell.name) then
-				equipSet = set_combine(equipSet, sets.Midcast.Utsusemi)
+				built_set = set_combine(built_set, sets.Midcast.Utsusemi)
 				info('['..spell.english..'] Utsusemi Set')
 			-- Enhancing Magic
 			elseif spell.target.type == 'SELF' then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 				info('Enhancing set')
 			-- Enfeebling
 			elseif Enfeebling_Ninjitsu:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
 				info('Enfeebling set')
 			-- Defaults to Nukes if not the above
 			else
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Nuke)
 				info('Nuke set')
 			end
 
 		-- WhiteMagic
 		elseif spell.type == 'WhiteMagic' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Gear Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			-- Cure
 			elseif spell.name:contains('Cure') then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cure)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Cure)
 				info('Cure Set')
 			-- Regen
 			elseif spell.name:contains('Regen') then
 				if spell.target.type == 'SELF' then
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing, sets.Midcast.Regen)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enhancing, sets.Midcast.Regen)
 					info('Regen Set')
 				else
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing.Others, sets.Midcast.Regen)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enhancing.Others, sets.Midcast.Regen)
 					info('Regen Set - Others')
 				end
 			-- Curaga 
 			elseif spell.name:contains('Curaga') then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Curaga)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Curaga)
 				info('Curaga Set')
 			-- Cura
 			elseif spell.name:contains('Cura') then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cura)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Cura)
 				info('Cura Set')
 			-- Raise (Stay in FastCast set for recast timers)
 			elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
-				equipSet = sets.Precast.FastCast
+				built_set = sets.Precast.FastCast
 				info('Raise Set (Fast Cast)')
 			-- Enhancing
 			elseif spell.skill == 'Enhancing Magic' then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 				if Storms:contains(spell.name) then
-					equipSet = set_combine(equipSet, sets.Storms)
+					built_set = set_combine(built_set, sets.Storms)
 				end
 				--Cancel Stoneskin if it is being cast and is an active buff
 				if spell.name == 'Stoneskin' then
@@ -1266,25 +1266,25 @@ do
 					-- Refresh
 					if spell.name:contains('Refresh') then
 						info('Refresh Set')
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing, sets.Midcast.Refresh)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing, sets.Midcast.Refresh)
 					-- Gain SPells
 					elseif spell.name:contains('Gain') then
 						info('Gain Set')
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing, sets.Midcast.Enhancing.Gain)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing, sets.Midcast.Enhancing.Gain)
 					-- Bar Spells
 					elseif Elemental_Bar:contains(spell.name) then 
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Elemental)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing.Elemental)
 						info('Elemental Bar Set')
 					elseif Status_Bar:contains(spell.name) then 
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Status)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing.Status)
 						info('Status Bar Set')
 					-- Enhancing SKill
 					elseif Enhancing_Skill:contains(spell.name) then 
 						if buffactive['Accession'] then
-							equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill, sets.Midcast.Enhancing.Others)
+							built_set = set_combine(built_set, sets.Midcast.Enhancing.Skill, sets.Midcast.Enhancing.Others)
 							info('Enhancing Skill Set')
 						else
-							equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
+							built_set = set_combine(built_set, sets.Midcast.Enhancing.Skill)
 							info('Enhancing Skill Set')
 						end
 					-- Enhancing
@@ -1295,35 +1295,35 @@ do
 					-- Refresh
 					if spell.name:contains('Refresh') then
 						info('Refresh Set - Others')
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing.Others, sets.Midcast.Refresh)
 					-- Enhancing SKill
 					elseif Enhancing_Skill:contains(spell.name) then 
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Skill)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing.Skill)
 						info('Enhancing Skill - Others')
 					-- Enhancing
 					else
-						equipSet = set_combine(equipSet, sets.Midcast.Enhancing.Others)
+						built_set = set_combine(built_set, sets.Midcast.Enhancing.Others)
 						info('Enhancing Magic Set - Others')
 					end
 				end
 			-- Divine Spells
 			elseif Divine_Skill:contains(spell.name) then 
-				equipSet = set_combine(equipSet, sets.Midcast.Divine)
+				built_set = set_combine(built_set, sets.Midcast.Divine)
 				info('Divine Skill Set')
 			-- Enfeebling Magic
 			elseif spell.skill == 'Enfeebling Magic' then
 				if Enfeeble_Acc:contains(spell.name) then 
 					info('Enfeebling Magic Set - Magic Accuracy')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 				elseif Enfeeble_Potency:contains(spell.name) then
 					info('Enfeebling Magic Set - Potency')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
 				elseif Enfeeble_Duration:contains(spell.name) then
 					info('Enfeebling Magic Set - Duration')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Duration)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Duration)
 				else
 					info('Enfeebling Magic Set')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
 				end
 			else
 				-- No type found and use default Midcast
@@ -1332,155 +1332,155 @@ do
 
 		-- Black Magic
 		elseif spell.type == 'BlackMagic' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Gear Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info( '['..spell.english..'] Set')
 			-- Aspir Gear
 			elseif spell.name:contains('Aspir') then
 				info('Aspir Set')
-				equipSet = set_combine(equipSet, sets.Midcast.Aspir)
+				built_set = set_combine(built_set, sets.Midcast.Aspir)
 			-- Drain Gear
 			elseif spell.name:contains('Drain') then
 				info('Drain Set')
-				equipSet = set_combine(equipSet, sets.Midcast.Drain)
+				built_set = set_combine(built_set, sets.Midcast.Drain)
 			-- Enfeebling Magic
 			elseif spell.skill == 'Enfeebling Magic' then
 				if Enfeeble_Acc:contains(spell.name) then 
 					info('Enfeebling Magic Set - Magic Accuracy')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 				elseif Enfeeble_Potency:contains(spell.name) then
 					info('Enfeebling Magic Set - Potency')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Potency)
 				elseif Enfeeble_Duration:contains(spell.name) then
 					info('Enfeebling Magic Set - Duration')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Duration)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.Duration)
 				else
 					info('Enfeebling Magic Set')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling)
 				end
 			-- Dark Magic
 			elseif spell.skill == 'Dark Magic' then
 				if Dark_Acc:contains(spell.name) then 
 					info('Dark Magic Set - Magic Accuracy')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.MACC)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.MACC)
 				elseif Dark_Absorb:contains(spell.name) then
 					info('Absorb Magic Set - Potency')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Absorb)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Absorb)
 				elseif Dark_Enhancing:contains(spell.name) then
 					info('Dark Enhancing Magic Set - Duration')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Enhancing)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Dark, sets.Midcast.Dark.Enhancing)
 				else
 					info('Dark Magic Set')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Dark)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Dark)
 				end
 			-- Enhancing Magic
 			elseif spell.skill == 'Enhancing Magic' then
 				info('Enhancing Magic Set')
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enhancing)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enhancing)
 			-- Enfeebling Elemental Magic
 			elseif Elemental_Enfeeble:contains(spell.name) then
 				info('Enfeebling Magic Set - Magic Accuracy')
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Enfeebling, sets.Midcast.Enfeebling.MACC)
 			else
 				if spell.target.id == last_skillchain_id and os.clock() - last_skillchain_time < 8 then
 					local element = res.spells[spell.id].element
 					local element_name = res.elements[element].en
 					if last_skillchain_elements[element_name] then
 						info("Burst Detected - Using the Burst Set")
-						equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Burst)
+						built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Burst)
 					end
 				else
 					info('Nuke Set')
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
+					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Nuke)
 				end
-				equipSet = Elemental_check(equipSet, spell)
+				built_set = set_combine(built_set, elemental_check(spell))
 			end
 
 		-- Bard Song
 		elseif spell.type == 'BardSong' and not buffactive['Nightingale'] then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Gear Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, equip_song_gear(spell), equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, equip_song_gear(spell), built_set[spell.english])
 				info( '['..spell.english..'] Set')
 			-- Song Count
 			elseif SongCount:contains(spell.name) then
 				info( '['..spell.english..'] Set (Song Count)')
-				equipSet = set_combine(equipSet, sets.Midcast.DummySongs, {range=Instrument.Count})
+				built_set = set_combine(built_set, sets.Midcast.DummySongs, {range=Instrument.Count})
 			-- Equip Marsyas
 			elseif spell.name == "Honor March" then
-				equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Honor})
+				built_set = set_combine(built_set, equip_song_gear(spell), {range=Instrument.Honor})
 			-- Equip Loughnashade
 			elseif spell.name == "Aria of Passion" then
-					equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Aria})
+					built_set = set_combine(built_set, equip_song_gear(spell), {range=Instrument.Aria})
 			-- AoE Sleep
 			elseif spell.name:contains('Horde') then
 				info( '['..spell.english..'] Set (AOE Sleep)')
-				equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
+				built_set = set_combine(built_set, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.AOE_Sleep})
 			-- Normal Enfeebles
 			elseif Enfeebling_Song:contains(spell.english) then
 				info( '['..spell.english..'] Set (Enfeebling)')
-				equipSet = set_combine(equipSet, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
+				built_set = set_combine(built_set, sets.Midcast.Enfeebling, equip_song_gear(spell), {range=Instrument.Potency})
 			-- Augment the buff songs
 			else
 				info( '['..spell.english..'] Set (Potency)')
-				equipSet = set_combine(equipSet, equip_song_gear(spell), {range=Instrument.Potency})
+				built_set = set_combine(built_set, equip_song_gear(spell), {range=Instrument.Potency})
 			end
 
 		-- BlueMagic
 		elseif spell.type == 'BlueMagic' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info( '['..spell.english..'] Set')
 			-- Defined Blue Nukes
 			elseif BlueNuke:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Nuke)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Nuke)
 				info('Blue Nuke set')
 			-- Spells that benifit from Blue Magic Skill
 			elseif BlueSkill:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Skill)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Skill)
 				info('Blue Skill set')
 			elseif BlueTank:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Enmity)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Enmity)
 				info('Blue Enmity set')
 			elseif BlueHealing:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.Cure)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Cure)
 				info('Blue Cure set')
 			elseif BlueACC:contains(spell.english) then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, sets.Midcast.ACC)
+				built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.ACC)
 				info('Blue Magic Accuracy set')
 			-- Default Spell set
 			else
 				info('Midcast not set')
 			end
 			if buffactive["Diffusion"] then
-				equipSet = set_combine(equipSet, sets.Diffusion)
+				built_set = set_combine(built_set, sets.Diffusion)
 				info('Diffusion Augment')
 			end
 
 		-- Geomancy
 		elseif spell.type == 'Geomancy' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- Defined Set
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info( '['..spell.english..'] Set')
 			-- Indi Equipment
 			elseif Indicolure_List:contains(spell.english) then
 				if buffactive["Entrust"] then
-					equipSet = sets.Geomancy.Indi.Entrust
+					built_set = sets.Geomancy.Indi.Entrust
 					info('Indicolure set - Entrust')
 				else
-					equipSet = sets.Geomancy.Indi
+					built_set = sets.Geomancy.Indi
 					info('Indicolure set')
 				end
 			-- Bubble Equipment
 			elseif Geomancy_List:contains(spell.english) then
-				equipSet = sets.Geomancy.Geo
+				built_set = sets.Geomancy.Geo
 				info('Geomancy set')
 			-- Default set
 			else
@@ -1489,47 +1489,47 @@ do
 
 		-- Trust
 		elseif spell.type == 'Trust' then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 
 		-- BloodPactRage and BloodPactWard
 		elseif spell.type == "BloodPactWard" or spell.type == "BloodPactRage" then
-			equipSet = sets.Midcast
+			built_set = sets.Midcast
 			-- BP Timer gear needs to swap here if not under Astral Conduit
 			if not buffactive["Astral Conduit"] then
-				equipSet = sets.Midcast
-				if equipSet[spell.english] then
-					equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+				built_set = sets.Midcast
+				if built_set[spell.english] then
+					built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 					info('['..spell.english..'] Set')
 				else
-					equipSet = set_combine(equipSet, sets.Midcast.BP)
+					built_set = set_combine(built_set, sets.Midcast.BP)
 				end
 			else
-				equipSet = {}
+				built_set = {}
 			end
 
 		-- Monster
 		elseif spell.type == 'Monster' then
-			equipSet = sets.Ready
+			built_set = sets.Ready
 			info( '[Ready] Set ')
 
 		-- Elemental Siphon
 		elseif spell.name == "Elemental Siphon" then
-			equipSet = sets.Midcast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			built_set = sets.Midcast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
-				equipSet = set_combine(equipSet, sets.Midcast.SummoningMagic)
+				built_set = set_combine(built_set, sets.Midcast.SummoningMagic)
 			end
 
 		-- Summon Avatar
 		elseif spell.type == "SummonerPact" then
-			equipSet = sets.Midcast
-			if equipSet[spell.english] then
-				equipSet = set_combine(equipSet, sets.Midcast.SIRD, equipSet[spell.english])
+			built_set = sets.Midcast
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, sets.Midcast.SIRD, built_set[spell.english])
 				info('['..spell.english..'] Set')
 			else
-				equipSet = set_combine(equipSet, sets.Midcast.Summon)
+				built_set = set_combine(built_set, sets.Midcast.Summon)
 			end
 		end
 
@@ -1545,15 +1545,15 @@ do
 		end
 
 		-- Weapon Checks for precast
-		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" then
 			if state.WeaponMode.value == "Locked" then
-				equipSet = set_combine(equipSet, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
-				log(equipSet)
+				built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				log(built_set)
 			else
-				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 				if not TwoHand and not DualWield then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+					built_set = set_combine(built_set, sets.Weapons.Shield)
 				end
 			end
 			log('Midcast set equiping Offense Mode Gear')
@@ -1561,25 +1561,25 @@ do
 
 		--Swap in bard song weapons
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
-			equipSet = set_combine(equipSet, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
+			built_set = set_combine(built_set, sets.Weapons.Songs, sets.Weapons.Songs.Midcast)
 			if not DualWield then
 				if not TwoHand then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+					built_set = set_combine(built_set, sets.Weapons.Shield)
 				end
 			end
 		end
 
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
-			equipSet = set_combine(equipSet, sets.TreasureHunter)
+			built_set = set_combine(built_set, sets.TreasureHunter)
 		end
 
-		-- Built equipset to return
-		return equipSet
+		-- Built built_set to return
+		return built_set
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
-	-- This function is called from the default GearSwap Function "aftercast" to build an equipset
+	-- This function is called from the default GearSwap Function "aftercast" to build an built_set
 	-------------------------------------------------------------------------------------------------------------------
 
 	function aftercastequip(spell)
@@ -1587,9 +1587,9 @@ do
 		if pet_midaction() then
 			return
 		else
-			equipSet = {}
-			equipSet = set_combine(choose_set(),choose_set_custom())
-			return equipSet
+			local built_set = choose_set()
+			built_set = set_combine(built_set, choose_set_custom())
+			return built_set
 		end
 	end
 
@@ -1609,7 +1609,6 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function precast(spell)
-		equipSet = {}
 
 		-- Spell timed out
 		if is_Busy and os.clock() - Spellstart > SpellCastTime then is_Busy = false SpellCastTime = 0 end
@@ -1639,12 +1638,14 @@ do
 		end
 
 		--Generate the correct set from the include file and custom function
-		equipSet = set_combine(precastequip (spell), precast_custom(spell))
+		local built_set = precastequip(spell)
 
-		equipSet = check_equipment_spells(spell, equipSet)
+		built_set = set_combine(built_set, precast_custom(spell))
+
+		built_set = set_combine(built_set, check_equipment_spells(spell))
 
 		-- here is where gear is actually equipped
-		equip(equipSet)
+		equip(built_set)
 	end
 
 	 -------------------------------------------------------------------------------------------------------------------
@@ -1652,22 +1653,23 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcast(spell)
-		equipSet = {}
-
 		--Generate the correct set from the include file and custom function
-		equipSet = set_combine(midcastequip (spell), midcast_custom(spell))
+		local built_set = midcastequip(spell)
 
-		equipSet = check_equipment_spells(spell, equipSet)
+		built_set = set_combine(built_set, midcast_custom(spell))
+
+		built_set = set_combine(built_set, check_equipment_spells(spell))
 
 		-- here is where gear is actually equipped
-		equip(equipSet)
+		equip(built_set)
 	end
 
-	function check_equipment_spells(spell, equipSet)
+	function check_equipment_spells(spell)
+		local built_set = {}
 
 		--Equip weapon for Dispelga
 		if spell.name == "Dispelga" then
-			equipSet = set_combine(equipSet, {main="Daybreak"})
+			built_set = {main="Daybreak"}
 		end
 
 		--Equip body for Impact
@@ -1681,12 +1683,12 @@ do
 				or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
 
 			-- Crepuscular Cloak Found
-			if Crepuscular then log("Crepuscular Found") equipSet = set_combine(equipSet, {head=empty, body="Crepuscular Cloak",})
+			if Crepuscular then log("Crepuscular Found") built_set = {head=empty, body="Crepuscular Cloak",}
 			-- Twilight Cloak Found
-			elseif Twilight then log("Twilight Found") equipSet = set_combine(equipSet, {head=empty, body="Twilight Cloak",}) end
+			elseif Twilight then log("Twilight Found") built_set = {head=empty, body="Twilight Cloak",} end
 		end
 
-		return equipSet
+		return built_set
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -1694,13 +1696,13 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function aftercast(spell)
-		equipSet = {}
-
 		--Generate the correct set from the include file and custom function
-		equipSet = set_combine(aftercastequip (spell), aftercast_custom(spell))
+		local built_set = aftercastequip (spell)
+
+		built_set = set_combine(built_set, aftercast_custom(spell))
 
 		-- here is where gear is actually equipped
-		equip(equipSet)
+		equip(built_set)
 
 		-- Begin Reset Process - Spells have a hard delay where the JA's have a small delay
 		if RecastTimers:contains(spell.type) then
@@ -1718,11 +1720,16 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function buff_change(name,gain)
-		equipSet = {}
 		if not is_Busy then
+
 			--calls the include file and custom on a buff change
-			equipSet = set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain))
-			equip(equipSet)
+			local built_set = choose_set()
+
+			built_set = set_combine(built_set, choose_set_custom())
+
+			built_set = set_combine(built_set, buff_change_custom(name,gain))
+
+			equip(built_set)
 		end
 	end
 
@@ -1731,10 +1738,11 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function status_change(new,old)
-		equipSet = {}
 		--calls the include file and custom on a state change
-		equipSet = set_combine(choose_set(), choose_set_custom(), status_change_custom(new,old))
-		equip(equipSet)
+		local built_set = choose_set()
+		built_set = set_combine(built_set, choose_set_custom())
+		built_set = set_combine(built_set, status_change_custom(new,old))
+		equip(built_set)
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -1742,10 +1750,10 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function pet_change(pet,gain)
-		equipSet = {}
 		-- A new pet is found
-		equipSet = set_combine(choose_set(), pet_change_custom(pet,gain))
-		equip(equipSet)
+		local built_set = choose_set()
+		built_set = set_combine(built_set, pet_change_custom(pet,gain))
+		equip(built_set)
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -1753,29 +1761,30 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function pet_midcast(spell)
-		equipSet = sets.Pet_Midcast
+		local built_set = sets.Pet_Midcast
 		-- Specific sets are defined
-		if equipSet[spell.english] then
-			equipSet = set_combine(equipSet, equipSet[spell.english])
+		if built_set[spell.english] then
+			built_set = set_combine(built_set, built_set[spell.english])
 			info('['..spell.english..'] Set')
 		else
-			equipSet = set_combine(equipSet, choose_set(), pet_midcast_custom(spell))
+			built_set = set_combine(built_set, choose_set())
+			built_set = set_combine(built_set, pet_midcast_custom(spell))
 		end
 
 		-- Weapon Checks for precast
-		-- If it set to unlocked it will not swap the weapons even if defined in the equipset job lua
+		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" then
 			if state.WeaponMode.value == "Locked" then
-				equipSet = set_combine(equipSet, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+				built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
 			else
-				equipSet = set_combine(equipSet, sets.Weapons[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 				if not TwoHand and not DualWield then
-					equipSet = set_combine(equipSet, sets.Weapons.Shield)
+					built_set = set_combine(built_set, sets.Weapons.Shield)
 				end
 			end
 			log('Midcast set equiping Offense Mode Gear')
 		end
-		equip(equipSet)
+		equip(built_set)
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -1783,10 +1792,9 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function pet_aftercast(spell)
-		equipSet = {}
-		log('Pet After Cast')
-		equipSet = set_combine(choose_set(), pet_aftercast_custom(spell))
-		equip(equipSet)
+		local built_set = choose_set()
+		built_set = set_combine(built_set, pet_aftercast_custom(spell))
+		equip(built_set)
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -1818,10 +1826,10 @@ do
 	-- Determine whether we have sufficient ammo for the action being attempted.
 	-------------------------------------------------------------------------------------------------------------------
 
-	function do_bullet_checks(spell, equipSet)
-		if spell and equipSet then
+	function do_bullet_checks(spell, built_set)
+		if spell and built_set then
 
-			local bullet_name = equipSet.ammo
+			local bullet_name = built_set.ammo
 			if bullet_name == 'empty' then
 				log('Ammo name is: '..bullet_name)
 				return
@@ -1888,8 +1896,9 @@ do
 	function do_Utsu_checks(spell)
 		if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
 			local available_shihei = player.inventory['Shihei']
+			local available_shiki = player.inventory['Shikanofuda']
 			local shihei_warning_level = 50
-			if available_shihei.count < shihei_warning_level  then
+			if available_shihei.count < shihei_warning_level and available_shiki.count < shihei_warning_level then
 				local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x *****'
 				local border = "" for i = 1, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
@@ -1908,13 +1917,17 @@ do
 		-- Updates the TH status
 		local command = cmd:lower()
 		if command == 'update auto' then
-			equip(set_combine(choose_set(),choose_set_custom()))
+			local built_set = choose_set()
+			built_set = set_combine(built_set,choose_set_custom())
+			equip(built_set)
 		-- Toggles the TH state
 		elseif command:contains('treasurehunter') then
 			if command == "treasurehunter" then
 				state.TreasureMode:cycle()
 				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
+				local built_set = choose_set()
+				built_set = set_combine(built_set,choose_set_custom())
+				equip(built_set)
 				display_box_update()
 				return
 			else
@@ -1935,7 +1948,9 @@ do
 				mode = string.split(cmd," ",2)
 				state.AutoBuff:set(mode[2])
 				info('Auto Buff is ['..state.AutoBuff.value..']')
-				equip(set_combine(choose_set(),choose_set_custom()))
+				local built_set = choose_set()
+				built_set = set_combine(built_set,choose_set_custom())
+				equip(built_set)
 			end
 			display_box_update()
 		-- Shuts down instnace
@@ -2163,29 +2178,29 @@ do
 
 	-- Determines correct gear for the songs
 	function equip_song_gear(spell)
-		equipSet = {}
-		if string.find(spell.english,'Finale') then equipSet = sets.Midcast.Finale
-		elseif string.find(spell.english,'Lullaby') then equipSet = sets.Midcast.Lullaby
-		elseif string.find(spell.english,'Threnody') then equipSet = sets.Midcast.Threnody
-		elseif string.find(spell.english,'Elegy') then equipSet = sets.Midcast.Elegy
-		elseif string.find(spell.english,'Requiem') then equipSet = sets.Midcast.Requiem
-		elseif string.find(spell.english,'March') then equipSet = sets.Midcast.March
-		elseif string.find(spell.english,'Minuet') then equipSet = sets.Midcast.Minuet
-		elseif string.find(spell.english,'Madrigal') then equipSet = sets.Midcast.Madrigal
-		elseif string.find(spell.english,'Ballad') then equipSet = sets.Midcast.Ballad
-		elseif string.find(spell.english,'Scherzo') then equipSet = sets.Midcast.Scherzo
-		elseif string.find(spell.english,'Mazurka') then equipSet = sets.Midcast.Mazurka
-		elseif string.find(spell.english,'Paeon') then equipSet = sets.Midcast.Paeon
-		elseif string.find(spell.english,'Carol') then equipSet = sets.Midcast.Carol
-		elseif string.find(spell.english,'Minne') then equipSet = sets.Midcast.Minne
-		elseif string.find(spell.english,'Mambo') then equipSet = sets.Midcast.Mambo
-		elseif string.find(spell.english,'Etude') then equipSet = sets.Midcast.Etude
-		elseif string.find(spell.english,'Prelude') then equipSet = sets.Midcast.Prelude
-		elseif string.find(spell.english,'Dirge') then equipSet = sets.Midcast.Dirge
-		elseif string.find(spell.english,'Sirvente') then equipSet = sets.Midcast.Sirvente
-		elseif string.find(spell.english,'Aria') then equipSet = sets.Midcast.Aria
+		local built_set = {}
+		if string.find(spell.english,'Finale') then built_set = sets.Midcast.Finale
+		elseif string.find(spell.english,'Lullaby') then built_set = sets.Midcast.Lullaby
+		elseif string.find(spell.english,'Threnody') then built_set = sets.Midcast.Threnody
+		elseif string.find(spell.english,'Elegy') then built_set = sets.Midcast.Elegy
+		elseif string.find(spell.english,'Requiem') then built_set = sets.Midcast.Requiem
+		elseif string.find(spell.english,'March') then built_set = sets.Midcast.March
+		elseif string.find(spell.english,'Minuet') then built_set = sets.Midcast.Minuet
+		elseif string.find(spell.english,'Madrigal') then built_set = sets.Midcast.Madrigal
+		elseif string.find(spell.english,'Ballad') then built_set = sets.Midcast.Ballad
+		elseif string.find(spell.english,'Scherzo') then built_set = sets.Midcast.Scherzo
+		elseif string.find(spell.english,'Mazurka') then built_set = sets.Midcast.Mazurka
+		elseif string.find(spell.english,'Paeon') then built_set = sets.Midcast.Paeon
+		elseif string.find(spell.english,'Carol') then built_set = sets.Midcast.Carol
+		elseif string.find(spell.english,'Minne') then built_set = sets.Midcast.Minne
+		elseif string.find(spell.english,'Mambo') then built_set = sets.Midcast.Mambo
+		elseif string.find(spell.english,'Etude') then built_set = sets.Midcast.Etude
+		elseif string.find(spell.english,'Prelude') then built_set = sets.Midcast.Prelude
+		elseif string.find(spell.english,'Dirge') then built_set = sets.Midcast.Dirge
+		elseif string.find(spell.english,'Sirvente') then built_set = sets.Midcast.Sirvente
+		elseif string.find(spell.english,'Aria') then built_set = sets.Midcast.Aria
 		end
-		return equipSet
+		return built_set
 	end
 
 	function use_enchantment(item)
@@ -2281,14 +2296,11 @@ do
 				log('Weapon:['..Main_Weapon.en..']')
 				local Skill_type = Main_Weapon.skill 
 				if Skill_type == 4 or Skill_type == 6 or Skill_type == 7 or Skill_type == 8 or Skill_type == 10 or Skill_type == 12 then
-					log('Two Handed Weapon Type: ['..Skill_type..']')
 					TwoHand = true
 				else
-					log('One Handed Weapon Type: ['..Skill_type..']')
 					TwoHand = false
 				end
 			else
-				log('Weapon Not Found')
 				TwoHand = false
 			end
 		end
@@ -2302,7 +2314,9 @@ do
 			-- If it's different than the last known mob, then we've actually changed targets.
 			if player.target.index == new_index and new_index ~= th_info.last_player_target_index then
 				th_info.last_player_target_index = player.target.index
-				equip(set_combine(choose_set(),choose_set_custom()))
+				local built_set = choose_set()
+				built_set = set_combine(built_set, choose_set_custom())
+				equip(built_set)
 			end
 		end
 	end
@@ -2394,30 +2408,31 @@ do
 		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	end
 
-	function Elemental_check(equipSet, spell)
+	function elemental_check(spell)
+		local built_set = {}
 		-- This function swaps in the Orpheus or Hachirin as needed
 		if (Elemental_WS:contains(spell.name) and spell.type == 'WeaponSkill') or spell.type == 'BlackMagic' then
 			-- Matching double weather (w/o day conflict).
 			if spell.element == world.weather_element and world.weather_intensity == 2 then
-				equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
 				windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Matching day and weather.
 			elseif spell.element == world.day_element and spell.element == world.weather_element then
-				equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
 				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Target distance less than 6 yalms
 			elseif spell.target.distance < (6 + spell.target.model_size) then
-				equipSet = set_combine(equipSet, {waist="Orpheus's Sash",})
+				built_set = set_combine(built_set, {waist="Orpheus's Sash",})
 				windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
 			-- Match day or weather.
 			elseif spell.element == world.day_element or spell.element == world.weather_element then
 				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-				equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi",})
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
 			else
 				windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
 			end
 		end
-		return equipSet
+		return built_set
 	end
 
 	function round(num, numDecimalPlaces)
@@ -2557,8 +2572,8 @@ do
 			end
 		elseif id == 2 then
 			info('Locking Sleep Gear')
-			equipSet = set_combine(sets.Idle, sets.Weapons.Sleep)
-			equip(equipSet)
+			built_set = set_combine(sets.Idle, sets.Weapons.Sleep)
+			equip(built_set)
 			disable('main','range')
 			-- Used to wake up during sleep
 			-- Cancel stoneskin
@@ -2734,36 +2749,36 @@ do
 
 		if buffactive['Sleep'] then return end
 
-		equipSet = {}
+		local built_set = {}
 		log('Choose Set Ran')
 
 		-- Combat Checks
 		if player.status == "Engaged" then
-			equipSet = set_combine(equipSet, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+			built_set = set_combine(built_set, sets.OffenseMode, sets.OffenseMode[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
 
 			if state.JobMode.value == "Ranged" then
 				log('Ranged Mode')
-				equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
+				built_set = set_combine(built_set, sets.OffenseMode.Ranged)
 			end
 
 			if not DualWield and not TwoHand then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				built_set = set_combine(built_set, sets.Weapons.Shield)
 			else
-				equipSet = set_combine(equipSet, sets.DualWield)
+				built_set = set_combine(built_set, sets.DualWield)
 			end
 
 			-- Check if AM3 is active
 			if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM3[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.OffenseMode.AM3[state.WeaponMode.value])
 
 			elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM2[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.OffenseMode.AM2[state.WeaponMode.value])
 
 			elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM1[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.OffenseMode.AM1[state.WeaponMode.value])
 
 			elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
-				equipSet = set_combine(equipSet, sets.OffenseMode.AM[state.WeaponMode.value])
+				built_set = set_combine(built_set, sets.OffenseMode.AM[state.WeaponMode.value])
 			end
 
 			-- Check if TreasureMode is activew
@@ -2771,15 +2786,15 @@ do
 
 				-- Equip TH gear if mob is not marked as tagged
 				if not th_info.tagged_mobs[player.target.id] then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
+					built_set = set_combine(built_set, sets.TreasureHunter)
 
 				-- Equip TH gear if TreasureMode is Fulltime
 				elseif state.TreasureMode.value == 'Fulltime' then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
+					built_set = set_combine(built_set, sets.TreasureHunter)
 
 				-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
 				elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
-					equipSet = set_combine(equipSet, sets.TreasureHunter)
+					built_set = set_combine(built_set, sets.TreasureHunter)
 				end
 			end
 
@@ -2787,34 +2802,34 @@ do
 
 		-- Idle sets
 		else
-			equipSet = set_combine(equipSet, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
+			built_set = set_combine(built_set, sets.Idle, sets.Idle[state.OffenseMode.value], sets.Weapons[state.WeaponMode.value])
 
 			if not DualWield and not TwoHand then
-				equipSet = set_combine(equipSet, sets.Weapons.Shield)
+				built_set = set_combine(built_set, sets.Weapons.Shield)
 			end
 
 			--Pet specific checks
 			if pet.isvalid then
 				--Augment built set for Perp cost
-				equipSet = set_combine(equipSet, sets.Idle.Pet)
+				built_set = set_combine(built_set, sets.Idle.Pet)
 			end
 
 			-- Equip Sublimation gear
 			if buffactive[187] then
-				equipSet = set_combine(equipSet, sets.Idle.Sublimation)
+				built_set = set_combine(built_set, sets.Idle.Sublimation)
 			end
 
 			-- Equip movement gear
 			if is_moving then
-				equipSet = set_combine(equipSet, sets.Movement)
+				built_set = set_combine(built_set, sets.Movement)
 			end
 
 			if player.status == "Resting" then
-				equipSet = set_combine(equipSet, sets.Idle.Resting)
+				built_set = set_combine(built_set, sets.Idle.Resting)
 			end
 
 		end
-		return equipSet
+		return built_set
 	end
 
 	-- List of all the possible tables to use
