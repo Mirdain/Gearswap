@@ -278,7 +278,6 @@ Physical_BPs_TP = S{'Rock Buster','Mountain Buster','Crescent Fang','Spinning Di
 AvatarList = S{'Shiva','Ramuh','Garuda','Leviathan','Diabolos','Titan','Fenrir','Ifrit','Carbuncle','Fire Spirit','Air Spirit','Ice Spirit','Thunder Spirit',
 	'Light Spirit','Dark Spirit','Earth Spirit','Water Spirit','Cait Sith','Alexander','Odin','Atomos'}
 
-
 SongCount = S{"Knight's Minne", "Knight's Minne II", "Army's Paeon", "Army's Paeon II", "Army's Paeon III", "Army's Paeon IV", "Fowl Aubade", "Herb Pastoral", 
 	"Shining Fantasia", "Scop's Operetta", "Puppet's Operetta", "Gold Capriccio", "Warding Round", "Goblin Gavotte"}
 
@@ -357,6 +356,8 @@ do
 	local UtsusemiSpell = S{'Utsusemi: Ichi','Utsusemi: Ni', 'Utsusemi: San'}
 	local RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 	local SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
+
+	local Divergence_Zones = S { "Dynamis - San d'Oria [D]", "Dynamis - Bastok [D]", "Dynamis - Windurst [D]", "Dynamis - Jeuno [D]" }
 
 	local settings = config.load(default)
 
@@ -2510,7 +2511,7 @@ do
 
 		local position = windower.ffxi.get_mob_by_id(player.id)
 		
-		if position and not buffactive['Mounted'] then
+		if position and not buffactive['Mounted'] and not is_Busy then
 			local movement = math.sqrt( (position.x-Location.x)^2 + (position.y-Location.y)^2 + (position.z-Location.z)^2 ) > 0.5
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
@@ -2606,12 +2607,20 @@ do
 	windower.register_event('lose buff', function(id)
 		local name = res.buffs[id].en
 		local gain = false
-		if id == 15 then
-			Unlock()
+		if id == 15 then -- Doom
+			if Divergence_Zones:contains(world.area) then
+				enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+			else
+				Unlock()
+			end
 			equip(set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain)))
 			info('Unlocking Cursna Received Gear')
-		elseif id == 2 then
-			Unlock()
+		elseif id == 2 then -- sleep
+			if Divergence_Zones:contains(world.area) then
+				enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+			else
+				Unlock()
+			end
 			equip(set_combine(choose_set(), choose_set_custom(), buff_change_custom(name,gain)))
 			info('Unlocking Sleep Gear')
 		end 
@@ -2673,14 +2682,22 @@ do
 						log('Item use')
 					elseif data.param == 28787 then
 						log('Item Use Interupted')
-						Unlock()
+						if Divergence_Zones:contains(world.area) then
+							enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+						else
+							Unlock()
+						end
 						equip(set_combine(choose_set(), choose_set_custom()))
 					end
 				-- Item use Finished
 				elseif data.category == 5 then
 					if data.param == 4154 then
 						log('Item Use Finished')
-						Unlock()
+						if Divergence_Zones:contains(world.area) then
+							enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+						else
+							Unlock()
+						end
 						equip(set_combine(choose_set(), choose_set_custom()))
 					end
 				-- Casting Start
