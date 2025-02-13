@@ -2609,7 +2609,7 @@ do
 		local gain = false
 		if id == 15 then -- Doom
 			if Divergence_Zones:contains(world.area) then
-				enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+				enable('main','sub','range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			else
 				Unlock()
 			end
@@ -2617,7 +2617,7 @@ do
 			info('Unlocking Cursna Received Gear')
 		elseif id == 2 then -- sleep
 			if Divergence_Zones:contains(world.area) then
-				enable('range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
+				enable('main','sub','range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			else
 				Unlock()
 			end
