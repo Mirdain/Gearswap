@@ -462,6 +462,13 @@ do
 		gs_status:text(lines:concat('\n'))
 	end
 
+	-- Zero the display window
+	function display_zero_command()
+		gs_status:pos_x(0)
+		gs_status:pos_y(0)
+		config.save(settings, windower.ffxi.get_player().name:lower())
+	end
+
 	-- Used to help debug issues
 	function debug_box_update()
 		local lines = T{}
@@ -1896,10 +1903,18 @@ do
 
 	function do_Utsu_checks(spell)
 		if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
+			local display_message = true
+			local shihei_warning_level = 50
 			local available_shihei = player.inventory['Shihei']
 			local available_shiki = player.inventory['Shikanofuda']
-			local shihei_warning_level = 50
-			if available_shihei.count < shihei_warning_level and available_shiki.count < shihei_warning_level then
+
+			-- Check for levels
+			if available_shihei and available_shihei.count > shihei_warning_level or available_shiki and available_shiki.count > shihei_warning_level then
+				display_message = false
+			end
+
+			-- Notify player is low
+			if display_message then
 				local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x *****'
 				local border = "" for i = 1, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
@@ -1907,6 +1922,7 @@ do
 				add_to_chat(167, msg)
 				add_to_chat(167, border)
 			end
+
 		end
 	end
 
@@ -1921,6 +1937,9 @@ do
 			local built_set = choose_set()
 			built_set = set_combine(built_set,choose_set_custom())
 			equip(built_set)
+		-- Put the UI at 0,0
+		elseif command == 'zero' then
+			display_zero_command()
 		-- Toggles the TH state
 		elseif command:contains('treasurehunter') then
 			if command == "treasurehunter" then
