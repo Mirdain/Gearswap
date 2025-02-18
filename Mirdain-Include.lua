@@ -1903,19 +1903,31 @@ do
 
 	function do_Utsu_checks(spell)
 		if spell.name == 'Utsusemi: Ichi' or spell.name == 'Utsusemi: Ni' or spell.name == 'Utsusemi: San' then
-			local display_message = true
-			local shihei_warning_level = 50
+
+			local display_message = false
+			local warning_level = 50
+			local count = 0
 			local available_shihei = player.inventory['Shihei']
 			local available_shiki = player.inventory['Shikanofuda']
 
 			-- Check for levels
-			if available_shihei and available_shihei.count > shihei_warning_level or available_shiki and available_shiki.count > shihei_warning_level then
-				display_message = false
+			if available_shihei then
+				if available_shihei.count < warning_level then
+					display_message = true
+					count = available_shihei.count
+				end
+			elseif available_shiki then
+				if available_shiki.count < warning_level then
+					display_message = true
+					count = available_shiki.count
+				end
+			else
+				display_message = true
 			end
 
 			-- Notify player is low
 			if display_message then
-				local msg = '*****  LOW SHIHEI WARNING: '..tostring(available_shihei.count)..'x *****'
+				local msg = '*****  LOW TOOL WARNING: '..tostring(count)..'x *****'
 				local border = "" for i = 1, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
 				add_to_chat(167, border)
