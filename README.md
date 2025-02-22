@@ -11,7 +11,7 @@ Ex: `gs c OffenseMode PDL`
 ## WeaponMode
 Cycle via Keybind: <kbd>F9</kbd>
 
-Changed in game via command: `gs c WeaponmMode <mode>`
+Changed in game via command: `gs c WeaponMode <mode>`
 
 Ex: `gs c WeaponMode "Savage Blade"`
 
