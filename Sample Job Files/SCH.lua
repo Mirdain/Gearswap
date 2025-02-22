@@ -27,7 +27,7 @@ state.OffenseMode:set('DT')
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Weapon Modes
-state.WeaponMode:options('Musa','Unlocked')
+state.WeaponMode:options('Musa','Mpaca','Unlocked','Locked')
 state.WeaponMode:set('Unlocked')
 
 -- Set to true to run organizer on job changes
@@ -48,11 +48,15 @@ function get_sets()
 		sub="Enki Strap",
 	}
 
+	sets.Weapons['Mpaca'] ={
+		main={ name="Mpaca's Staff", augments={'Path: A',}},
+		sub="Enki Strap",
+	}
+
 	sets.Weapons['Unlocked'] ={
 		main={ name="Musa", augments={'Path: C',}},
 		sub="Enki Strap",
 	}
-
 	
 	sets.Weapons.Sleep ={
 		main="Opashoro",
@@ -130,11 +134,11 @@ function get_sets()
 	sets.Precast.FastCast = {
 		-- 10 FC from Musa staff 
 		ammo="Hasty Pinion +1", -- 2% Haste
-		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
+		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
 		body="Pinga Tunic +1", -- 15% FC, Haste
 		hands="Acad. Bracers +3", -- 9% FC, 3% Haste
 		legs="Pinga Pants +1", -- 13% FC, 5% Haste
-		feet={ name="Peda. Loafers +3", augments={'Enhances "Stormsurge" effect',}},
+		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
 		neck="Voltsurge Torque", -- 4% FC
 		waist="Embla Sash", -- 5% FC
 		left_ear="Malignance Earring", -- 4% FC
@@ -142,9 +146,9 @@ function get_sets()
 		left_ring="Weather. Ring", -- 5% FC
 		right_ring="Kishar Ring", -- 4% FC
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10% FC
-	} -- 80 Fastcast, 
+	} -- 80 Fastcast, and 25% Grimoire all in one
 
-	-- Used for Raises and Cures
+	-- Used for Raises
 	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
 	    ammo="Impatiens", -- 2
 	    waist="Witful Belt", -- 3
@@ -153,10 +157,7 @@ function get_sets()
 	})
 
 	-- Swaps for Grimoire Fast Cast (Should be over 80% FC)
-	sets.Precast.Grimoire = {
-		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
-		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
-	}
+	sets.Precast.Grimoire = {}
 
 	-- Job Abilities
 	sets.JA = {}
@@ -180,21 +181,20 @@ function get_sets()
 
 	-- Cure Set
 	sets.Midcast.Cure = {
-		-- Staff 20% Cure Potency
-		ammo="Hasty Pinion +1", --2% Haste
-		head="Arbatel Bonnet +3", -- 6% Haste
-		body="Arbatel Gown +3", -- 3% Haste
-		hands={ name="Peda. Bracers +3", augments={'Enh. "Tranquility" and "Equanimity"',}}, -- 3% Haste 0/3
-		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 5% Haste 11/2
-		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 3% Haste 11/2
-		neck="Loricate Torque +1",
-		waist="Witful Belt", -- 3% Haste
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
+		ammo="Hasty Pinion +1",
+		head="Arbatel Bonnet +3",
+		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
+		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		neck="Nodens Gorget",
+		waist="Witful Belt",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Mendi. Earring",
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		left_ring="Naji's Loop",
 		right_ring="Defending Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
-    }	-- 25% Haste 50%+ Cure Potency and 7% Cure Potency II 50 DT
+    }	
 
 	-- Cursna Gear
 	sets.Midcast.Cursna = set_combine(sets.Midcast.Cure, {
@@ -246,6 +246,19 @@ function get_sets()
 	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
 
 	})
+
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
+
+	})
+
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
+
+	})
+
 	 -- Used for Vagary (6k+ nuke no kill)
 	sets.Midcast.Vagary = {
 	    main="Chatoyant Staff",
@@ -296,12 +309,28 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
+	sets.Midcast.Nuke.Earth = {
+	    neck="Quanpur Necklace",
+	}
+
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-		left_ring="Mujin Band",
+
 	})
 
 	sets.Midcast.Helix = set_combine(sets.Midcast.Nuke, {
-
+		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		head={ name="Agwu's Cap", augments={'Path: A',}},
+		body={ name="Agwu's Robe", augments={'Path: A',}},
+		hands={ name="Agwu's Gages", augments={'Path: A',}},
+		legs={ name="Agwu's Slops", augments={'Path: A',}},
+		feet="Arbatel Loafers +3",
+		neck={ name="Argute Stole +2", augments={'Path: A',}},
+		waist={ name="Acuity Belt +1", augments={'Path: A',}},
+		left_ear="Regal Earring",
+		right_ear="Malignance Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Freke Ring",
+		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	})
 
 	sets.Perpetuance = {
@@ -428,18 +457,51 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
+
+	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
+
+		if spell.name:contains('helix') then
+			equipSet = set_combine(equipSet, sets.Midcast.Helix)
+			windower.add_to_chat(8,'Helix Detected!')
+		end
+
+		if spell.element == "Earth" and not spell.name:contains('helix') then
+			equipSet = set_combine(equipSet, sets.Midcast.Nuke.Earth)
+			windower.add_to_chat(8,'Earth Element Detected!')
+		end
+	end
+
+	-- This function swaps in elemental buffs
+	if spell.name:contains('Cure') then
+		-- Matching bonus
+		if spell.element == world.weather_element or spell.element == world.day_element then
+			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi"})
+			if state.WeaponMode.value == "Unlocked" then
+				equipSet = set_combine(equipSet, {main="Chatoyant Staff"})
+				log('Element Match found for Curing - Swapping Waist and Weapon')
+			else
+				log('Element Match found for Curing - Swapping Waist')
+			end
+		else
+			log('No Day/Weather match and too far.  Using default')
+		end
+	end
+
 	if buffactive["Immanence"] then
 		log("Immanence Set")
-		equipSet = sets.Immanence
+		equipSet = set_combine(equipSet, sets.Immanence)
 	end
+
 	if buffactive["Ebullience"] then
 		log("Ebullience Set")
-		equipSet = sets.Ebullience
+		equipSet = set_combine(equipSet, sets.Ebullience)
 	end
+
 	if buffactive["Rapture"] then
 		log("Rapture Set")
-		equipSet = sets.Rapture
+		equipSet = set_combine(equipSet, sets.Rapture)
 	end
+
 	-- Skipping Penury due to lack of duration gear (Embrava)
 	--[[
 	if buffactive["Penury"] then
@@ -447,14 +509,17 @@ function midcast_custom(spell)
 		equipSet = sets.Penury
 	end
 	]]--
+
 	if buffactive["Parsimony"] then
-		log("Parsimony Set")
-		equipSet = sets.Parsimony
+		log("Parsimony Set") 
+		equipSet = set_combine(equipSet, sets.Parsimony)
 	end
+
 	if buffactive["Perpetuance"] then
 		log("Perpetuance Set")
-		equipSet = sets.Perpetuance
+		equipSet = set_combine(equipSet, sets.Perpetuance)
 	end
+
 	return equipSet
 end
 
@@ -506,4 +571,22 @@ end
 function check_buff_SP()
 	buff = 'None'
 	return buff
+end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
+
+	return equipSet
 end

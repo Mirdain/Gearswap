@@ -27,11 +27,6 @@ state.OffenseMode:set('DT')
 state.WeaponMode:options('Nuke','Unlocked')
 state.WeaponMode:set('Nuke')
 
--- Set to true to run organizer on job changes
-Organizer = false
-
-elemental_ws = S{'Aeolian Edge'}
-
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -190,18 +185,22 @@ function get_sets()
 		body="Wicce Coat +3",
 		hands={ name="Agwu's Gages", augments={'Path: A',}},
 		legs="Wicce Chausses +3",
-		feet="Wicce Sabots +3",
+		feet={ name="Agwu's Pigaches", augments={'Path: A',}},
 		neck={ name="Src. Stole +2", augments={'Path: A',}},
 		waist={ name="Acuity Belt +1", augments={'Path: A',}},
 		left_ear="Malignance Earring",
-		right_ear="Wicce Earring +1",
+		right_ear="Regal Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Freke Ring",
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast.Nuke.Earth = {
+	    neck="Quanpur Necklace",
+	}
+
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-		left_ring="Mujin Band",
+
 	})
 
 	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
@@ -216,7 +215,13 @@ function get_sets()
 
 	})
 
-
+	sets.Midcast['Impact'] = set_combine(sets.Midcast.Nuke, {
+		hands="Wicce Gloves +3",
+		legs="Wicce Chausses +3",
+		feet="Wicce Sabots +3",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+	})
 
 	-- Misc Sets
 	sets.Midcast.CuragaSet = sets.Midcast.Cure
@@ -299,6 +304,10 @@ function midcast_custom(spell)
 		if player.MPP < 30 then
 			windower.add_to_chat(8,'Player Less than 30% MP - Recover MP!')
 			equipSet = sets.MP_Recover
+		end
+		if spell.element == "Earth" then
+			equipSet = set_combine(equipSet, sets.Midcast.Nuke.Earth)
+			windower.add_to_chat(8,'Earth Element Detected!')
 		end
 	end
 	return equipSet
