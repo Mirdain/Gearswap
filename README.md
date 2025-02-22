@@ -249,3 +249,187 @@ These songs are:
 - Goblin Gavotte
 
 If your Dummy Songs in Silmaril are set to any of the above, you do not need to worry about equipping the appropriate weapon yourself, it will be handled for you.
+
+---
+
+# Predefined Sets
+
+## Weapons
+```lua
+sets.Weapons = {}
+sets.Weapons.Sleep = {}
+sets.Weapons.Shield = {}
+sets.Weapons.Songs = {}
+sets.Weapons.Songs.Midcast = {}
+```
+
+## Idle Sets
+
+```lua
+sets.Idle = {}
+sets.Idle.Pet = {}
+sets.Idle.Sublimation = {}
+sets.Idle.Resting = {}
+```
+
+## Engaged Sets
+
+```lua
+sets.OffenseMode = {}
+sets.OffenseMode.Ranged = {}
+sets.OffenseMode.AM = {}
+sets.OffenseMode.AM1 = {}
+sets.OffenseMode.AM2 = {}
+sets.OffenseMode.AM3 = {}
+```
+
+## Misc Sets
+
+```lua
+sets.Waltz = {}
+sets.Jig = {}
+sets.Samba = {}
+sets.Step = {}
+sets.Flourish = {}
+sets.Jugs = {}
+sets.PhantomRoll = {}
+sets.TreasureHunter = {}
+sets.QuickDraw = {}
+sets.JA = {}
+sets.Storms = {}
+sets.Enmity = {}
+sets.Diffusion = {}
+sets.Geomancy = {}
+sets.Geomancy.Geo = {}
+sets.Geomancy.Indi = {}
+sets.Geomancy.Indi.Entrust = {}
+sets.Pet_Midcast = {}
+sets.DualWield = {}
+sets.Cursna_Received = {}
+sets.Movement = {}
+```
+
+## Precast
+```lua
+sets.Precast = {}
+sets.Precast.FastCast = {}
+sets.Precast.FastCast.Enhancing = {}
+sets.Precast.Cure = {}
+sets.Precast.QuickMagic = {}
+sets.Precast.Utsusemi = {}
+sets.Precast.RA = {}
+sets.Precast.RA.Flurry = {}
+sets.Precast.RA.Flurry_II = {}
+sets.Precast.Songs = {}
+```
+
+## Weaponskills
+```lua
+sets.WS = {}
+sets.WS.ACC =  {}
+sets.WS.ACC.RA = {}
+sets.WS.PDL = {}
+sets.WS.PDL.RA = {}
+sets.WS.SB = {}
+sets.WS.SB.RA = {}
+sets.WS.CRIT = {}
+sets.WS.CRIT.RA = {}
+sets.WS.MEVA = {}
+sets.WS.MEVA.RA = {}
+sets.WS.AM = {}
+sets.WS.AM.RA = {}
+sets.WS.AM1 = {}
+sets.WS.AM1.RA = {}
+sets.WS.AM2 = {}
+sets.WS.AM2.RA = {}
+sets.WS.AM3 = {}
+sets.WS.AM3.RA = {}
+```
+
+## Midcast Ranged Attack
+
+```lua
+sets.Midcast = {}
+sets.Midcast.RA = {}
+sets.Midcast.RA.ACC = {}
+sets.Midcast.RA.PDL = {}
+sets.Midcast.RA.SB = {}
+sets.Midcast.RA.CRIT = {}
+sets.Midcast.RA['True Shot'] = {}
+sets.Midcast.RA.TripleShot = {}
+sets.Midcast.RA.DoubleShot = {}
+sets.Midcast.RA.Barrage = {}
+```
+
+## Midcast for Aftermath (Ranged Attack)
+
+```lua
+sets.Midcast.AM = {}
+sets.Midcast.AM.RA = {}
+sets.Midcast.AM1 = {}
+sets.Midcast.AM1.RA = {}
+sets.Midcast.AM2 = {}
+sets.Midcast.AM2.RA = {}
+sets.Midcast.AM3 = {}
+sets.Midcast.AM3.RA = {}
+```
+
+## Midcast for Magic
+
+```lua
+sets.Midcast.Nuke = {}
+sets.Midcast.Burst = {}
+sets.Midcast.Cure = {}
+sets.Midcast.Curaga = {}
+sets.Midcast.Cura = {}
+sets.Midcast.Regen = {}
+sets.Midcast.Enhancing = {}
+sets.Midcast.Enhancing.Others = {}
+sets.Midcast.Refresh = {}
+sets.Midcast.Enhancing.Gain = {}
+sets.Midcast.Enhancing.Elemental = {}
+sets.Midcast.Enhancing.Status = {}
+sets.Midcast.Enhancing.Skill = {}
+sets.Midcast.Enfeebling = {}
+sets.Midcast.Enfeebling.MACC = {}
+sets.Midcast.Enfeebling.Potency = {}
+sets.Midcast.Enfeebling.Duration = {}
+sets.Midcast.Aspir = {}
+sets.Midcast.Drain = {}
+sets.Midcast.Dark = {}
+sets.Midcast.Dark.MACC = {}
+sets.Midcast.Dark.Absorb = {}
+sets.Midcast.Dark.Enhancing = {}
+sets.Midcast.Skill = {}
+sets.Midcast.SIRD = {}
+sets.Midcast.ACC = {}
+sets.Midcast.BP = {}
+sets.Midcast.SummoningMagic = {}
+sets.Midcast.Summon = {}
+sets.Midcast.DummySongs = {}
+sets.Midcast.Enfeebling = {}
+```
+## Midcast for Songs
+
+```lua
+sets.Midcast.Finale = {}
+sets.Midcast.Lullaby = {}
+sets.Midcast.Threnody = {}
+sets.Midcast.Elegy = {}
+sets.Midcast.Requiem = {}
+sets.Midcast.March = {}
+sets.Midcast.Minuet = {}
+sets.Midcast.Madrigal = {}
+sets.Midcast.Ballad = {}
+sets.Midcast.Scherzo = {}
+sets.Midcast.Mazurka = {}
+sets.Midcast.Paeon = {}
+sets.Midcast.Carol = {}
+sets.Midcast.Minne = {}
+sets.Midcast.Mambo = {}
+sets.Midcast.Etude = {}
+sets.Midcast.Prelude = {}
+sets.Midcast.Dirge ={}
+sets.Midcast.Sirvente = {}
+sets.Midcast.Aria = {}
+```
