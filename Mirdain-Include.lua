@@ -175,10 +175,10 @@ state.AutoBuff:set('OFF')
 --TH mode handling
 state.TreasureMode = M{['description']='Treasure Mode'}
 if player.main_job == "THF" then
-	state.TreasureMode:options('None','Tag','Fulltime','SATA')
-	state.TreasureMode:set('Fulltime')
+	state.TreasureMode:options('None','Tag','Full Time','SATA')
+	state.TreasureMode:set('Full Time')
 else
-	state.TreasureMode:options('None','Tag','Fulltime')
+	state.TreasureMode:options('None','Tag','Full Time')
 	state.TreasureMode:set('None')
 end
 
@@ -2154,12 +2154,6 @@ do
 			end
 			local smModePath = table.concat(modes, '_', 2, #modes)
 			info('Profile: ['..modes[#modes] ..']')
-			windower.send_command('sm load '..smModePath)
-			modes = {}
-			for mode in string.gmatch(cmd, "(%w+)") do
-				table.insert(modes, mode)
-			end
-			smModePath = table.concat(modes, '/', 2, #modes)
 			windower.send_command('exec '..smModePath..'/'..player.main_job..'_'..player.sub_job..'_'..player.name)
 		elseif command == 'food' then
 			windower.chat.input('/item "'..Food..'" <me>')
@@ -2752,7 +2746,7 @@ do
 				if state.TreasureMode.value ~= 'None' and TaggingCategories:contains(data.category) then
 					if windower.ffxi.get_mob_by_id(data.targets[1].id).is_npc then
 						th_info.tagged_mobs[data.targets[1].id] = os.clock()
-						if state.TreasureMode.value ~= 'Fulltime' then 
+						if state.TreasureMode.value ~= 'Full Time' then 
 							equip(set_combine(choose_set(),choose_set_custom())) 
 						end
 					elseif th_info.tagged_mobs[data.actor_id] then
@@ -2836,8 +2830,8 @@ do
 				if not th_info.tagged_mobs[player.target.id] then
 					built_set = set_combine(built_set, sets.TreasureHunter)
 
-				-- Equip TH gear if TreasureMode is Fulltime
-				elseif state.TreasureMode.value == 'Fulltime' then
+				-- Equip TH gear if TreasureMode is Full Time
+				elseif state.TreasureMode.value == 'Full Time' then
 					built_set = set_combine(built_set, sets.TreasureHunter)
 
 				-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
