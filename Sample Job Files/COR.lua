@@ -124,8 +124,8 @@ function get_sets()
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear="Sanare Earring",
+		left_ear="Sanare Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Shadow Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
@@ -166,6 +166,7 @@ function get_sets()
 	--This set is used when OffenseMode is DT and Enaged
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 	    legs="Chas. Culottes +3",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 	})
 
 	--This set is used when OffenseMode is PDL and Enaged
@@ -181,7 +182,7 @@ function get_sets()
 	--The following sets augment the base TP set above for Dual Wielding
 	sets.DualWield = {
 		waist="Reiki Yotai",
-		right_ear="Eabani Earring",
+		--right_ear="Eabani Earring",
 	}
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -518,7 +519,7 @@ function get_sets()
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	})
 
-	sets.WS["Savage Blade"] = set_combine(sets.WS.WSD, {
+	sets.WS["Savage Blade"] = set_combine(sets.WS, {
 		left_ring="Sroda Ring",
 	})
 
