@@ -232,6 +232,8 @@ Cycle_Time = false
 Random_Lockstyle = false
 Lockstyle_List = {}
 
+Mirdain_GS = '1.0.0'
+
 Elemental_WS = S{'Aeolian Edge','Seraph Blade','Shining Blade','Red Lotus Blade','Burning Blade','Sanguine Blade','Energy Drain','Energy Steal',
 	'Cyclone','Gust Slash','Leaden Salute','Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
@@ -1003,6 +1005,36 @@ do
 				info('['..spell.english..'] Set')
 			else
 				info('Using Default Step Set')
+			end
+
+		-- Ward
+		elseif spell.type == 'Ward' then
+			built_set = sets.JA
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
+				info('['..spell.english..'] Set')
+			else
+				info('Using Default Ward Set')
+			end
+
+		-- Rune
+		elseif spell.type == 'Rune' then
+			built_set = sets.JA
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
+				info('['..spell.english..'] Set')
+			else
+				info('Using Default Rune Set')
+			end
+
+		-- Effusion
+		elseif spell.type == 'Effusion' then
+			built_set = sets.JA
+			if built_set[spell.english] then
+				built_set = set_combine(built_set, built_set[spell.english])
+				info('['..spell.english..'] Set')
+			else
+				info('Using Default Effusion Set')
 			end
 
 		-- Flourishes
@@ -2160,6 +2192,8 @@ do
 		-- Command to use any enchanted item, can use either en or enl names from resources, autodetects slot, equip timeout and cast time
 		elseif command:startswith('use') then
 			use_enchantment(command:slice(5))
+		elseif command == 'version' then
+			info('Include Version is ['..Mirdain_GS..']')
 		end
 		--use below for custom Job commands
 		self_command_custom(command)
@@ -2383,6 +2417,8 @@ do
 		-- remove them from the tagged mobs list.
 		local current_time = os.clock()
 		local remove_mobs = S{}
+
+		log('The TH table contains ['..tostring(#th_info.tagged_mobs)..'] entries.')
 
 		-- Search list and flag old entries.
 		for target_id, action_time in pairs(th_info.tagged_mobs) do
@@ -2618,13 +2654,12 @@ do
 			equip(sets.Cursna_Received)
 			disable('neck','lring','rring','waist')
 			info('Locking Cursna Received Gear')
-			if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
-				if AutoItem == true then
-					equip(set_combine(choose_set(), sets.Cursna_Received))
+			if AutoItem then
+				if player.inventory['Holy Water'] ~= nil then -- Only here to notify player about Doom status and potential lack of Holy Waters
 					windower.send_command('input /item "Holy Water" <me>')
+				else 
+					info('No Holy Waters in inventory. Unable to cure DOOM status!')
 				end
-			else 
-				info('No Holy Waters in inventory. Unable to cure DOOM status!')
 			end
 		end 
 	end)
@@ -2634,6 +2669,7 @@ do
 		local gain = false
 		if id == 15 then -- Doom
 			if Divergence_Zones:contains(world.area) then
+				-- Skip unlocking neck if need to RP
 				enable('main','sub','range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			else
 				Unlock()
@@ -2642,6 +2678,7 @@ do
 			info('Unlocking Cursna Received Gear')
 		elseif id == 2 then -- sleep
 			if Divergence_Zones:contains(world.area) then
+				-- Skip unlocking neck if need to RP
 				enable('main','sub','range','ammo','head','lear','rear','body','hands','lring','rring','waist','legs','feet')
 			else
 				Unlock()
@@ -2839,8 +2876,6 @@ do
 					built_set = set_combine(built_set, sets.TreasureHunter)
 				end
 			end
-
-
 
 		-- Idle sets
 		else
