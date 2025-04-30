@@ -1769,7 +1769,9 @@ do
 	function pet_change(pet,gain)
 		-- A new pet is found
 		local built_set = choose_set()
-		built_set = set_combine(built_set, pet_change_custom(pet,gain))
+		if pet_change_custom(pet,gain) then
+			built_set = set_combine(built_set, pet_change_custom(pet,gain))
+		end
 		equip(built_set)
 	end
 
