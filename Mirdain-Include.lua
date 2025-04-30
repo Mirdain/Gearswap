@@ -1,4 +1,5 @@
 -- Globals Variables
+Mirdain_GS = '1.2'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -9,18 +10,20 @@ sets.Weapons.Sleep = {}
 sets.Weapons.Shield = {}
 sets.Weapons.Songs = {}
 sets.Weapons.Songs.Midcast = {}
-
+		
 -- Precast
 sets.Precast = {}
 sets.Precast.FastCast = {}
+sets.Precast.FastCast.Blue_Magic = {}
 sets.Precast.FastCast.Enhancing = {}
 sets.Precast.Cure = {}
 sets.Precast.QuickMagic = {}
 sets.Precast.Utsusemi = {}
+sets.Precast.Songs = {}
+
 sets.Precast.RA = {}
 sets.Precast.RA.Flurry = {}
 sets.Precast.RA.Flurry_II = {}
-sets.Precast.Songs = {}
 
 --Weaponskills
 sets.WS = {}
@@ -42,7 +45,7 @@ sets.WS.AM2 = {}
 sets.WS.AM2.RA = {}
 sets.WS.AM3 = {}
 sets.WS.AM3.RA = {}
-
+		
 -- Midcast
 sets.Midcast = {}
 sets.Midcast.RA = {}
@@ -54,8 +57,12 @@ sets.Midcast.RA['True Shot'] = {}
 sets.Midcast.RA.TripleShot = {}
 sets.Midcast.RA.DoubleShot = {}
 sets.Midcast.RA.Barrage = {}
-sets.Midcast.DummySongs = {}
+		
 sets.Midcast.Enfeebling = {}
+sets.Midcast.Enfeebling.MACC = {}
+sets.Midcast.Enfeebling.Potency = {}
+sets.Midcast.Enfeebling.Duration = {}
+
 
 -- Midcast for Ranged Attacks and Aftermath
 sets.Midcast.AM = {}
@@ -66,7 +73,7 @@ sets.Midcast.AM2 = {}
 sets.Midcast.AM2.RA = {}
 sets.Midcast.AM3 = {}
 sets.Midcast.AM3.RA = {}
-
+		
 sets.Midcast.SIRD = {}
 sets.Midcast.Nuke = {}
 sets.Midcast.Burst = {}
@@ -74,17 +81,14 @@ sets.Midcast.Cure = {}
 sets.Midcast.Curaga = {}
 sets.Midcast.Cura = {}
 sets.Midcast.Regen = {}
+sets.Midcast.Refresh = {}
 sets.Midcast.Enhancing = {}
 sets.Midcast.Enhancing.Others = {}
-sets.Midcast.Refresh = {}
 sets.Midcast.Enhancing.Gain = {}
 sets.Midcast.Enhancing.Elemental = {}
 sets.Midcast.Enhancing.Status = {}
 sets.Midcast.Enhancing.Skill = {}
-sets.Midcast.Enfeebling = {}
-sets.Midcast.Enfeebling.MACC = {}
-sets.Midcast.Enfeebling.Potency = {}
-sets.Midcast.Enfeebling.Duration = {}
+		
 sets.Midcast.Aspir = {}
 sets.Midcast.Drain = {}
 sets.Midcast.Dark = {}
@@ -98,6 +102,7 @@ sets.Midcast.SummoningMagic = {}
 sets.Midcast.Summon = {}
 
 -- Bard Midcast
+sets.Midcast.DummySongs = {}
 sets.Midcast.Finale = {}
 sets.Midcast.Lullaby = {}
 sets.Midcast.Threnody = {}
@@ -131,8 +136,8 @@ sets.OffenseMode.AM1 = {}
 sets.OffenseMode.AM2 = {}
 sets.OffenseMode.AM3 = {}
 
-
 -- Other Sets
+sets.JA = {}
 sets.Waltz = {}
 sets.Jig = {}
 sets.Samba = {}
@@ -142,7 +147,7 @@ sets.Jugs = {}
 sets.PhantomRoll = {}
 sets.TreasureHunter = {}
 sets.QuickDraw = {}
-sets.JA = {}
+
 sets.Storms = {}
 sets.Enmity = {}
 sets.Diffusion = {}
@@ -232,8 +237,6 @@ Cycle_Time = false
 Random_Lockstyle = false
 Lockstyle_List = {}
 
-Mirdain_GS = '1.0.0'
-
 Elemental_WS = S{'Aeolian Edge','Seraph Blade','Shining Blade','Red Lotus Blade','Burning Blade','Sanguine Blade','Energy Drain','Energy Steal',
 	'Cyclone','Gust Slash','Leaden Salute','Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
@@ -261,7 +264,7 @@ Enhancing_Skill = S{'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater
 Divine_Skill = S{'Enlight', 'Enlight II', 'Flash', 'Repose', 'Holy', 'Holy II', 'Banish', 'Banish II', 'Banish III', 'Banishga', 'Banishga II',}
 
 BlueNuke = S{'Spectral Floe','Entomb', 'Magic Hammer', 'Tenebral Crush'}
-BlueACC = S{'Cruel Joke','Dream Flower'}
+BlueACC = S{'Cruel Joke','Dream Flower','Reaving Wind'}
 BlueHealing = S{'Magic Fruit','Healing Breeze','Wild Carrot','Plenilune Embrace','Restoral'}
 BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','Barrier Tusk','Matellic Body','Mighty Guard'}
 BlueTank = S{'Jettatura','Geist Wall','Blank Gaze','Sheep Song','Sandspin','Healing Breeze'}
@@ -324,17 +327,19 @@ Ready_TP = S{'Sic','Somersault','Dust Cloud','Foot Kick','Sheep Song','Sheep Cha
 	'Mandibular Bite','Metallic Body','Bubble Shower','Bubble Curtain','Scissor Guard','Grapple','Spinning Top',
 	'Double Claw','Filamented Hold','Spore','Blockhead','Secretion','Fireball','Tail Blow','Plague Breath',
 	'Brain Crush','Infrasonics','Needleshot','Chaotic Eye','Blaster','Ripper Fang','Intimidate','Recoil Dive',
-	'Water Wall','Snow Cloud','Wild Carrot','Sudden Lunge','Noisome Powder','Wing Slap','Beak Lunge','Suction',
+	'Water Wall','Snow Cloud','Wild Carrot','Sudden Lunge','Noisome Powder','Beak Lunge','Suction',
 	'Drainkiss','Acid Mist','TP Drainkiss','Back Heel','Jettatura','Choke Breath','Fantod','Charged Whisker',
 	'Purulent Ooze','Corrosive Ooze','Tortoise Stomp','Harden Shell','Aqua Breath','Sensilla Blades',
-	'Tegmina Buffet','Sweeping Gouge','Zealous Snort','Tickling Tendrils','Pecking Flurry',
-	'Pestilent Plume','Foul Waters','Spider Web'}
+	'Tegmina Buffet','Zealous Snort','Pestilent Plume','Foul Waters','Spider Web'}
 
 -- Magic ACC Based Ready moves
 Ready_Debuff = S{'Dust Cloud','Sheep Song','Scream','Dream Flower','Roar','Gloeosuccus','Palsy Pollen',
     'Soporific','Geist Wall','Numbing Noise','Spoil','Hi-Freq Field','Sandpit','Sandblast','Filamented Hold',
 	'Spore','Fireball','Infrasonics','Chaotic Eye','Blaster','Intimidate','Noisome Powder','TP Drainkiss',
 	'Jettatura','Purulent Ooze','Corrosive Ooze','Pestilent Plume','Spider Web','Nihility Song'}
+
+-- Physical Ready moves that have Multi-Hit
+Ready_Multi = S{'Sweeping Gouge','Tickling Tendrils','Chomp Rush','Pentapeck','Wing Slap','Pecking Flurry'}
 
 UI_Name = ''
 UI_Name2 = ''
@@ -388,6 +393,8 @@ do
 	local UpdateTime2 = os.clock()
 	local Location = {x=0, y=0, z=0}
 	local main_engine_time = os.clock()
+
+	local Require_Update = false
 
 	-- Tracking vars for TH
 	local th_info = {}
@@ -545,7 +552,6 @@ do
 
 		if buffactive['Charm'] then
 			cancel_spell()
-			equip(sets.Idle)
 			return
 		end
 
@@ -633,6 +639,7 @@ do
 				local cast_spell = res.spells[spell.id]
 				if not cast_spell.targets then
 					info('Unable to find spell ['..spell.name..']')
+
 				-- Self Target spells
 				elseif tostring(cast_spell.targets) == '{Self}' then
 					if spell.target.type ~= 'SELF' then
@@ -640,7 +647,8 @@ do
 						log('Redirect Spell:[SELF TARGET]')
 						change_target('<me>')
 					end
-					-- Enemy Spells
+
+				-- Enemy Spells
 				elseif tostring(cast_spell.targets) == '{Enemy}' then
 					if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
 						--Cancel Spell
@@ -649,7 +657,8 @@ do
 						cancel_spell()
 						return
 					end
-					-- Party Buffs
+
+				-- Party Buffs
 				elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 					if spell.target.type == 'MONSTER' then
 						if spell.type == 'BardSong' then
@@ -682,6 +691,7 @@ do
 					end
 				end
 			end
+
 		end
 	end
 
@@ -703,154 +713,121 @@ do
 			local message = ''
 			built_set = sets.WS
 			if spell.skill == "Marksmanship" or spell.skill == "Archery" then
-				-- Set is defined
-				if built_set[spell.english] then	
+				if built_set[spell.english] then
 					built_set = set_combine(built_set, built_set[spell.english])
-					-- Augment the specified WS
-					if state.OffenseMode.value == 'ACC' then
-						built_set = set_combine(built_set, sets.WS.ACC.RA)
-						message = '['..spell.english..'] Set with Accuracy (Ranged)'
-					elseif state.OffenseMode.value == 'PDL' then
-						built_set = set_combine(built_set, sets.WS.PDL.RA)
-						message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
-					elseif state.OffenseMode.value == 'SB' then
-						built_set = set_combine(built_set, sets.WS.SB.RA)
-						message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
-				    elseif state.OffenseMode.value == 'MEVA' then
-						built_set = set_combine(built_set, sets.WS.MEVA.RA)
-						message = '['..spell.english..'] Set with Magic Evasion (Ranged)'
-					elseif state.OffenseMode.value == 'CRIT' then
-						built_set = set_combine(built_set, sets.WS.CRIT.RA)
-						message = '['..spell.english..'] Set with Critical Hit (Ranged)'
+					-- Set is defined
+					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value].RA then
+						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
+						-- Augment the specified WS
+						if state.OffenseMode.value == 'ACC' then
+							message = '['..spell.english..'] Set with Accuracy (Ranged)'
+						elseif state.OffenseMode.value == 'PDL' then
+							message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
+						elseif state.OffenseMode.value == 'SB' then
+							message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
+						elseif state.OffenseMode.value == 'MEVA' then
+							message = '['..spell.english..'] Set with Magic Evasion (Ranged)'
+						elseif state.OffenseMode.value == 'CRIT' then
+							message = '['..spell.english..'] Set with Critical Hit (Ranged)'
+						end
 					else
 						message = '['..spell.english..'] Set'
 					end
-					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
-					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath (Ranged)'
-					end
 				else
 					-- Generic
-					if state.OffenseMode.value == 'ACC' then
-						built_set = set_combine(built_set, sets.WS.ACC.RA)
-						message = 'Using Default WS Set with Accuracy (Ranged)'
-					elseif state.OffenseMode.value == 'PDL' then
-						built_set = set_combine(built_set, sets.WS.PDL.RA)
-						message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
-					elseif state.OffenseMode.value == 'SB' then
-						built_set = set_combine(built_set, sets.WS.SB.RA)
-						message = 'Using Default WS Set with Subtle Blow (Ranged)'
-					elseif state.OffenseMode.value == 'MEVA' then
-						built_set = set_combine(built_set, sets.WS.MEVA.RA)
-						message = 'Using Default WS Set with Magic Evasion (Ranged)'
-					elseif state.OffenseMode.value == 'CRIT' then
-						built_set = set_combine(built_set, sets.WS.CRIT.RA)
-						message = 'Using Default WS Set with Critical Hit (Ranged)'
+					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value].RA then
+						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
+						if state.OffenseMode.value == 'ACC' then
+							message = 'Using Default WS Set with Accuracy (Ranged)'
+						elseif state.OffenseMode.value == 'PDL' then
+							message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
+						elseif state.OffenseMode.value == 'SB' then
+							message = 'Using Default WS Set with Subtle Blow (Ranged)'
+						elseif state.OffenseMode.value == 'MEVA' then
+							message = 'Using Default WS Set with Magic Evasion (Ranged)'
+						elseif state.OffenseMode.value == 'CRIT' then
+							message = 'Using Default WS Set with Critical Hit (Ranged)'
+						end
 					else
 						message = 'Using Default WS Set (Ranged)'
 					end
-					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 3 (Ranged)'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 2 (Ranged)'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 1 (Ranged)'
-					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath (Ranged)'
-					end
 				end
+
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
+					message = message..' and Level 3 Aftermath (Ranged)'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
+					message = message..' and Level 2 Aftermath (Ranged)'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
+					message = message..' and Level 1 Aftermath (Ranged)'
+				elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
+					message = message..' and Aftermath (Ranged)'
+				end
+
 			else
 				if built_set[spell.english] then	
 					-- Set is defined
 					built_set = set_combine(built_set, built_set[spell.english])
-					-- Augment the specified WS
-					if state.OffenseMode.value == 'ACC' then
-						built_set = set_combine(built_set, sets.WS.ACC)
-						message = '['..spell.english..'] Set with Accuracy'
-					elseif state.OffenseMode.value == 'PDL' then
-						built_set = set_combine(built_set, sets.WS.PDL)
-						message = '['..spell.english..'] Set with Physical Damage Limit'
-					elseif state.OffenseMode.value == 'SB' then
-						built_set = set_combine(built_set, sets.WS.SB)
-						message = '['..spell.english..'] Set with Subtle Blow'
-					elseif state.OffenseMode.value == 'MEVA' then
-						built_set = set_combine(built_set, sets.WS.MEVA)
-						message = '['..spell.english..'] Set with Magic Evasion'
-					elseif state.OffenseMode.value == 'CRIT' then
-						built_set = set_combine(built_set, sets.WS.CRIT)
-						message = '['..spell.english..'] Set with Critical Hit'
+					if state.OffenseMode.value ~= 'TP' then
+						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
+						-- Augment the specified WS
+						if state.OffenseMode.value == 'ACC' then
+							message = '['..spell.english..'] Set with Accuracy'
+						elseif state.OffenseMode.value == 'PDL' then
+							message = '['..spell.english..'] Set with Physical Damage Limit'
+						elseif state.OffenseMode.value == 'SB' then
+							message = '['..spell.english..'] Set with Subtle Blow'
+						elseif state.OffenseMode.value == 'MEVA' then
+							message = '['..spell.english..'] Set with Magic Evasion'
+						elseif state.OffenseMode.value == 'CRIT' then
+							message = '['..spell.english..'] Set with Critical Hit'
+						end
 					else
 						message = '['..spell.english..'] Set'
 					end
-
-					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 3'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2  and sets.WS.AM2[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM2[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 2'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1  and sets.WS.AM1[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM1[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 1'
-					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath'
-					end
-
 				else
 					-- Generic
-					built_set = set_combine(built_set, sets.WS)
-					if state.OffenseMode.value == 'ACC' then
-						built_set = set_combine(built_set, sets.WS.ACC)
-						message = 'Using Default WS Set with Accuracy'
-					elseif state.OffenseMode.value == 'PDL' then
-						built_set = set_combine(built_set, sets.WS.PDL)
-						message = 'Using Default WS Set with Physical Damage Limit'
-					elseif state.OffenseMode.value == 'SB' then
-						built_set = set_combine(built_set, sets.WS.SB)
-						message = 'Using Default WS Set with Subtle Blow'
-					elseif state.OffenseMode.value == 'CRIT' then
-						built_set = set_combine(built_set, sets.WS.CRIT)
-						message = 'Using Default WS Set with Critical Hit'
+					if state.OffenseMode.value ~= 'TP' then
+						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
+						-- Augment the specified WS
+						if state.OffenseMode.value == 'ACC' then
+							message = 'Using Default WS Set with Accuracy'
+						elseif state.OffenseMode.value == 'PDL' then
+							message = 'Using Default WS Set with Physical Damage Limit'
+						elseif state.OffenseMode.value == 'SB' then
+							message = 'Using Default WS Set with Subtle Blow'
+						elseif state.OffenseMode.value == 'MEVA' then
+							message = 'Using Default WS Set with Magic Evasion'
+						elseif state.OffenseMode.value == 'CRIT' then
+							message = 'Using Default WS Set with Critical Hit'
+						end
 					else
 						message = 'Using Default WS Set'
 					end
+				end
 
-					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 3'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM2[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 2'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM1[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath 1'
-					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM[state.WeaponMode.value])
-						message = 'Using Default WS Set with Aftermath'
-					end
+				-- Check if Aftermath is active
+				if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
+					message = message..' and Level 3 Aftermath'
+				elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM2[state.WeaponMode.value])
+					message = message..' and Level 2 Aftermath'
+				elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM1[state.WeaponMode.value])
+					message = message..' and Level 1 Aftermath'
+				elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM[state.WeaponMode.value] then
+					built_set = set_combine(built_set, sets.WS.AM[state.WeaponMode.value])
+					message = message..' and Aftermath'
 				end
 			end
 
 			-- Check if an Obi or Orpheus is to be Equiped
-			built_set =  set_combine(built_set, elemental_check(spell))
+			built_set =  elemental_check(spell, built_set)
 
 			info(message)
 
@@ -1096,10 +1073,10 @@ do
 		elseif spell.type == 'BlueMagic' then
 			built_set = sets.Precast
 			if built_set[spell.english] then
-				built_set = set_combine(built_set, sets.Precast.FastCast, built_set[spell.english])
+				built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.FastCast.Blue_Magic, built_set[spell.english])
 				info( '['..spell.english..'] Precast Set')
 			else
-				built_set = set_combine(built_set, sets.Precast.FastCast)
+				built_set = set_combine(built_set, sets.Precast.FastCast, sets.Precast.FastCast.Blue_Magic)
 				if spell.skill == 'Enhancing Magic' then
 					built_set = set_combine(built_set, sets.Precast.FastCast.Enhancing)
 				end
@@ -1435,7 +1412,7 @@ do
 					info('Nuke Set')
 					built_set = set_combine(built_set, sets.Midcast.SIRD, sets.Midcast.Nuke)
 				end
-				built_set = set_combine(built_set, elemental_check(spell))
+				built_set = elemental_check(spell, built_set)
 			end
 
 		-- Bard Song
@@ -1512,10 +1489,10 @@ do
 			-- Indi Equipment
 			elseif Indicolure_List:contains(spell.english) then
 				if buffactive["Entrust"] then
-					built_set = sets.Geomancy.Indi.Entrust
+					built_set = set_combine(built_set, sets.Geomancy.Indi, sets.Geomancy.Indi.Entrust)
 					info('Indicolure set - Entrust')
 				else
-					built_set = sets.Geomancy.Indi
+					built_set = set_combine(built_set, sets.Geomancy.Indi)
 					info('Indicolure set')
 				end
 			-- Bubble Equipment
@@ -1715,12 +1692,12 @@ do
 		--Equip body for Impact
 		if spell.name == "Impact" then
 			local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
-				or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
-				or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
+			or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
+			or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
 
 			local Twilight = player.inventory["Twilight Cloak"] or player.wardrobe["Twilight Cloak"] or player.wardrobe2["Twilight Cloak"]
-				or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
-				or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
+			or player.wardrobe3["Twilight Cloak"] or player.wardrobe4["Twilight Cloak"] or player.wardrobe5["Twilight Cloak"] 
+			or player.wardrobe6["Twilight Cloak"] or player.wardrobe7["Twilight Cloak"] or player.wardrobe8["Twilight Cloak"]
 
 			-- Crepuscular Cloak Found
 			if Crepuscular then log("Crepuscular Found") built_set = {head=empty, body="Crepuscular Cloak",}
@@ -1989,9 +1966,6 @@ do
 			if command == "treasurehunter" then
 				state.TreasureMode:cycle()
 				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
-				local built_set = choose_set()
-				built_set = set_combine(built_set,choose_set_custom())
-				equip(built_set)
 				display_box_update()
 				return
 			else
@@ -2002,6 +1976,7 @@ do
 				display_box_update()
 				return
 			end
+			Require_Update = true
 		-- Toggles the Auto Buff function off/on
 		elseif command:contains('autobuff') then
 			if command == 'autobuff' then
@@ -2012,11 +1987,9 @@ do
 				mode = string.split(cmd," ",2)
 				state.AutoBuff:set(mode[2])
 				info('Auto Buff is ['..state.AutoBuff.value..']')
-				local built_set = choose_set()
-				built_set = set_combine(built_set,choose_set_custom())
-				equip(built_set)
 			end
 			display_box_update()
+			Require_Update = true
 		-- Shuts down instnace
 		elseif command == 'shutdown' then
 			send_command('terminate')
@@ -2088,7 +2061,6 @@ do
 							state.OffenseMode:set(state.OffenseMode[1])
 						end
 						info('Offense Mode: ['..state.OffenseMode.value..']')
-						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -2098,10 +2070,10 @@ do
 				mode = string.split(cmd," ",2)
 				state.OffenseMode:set(mode[2])
 				info('Offense Mode: ['..state.OffenseMode.value..']')
-				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
+			Require_Update = true
 		elseif command:contains('weaponmode') then
 			if command == 'weaponmode' then
 				for i,v in ipairs(state.WeaponMode) do
@@ -2113,7 +2085,6 @@ do
 						end
 						two_hand_check()
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
-						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -2124,10 +2095,10 @@ do
 				state.WeaponMode:set(mode[2])
 				two_hand_check()
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
-				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
+			Require_Update = true
 		elseif command:contains('jobmode2') then
 			if command == 'jobmode2' then
 				for i,v in ipairs(state.JobMode2) do
@@ -2138,7 +2109,6 @@ do
 							state.JobMode2:set(state.JobMode2[1])
 						end
 						info(UI_Name2..': ['..state.JobMode2.value..']')
-						windower.send_command("gs c update auto")
 						display_box_update()
 						return
 					end
@@ -2148,10 +2118,10 @@ do
 				mode = string.split(cmd," ",2)
 				state.JobMode2:set(mode[2])
 				info(UI_Name2..': ['..state.JobMode2.value..']')
-				windower.send_command("gs c update auto")
 				display_box_update()
 				return
 			end
+			Require_Update = true
 		elseif command:contains('jobmode') then
 			if command == 'jobmode' then
 				for i,v in ipairs(state.JobMode) do
@@ -2162,8 +2132,8 @@ do
 							state.JobMode:set(state.JobMode[1])
 						end
 						info(UI_Name..': ['..state.JobMode.value..']')
-						windower.send_command("gs c update auto")
 						display_box_update()
+						-- Issue a command to the lua for the job specific command
 						self_command_custom(command)
 						return
 					end
@@ -2173,11 +2143,12 @@ do
 				mode = string.split(cmd," ",2)
 				state.JobMode:set(mode[2])
 				info(UI_Name..': ['..state.JobMode.value..']')
-				windower.send_command("gs c update auto")
 				display_box_update()
+				-- Issue a command to the lua for the job specific command
 				self_command_custom(command)
 				return
 			end
+			Require_Update = true
 		-- This profile mode is used to load a Silmaril profile and execute a script
 		elseif command:contains('profile') then
 			local modes = {}
@@ -2470,29 +2441,36 @@ do
 		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	end
 
-	function elemental_check(spell)
-		local built_set = {}
+	function elemental_check(spell, built_set)
 		-- This function swaps in the Orpheus or Hachirin as needed
 		if (Elemental_WS:contains(spell.name) and spell.type == 'WeaponSkill') or spell.type == 'BlackMagic' then
+
+			local Osash = player.inventory["Orpheus's Sash"] or player.wardrobe["Orpheus's Sash"] or player.wardrobe2["Orpheus's Sash"]
+			or player.wardrobe3["Orpheus's Sash"] or player.wardrobe4["Orpheus's Sash"] or player.wardrobe5["Orpheus's Sash"] 
+			or player.wardrobe6["Orpheus's Sash"] or player.wardrobe7["Orpheus's Sash"] or player.wardrobe8["Orpheus's Sash"]
+
+			local Obi = player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] or player.wardrobe2["Hachirin-no-Obi"]
+			or player.wardrobe3["Hachirin-no-Obi"] or player.wardrobe4["Hachirin-no-Obi"] or player.wardrobe5["Hachirin-no-Obi"] 
+			or player.wardrobe6["Hachirin-no-Obi"] or player.wardrobe7["Hachirin-no-Obi"] or player.wardrobe8["Hachirin-no-Obi"]
+
 			-- Matching double weather (w/o day conflict).
-			if spell.element == world.weather_element and world.weather_intensity == 2 then
-				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
+			if spell.element == world.weather_element and world.weather_intensity == 2 and Obi then
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
 				windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Matching day and weather.
-			elseif spell.element == world.day_element and spell.element == world.weather_element then
-				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
+			elseif spell.element == world.day_element and spell.element == world.weather_element and Obi then
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
 				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Target distance less than 6 yalms
-			elseif spell.target.distance < (6 + spell.target.model_size) then
-				built_set = set_combine(built_set, {waist="Orpheus's Sash",})
+			elseif spell.target.distance < (6 + spell.target.model_size) and Osash then
+				built_set = set_combine(built_set, {waist="Orpheus's Sash"})
 				windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
 			-- Match day or weather.
-			elseif spell.element == world.day_element or spell.element == world.weather_element then
+			elseif spell.element == world.day_element or spell.element == world.weather_element and Obi then
+				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
 				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
-				built_set = set_combine(built_set, {waist="Hachirin-no-Obi",})
-			else
-				windower.add_to_chat(8,'No Day/Weather match and too far.  Using default waist')
 			end
+
 		end
 		return built_set
 	end
@@ -2556,17 +2534,17 @@ do
 		-- Spell timed out
 		if is_Busy and now - Spellstart > SpellCastTime then is_Busy = false SpellCastTime = 0 end
 
-		-- Make sure not update faster than .2 seconds
+		-- Make sure not update faster than .1 seconds
 		if now - main_engine_time < .1 then return end
 
 		-- Update the debug UI if visible
 		if settings.debug then debug_box_update() end
 
 		-- Go no farther as you are dead
-		if not player or player.status == "Dead" or player.status == "Engaged dead" then return end
+		if not player or player.status == "Dead" or player.status == "Engaged dead" or buffactive['Charm'] or buffactive['Sleep'] then return end
 
 		-- Status Ailment Check
-		if not buffactive['Paralysis'] and not buffactive['Silence'] and not buffactive['Sleep'] and not buffactive['Muddle'] then
+		if not buffactive['Paralysis'] and not buffactive['Silence'] and not buffactive['Muddle'] then
 			check_buff()
 		end		
 
@@ -2577,18 +2555,20 @@ do
 			if movement and not is_moving then
 				if player.status ~= "Engaged" then
 					is_moving = true
-					windower.send_command("gs c update auto")
+					Require_Update = true
 					--windower.chat.input('/echo Moving! Status: '..player.status..'')
 				end
 			elseif not movement and is_moving then
 				is_moving = false
-				windower.send_command("gs c update auto")
+				Require_Update = true
 				--windower.chat.input('/echo Stopped Moving! Status: '..player.status..'')
 			end
 			Location.x = position.x
 			Location.y = position.y
 			Location.z = position.z
 		end
+
+		if Require_Update then windower.send_command("gs c update auto") end
 
 		-- 60 second cycle timer
 		if now - UpdateTime1 > 30 then
@@ -2597,7 +2577,7 @@ do
 			UpdateTime1 = now
 		end
 
-		-- Used for periodic updates
+		-- function used for periodic updates - feature
 		if Cycle_Time then
 			if now - UpdateTime2 > Cycle_Time then
 				Cycle_Timer()
@@ -2909,170 +2889,8 @@ do
 		return built_set
 	end
 
-	-- List of all the possible tables to use
-	function validate_sets()
-
-		-- Weapons
-		if not sets.Weapons then sets.Weapons = {} end
-		if not sets.Weapons.Sleep then sets.Weapons.Sleep = {} end
-		if not sets.Weapons.Shield then sets.Weapons.Shield = {} end
-		if not sets.Weapons.Songs then sets.Weapons.Songs = {} end
-		if not sets.Weapons.Songs.Midcast then sets.Weapons.Songs.Midcast = {} end
-
-		-- Precast
-		if not sets.Precast then sets.Precast = {} end
-		if not sets.Precast.FastCast then sets.Precast.FastCast = {} end
-		if not sets.Precast.FastCast.Enhancing then sets.Precast.FastCast.Enhancing = {} end
-		if not sets.Precast.Cure then sets.Precast.Cure = {} end
-		if not sets.Precast.QuickMagic then sets.Precast.QuickMagic = {} end
-		if not sets.Precast.Utsusemi then sets.Precast.Utsusemi = {} end
-		if not sets.Precast.Songs then sets.Precast.Songs = {} end
-
-		if not sets.Precast.RA then sets.Precast.RA = {} end
-		if not sets.Precast.RA.Flurry then sets.Precast.RA.Flurry = {} end
-		if not sets.Precast.RA.Flurry_II then sets.Precast.RA.Flurry_II = {} end
-
-		--Weaponskills
-		if not sets.WS then sets.WS = {} end
-		if not sets.WS.ACC then sets.WS.ACC =  {} end
-		if not sets.WS.ACC.RA then sets.WS.ACC.RA = {} end
-		if not sets.WS.PDL then sets.WS.PDL = {} end
-		if not sets.WS.PDL.RA then sets.WS.PDL.RA = {} end
-		if not sets.WS.SB then sets.WS.SB = {} end
-		if not sets.WS.SB.RA then sets.WS.SB.RA = {} end
-		if not sets.WS.CRIT then sets.WS.CRIT = {} end
-		if not sets.WS.CRIT.RA then sets.WS.CRIT.RA = {} end
-		if not sets.WS.MEVA then sets.WS.MEVA = {} end
-		if not sets.WS.MEVA.RA then sets.WS.MEVA.RA = {} end
-		if not sets.WS.AM then sets.WS.AM = {} end
-		if not sets.WS.AM.RA then sets.WS.AM.RA = {} end
-		if not sets.WS.AM1 then sets.WS.AM1 = {} end
-		if not sets.WS.AM1.RA then sets.WS.AM1.RA = {} end
-		if not sets.WS.AM2 then sets.WS.AM2 = {} end
-		if not sets.WS.AM2.RA then sets.WS.AM2.RA = {} end
-		if not sets.WS.AM3 then sets.WS.AM3 = {} end
-		if not sets.WS.AM3.RA then sets.WS.AM3.RA = {} end
-
-		-- Midcast
-		if not sets.Midcast then sets.Midcast = {} end
-
-		if not sets.Midcast.RA then sets.Midcast.RA = {} end
-		if not sets.Midcast.RA.ACC then sets.Midcast.RA.ACC = {} end
-		if not sets.Midcast.RA.PDL then sets.Midcast.RA.PDL = {} end
-		if not sets.Midcast.RA.SB then sets.Midcast.RA.SB = {} end
-		if not sets.Midcast.RA.CRIT then sets.Midcast.RA.CRIT = {} end
-		if not sets.Midcast.RA['True Shot'] then sets.Midcast.RA['True Shot'] = {} end
-		if not sets.Midcast.RA.TripleShot then sets.Midcast.RA.TripleShot = {} end
-		if not sets.Midcast.RA.DoubleShot then sets.Midcast.RA.DoubleShot = {} end
-		if not sets.Midcast.RA.Barrage then sets.Midcast.RA.Barrage = {} end
-
-		if not sets.Midcast.Enfeebling then sets.Midcast.Enfeebling = {} end
-		if not sets.Midcast.Enfeebling.MACC then sets.Midcast.Enfeebling.MACC = {} end
-		if not sets.Midcast.Enfeebling.Potency then sets.Midcast.Enfeebling.Potency = {} end
-		if not sets.Midcast.Enfeebling.Duration then sets.Midcast.Enfeebling.Duration = {} end
-
-
-		-- Midcast for Ranged Attacks and Aftermath
-		if not sets.Midcast.AM then sets.Midcast.AM = {} end
-		if not sets.Midcast.AM.RA then sets.Midcast.AM.RA = {} end
-		if not sets.Midcast.AM1 then sets.Midcast.AM1 = {} end
-		if not sets.Midcast.AM1.RA then sets.Midcast.AM1.RA = {} end
-		if not sets.Midcast.AM2 then sets.Midcast.AM2 = {} end
-		if not sets.Midcast.AM2.RA then sets.Midcast.AM2.RA = {} end
-		if not sets.Midcast.AM3 then sets.Midcast.AM3 = {} end
-		if not sets.Midcast.AM3.RA then sets.Midcast.AM3.RA = {} end
-
-		if not sets.Midcast.SIRD then sets.Midcast.SIRD = {} end
-		if not sets.Midcast.Nuke then sets.Midcast.Nuke = {} end
-		if not sets.Midcast.Burst then sets.Midcast.Burst = {} end
-		if not sets.Midcast.Cure then sets.Midcast.Cure = {} end
-		if not sets.Midcast.Curaga then sets.Midcast.Curaga = {} end
-		if not sets.Midcast.Cura then sets.Midcast.Cura = {} end
-		if not sets.Midcast.Regen then sets.Midcast.Regen = {} end
-		if not sets.Midcast.AM then sets.Midcast.Refresh = {} end
-		if not sets.Midcast.Enhancing then sets.Midcast.Enhancing = {} end
-		if not sets.Midcast.Enhancing.Others then sets.Midcast.Enhancing.Others = {} end
-		if not sets.Midcast.Enhancing.Gain then sets.Midcast.Enhancing.Gain = {} end
-		if not sets.Midcast.Enhancing.Elemental then sets.Midcast.Enhancing.Elemental = {} end
-		if not sets.Midcast.Enhancing.Status then sets.Midcast.Enhancing.Status = {} end
-		if not sets.Midcast.Enhancing.Skill then sets.Midcast.Enhancing.Skill = {} end
-
-		if not sets.Midcast.Aspir then sets.Midcast.Aspir = {} end
-		if not sets.Midcast.Drain then sets.Midcast.Drain = {} end
-		if not sets.Midcast.Dark then sets.Midcast.Dark = {} end
-		if not sets.Midcast.Dark.MACC then sets.Midcast.Dark.MACC = {} end
-		if not sets.Midcast.Dark.Absorb then sets.Midcast.Dark.Absorb = {} end
-		if not sets.Midcast.Dark.Enhancing then sets.Midcast.Dark.Enhancing = {} end
-		if not sets.Midcast.Skill then sets.Midcast.Skill = {} end
-		if not sets.Midcast.ACC then sets.Midcast.ACC = {} end
-		if not sets.Midcast.BP then sets.Midcast.BP = {} end
-		if not sets.Midcast.SummoningMagic then sets.Midcast.SummoningMagic = {} end
-		if not sets.Midcast.Summon then sets.Midcast.Summon = {} end
-
-		-- Bard Midcast
-		if not sets.Midcast.DummySongs then sets.Midcast.DummySongs = {} end
-		if not sets.Midcast.Finale then sets.Midcast.Finale = {} end
-		if not sets.Midcast.Lullaby then sets.Midcast.Lullaby = {} end
-		if not sets.Midcast.Threnody then sets.Midcast.Threnody = {} end
-		if not sets.Midcast.Elegy then sets.Midcast.Elegy = {} end
-		if not sets.Midcast.Requiem then sets.Midcast.Requiem = {} end
-		if not sets.Midcast.March then sets.Midcast.March = {} end
-		if not sets.Midcast.Minuet then sets.Midcast.Minuet = {} end
-		if not sets.Midcast.Madrigal then sets.Midcast.Madrigal = {} end
-		if not sets.Midcast.Ballad then sets.Midcast.Ballad = {} end
-		if not sets.Midcast.Scherzo then sets.Midcast.Scherzo = {} end
-		if not sets.Midcast.Mazurka then sets.Midcast.Mazurka = {} end
-		if not sets.Midcast.Paeon then sets.Midcast.Paeon = {} end
-		if not sets.Midcast.Carol then sets.Midcast.Carol = {} end
-		if not sets.Midcast.Minne then sets.Midcast.Minne = {} end
-		if not sets.Midcast.Mambo then sets.Midcast.Mambo = {} end
-		if not sets.Midcast.Etude then sets.Midcast.Etude = {} end
-		if not sets.Midcast.Prelude then sets.Midcast.Prelude = {} end
-		if not sets.Midcast.Dirge then sets.Midcast.Dirge ={} end
-		if not sets.Midcast.Sirvente then sets.Midcast.Sirvente = {} end
-		if not sets.Midcast.Aria then sets.Midcast.Aria = {} end
-
-		-- State sets
-		if not sets.Idle then sets.Idle = {} end
-		if not sets.Idle.Pet then sets.Idle.Pet = {} end
-		if not sets.Idle.Sublimation then sets.Idle.Sublimation = {} end
-		if not sets.Idle.Resting then sets.Idle.Resting = {} end
-		if not sets.OffenseMode then sets.OffenseMode = {} end
-		if not sets.OffenseMode.Ranged then sets.OffenseMode.Ranged = {} end
-		if not sets.OffenseMode.AM then sets.OffenseMode.AM = {} end
-		if not sets.OffenseMode.AM1 then sets.OffenseMode.AM1 = {} end
-		if not sets.OffenseMode.AM2 then sets.OffenseMode.AM2 = {} end
-		if not sets.OffenseMode.AM3 then sets.OffenseMode.AM3 = {} end
-
-
-		-- Other Sets
-		if not sets.JA then sets.JA = {} end
-		if not sets.Waltz then sets.Waltz = {} end
-		if not sets.Jig then sets.Jig = {} end
-		if not sets.Samba then sets.Samba = {} end
-		if not sets.Step then sets.Step = {} end
-		if not sets.Flourish then sets.Flourish = {} end
-		if not sets.Jugs then sets.Jugs = {} end
-		if not sets.PhantomRoll then sets.PhantomRoll = {} end
-		if not sets.TreasureHunter then sets.TreasureHunter = {} end
-		if not sets.QuickDraw then sets.QuickDraw = {} end
-
-		if not sets.Storms then sets.Storms = {} end
-		if not sets.Enmity then sets.Enmity = {} end
-		if not sets.Diffusion then sets.Diffusion = {} end
-		if not sets.Geomancy then sets.Geomancy = {} end
-		if not sets.Geomancy.Geo then sets.Geomancy.Geo = {} end
-		if not sets.Geomancy.Indi then sets.Geomancy.Indi = {} end
-		if not sets.Geomancy.Entrust then sets.Geomancy.Indi.Entrust = {} end
-		if not sets.Pet_Midcast then sets.Pet_Midcast = {} end
-		if not sets.DualWield then sets.DualWield = {} end
-		if not sets.Cursna_Received then sets.Cursna_Received = {} end
-		if not sets.Movement then sets.Movement = {} end
-	end
-
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 5)
 	coroutine.schedule(dual_wield_check, 5)
 	coroutine.schedule(display_box_update, 5)
-	coroutine.schedule(validate_sets, 4)
 end
