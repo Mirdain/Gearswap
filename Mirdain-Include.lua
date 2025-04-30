@@ -2570,7 +2570,7 @@ do
 			Location.z = position.z
 		end
 
-		if Require_Update then windower.send_command("gs c update auto") end
+		if Require_Update then windower.send_command("gs c update auto") Require_Update = false end
 
 		-- 60 second cycle timer
 		if now - UpdateTime1 > 30 then
