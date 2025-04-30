@@ -1,5 +1,5 @@
 
---Colonnello
+--Relyk
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -89,9 +89,11 @@ function get_sets()
     }
 
 	sets.Idle.Pet = set_combine(sets.Idle,{
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
 		feet={ name="Gleti's Boots", augments={'Path: A',}},
-	    right_ear={ name="Nukumi Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+13','Mag. Acc.+13','Pet: "Dbl. Atk."+6',}},
-		left_ring="C. Palug Ring",
+	    right_ear="Nukumi Earring +1",
+		right_ring="C. Palug Ring",
+		back={ name="Artio's Mantle", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Mag. Acc.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
@@ -109,38 +111,44 @@ function get_sets()
 
 	sets.OffenseMode = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-		head={ name="Gleti's Mask", augments={'Path: A',}},
+		head="Malignance Chapeau",
 		body={ name="Gleti's Cuirass", augments={'Path: A',}},
-		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		hands="Malignance Gloves",
 		legs={ name="Gleti's Breeches", augments={'Path: A',}},
-		feet={ name="Gleti's Boots", augments={'Path: A',}},
-		neck="Bst. Collar +2",
+		feet="Malignance Boots",
+		neck="Anu Torque",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Sherida Earring",
-		right_ear="Crep. Earring",
+		left_ear="Crep. Earring",
+		right_ear="Sherida Earring",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
-		back={ name="Artio's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		back="Null Shawl",
 	}
 
 	--Base TP set to build off
 	sets.OffenseMode.TP = set_combine (sets.OffenseMode, {
 
 	})
+
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
+		body="Malignance Tabard",
+		legs="Malignance Tights",
+		left_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
+		back={ name="Artio's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	})
+
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {
 
 	})
 
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP,{
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode,{
 
 	})
 
-	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.TP,{
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
 		neck="Warder's Charm +1",
 	})
 
@@ -148,14 +156,9 @@ function get_sets()
 	-- Cap is 75% - 50% limit in I or II
 	sets.OffenseMode.SB = {}
 
-	set.DualWield = {
+	sets.DualWield = {
 		left_ear="Eabani Earring",
 		waist="Reiki Yotai",
-	}
-
-	-- Ready JA command
-	sets.Ready = {
-		legs={ name="Gleti's Breeches", augments={'Path: A',}},
 	}
 
 	sets.Precast = {}
@@ -172,39 +175,90 @@ function get_sets()
 
 	-- Default
 	sets.Pet_Midcast = {
-		waist="Gishdubar Sash",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+		neck={ name="Bst. Collar +2", augments={'Path: A',}},
+		waist="Incarnation Sash",
+		left_ear="Ferine Earring",
+		right_ear="Nukumi Earring +1",
+		right_ring="C. Palug Ring",
+		back={ name="Artio's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	-- TP based Ready moves
-	sets.Pet_Midcast.TP = {
-		left_ear="Eabani Earring",
-	}
+	sets.Pet_Midcast.TP = set_combine(sets.Pet_Midcast, {
+
+	})
 
 	-- Magic Attack Bonus Ready moves
-	sets.Pet_Midcast.MAB = {
-		right_ring="Epona's Ring",
-	}
+	sets.Pet_Midcast.MAB = set_combine(sets.Pet_Midcast, {
+
+	})
 
 	-- Debuff moves that need MACC
-	sets.Pet_Midcast.MACC = {
-		right_ear="Crep. Earring",
-	}
+	sets.Pet_Midcast.MACC = set_combine(sets.Pet_Midcast, {
+		ammo={ name="Hesperiidae", augments={'Path: A',}},
+		left_ear="Crep. Earring",
+		back={ name="Artio's Mantle", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Mag. Acc.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+	})
 
-	-- Example for a specific move
-	-- sets.Pet_Midcast['TP Drainkiss'] = set_combine(sets.Pet_Midcast.MACC, { })
+	sets.Pet_Midcast.Multi = set_combine(sets.Pet_Midcast, {
+
+	})
+
+	-- Example for a specific move overwrite
+	sets.Pet_Midcast['TP Drainkiss'] = set_combine(sets.Pet_Midcast.MACC, { })
+
+	-- Ready JA command
+	sets.Ready = {
+		hands="Nukumi Manoplas +1",
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	}
 
 	-- Job Abilities
 	sets.JA = {}
-	sets.JA['Familiar'] = set_combine(sets.Idle, {}) --legs="Ankusa Trousers +3"
-	sets.JA['Charm'] = set_combine(sets.Idle, {})
+	sets.JA['Familiar'] = set_combine(sets.Idle, 
+	{
+		legs={ name="Ankusa Trousers +3", augments={'Enhances "Familiar" effect',}},
+	})
+	sets.JA['Charm'] = set_combine(sets.Idle, 
+	{
+		legs={ name="Ankusa Trousers +3", augments={'Enhances "Familiar" effect',}},
+	})
 	sets.JA['Gauge'] = set_combine(sets.Idle, {})
-	sets.JA['Tame'] = set_combine(sets.Idle, {}) -- head="Totemic Helm +3"
-	sets.JA['Reward'] = set_combine(sets.Idle, { ammo="Pet Food Theta",})
-	sets.JA['Call Beast'] = set_combine(sets.Idle, {}) -- hands="Ankusa Gloves +3"
-	sets.JA['Feral Howl'] = set_combine(sets.Idle, {})
+	sets.JA['Tame'] = set_combine(sets.Idle, 
+	{
+		head="Totemic Helm +3",
+	})
+	sets.JA['Reward'] = set_combine(sets.Idle, 
+	{ 
+		head="Bison Warbonnet",
+		body="Tot. Jackcoat +3",
+		legs={ name="Ankusa Trousers +3", augments={'Enhances "Familiar" effect',}},
+		feet={ name="Ankusa Gaiters +3", augments={'Enhances "Beast Healer" effect',}},
+		left_ear="Ferine Earring",
+		ammo="Pet Food Theta",
+	})
+	sets.JA['Call Beast'] = set_combine(sets.Idle, 
+	{
+	    hands={ name="Ankusa Gloves +3", augments={'Enhances "Beast Affinity" effect',}},
+	})
+	sets.JA['Feral Howl'] = set_combine(sets.Idle, 
+	{
+	    body={ name="An. Jackcoat +3", augments={'Enhances "Feral Howl" effect',}},
+	})
 	sets.JA['Unleash'] = set_combine(sets.Idle, {})
-	sets.JA['Bestial Loyalty'] = set_combine(sets.Idle, {}) --hands="Ankusa Gloves +3"
-	sets.JA['Killer Instinct'] = set_combine(sets.Idle, {}) --head="Ankusa Helm +3"
+	sets.JA['Bestial Loyalty'] = set_combine(sets.Idle, 
+	{
+		hands={ name="Ankusa Gloves +3", augments={'Enhances "Beast Affinity" effect',}},
+	})
+	sets.JA['Killer Instinct'] = set_combine(sets.Idle, 
+	{
+		head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	})
 
 	-- Pet Commands
 	sets.JA['Fight'] = set_combine(sets.Idle, {})
@@ -212,8 +266,11 @@ function get_sets()
 	sets.JA['Leave'] = set_combine(sets.Idle, {})
 	sets.JA['Stay'] = set_combine(sets.Idle, {})
 	sets.JA['Snarl'] = set_combine(sets.Idle, {})
-	sets.JA['Ready'] = set_combine(sets.Idle, {})
-	sets.JA['Spur'] = set_combine(sets.Idle, {}) -- feet="Nukumi Ocreae +3"
+	sets.JA['Ready'] = set_combine(sets.Idle, {}) -- This is not called for a Ready Move
+	sets.JA['Spur'] = set_combine(sets.Idle, 
+	{
+		feet="Nukumi Ocreae +1"
+	})
 	sets.JA['Run Wild'] = set_combine(sets.Idle, {})	
 
 	--Default WS set base
@@ -227,7 +284,7 @@ function get_sets()
 		neck="Bst. Collar +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Sherida Earring",
-		right_ear={ name="Nukumi Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+13','Mag. Acc.+13','Pet: "Dbl. Atk."+6',}},
+		right_ear="Nukumi Earring +1",
 		left_ring="Gere Ring",
 		right_ring="Epona's Ring",
 		back={ name="Artio's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Damage taken-5%',}},
@@ -325,6 +382,10 @@ function pet_midcast_custom(spell)
 			equipSet = set_combine(equipSet, sets.Pet_Midcast.MACC)
 			message = 'Pet Magic Accuracy Set'
 		end
+		if Ready_Multi[spell.name] then
+			equipSet = set_combine(equipSet, sets.Pet_Midcast.Multi)
+			message = 'Pet Multi-Attack Set'
+		end
 		info(message)
 	return equipSet
 end
@@ -342,6 +403,7 @@ function buff_change_custom(name,gain)
 
 	return choose_gear()
 end
+
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
