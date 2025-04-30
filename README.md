@@ -1,3 +1,6 @@
+#Version 1.2
+Use //gs c version to check your active version
+
 ## Write up: `Sotel` 
 
 # Keybinds
