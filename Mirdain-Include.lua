@@ -716,7 +716,7 @@ do
 				if built_set[spell.english] then
 					built_set = set_combine(built_set, built_set[spell.english])
 					-- Set is defined
-					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value].RA then
+					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] and sets.WS[state.OffenseMode.value].RA then
 						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
 						-- Augment the specified WS
 						if state.OffenseMode.value == 'ACC' then
@@ -735,7 +735,7 @@ do
 					end
 				else
 					-- Generic
-					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value].RA then
+					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] and sets.WS[state.OffenseMode.value].RA then
 						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
 						if state.OffenseMode.value == 'ACC' then
 							message = 'Using Default WS Set with Accuracy (Ranged)'
