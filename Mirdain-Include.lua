@@ -772,7 +772,7 @@ do
 				if built_set[spell.english] then	
 					-- Set is defined
 					built_set = set_combine(built_set, built_set[spell.english])
-					if state.OffenseMode.value ~= 'TP' and and sets.WS[state.OffenseMode.value] then
+					if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] then
 						built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
 						-- Augment the specified WS
 						if state.OffenseMode.value == 'ACC' then
