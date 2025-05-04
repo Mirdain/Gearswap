@@ -1,5 +1,5 @@
 
---Colonnello
+--Morwen
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -65,6 +65,11 @@ function get_sets()
 		main="Lorg Mor",
 	}
 
+	--Shield used when not dual wield.
+	sets.Weapons.Shield = {
+		sub="Genmei Shield",
+	}
+
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
@@ -105,19 +110,7 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
-	-- Base TP set
-	sets.OffenseMode.TP = {
-
-	}
-	-- Set to use when Dual Wielding
-	sets.OffenseMode.TP.DW = {}
-	-- TP set when in -Damage Taken mode
-	sets.OffenseMode.DT = {}
-	-- TP set to use when mode is in accuracy
-	sets.OffenseMode.ACC = {}
-	--This set is used when OffenseMode is PDL and Enaged
-	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
+	sets.OffenseMode = {
 		head="Azimuth Hood +3",
 		body={ name="Nyame Mail", augments={'Path: B',}},
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -130,10 +123,32 @@ function get_sets()
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+	}
+
+	-- Base TP set
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{
 	})
+
+	-- TP set when in -Damage Taken mode
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{
+	})
+	
+	-- TP set to use when mode is in accuracy
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{
+	})
+
+	--This set is used when OffenseMode is PDL and Enaged
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
+	})
+
+	--Swap in when dual wielding
+	sets.DualWield = {
+		left_ear="Eabani Earring",
+	}
 
 	-- Precast Sets
 	sets.Precast = {}
+
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}}, -- 3
@@ -159,6 +174,7 @@ function get_sets()
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {
 	}
+
 	-- Cure Set
 	sets.Midcast.Cure = {
 		main="Daybreak", -- 30
@@ -177,9 +193,9 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Cure" potency +10%','Phys. dmg. taken-10%',}}, -- 10
     }
+
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
-		main={ name="Gada", augments={'Enh. Mag. eff. dur. +6','"Mag.Atk.Bns."+2','DMG:+1',}},
 		sub="Ammurapi Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 		head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
@@ -195,9 +211,11 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
+
 	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
 	
 	});
+
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		main={ name="Idris", augments={'Path: A',}},
@@ -216,6 +234,7 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
+
 	-- Free Nuke
 	sets.Midcast.Nuke = {
 		main={ name="Idris", augments={'Path: A',}},
@@ -234,10 +253,12 @@ function get_sets()
 		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		back={ name="Nantosuelta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
+
 	-- Used for Burst Mode
 	sets.Midcast.Burst = set_combine( sets.Midcast.Nuke, {
 
 	})
+
 	-- CuragaSet
 	sets.Midcast.Curaga = set_combine( sets.Midcast.Cure, {})
 
@@ -259,9 +280,8 @@ function get_sets()
 	})
 
 	-- Stun Set
-	sets.Midcast["Stun"] = {
-
-	}
+	sets.Midcast["Stun"] = set_combine( sets.Midcast.Nuke,{
+	})
 
 	sets.Midcast["Erase"] = sets.Precast.FastCast
 
@@ -277,9 +297,10 @@ function get_sets()
 	sets.Midcast.Drain = {
 
 	}
-	-- Indi Duration
+
 	sets.Geomancy = {}
 
+	-- Indi Duration
 	sets.Geomancy.Indi = {
 		main={ name="Idris", augments={'Path: A',}},
 		sub="Genmei Shield",
@@ -295,11 +316,11 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+		back={ name="Lifestream Cape", augments={'Geomancy Skill +8','Indi. eff. dur. +20','Pet: Damage taken -3%',}},
 	}
 
 	sets.Geomancy.Indi.Entrust = set_combine(sets.Geomancy.Indi, {
-
+		main={ name="Gada", augments={'Indi. eff. dur. +11','Mag. Acc.+2','"Mag.Atk.Bns."+13',}},
 	})
 
 	-- Geo Potency
@@ -361,8 +382,10 @@ function get_sets()
 		right_ring="Cornelia's Ring",
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
+
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
+
 	-- Set to equip when charmed
 	sets.Charm = {}
 
