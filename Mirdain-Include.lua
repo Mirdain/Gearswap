@@ -1969,16 +1969,15 @@ do
 				state.TreasureMode:cycle()
 				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 				display_box_update()
-				return
 			else
 				local mode = {}
 				mode = string.split(cmd," ",2)
 				state.TreasureMode:set(mode[2])
 				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 				display_box_update()
-				return
 			end
-			Require_Update = true
+			coroutine.schedule(equip_set, .25)
+			return
 		-- Toggles the Auto Buff function off/on
 		elseif command:contains('autobuff') then
 			if command == 'autobuff' then
@@ -1991,7 +1990,8 @@ do
 				info('Auto Buff is ['..state.AutoBuff.value..']')
 			end
 			display_box_update()
-			Require_Update = true
+			coroutine.schedule(equip_set, .25)
+			return
 		-- Shuts down instnace
 		elseif command == 'shutdown' then
 			send_command('terminate')
@@ -2064,6 +2064,7 @@ do
 						end
 						info('Offense Mode: ['..state.OffenseMode.value..']')
 						display_box_update()
+						coroutine.schedule(equip_set, .25)
 						return
 					end
 				end
@@ -2073,9 +2074,9 @@ do
 				state.OffenseMode:set(mode[2])
 				info('Offense Mode: ['..state.OffenseMode.value..']')
 				display_box_update()
+				coroutine.schedule(equip_set, .25)
 				return
 			end
-			Require_Update = true
 		elseif command:contains('weaponmode') then
 			if command == 'weaponmode' then
 				for i,v in ipairs(state.WeaponMode) do
@@ -2088,6 +2089,7 @@ do
 						two_hand_check()
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
 						display_box_update()
+						coroutine.schedule(equip_set, .25)
 						return
 					end
 				end
@@ -2098,9 +2100,9 @@ do
 				two_hand_check()
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
 				display_box_update()
+				coroutine.schedule(equip_set, .25)
 				return
 			end
-			Require_Update = true
 		elseif command:contains('jobmode2') then
 			if command == 'jobmode2' then
 				for i,v in ipairs(state.JobMode2) do
@@ -2112,6 +2114,7 @@ do
 						end
 						info(UI_Name2..': ['..state.JobMode2.value..']')
 						display_box_update()
+						coroutine.schedule(equip_set, .25)
 						return
 					end
 				end
@@ -2121,9 +2124,9 @@ do
 				state.JobMode2:set(mode[2])
 				info(UI_Name2..': ['..state.JobMode2.value..']')
 				display_box_update()
+				coroutine.schedule(equip_set, .25)
 				return
 			end
-			Require_Update = true
 		elseif command:contains('jobmode') then
 			if command == 'jobmode' then
 				for i,v in ipairs(state.JobMode) do
@@ -2137,6 +2140,7 @@ do
 						display_box_update()
 						-- Issue a command to the lua for the job specific command
 						self_command_custom(command)
+						coroutine.schedule(equip_set, .25)
 						return
 					end
 				end
@@ -2148,9 +2152,9 @@ do
 				display_box_update()
 				-- Issue a command to the lua for the job specific command
 				self_command_custom(command)
+				coroutine.schedule(equip_set, .25)
 				return
 			end
-			Require_Update = true
 		-- This profile mode is used to load a Silmaril profile and execute a script
 		elseif command:contains('profile') then
 			local modes = {}
@@ -2167,6 +2171,8 @@ do
 			use_enchantment(command:slice(5))
 		elseif command == 'version' then
 			info('Include Version is ['..Mirdain_GS..']')
+		else
+
 		end
 		--use below for custom Job commands
 		self_command_custom(command)
@@ -2570,7 +2576,7 @@ do
 			Location.z = position.z
 		end
 
-		if Require_Update and not is_busy then windower.send_command("gs c update auto") Require_Update = false end
+		if Require_Update and not is_busy then equip_set() Require_Update = false end
 
 		-- 60 second cycle timer
 		if now - UpdateTime1 > 30 then
@@ -2889,6 +2895,10 @@ do
 
 		end
 		return built_set
+	end
+
+	function equip_set()
+		windower.send_command("gs c update auto")
 	end
 
 	-- Start the engine with a 5 sec delay
