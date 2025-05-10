@@ -4,169 +4,169 @@ Mirdain_GS = '1.4'
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
 
-	-- Weapons
-	sets.Weapons = {}
-	sets.Weapons.Sleep = {}
-	sets.Weapons.Shield = {}
-	sets.Weapons.Songs = {}
-	sets.Weapons.Songs.Midcast = {}
+-- Weapons
+sets.Weapons = {}
+sets.Weapons.Sleep = {}
+sets.Weapons.Shield = {}
+sets.Weapons.Songs = {}
+sets.Weapons.Songs.Midcast = {}
 
-	sets.Idle = {}
-	sets.Idle.Pet = {}
-	sets.Idle.Sublimation = {}
-	sets.Idle.Resting = {}
-	sets.Idle.TP = {}
-	sets.Idle.ACC = {}
-	sets.Idle.DT = {}
+sets.Idle = {}
+sets.Idle.Pet = {}
+sets.Idle.Sublimation = {}
+sets.Idle.Resting = {}
+sets.Idle.TP = {}
+sets.Idle.ACC = {}
+sets.Idle.DT = {}
 
-	sets.Movement = {}
-	sets.Cursna_Received = {}
+sets.Movement = {}
+sets.Cursna_Received = {}
 
-	-- State sets
-	sets.OffenseMode = {}
-	sets.OffenseMode.Ranged = {}
-	sets.OffenseMode.AM = {}
-	sets.OffenseMode.AM1 = {}
-	sets.OffenseMode.AM2 = {}
-	sets.OffenseMode.AM3 = {}
+-- State sets
+sets.OffenseMode = {}
+sets.OffenseMode.Ranged = {}
+sets.OffenseMode.AM = {}
+sets.OffenseMode.AM1 = {}
+sets.OffenseMode.AM2 = {}
+sets.OffenseMode.AM3 = {}
 
-	sets.DualWield = {}
+sets.DualWield = {}
 		
-	-- Precast
-	sets.Precast = {}
-	sets.Precast.FastCast = {}
-	sets.Precast.Blue_Magic = {}
-	sets.Precast.Enhancing = {}
-	sets.Precast.Cure = {}
-	sets.Precast.Utsusemi = {}
-	sets.Precast.Songs = {}
+-- Precast
+sets.Precast = {}
+sets.Precast.FastCast = {}
+sets.Precast.Blue_Magic = {}
+sets.Precast.Enhancing = {}
+sets.Precast.Cure = {}
+sets.Precast.Utsusemi = {}
+sets.Precast.Songs = {}
 
-	sets.Precast.RA = {}
-	sets.Precast.RA.Flurry = {}
-	sets.Precast.RA.Flurry_II = {}
+sets.Precast.RA = {}
+sets.Precast.RA.Flurry = {}
+sets.Precast.RA.Flurry_II = {}
 
-	-- Midcast
-	sets.Midcast = {}
-	sets.Midcast.RA = {}
-	sets.Midcast.RA['True Shot'] = {}
-	sets.Midcast.RA.TripleShot = {}
-	sets.Midcast.RA.DoubleShot = {}
-	sets.Midcast.RA.Barrage = {}
+-- Midcast
+sets.Midcast = {}
+sets.Midcast.RA = {}
+sets.Midcast.RA['True Shot'] = {}
+sets.Midcast.RA.TripleShot = {}
+sets.Midcast.RA.DoubleShot = {}
+sets.Midcast.RA.Barrage = {}
 		
-	sets.Midcast.Enfeebling = {}
-	sets.Midcast.Enfeebling.MACC = {}
-	sets.Midcast.Enfeebling.Potency = {}
-	sets.Midcast.Enfeebling.Duration = {}
+sets.Midcast.Enfeebling = {}
+sets.Midcast.Enfeebling.MACC = {}
+sets.Midcast.Enfeebling.Potency = {}
+sets.Midcast.Enfeebling.Duration = {}
 
-	-- Midcast		
-	sets.Midcast.SIRD = {}
-	sets.Midcast.Nuke = {}
-	sets.Midcast.Burst = {}
-	sets.Midcast.Cure = {}
-	sets.Midcast.Curaga = {}
-	sets.Midcast.Cura = {}
-	sets.Midcast.Regen = {}
-	sets.Midcast.Refresh = {}
-	sets.Midcast.Enhancing = {}
-	sets.Midcast.Enhancing.Others = {}
-	sets.Midcast.Enhancing.Gain = {}
-	sets.Midcast.Enhancing.Elemental = {}
-	sets.Midcast.Enhancing.Status = {}
-	sets.Midcast.Enhancing.Skill = {}
+-- Midcast		
+sets.Midcast.SIRD = {}
+sets.Midcast.Nuke = {}
+sets.Midcast.Burst = {}
+sets.Midcast.Cure = {}
+sets.Midcast.Curaga = {}
+sets.Midcast.Cura = {}
+sets.Midcast.Regen = {}
+sets.Midcast.Refresh = {}
+sets.Midcast.Enhancing = {}
+sets.Midcast.Enhancing.Others = {}
+sets.Midcast.Enhancing.Gain = {}
+sets.Midcast.Enhancing.Elemental = {}
+sets.Midcast.Enhancing.Status = {}
+sets.Midcast.Enhancing.Skill = {}
 		
-	sets.Midcast.Aspir = {}
-	sets.Midcast.Drain = {}
-	sets.Midcast.Dark = {}
-	sets.Midcast.Dark.MACC = {}
-	sets.Midcast.Dark.Absorb = {}
-	sets.Midcast.Dark.Enhancing = {}
-	sets.Midcast.Skill = {}
-	sets.Midcast.ACC = {}
-	sets.Midcast.BP = {}
-	sets.Midcast.SummoningMagic = {}
-	sets.Midcast.Summon = {}
+sets.Midcast.Aspir = {}
+sets.Midcast.Drain = {}
+sets.Midcast.Dark = {}
+sets.Midcast.Dark.MACC = {}
+sets.Midcast.Dark.Absorb = {}
+sets.Midcast.Dark.Enhancing = {}
+sets.Midcast.Skill = {}
+sets.Midcast.ACC = {}
+sets.Midcast.BP = {}
+sets.Midcast.SummoningMagic = {}
+sets.Midcast.Summon = {}
 
-	-- Bard Midcast
-	sets.Midcast.DummySongs = {}
-	sets.Midcast.Finale = {}
-	sets.Midcast.Lullaby = {}
-	sets.Midcast.Threnody = {}
-	sets.Midcast.Elegy = {}
-	sets.Midcast.Requiem = {}
-	sets.Midcast.March = {}
-	sets.Midcast.Minuet = {}
-	sets.Midcast.Madrigal = {}
-	sets.Midcast.Ballad = {}
-	sets.Midcast.Scherzo = {}
-	sets.Midcast.Mazurka = {}
-	sets.Midcast.Paeon = {}
-	sets.Midcast.Carol = {}
-	sets.Midcast.Minne = {}
-	sets.Midcast.Mambo = {}
-	sets.Midcast.Etude = {}
-	sets.Midcast.Prelude = {}
-	sets.Midcast.Dirge ={}
-	sets.Midcast.Sirvente = {}
-	sets.Midcast.Aria = {}
+-- Bard Midcast
+sets.Midcast.DummySongs = {}
+sets.Midcast.Finale = {}
+sets.Midcast.Lullaby = {}
+sets.Midcast.Threnody = {}
+sets.Midcast.Elegy = {}
+sets.Midcast.Requiem = {}
+sets.Midcast.March = {}
+sets.Midcast.Minuet = {}
+sets.Midcast.Madrigal = {}
+sets.Midcast.Ballad = {}
+sets.Midcast.Scherzo = {}
+sets.Midcast.Mazurka = {}
+sets.Midcast.Paeon = {}
+sets.Midcast.Carol = {}
+sets.Midcast.Minne = {}
+sets.Midcast.Mambo = {}
+sets.Midcast.Etude = {}
+sets.Midcast.Prelude = {}
+sets.Midcast.Dirge ={}
+sets.Midcast.Sirvente = {}
+sets.Midcast.Aria = {}
 
-	-- Midcast for Ranged Attacks and Aftermath
-	sets.Midcast.AM = {}
-	sets.Midcast.AM.RA = {}
-	sets.Midcast.AM1 = {}
-	sets.Midcast.AM1.RA = {}
-	sets.Midcast.AM2 = {}
-	sets.Midcast.AM2.RA = {}
-	sets.Midcast.AM3 = {}
-	sets.Midcast.AM3.RA = {}
+-- Midcast for Ranged Attacks and Aftermath
+sets.Midcast.AM = {}
+sets.Midcast.AM.RA = {}
+sets.Midcast.AM1 = {}
+sets.Midcast.AM1.RA = {}
+sets.Midcast.AM2 = {}
+sets.Midcast.AM2.RA = {}
+sets.Midcast.AM3 = {}
+sets.Midcast.AM3.RA = {}
 
-	--Weaponskills
-	sets.WS = {}
-	sets.WS.ACC =  {}
-	sets.WS.ACC.RA = {}
-	sets.WS.PDL = {}
-	sets.WS.PDL.RA = {}
-	sets.WS.SB = {}
-	sets.WS.SB.RA = {}
-	sets.WS.CRIT = {}
-	sets.WS.CRIT.RA = {}
-	sets.WS.MEVA = {}
-	sets.WS.MEVA.RA = {}
-	sets.WS.AM = {}
-	sets.WS.AM.RA = {}
-	sets.WS.AM1 = {}
-	sets.WS.AM1.RA = {}
-	sets.WS.AM2 = {}
-	sets.WS.AM2.RA = {}
-	sets.WS.AM3 = {}
-	sets.WS.AM3.RA = {}
+--Weaponskills
+sets.WS = {}
+sets.WS.ACC =  {}
+sets.WS.ACC.RA = {}
+sets.WS.PDL = {}
+sets.WS.PDL.RA = {}
+sets.WS.SB = {}
+sets.WS.SB.RA = {}
+sets.WS.CRIT = {}
+sets.WS.CRIT.RA = {}
+sets.WS.MEVA = {}
+sets.WS.MEVA.RA = {}
+sets.WS.AM = {}
+sets.WS.AM.RA = {}
+sets.WS.AM1 = {}
+sets.WS.AM1.RA = {}
+sets.WS.AM2 = {}
+sets.WS.AM2.RA = {}
+sets.WS.AM3 = {}
+sets.WS.AM3.RA = {}
 		
-	-- Other Sets
-	sets.JA = {}
-	sets.Waltz = {}
-	sets.Jig = {}
-	sets.Samba = {}
-	sets.Step = {}
-	sets.Flourish = {}
-	sets.Jugs = {}
-	sets.PhantomRoll = {}
-	sets.TreasureHunter = {}
-	sets.QuickDraw = {}
+-- Other Sets
+sets.JA = {}
+sets.Waltz = {}
+sets.Jig = {}
+sets.Samba = {}
+sets.Step = {}
+sets.Flourish = {}
+sets.Jugs = {}
+sets.PhantomRoll = {}
+sets.TreasureHunter = {}
+sets.QuickDraw = {}
 
-	sets.Storms = {}
-	sets.Enmity = {}
-	sets.Diffusion = {}
-	sets.Geomancy = {}
-	sets.Geomancy.Geo = {}
-	sets.Geomancy.Indi = {}
-	sets.Geomancy.Indi.Entrust = {}
-	sets.Pet_Midcast = {}
+sets.Storms = {}
+sets.Enmity = {}
+sets.Diffusion = {}
+sets.Geomancy = {}
+sets.Geomancy.Geo = {}
+sets.Geomancy.Indi = {}
+sets.Geomancy.Indi.Entrust = {}
+sets.Pet_Midcast = {}
 
 
-	sets.Ready = {}
-	sets.Ready.Magic = {}
-	sets.Ready.TP = {}
-	sets.Ready.Debuff = {}
-	sets.Ready.Standard = {}	
+sets.Ready = {}
+sets.Ready.Magic = {}
+sets.Ready.TP = {}
+sets.Ready.Debuff = {}
+sets.Ready.Standard = {}	
 
 state = state or {}
 
@@ -466,74 +466,53 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function pretargetcheck(spell,action)
-
 		--Cancel if pet is in middle of move
 		if (pet.isvalid and pet_midaction()) then
 			cancel_spell()
 			return
 		end
-
 		-- Status Ailment Check
 		if buffactive['Sleep'] then
 			cancel_spell()
 			if sets.Idle then
 				equip(sets.Idle)
-			else
-				warn('sets.Idle not found!')
-			end
+			else warn('sets.Idle not found!') end
 			if sets.Weapons then
 				if sets.Weapons.Sleep then
 					equip(sets.Weapons.Sleep)
-				else
-					warn('sets.Weapons.Sleep not found!')
-				end
-			else
-				warn('sets.Weapons not found!')
-			end
+				else warn('sets.Weapons.Sleep not found!') end
+			else warn('sets.Weapons not found!') end
 		end
-
 		if buffactive['Stun'] then
 			cancel_spell()	
 			if sets.Idle then
 				equip(sets.Idle)
-			else
-				warn('sets.Idle not found!')
-			end
+			else warn('sets.Idle not found!') end
 			return
 		end
-
 		if buffactive['KO'] then
 			cancel_spell()
 			return
 		end
-
 		if buffactive['Petrification'] then
 			cancel_spell()	
 			if sets.Idle then
 				equip(sets.Idle)
-			else
-				warn('sets.Idle not found!')
-			end
+			else warn('sets.Idle not found!') end
 			return
 		end
-
 		if buffactive['Charm'] then
 			cancel_spell()
 			return
 		end
-
 		if buffactive['Terror'] then
 			cancel_spell()
 			if sets.Idle then
 				equip(sets.Idle)
-			else
-				warn('sets.Idle not found!')
-			end
+			else warn('sets.Idle not found!') end
 			return
 		end
-
 		if AutoItem and not buffactive['Muddle'] then
-
 			-- Auto Remedy --
 			if buffactive['Paralysis'] and spell.type == 'JobAbility' then
 				if player.inventory['Remedy'] ~= nil then
@@ -542,7 +521,6 @@ do
 					log('Cancel Spell - Using Items')
 				end
 			end
-
 			-- Auto Echo Drops
 			if spell.action_type == 'Magic' and buffactive['Silence'] then
 				if player.inventory['Remedy'] ~= nil then
@@ -552,7 +530,6 @@ do
 				end
 			end											
 		end
-
 		--Weapon Skill checks
 		if spell.type == 'WeaponSkill' then
 			--Stop gear swap when you can't WS
@@ -560,14 +537,12 @@ do
 				cancel_spell()
 				log('TP:['..player.tp..']')
 				return
-
 			--Stop gear swap when you can't WS
 			elseif buffactive['Amnesia'] then
 				cancel_spell()
 				info('Can\'t Weapon Skill due to amnesia.')
 				return
 			end
-		
 		--Cancel ability due to abilty not ready
 		elseif spell.type == 'JobAbility' or spell.type == 'BloodPactWard' or spell.type == 'BloodPactRage' or spell.type == 'PetCommand' then
 			local abil_recasts_table = windower.ffxi.get_ability_recasts()
@@ -579,20 +554,17 @@ do
 				cancel_spell()
 				return
 			end
-
 		--Cancel certain actions (Defined by RecastTimers) if not ready
 		elseif RecastTimers:contains(spell.type) then
 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			local spell_time = spell_recasts[spell.recast_id] / 60
 			local min = math.floor(spell_time)
 			local sec = (spell_time - min) * 60
-
 			if spell_time > 0 then
 				info(''..spell.name..' ['..string.format("%d.%02d",min,sec)..']')
 				cancel_spell()
 				return
 			end
-
 			--Cancel if null target and redirect to self if bard song
 			if not spell.target.type and spell.type == 'BardSong' then
 				if buffactive['Pianissimo'] then
@@ -610,7 +582,6 @@ do
 				local cast_spell = res.spells[spell.id]
 				if not cast_spell.targets then
 					info('Unable to find spell ['..spell.name..']')
-
 				-- Self Target spells
 				elseif tostring(cast_spell.targets) == '{Self}' then
 					if spell.target.type ~= 'SELF' then
@@ -618,7 +589,6 @@ do
 						log('Redirect Spell:[SELF TARGET]')
 						change_target('<me>')
 					end
-
 				-- Enemy Spells
 				elseif tostring(cast_spell.targets) == '{Enemy}' then
 					if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
@@ -628,7 +598,6 @@ do
 						cancel_spell()
 						return
 					end
-
 				-- Party Buffs
 				elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 					if spell.target.type == 'MONSTER' then
@@ -663,7 +632,6 @@ do
 				end
 			end
 		end
-
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -671,30 +639,22 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function precastequip(spell)
-
 		--Cancel for SMN if Avatar is mid action
 		if pet.isvalid and pet_midaction() then return end
-
 		--Default gearset
 		local built_set = {}
-
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
-
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then
 			if sets.WS then
 				built_set = set_combine(built_set, sets.WS)
 				local message = ''
 				if spell.skill == "Marksmanship" or spell.skill == "Archery" then
-
 					-- Try to equip a generic ranged WS set
 					if sets.WS.RA then 
 						built_set = set_combine(built_set, sets.WS.RA) 
-					else
-						warn('sets.WS.RA not found!')
-					end
-
+					else warn('sets.WS.RA not found!') end
 					if sets.WS[spell.english] then
 						-- Set is defined
 						built_set = set_combine(built_set, sets.WS[spell.english])
@@ -731,7 +691,6 @@ do
 							end
 						else message = 'Using Default WS Set (Ranged)' end
 					end
-
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
@@ -783,7 +742,6 @@ do
 							end
 						else message = 'Using Default WS Set' end
 					end
-
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
@@ -799,14 +757,10 @@ do
 						message = message..' and Aftermath'
 					end
 				end
-
 				-- Check if an Obi or Orpheus is to be Equiped
 				built_set =  elemental_check(spell, built_set)
 				info(message)
-			else 
-				warn('sets.WS not found!')
-			end
-
+			else warn('sets.WS not found!') end
 		-- Ranged attack
 		elseif spell.action_type == 'Ranged Attack' then
 			if sets.Precast then
@@ -816,29 +770,18 @@ do
 					if buffactive[265] then -- Flurry
 						if sets.Precast.RA.Flurry then
 							built_set = set_combine(built_set, sets.Precast.RA.Flurry)
-						else
-							warn('sets.Precast.RA.Flurry not found!')
-						end
+						else warn('sets.Precast.RA.Flurry not found!') end
 					elseif buffactive[581] then -- Flurry II
 						if sets.Precast.RA.Flurry_II then
 							built_set = set_combine(built_set, sets.Precast.RA.Flurry_II)
-						else
-							warn('sets.Precast.RA.Flurry_II not found!')
-						end
+						else warn('sets.Precast.RA.Flurry_II not found!') end
 					elseif buffactive[228] then -- Embrava
 						if sets.Precast.RA.Flurry_II then
 							built_set = set_combine(built_set, sets.Precast.RA.Flurry_II)
-						else
-							warn('sets.Precast.RA.Flurry_II not found!')
-						end
+						else warn('sets.Precast.RA.Flurry_II not found!') end
 					end
-				else
-					warn('sets.Precast.RA not found!')
-				end
-			else
-				warn('sets.Precast not found!')
-			end
-
+				else warn('sets.Precast.RA not found!') end
+			else warn('sets.Precast not found!') end
 		-- JobAbility
 		elseif spell.type == 'JobAbility' then
 			if sets.JA then
@@ -849,33 +792,21 @@ do
 					if spell.name == 'Bestial Loyalty' or spell.name == 'Call Beast' then
 						if sets.Jugs[state.JobMode.value] then
 							built_set = set_combine(built_set, sets.Jugs[state.JobMode.value])
-						else
-							warn('sets.Jugs['..state.JobMode.value..'] not found!')
-						end
+						else warn('sets.Jugs['..state.JobMode.value..'] not found!') end
 					end
 					info('['..spell.english..'] Set')
 				elseif spell.id == 123 then -- Double Up for distance
 					if sets.PhantomRoll then
 						built_set = set_combine(built_set, sets.PhantomRoll)
 						info('['..spell.english..'] Set')
-					else
-						warn('sets.PhantomRoll not found!')
-					end
-				else
-					info('JA not set for ['..spell.english..']')
-				end
-			else
-				warn('sets.JA not found!')
-			end
-
+					else warn('sets.PhantomRoll not found!') end
+				else info('JA not set for ['..spell.english..']') end
+			else warn('sets.JA not found!') end
 		-- Items
 		elseif spell.type == 'Item' then 
 			if sets.Idle then
 				built_set = sets.Idle
-			else
-				warn('sets.Idle not found!')
-			end
-
+			else warn('sets.Idle not found!') end
 		-- Scholar
 		elseif spell.type == 'Scholar' then
 			if sets.JA then
@@ -883,13 +814,8 @@ do
 				if sets.JA[spell.english] then
 					built_set = set_combine(built_set, sets.JA[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Scholar Set')
-				end
-			else
-				warn('sets.JA not found!')
-			end
-
+				else info('Using Default Scholar Set') end
+			else warn('sets.JA not found!') end
 		-- Ward
 		elseif spell.type == 'Ward' then
 			if sets.JA then
@@ -897,13 +823,8 @@ do
 				if sets.JA[spell.english] then
 					built_set = set_combine(built_set, sets.JA[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Ward Set')
-				end
-			else
-				warn('sets.JA not found!')
-			end
-
+				else info('Using Default Ward Set') end
+			else warn('sets.JA not found!') end
 		-- Rune
 		elseif spell.type == 'Rune' then
 			if sets.JA then
@@ -911,13 +832,8 @@ do
 				if sets.JA[spell.english] then
 					built_set = set_combine(built_set, sets.JA[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Rune Set')
-				end
-			else
-				warn('sets.JA not found!')
-			end
-
+				else info('Using Default Rune Set') end
+			else warn('sets.JA not found!') end
 		-- Effusion
 		elseif spell.type == 'Effusion' then
 			if sets.JA then
@@ -925,13 +841,8 @@ do
 				if sets.JA[spell.english] then
 					built_set = set_combine(built_set, sets.JA[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Effusion Set')
-				end
-			else
-				warn('sets.JA not found!')
-			end
-
+				else info('Using Default Effusion Set') end
+			else warn('sets.JA not found!') end
 		-- CorsairRoll
 		elseif spell.type == 'CorsairRoll' then
 			if sets.PhantomRoll then
@@ -939,13 +850,8 @@ do
 				if sets.PhantomRoll[spell.english] then
 					built_set = set_combine(built_set, sets.PhantomRoll[spell.english])
 					info( '['..spell.english..'] Set ')
-				else
-					info('Roll not set')
-				end
-			else
-				warn('sets.PhantomRoll not found!')
-			end
-
+				else info('Roll not set') end
+			else warn('sets.PhantomRoll not found!') end
 		-- CorsairShot
 		elseif spell.type == 'CorsairShot' then
 			if sets.QuickDraw then
@@ -953,13 +859,8 @@ do
 				if sets.QuickDraw[spell.english] then
 					built_set = set_combine(built_set, sets.QuickDraw[spell.english])
 					info( '['..spell.english..'] Set')
-				else
-					info('Using Default Quick Draw Set')
-				end
-			else
-				warn('sets.QuickDraw not found!')
-			end
-
+				else info('Using Default Quick Draw Set') end
+			else warn('sets.QuickDraw not found!') end
 		-- Waltz
 		elseif spell.type == 'Waltz' then
 			if sets.Waltz then
@@ -967,13 +868,8 @@ do
 				if sets.Waltz[spell.english] then
 					built_set = set_combine(built_set, sets.Waltz[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Waltz Set')
-				end
-			else
-				warn('sets.Waltz not found!')
-			end
-
+				else info('Using Default Waltz Set') end
+			else warn('sets.Waltz not found!') end
 		-- Jig
 		elseif spell.type == 'Jig' then
 			if sets.Jig then
@@ -981,13 +877,8 @@ do
 				if sets.Jig[spell.english] then
 					built_set = set_combine(built_set, sets.Jig[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Jig Set')
-				end
-			else
-				warn('sets.Jig not found!')
-			end
-
+				else info('Using Default Jig Set') end
+			else warn('sets.Jig not found!') end
 		-- Samba
 		elseif spell.type == 'Samba' then
 			if sets.Samba then
@@ -995,13 +886,8 @@ do
 				if sets.Samba[spell.english] then
 					built_set = set_combine(built_set, sets.Samba[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Samba Set')
-				end
-			else
-				warn('sets.Samba not found!')
-			end
-
+				else info('Using Default Samba Set') end
+			else warn('sets.Samba not found!') end
 		-- Step
 		elseif spell.type == 'Step' then
 			if sets.Step then
@@ -1009,13 +895,8 @@ do
 				if sets.Step[spell.english] then
 					built_set = set_combine(built_set, sets.Step[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Step Set')
-				end
-			else
-				warn('sets.Step not found!')
-			end
-
+				else info('Using Default Step Set') end
+			else warn('sets.Step not found!') end
 		-- Flourishes
 		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then
 			if sets.Flourish then
@@ -1023,13 +904,8 @@ do
 				if sets.Flourish[spell.english] then
 					built_set = set_combine(built_set, sets.Flourish[spell.english])
 					info('['..spell.english..'] Set')
-				else
-					info('Using Default Flourish Set')
-				end
-			else
-				warn('sets.Flourish not found!')
-			end
-
+				else info('Using Default Flourish Set') end
+			else warn('sets.Flourish not found!') end
 		-- Magic based actions
 		else
 			-- Precast
@@ -1038,45 +914,31 @@ do
 				-- FastCast
 				if sets.Precast.FastCast then
 					built_set = set_combine(built_set, sets.Precast.FastCast)
-
 					-- Augment with Enhancing set
 					if spell.skill == 'Enhancing Magic' then
 						if sets.Precast.Enhancing then
 							built_set = set_combine(built_set, sets.Precast.Enhancing)
-						else
-							warn('sets.Precast.Enhancing not found!')
-						end
+						else warn('sets.Precast.Enhancing not found!') end
 					end
-
 					-- Specified Sets
 					if sets.Precast[spell.english] then
 						built_set = set_combine(built_set, sets.Precast[spell.english])
-
 					-- Augment with Cure Casting set
 					elseif spell.name:contains('Cure') or spell.name:contains('Cura') then
 						if sets.Precast.Cure then
 							built_set = set_combine(built_set, sets.Precast.Cure)
-						else
-							warn('sets.Precast.Cure not found!')
-						end
-								
+						else warn('sets.Precast.Cure not found!') end		
 					-- Ninjutsu
 					elseif spell.type == 'Ninjutsu' and UtsusemiSpell:contains(spell.name) then
 						do_Utsu_checks(spell)
 						if sets.Precast.Utsusemi then
 							built_set = set_combine(built_set, sets.Precast.Utsusemi)
-						else
-							warn('sets.Precast.Utsusemi not found!')
-						end
-								
+						else warn('sets.Precast.Utsusemi not found!') end	
 					-- Blue Magic
 					elseif spell.type == 'BlueMagic' then
 						if sets.Precast.Blue_Magic then
 							built_set = set_combine(built_set, sets.Precast.Blue_Magic)
-						else
-							warn('sets.Precast.Blue_Magic not found!')
-						end
-								
+						else warn('sets.Precast.Blue_Magic not found!') end		
 					-- BardSong
 					elseif spell.type == 'BardSong' then
 						if sets.Precast.Songs then
@@ -1088,26 +950,17 @@ do
 							elseif spell.name == "Aria of Passion" then
 								built_set = set_combine(built_set, {range=Instrument.Aria})
 							end
-						else
-							warn('sets.Precast.Songs not found!')
-						end
+						else warn('sets.Precast.Songs not found!') end
 					end
-
-				else
-					warn('sets.Precast.FastCast not found!')
-				end
-			else
-				warn('sets.Precast not found!')
-			end
+				else warn('sets.Precast.FastCast not found!') end
+			else warn('sets.Precast not found!') end
 		end
-
 		-- Check that proper ammo is available if the action requires it
 		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
 			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
 				do_bullet_checks(spell, built_set)
 			end
 		end
-
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" then
@@ -1120,19 +973,12 @@ do
 						if not TwoHand and not DualWield then
 							if sets.Weapons.Shield then
 								built_set = set_combine(built_set, sets.Weapons.Shield)
-							else
-								warn('sets.Weapons.Shield not found!')
-							end
+							else warn('sets.Weapons.Shield not found!') end
 						end
-					else
-						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
-					end
-				else
-					warn('sets.Weapons not found!')
-				end
+					else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
+				else warn('sets.Weapons not found!') end
 			end
 		end
-
 		--Swap in bard song weapons no matter the mode
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			if sets.Weapons then
@@ -1142,32 +988,20 @@ do
 						if not DualWield and not TwoHand then
 							if sets.Weapons.Shield then
 								built_set = set_combine(built_set, sets.Weapons.Shield)
-							else
-								warn('sets.Weapons.Shield not found!')
-							end
+							else warn('sets.Weapons.Shield not found!') end
 						end
 						built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
-					else
-						warn('sets.Weapons.Songs.Midcast not found!')
-					end
-				else
-					warn('sets.Weapons.Songs not found!')
-				end
-			else
-				warn('sets.Weapons not found!')
-			end
+					else warn('sets.Weapons.Songs.Midcast not found!') end
+				else warn('sets.Weapons.Songs not found!') end
+			else warn('sets.Weapons not found!') end
 		end
-
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 			if sets.TreasureHunter then
 				built_set = set_combine(built_set, sets.TreasureHunter)
 				info('['..spell.english..'] Set with Treasure Hunter')
-			else
-				warn('sets.TreasureHunter not found!')
-			end
+			else warn('sets.TreasureHunter not found!') end
 		end
-
 		-- Final built_set built to return.  This is not the final set as custom Job can Augment
 		return built_set
 	end
@@ -1177,29 +1011,24 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcastequip(spell)
-
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then return end
 		if spell.type == 'Item' then return end
 		if spell.type == 'JobAbility' then return end
 		if pet.isvalid and pet_midaction() then return end
-
 		--Default gearset
 		local built_set = {}
-
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
-
 		-- Merget the Midcast Set
 		if sets.Midcast then 
 			built_set = set_combine(built_set, sets.Midcast)
 			-- Spell interruption Down for the rest of the actions
 			if sets.Midcast.SIRD and spell.action_type ~= 'Ranged Attack' then built_set = set_combine(built_set, sets.Midcast.SIRD) end
 			-- Ranged Attack
-			elseif spell.action_type == 'Ranged Attack' then
+			if spell.action_type == 'Ranged Attack' then
 				if sets.Midcast.RA then 
 					built_set = set_combine(built_set, sets.Midcast.RA)
-
 					-- Generic
 					local message = ''
 					if state.OffenseMode.value ~= 'TP' and sets.Midcast[state.OffenseMode.value] and sets.sets.Midcast[state.OffenseMode.value].RA then
@@ -1222,7 +1051,6 @@ do
 							message = 'Ranged Attack with True Shot'
 						end
 					else message = 'Ranged Attack Set' end
-
 					-- Buffs
 					if buffactive['Triple Shot'] and sets.Midcast.RA.TripleShot then 
 						built_set = set_combine(built_set, sets.Midcast.RA.TripleShot)
@@ -1234,7 +1062,6 @@ do
 						built_set = set_combine(built_set, sets.Midcast.RA.Barrage)
 						message = 'Using Barrage Set'
 					end
-
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.Midcast.AM3 and sets.Midcast.AM3.RA and sets.Midcast.AM3.RA[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.AM3.RA[state.WeaponMode.value])
@@ -1249,12 +1076,9 @@ do
 						built_set = set_combine(built_set, sets.Midcast.AM.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath (Ranged)'
 					end
-
 					info(message)
-				else
-					info('No sets.Midcast.RA defined!')
-				end
-			-- Ninjutsu
+				else warn('sets.Midcast.RA not found!') end
+				-- Ninjutsu
 			elseif spell.type == 'Ninjutsu' then
 				-- Defined Gear Set
 				if sets.Midcast[spell.english] then
@@ -1265,33 +1089,25 @@ do
 					if sets.Midcast.Utsusemi then
 						built_set = set_combine(built_set, sets.Midcast.Utsusemi)
 						info('['..spell.english..'] Utsusemi Set')
-					else
-						warn('sets.Midcast.Utsusemi not found!')
-					end
+					else warn('sets.Midcast.Utsusemi not found!') end
 				-- Enhancing Magic
 				elseif spell.target.type == 'SELF' then
 					if sets.Midcast.Enhancing then
 						built_set = set_combine(built_set, sets.Midcast.Enhancing)
 						info('Enhancing set')
-					else
-						warn('sets.Midcast.Enhancing not found!')
-					end
+					else warn('sets.Midcast.Enhancing not found!') end
 				-- Enfeebling
 				elseif Enfeebling_Ninjitsu:contains(spell.english) then
 					if sets.Midcast.Enfeebling then
 						built_set = set_combine(built_set, sets.Midcast.Enfeebling)
 						info('Enfeebling set')
-					else
-						warn('sets.Midcast.Enfeebling not found!')
-					end
+					else warn('sets.Midcast.Enfeebling not found!') end
 				-- Defaults to Nukes if not the above
 				else
 					if sets.Midcast.Nuke then
 						built_set = set_combine(built_set, sets.Midcast.Nuke)
 						info('Nuke set')
-					else
-						warn('sets.Midcast.Nuke not found!')
-					end
+					else warn('sets.Midcast.Nuke not found!') end
 				end
 			-- WhiteMagic
 			elseif spell.type == 'WhiteMagic' then
@@ -1304,28 +1120,22 @@ do
 					if sets.Midcast.Cure then
 						built_set = set_combine(built_set, sets.Midcast.Cure)
 						info('Cure Set')
-					else
-						warn('sets.Midcast.Cure not found!')
-					end
+					else warn('sets.Midcast.Cure not found!') end
 				-- Curaga 
 				elseif spell.name:contains('Curaga') then
 					if sets.Midcast.Curaga then
 						built_set = set_combine(built_set, sets.Midcast.Curaga)
 						info('Curaga Set')
-					else 
-						info('No sets.Midcast.Curaga defined!')
-					end
+					else warn('sets.Midcast.Curaga not found!') end
 				-- Cura
 				elseif spell.name:contains('Cura') then
 					if sets.Midcast.Cura then
 						built_set = set_combine(built_set, sets.Midcast.Cura)
 						info('Cura Set')
-					else
-						info('No sets.Midcast.Cura defined!')
-					end
+					else warn('sets.Midcast.Cura not found!') end
 				-- Raise (Stay in FastCast set for recast timers)
 				elseif (spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise')) and not spell.name:contains('Reraise') then
-					built_set = {}
+					log('No Swap Defined (Raise)')
 				-- Enhancing
 				elseif spell.skill == 'Enhancing Magic' then
 					if sets.Midcast.Enhancing then
@@ -1334,88 +1144,64 @@ do
 						if spell.target.type ~= 'SELF' or (spell.target.type == 'SELF' and buffactive['Accession']) then
 							if sets.Midcast.Enhancing.Others then
 								built_set = set_combine(built_set, sets.Midcast.Enhancing.Others)
-							else
-								warn('sets.Midcast.Enhancing.Others not found!')
-							end
+							else warn('sets.Midcast.Enhancing.Others not found!') end
 						end
 						-- Refresh
 						if spell.name:contains('Refresh') then
 							if sets.Midcast.Refresh then
 								built_set = set_combine(built_set, sets.Midcast.Refresh)
 								info('Refresh Set')
-							else
-								warn('sets.Midcast.Refresh not found!')
-							end
+							else warn('sets.Midcast.Refresh not found!') end
 						-- Regen
 						elseif spell.name:contains('Regen') then
 							if sets.Midcast.Regen then
 								built_set = set_combine(built_set, sets.Midcast.Regen)
 								info('Regen Set')
-							else 
-								warn('sets.Midcast.Regen not found!') 
-							end
+							else warn('sets.Midcast.Regen not found!') end
 						elseif Storms:contains(spell.name) then
 							if sets.Storms then
 								built_set = set_combine(built_set, sets.Storms)
 								info('Storms Set')
-							else
-								warn('sets.Storms not found!')
-							end
+							else warn('sets.Storms not found!') end
 						-- Gain Spells
 						elseif spell.name:contains('Gain') then
 							if sets.Midcast.Enhancing.Gain then
 								built_set = set_combine(built_set, sets.Midcast.Enhancing.Gain)
 								info('Gain Set')
-							else
-								warn('sets.Midcast.Enhancing.Gain not found!')
-							end
+							else warn('sets.Midcast.Enhancing.Gain not found!') end
 						-- Phalanx
 						elseif spell.name:contains('Phalanx') then
 							if sets.Midcast.Phalanx then
 								built_set = set_combine(built_set, sets.Midcast.Phalanx)
 								info('Phalanx Set')
-							else
-								warn('sets.Midcast.Phalanx not found!')
-							end
+							else warn('sets.Midcast.Phalanx not found!') end
 						-- Bar Spells
 						elseif Elemental_Bar:contains(spell.name) then
 							if sets.Midcast.Enhancing.Elemental then
 								built_set = set_combine(built_set, sets.Midcast.Enhancing.Elemental)
 								info('Elemental Bar Element Set')
-							else
-								warn('sets.Midcast.Enhancing.Elemental not found!')
-							end
+							else warn('sets.Midcast.Enhancing.Elemental not found!') end
 						-- Bar Status
 						elseif Status_Bar:contains(spell.name) then
 							if sets.Midcast.Enhancing.Status then
 								built_set = set_combine(built_set, sets.Midcast.Enhancing.Status)
 								info('Status Bar Status Set')
-							else
-								warn('sets.Midcast.Enhancing.Status not found!')
-							end
+							else warn('sets.Midcast.Enhancing.Status not found!') end
 						-- Enhancing SKill
 						elseif Enhancing_Skill:contains(spell.name) then
 							if sets.Midcast.Enhancing.Skill then
 								built_set = set_combine(built_set, sets.Midcast.Enhancing.Skill)
 								info('Enhancing Skill Set')
-							else
-								warn('sets.Midcast.Enhancing.Skill not found!')
-							end
+							else warn('sets.Midcast.Enhancing.Skill not found!') end
 						-- Enhancing
-						else
-							info('Enhancing Magic Set')
-						end
-					else
-						warn('sets.Midcast.Enhancing not found!')
-					end
+						else info('Enhancing Magic Set') end
+					else warn('sets.Midcast.Enhancing not found!') end
 				-- Divine Spells
 				elseif Divine_Skill:contains(spell.name) then
 					if sets.Midcast.Divine then
 						built_set = set_combine(built_set, sets.Midcast.Divine)
 						info('Divine Skill Set')
-					else
-						warn('sets.Midcast.Divine not found!')
-					end
+					else warn('sets.Midcast.Divine not found!') end
 				-- Enfeebling Magic
 				elseif spell.skill == 'Enfeebling Magic' then
 					if sets.Midcast.Enfeebling then
@@ -1425,32 +1211,23 @@ do
 							if sets.Midcast.Enfeebling.MACC then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.MACC)
 								info('Enfeebling Magic Set - Magic Accuracy')
-							else
-								warn('sets.Midcast.Enfeebling.MACC not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.MACC not found!') end
 						-- Potency
 						elseif Enfeeble_Potency:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Potency then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Potency)
 								info('Enfeebling Magic Set - Potency')
-							else
-								warn('sets.Midcast.Enfeebling.Potency not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Potency not found!') end
 						-- Duration
 						elseif Enfeeble_Duration:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Duration then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Duration)
 								info('Enfeebling Magic Set - Duration')
-							else
-								warn('sets.Midcast.Enfeebling.Duration not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Duration not found!') end
 						-- Default
-						else
-							info('Enfeebling Magic Set')
-						end
-					else
-						info('No sets.Midcast.Enfeebling defined!')
-					end
+						else info('Enfeebling Magic Set') end
+					else info('No sets.Midcast.Enfeebling defined!') end
+				end
 			-- Black Magic
 			elseif spell.type == 'BlackMagic' then
 				-- Defined Gear Set
@@ -1462,17 +1239,13 @@ do
 					if sets.Midcast.Aspir then
 						built_set = set_combine(built_set, sets.Midcast.Aspir)
 						info('Aspir Set')
-					else
-						warn('sets.Midcast.Aspir not found!')
-					end
+					else warn('sets.Midcast.Aspir not found!') end
 				-- Drain Gear
 				elseif spell.name:contains('Drain') then
 					if sets.Midcast.Drain then
 						built_set = set_combine(built_set, sets.Midcast.Drain)
 						info('Drain Set')
-					else
-						warn('sets.Midcast.Drain not found!')
-					end
+					else warn('sets.Midcast.Drain not found!') end
 				-- Enfeebling Magic
 				elseif spell.skill == 'Enfeebling Magic' then
 					if sets.Midcast.Enfeebling then
@@ -1482,32 +1255,22 @@ do
 							if sets.Midcast.Enfeebling.MACC then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.MACC)
 								info('Enfeebling Magic Set - Magic Accuracy')
-							else
-								warn('sets.Midcast.Enfeebling.MACC not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.MACC not found!') end
 						-- Potency
 						elseif Enfeeble_Potency:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Potency then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Potency)
 								info('Enfeebling Magic Set - Potency')
-							else
-								warn('sets.Midcast.Enfeebling.Potency not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Potency not found!') end
 						-- Duration
 						elseif Enfeeble_Duration:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Duration then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Duration)
 								info('Enfeebling Magic Set - Duration')
-							else
-								warn('sets.Midcast.Enfeebling.Duration not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Duration not found!') end
 						-- Default
-						else
-							info('Enfeebling Magic Set')
-						end
-					else
-						info('No sets.Midcast.Enfeebling not found!')
-					end
+						else info('Enfeebling Magic Set') end
+					else info('No sets.Midcast.Enfeebling not found!') end
 				-- Dark Magic
 				elseif spell.skill == 'Dark Magic' then
 					if sets.Midcast.Dark then
@@ -1517,56 +1280,40 @@ do
 							if sets.Midcast.Dark.MACC then
 								built_set = set_combine(built_set, sets.Midcast.Dark.MACC)
 								info('Dark Magic Set - Magic Accuracy')
-							else
-								warn('sets.Midcast.Dark.MACC not found!')
-							end
+							else warn('sets.Midcast.Dark.MACC not found!') end
 						-- Absorb
 						elseif Dark_Absorb:contains(spell.name) then
 							if sets.Midcast.Dark.Absorb then
 								built_set = set_combine(built_set, sets.Midcast.Dark.Absorb)
 								info('Absorb Magic Set - Potency')
-							else
-								warn('sets.Midcast.Dark.Absorb not found!')
-							end
+							else warn('sets.Midcast.Dark.Absorb not found!') end
 						-- Enhancing
 						elseif Dark_Enhancing:contains(spell.name) then
 							if sets.Midcast.Dark.Enhancing then
 								built_set = set_combine(built_set, sets.Midcast.Dark.Enhancing)
 								info('Dark Enhancing Magic Set - Duration')
-							else
-								warn('sets.Midcast.Dark.Enhancing not found!')
-							end
+							else warn('sets.Midcast.Dark.Enhancing not found!') end
 						-- Potency
 						elseif Enfeeble_Potency:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Potency then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Potency)
 								info('Enfeebling Magic Set - Potency')
-							else
-								warn('sets.Midcast.Enfeebling.Potency not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Potency not found!') end
 						-- Duration
 						elseif Enfeeble_Duration:contains(spell.name) then
 							if sets.Midcast.Enfeebling.Duration then
 								built_set = set_combine(built_set, sets.Midcast.Enfeebling.Duration)
 								info('Enfeebling Magic Set - Duration')
-							else
-								warn('sets.Midcast.Enfeebling.Duration not found!')
-							end
+							else warn('sets.Midcast.Enfeebling.Duration not found!') end
 						-- Default
-						else
-							info('Dark Magic Set')
-						end
-					else
-						info('No sets.Midcast.Dark not found!')
-					end
+						else info('Dark Magic Set') end
+					else info('No sets.Midcast.Dark not found!') end
 				-- Enhancing Magic
 				elseif spell.skill == 'Enhancing Magic' then
 					if sets.Midcast.Enhancing then
 						built_set = set_combine(built_set, sets.Midcast.Enhancing)
 						info('Enhancing Magic Set')
-					else
-						warn('sets.Midcast.Enhancing not found!')
-					end
+					else warn('sets.Midcast.Enhancing not found!') end
 				-- Enfeebling Elemental Magic
 				elseif Elemental_Enfeeble:contains(spell.name) then
 					if sets.Midcast.Enfeebling then
@@ -1574,12 +1321,8 @@ do
 						if sets.Midcast.Enfeebling.MACC then
 							built_set = set_combine(built_set, sets.Midcast.Enfeebling.MACC)
 							info('Enfeebling Magic Set - Magic Accuracy')
-						else
-							warn('sets.Midcast.Enfeebling.MACC not found!')
-						end
-					else
-						warn('sets.Midcast.Enfeebling not found!')
-					end
+						else warn('sets.Midcast.Enfeebling.MACC not found!') end
+					else warn('sets.Midcast.Enfeebling not found!') end
 				-- Standard Offensive Spells
 				else
 					local element = res.spells[spell.id].element
@@ -1588,16 +1331,12 @@ do
 						info("Burst Detected!")
 						if sets.Midcast.Burst then
 							built_set = set_combine(built_set, sets.Midcast.Burst)
-						else
-							info('No sets.Midcast.Burst not found!')
-						end
+						else info('No sets.Midcast.Burst not found!') end
 					else
 						if sets.Midcast.Nuke then
 							built_set = set_combine(built_set, sets.Midcast.Nuke)
 							info('Nuke Set')
-						else
-							info('No sets.Midcast.Nuke not found!')
-						end
+						else info('No sets.Midcast.Nuke not found!') end
 					end
 					-- Check for an elemental set
 					built_set = elemental_check(spell, built_set)
@@ -1609,9 +1348,7 @@ do
 					if sets.Midcast.DummySongs then
 						built_set = set_combine(built_set, sets.Midcast.DummySongs)
 						info( '['..spell.english..'] Set (Song Count)')
-					else
-						warn('sets.Midcast.DummySongs not found!')
-					end
+					else warn('sets.Midcast.DummySongs not found!') end
 					built_set = set_combine(built_set, {range=Instrument.Count})
 				-- Potency / Instruments
 				else
@@ -1633,18 +1370,14 @@ do
 					elseif spell.name:contains('Horde') then
 						if sets.Midcast.Enfeebling then
 							built_set = set_combine(built_set, sets.Midcast.Enfeebling)
-						else
-							warn('sets.Midcast.Enfeebling not found!')
-						end
+						else warn('sets.Midcast.Enfeebling not found!') end
 						built_set = set_combine(built_set, {range=Instrument.AOE_Sleep})
 						info( '['..spell.english..'] Set (AOE Sleep)')
 					-- Normal Enfeebles
 					elseif Enfeebling_Song:contains(spell.english) then
 						if sets.Midcast.Enfeebling then
 							built_set = set_combine(built_set, sets.Midcast.Enfeebling)
-						else
-							warn('sets.Midcast.Enfeebling not found!')
-						end
+						else warn('sets.Midcast.Enfeebling not found!') end
 						built_set = set_combine(built_set, {range=Instrument.Potency})
 						info( '['..spell.english..'] Set (Enfeebling)')
 					-- Augment the buff songs
@@ -1664,50 +1397,36 @@ do
 					if sets.Midcast.Nuke then
 						built_set = set_combine(built_set, sets.Midcast.Nuke)
 						info('Blue Nuke set')
-					else
-						info('No sets.Midcast.Nuke not found!')
-					end
+					else warn('sets.Midcast.Nuke not found!') end
 					built_set = elemental_check(spell, built_set)
 				-- Spells that benifit from Blue Magic Skill
 				elseif BlueSkill:contains(spell.english) then
 					if sets.Midcast.Skill then
 						built_set = set_combine(built_set, sets.Midcast.Skill)
 						info('Blue Skill set')
-					else
-						warn('sets.Midcast.Skill not found!')
-					end
+					else warn('sets.Midcast.Skill not found!') end
 				elseif BlueTank:contains(spell.english) then
 					if sets.Enmity then
 						built_set = set_combine(built_set, sets.Enmity)
 						info('Blue Enmity set')
-					else
-						warn('sets.Enmity not found!')
-					end
+					else warn('sets.Enmity not found!') end
 				elseif BlueHealing:contains(spell.english) then
 					if sets.Midcast.Cure then
 						built_set = set_combine(built_set, sets.Midcast.Cure)
 						info('Blue Cure set')
-					else
-						warn('sets.Midcast.Cure not found!')
-					end
+					else warn('sets.Midcast.Cure not found!') end
 				elseif BlueACC:contains(spell.english) then
 					if sets.Midcast.ACC then
 						built_set = set_combine(built_set, sets.Midcast.ACC)
 						info('Blue Magic Accuracy set')
-					else
-						warn('sets.Midcast.ACC not found!')
-					end
+					else warn('sets.Midcast.ACC not found!') end
 				-- Default Spell set
-				else
-					info('Midcast not set')
-				end
+				else info('Midcast not set') end
 				if buffactive["Diffusion"] then
 					if sets.Diffusion then
 						built_set = set_combine(built_set, sets.Diffusion)
 						info('Diffusion Augment')
-					else
-						warn('sets.Diffusion not found!')
-					end
+					else warn('sets.Diffusion not found!') end
 				end
 			-- Geomancy
 			elseif spell.type == 'Geomancy' then
@@ -1724,38 +1443,21 @@ do
 								if sets.Geomancy.Indi.Entrust then
 									built_set = set_combine(built_set, sets.Geomancy.Indi.Entrust)
 									info('Indicolure set - Entrust')
-								else
-									warn('sets.Geomancy.Indi.Entrust not found!')
-								end
-							else
-								info('Indicolure set')
-							end
-						else
-							warn('sets.Geomancy.Indi not found!')
-						end
+								else warn('sets.Geomancy.Indi.Entrust not found!') end
+							else info('Indicolure set') end
+						else warn('sets.Geomancy.Indi not found!') end
 					-- Bubble Equipment
 					elseif Geomancy_List:contains(spell.english) then
 						if sets.Geomancy.Geo then
 							built_set = set_combine(built_set, sets.Geomancy.Geo)
 							info('Geomancy set')
-						else
-							warn('sets.Geomancy.Geo not found!')
-						end
+						else warn('sets.Geomancy.Geo not found!') end
 					-- Default set
-					else
-						info('Midcast not set')
-					end
-				else
-					warn('sets.Geomancy not found!')
-				end
+					else info('Midcast not set') end
+				else warn('sets.Geomancy not found!') end
 			-- Trust
 			elseif spell.type == 'Trust' then
-				if sets.Trust then
-					built_set = set_combine(built_set, sets.Trust)
-					info('Trust set')
-				else
-					warn('sets.Trust not found!')
-				end
+				log('Nothing Defined')
 			-- BloodPactRage and BloodPactWard
 			elseif spell.type == "BloodPactWard" or spell.type == "BloodPactRage" then
 				-- BP Timer gear needs to swap here if not under Astral Conduit
@@ -1766,9 +1468,7 @@ do
 					elseif sets.Midcast.BP then
 						built_set = set_combine(built_set, sets.Midcast.BP)
 						info('Blood Pact Set')
-					else
-						warn('sets.Midcast.BP not found!')
-					end
+					else warn('sets.Midcast.BP not found!') end
 				else
 					-- Astral Conduit active so don't swap gear
 					built_set = {}
@@ -1778,9 +1478,7 @@ do
 				if sets.Ready then
 					built_set = set_combine(built_set, sets.Ready)
 					info('[Ready] Set')
-				else
-					warn('sets.Ready not found!')
-				end
+				else warn('sets.Ready not found!') end
 			-- Elemental Siphon
 			elseif spell.name == "Elemental Siphon" then
 				if sets.Midcast[spell.english] then
@@ -1790,9 +1488,7 @@ do
 					if sets.Midcast.SummoningMagic then
 						built_set = set_combine(built_set, sets.Midcast.SummoningMagic)
 						info('Summoning Magic Set')
-					else
-						warn('sets.Midcast.SummoningMagic not found!')
-					end
+					else warn('sets.Midcast.SummoningMagic not found!') end
 				end
 			-- Summon Avatar
 			elseif spell.type == "SummonerPact" then
@@ -1803,13 +1499,10 @@ do
 					if sets.Midcast.Summon then
 						built_set = set_combine(built_set, sets.Midcast.Summon)
 						info('Summon Magic Set')
-					else
-						warn('sets.Midcast.Summon not found!')
-					end
+					else warn('sets.Midcast.Summon not found!') end
 				end
 			end
 		else warn('sets.Midcast not found!') end
-
 		-- Auto-cancel existing buffs
 		if spell.name == "Stoneskin" and buffactive["Stoneskin"] then
 			send_command('cancel 37;')
@@ -1820,7 +1513,6 @@ do
 		elseif spell.name == "Utsusemi: Ichi" and buffactive["Copy Image"] then
 			send_command('wait .5;cancel 66;')
 		end
-
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" then
@@ -1831,22 +1523,15 @@ do
 				if sets.Weapons then
 					if sets.Weapons[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					else
-						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
-					end
+					else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
 					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
-						else
-							warn('sets.Weapons.Shield not found!')
-						end
+						else warn('sets.Weapons.Shield not found!') end
 					end
-				else
-					warn('sets.Weapons not found!')
-				end
+				else warn('sets.Weapons not found!') end
 			end
 		end
-
 		--Swap in bard song weapons no matter the mode
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			if sets.Weapons.Songs then
@@ -1856,24 +1541,16 @@ do
 					if not DualWield and not TwoHand then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
-						else
-							warn('sets.Weapons.Shield not found!')
-						end
+						else warn('sets.Weapons.Shield not found!') end
 					end
-				else
-					warn('sets.Weapons.Songs.Midcast not found!')
-				end
-			else
-				warn('sets.Weapons.Songs not found!')
-			end
+				else warn('sets.Weapons.Songs.Midcast not found!') end
+			else warn('sets.Weapons.Songs not found!') end
 		end
-
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] and sets.TreasureHunter then
 			built_set = set_combine(built_set, sets.TreasureHunter)
 			info('['..spell.english..'] Set with Treasure Hunter')
 		end
-
 		-- Built built_set to return
 		return built_set
 	end
@@ -1890,9 +1567,7 @@ do
 			local built_set = choose_set()
 			if choose_set_custom then
 				built_set = set_combine(built_set, choose_set_custom())
-			else
-				info('choose_set_custom() not found!')
-			end
+			else info('choose_set_custom() not found!') end
 			return built_set
 		end
 	end
@@ -1949,9 +1624,7 @@ do
 		-- Process a custom set if enabled
 		if precast_custom then
 			built_set = set_combine(built_set, precast_custom(spell))
-		else
-			info('precast_custom() not found!')
-		end
+		else info('precast_custom() not found!') end
 
 		-- Check the gear
 		built_set = set_combine(built_set, check_equipment_spells(spell))
@@ -1965,16 +1638,13 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcast(spell)
-
 		--Generate the correct set from the include file and custom function
 		local built_set = midcastequip(spell)
 
 		-- Process a custom set if enabled
 		if midcast_custom then
 			built_set = set_combine(built_set, midcast_custom(spell))
-		else
-			info('midcast_custom() not found!')
-		end
+		else info('midcast_custom() not found!') end
 
 		-- Check the gear
 		built_set = set_combine(built_set, check_equipment_spells(spell))
