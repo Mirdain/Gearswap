@@ -1,4 +1,4 @@
---Relyk
+--Maedhros
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -20,11 +20,8 @@ Random_Lockstyle = false
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
--- Set to true to run organizer on job changes
-Organizer = false
-
 -- Add CRIT the base modes to allow AM3 Critical Builds
-state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
+state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','MEVA')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Corsair
@@ -37,8 +34,6 @@ UI_Name = 'TP Mode'
 --Melee or Ranged Mode
 state.JobMode:options('Standard','Melee','Ranged')
 state.JobMode:set('Standard')
-
-elemental_ws = S{'Aeolian Edge', 'Leaden Salute', 'Wildfire','Earth Shot','Ice Shot','Water Shot','Fire Shot','Wind Shot','Thunder Shot'}
 
 -- load addons
 --send_command('lua l autocor')
@@ -130,6 +125,12 @@ function get_sets()
 		right_ring="Shadow Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
+	sets.Idle.TP = sets.Idle
+	sets.Idle.ACC = sets.Idle
+	sets.Idle.DT = sets.Idle
+	sets.Idle.PDL = sets.Idle
+	sets.Idle.CRIT = sets.Idle
+	sets.Idle.MEVA = sets.Idle
 
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
@@ -139,8 +140,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -179,10 +180,26 @@ function get_sets()
 
 	})
 
+	--This set is used when OffenseMode is MEVA and Enaged
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Chas. Culottes +3",
+		feet="Malignance Boots",
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+		left_ear="Telos Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Lehko's Ring",
+		right_ring="Defending Ring",
+		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+	})
+
 	--The following sets augment the base TP set above for Dual Wielding
 	sets.DualWield = {
 		waist="Reiki Yotai",
-		--right_ear="Eabani Earring",
+		right_ear="Eabani Earring",
 	}
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
@@ -240,9 +257,7 @@ function get_sets()
 	} -- 65 FC
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
 
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = set_combine(sets.Midcast, {
@@ -261,9 +276,7 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     })
 
-	sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
-	
-	})
+	sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {})
 
 	-- Ranged PDL
 	sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
@@ -291,9 +304,7 @@ function get_sets()
         feet="Osh. Leggings +1", --3
     }) --28
 
-	sets.Utsusemi = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast.Utsusemi = set_combine(sets.Idle, {})
 
 	-- Quick Draw Gear Sets
 	sets.QuickDraw = {}
@@ -498,6 +509,11 @@ function get_sets()
 		left_ear="Friomisi Earring",
 		right_ear="Crematio Earring",
 		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
+
+	sets.WS.MEVA = set_combine(sets.WS, {
+	    neck="Warder's Charm +1",
+		waist="Carrier's Sash",
 	})
 
 	--These set are used when a weaponskill is used with that level of aftermath with the correct weapon

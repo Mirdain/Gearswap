@@ -1,5 +1,5 @@
 
---Mirdain
+--Turin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -27,96 +27,77 @@ state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS a
 --Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
 
---Modes for specific to Ninja
+--Modes for weapons.  You must define the set in sets.Weapons['X']
 state.WeaponMode:options('Verethragna','Karambit','Pole','Club')
 state.WeaponMode:set('Verethragna')
-
-elemental_ws = S{'Cataclysm', 'Rock Crusher', 'Earth Crusher', 'Starburst','Sunburst'}
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 function get_sets()
 
-	-- Weapon setup
-	sets.Weapons = {}
-
+	-- Weapon sets
 	sets.Weapons['Verethragna'] = {
 		main={ name="Verethragna", augments={'Path: A',}},
 	}
-
 	sets.Weapons['Karambit'] = {
 		main="Karambit",
 	}
-
 	sets.Weapons['Pole'] = {
 		main="Malignance Pole",
 		sub="Alber Strap",
 	}
-
 	sets.Weapons['Club'] = {
 		main="Warp Cudgel",
 	}
 
-	sets.Weapons.Sleep = {
-		--main="Varga Purnikawa",
-	}
-
-	-- Standard Idle set with -DT, Refresh, Regen and movement gear
+	-- Idle sets
 	sets.Idle = {
-	    ammo="Staunch Tathlum +1",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck="Loricate Torque +1",
-		waist="Carrier's Sash",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		ammo="Staunch Tathlum +1",
+		head="Null Masque",
+		body="Adamantite Armor",
+		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
+		legs={ name="Mpaca's Hose", augments={'Path: A',}},
+		feet={ name="Mpaca's Boots", augments={'Path: A',}},
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		waist="Null Belt",
 		left_ear="Sanare Earring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		left_ring="Archon Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Purity Ring",
+		right_ring="Shadow Ring",
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
     }
-	--Used to swap into movement gear when the player is detected movement when not engaged
-	sets.Movement = {
-		feet="Hermes' Sandals",
-	}
+	sets.Idle.TP = sets.Idle
+	sets.Idle.ACC = sets.Idle
+	sets.Idle.DT = sets.Idle
+	sets.Idle.PDL = sets.Idle
+	sets.Idle.SB = sets.Idle
+	sets.Idle.MEVA = sets.Idle
 
-	-- Set to be used if you get 
-	sets.Cursna_Received = {
-	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
-		waist="Gishdubar Sash",
-	}
-
+	-- Engaged Sets
 	sets.OffenseMode = {}
-
-	--Base TP set to build off
 	sets.OffenseMode.TP = {
-		ammo="Coiste Bodhar",
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		body={ name="Mpaca's Doublet", augments={'Path: A',}},
+		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs="Bhikku Hose +3",
+		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
 		feet="Anch. Gaiters +3",
-		neck="Mnk. Nodowa +2",
+		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
 		right_ear={ name="Schere Earring", augments={'Path: A',}},
 		left_ring="Lehko's Ring",
 		right_ring="Gere Ring",
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
 	}
-
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
 		head={ name="Mpaca's Cap", augments={'Path: A',}},
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
 		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
+		legs="Bhikku Hose +3",
+		feet={ name="Mpaca's Boots", augments={'Path: A',}},
 	})
-
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
@@ -124,31 +105,68 @@ function get_sets()
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
 	})
-
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT,{
 	    ammo="Crepuscular Pebble",
+		legs={ name="Mpaca's Hose", augments={'Path: A',}},
 	})
-
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	})
 
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
 	-- MNK gets 35 Native Subtle Blow
-	-- Cap is 75% - 40% in either I or II
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.TP, {
-		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
+	-- Cap is 75% - 50% caps either I or II
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode[state.OffenseMode.value], {
 		waist="Moonbow Belt +1", -- SB II 15
 		left_ear="Sherida Earring", -- SB II 5
-		--left_ring="Niqmaddu Ring", -- SB II 5
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 8
+		left_ring="Niqmaddu Ring", -- SB II 5
+		right_ring="Chirich Ring +1", -- SB 10
 		ammo="Coiste Bodhar", -- SB 3
 		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
-	}) -- 35 + 14% SB I + %25 SB II = 74 one under
+	}) -- 35 + 16% SB I + %25 SB II = 76 one under
 
+	-- Augments the OffenseMode when in DT stance
+	sets.Foot_Work = { feet="Anch. Gaiters +3", }
 
-	sets.Precast = {}
+	--Used to swap into movement gear when the player is detected movement when not engaged
+	sets.Movement = {
+		feet="Hermes' Sandals",
+	}
+
+	--Impetus set has priority over any other modes
+	sets.Impetus = {
+		body="Bhikku Cyclas +3",
+	}
+
+	sets.Boost = {
+		waist="Ask Sash",
+	}
+
+	-- Set to be used if you get cursed
+	sets.Cursna_Received = {
+	    neck="Nicander's Necklace",
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
+		waist="Gishdubar Sash",
+	}
+
+	sets.Enmity = {
+	    ammo="Sapience Orb", -- 2
+		head="Null Masque",
+		neck="Moonlight Necklace", -- 15
+		body="Emet Harness +1", -- 10
+		hands="Kurys Gloves", -- 9
+		legs="Bhikku Hose +3",
+		feet="Ahosi Leggings", -- 7
+		waist="Plat. Mog. Belt",
+	    left_ear="Cryptic Earring", -- 4
+		right_ear="Trux Earring", -- 5
+		left_ring="Eihwaz Ring", -- 5
+		right_ring="Petrov Ring", -- 4
+	} -- 61
+
 	-- Used for Magic Spells
+	sets.Precast = {}
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb", -- 2
 		head={ name="Herculean Helm", augments={'"Mag.Atk.Bns."+21','"Fast Cast"+6',}}, --13
@@ -165,19 +183,6 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, --10
 	} -- FC 66
 
-	sets.Enmity = {
-	    ammo="Sapience Orb", -- 2
-		neck="Moonlight Necklace", -- 15
-		body="Emet Harness +1", -- 10
-		hands="Kurys Gloves", -- 9
-		feet="Ahosi Leggings", -- 7
-		waist="Kasiri Belt", -- 3
-	    left_ear="Cryptic Earring", -- 4
-		right_ear="Trux Earring", -- 5
-		left_ring="Eihwaz Ring", -- 5
-		right_ring="Petrov Ring", -- 4
-	} -- 64
-
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
 	
@@ -193,19 +198,19 @@ function get_sets()
 	sets.JA["Focus"] = {}
 	sets.JA["Dodge"] = {}
 	sets.JA["Chakra"] = {
-		ammo="Crepuscular Pebble",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		ammo="Iron Gobbet",
+		head="Null Masque",
+		body="Anch. Cyclas +3",
+		hands={ name="Hes. Gloves +3", augments={'Enhances "Invigorate" effect',}},
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-		waist="Moonbow Belt +1",
+		waist="Plat. Mog. Belt",
 		left_ear="Tuisto Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Regal Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
 	}
 	sets.JA["Boost"] = {}
 	sets.JA["Counterstance"] = {}
@@ -235,16 +240,16 @@ function get_sets()
 		back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Crit.hit rate+10','Damage taken-5%',}},
 	}
 
+	-- 35% SB I for MNK
+	-- Belt SB II 15%
+	-- Mpaca Legs -- SB II 5%
+	-- Earring / Ring SB II 10%
+	-- Need 4% SB
 	sets.WS.SB = set_combine( sets.WS, { -- This maximize SB
-		-- 35% SB I for MNK
-		-- Belt SB II 15%
-		-- Mpaca Legs -- SB II 5%
-		-- Earring / Ring SB II 10%
-		-- Need 10% SB
 		waist="Moonbow Belt +1", -- SB II 15
 		left_ear="Sherida Earring", -- SB II 5
-		--left_ring="Niqmaddu Ring", -- SB II 5
-		legs="Mpaca's Hose",
+		left_ring="Niqmaddu Ring", -- SB II 5
+		legs="Mpaca's Hose", -- SB II 5
 		ammo="Coiste Bodhar", -- SB 3
 		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
 	})
@@ -294,30 +299,7 @@ function get_sets()
 	sets.WS["Tornado Kick"] = sets.WS.Kicks
 	sets.WS["Victory Smite"] = set_combine(sets.WS,{})
 	sets.WS["Shijin Spiral"] = set_combine(sets.WS,{
-		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}}
-	})
-
-	--Impetus set has priority over any other modes
-	sets.Impetus = {
-		body="Bhikku Cyclas +3",
-	}
-
-	-- Impetus for the DT stance (need more PDT)
-	sets.Impetus.DT = {
-		body="Bhikku Cyclas +3",
-	}
-
-	-- Impetus for the WS sets
-	sets.Impetus.WS = {
-		body="Bhikku Cyclas +3",
-	}
-
-	sets.Boost = {
-		waist="Ask Sash",
-	}
-
-	sets.Charm =  set_combine(sets.OffenseMode.DT, {
-
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
 	})
 
 	sets.TreasureHunter = {
@@ -342,83 +324,83 @@ function pretarget_custom(spell,action)
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	if spell.type == 'WeaponSkill' then
 		if buffactive.Impetus then
 			equipSet = sets.Impetus
 		end	
-		if state.OffenseMode.value == "MEVA" then
-			equipSet = set_combine(equipSet, { neck="Warder's Charm +1", })
-		end
 	end
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return choose_gear()
 end
 
 -- Called when the pet dies or is summoned
 function pet_change_custom(pet,gain)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 -- Called during a pet midcast
 function pet_midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 -- Called after the performs an action
 function pet_aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
+	local equipSet = {}
 
 	return choose_gear()
 end
+
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
+	local equipSet = {}
 
 	return choose_gear()
 end
+
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
+	local equipSet = {}
 
 	return choose_gear()
 end
+
 --Function is called when a self command is issued
 function self_command_custom(command)
 
 end
+
 --Custom Function
 function choose_gear()
-	equipSet = {}
+	local equipSet = {}
 	if player.status == "Engaged" then
 		if buffactive['Impetus'] then
-			if state.OffenseMode.value == "DT" then
-				equipSet = sets.Impetus.DT
-			else
-				equipSet = sets.Impetus
-			end
+			equipSet = sets.Impetus
+		end	
+		if buffactive['Footwork'] then
+			equipSet = set_combine(equipSet, sets.Foot_Work)
 		end	
 	end
 	if buffactive['Boost'] then
@@ -428,7 +410,7 @@ function choose_gear()
 end
 
 function check_buff_JA()
-	buff = 'None'
+	local buff = 'None'
 	local ja_recasts = windower.ffxi.get_ability_recasts()
 
 	-- Sub job has least priority
@@ -461,7 +443,7 @@ function check_buff_JA()
 end
 
 function check_buff_SP()
-	buff = 'None'
+	local buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end

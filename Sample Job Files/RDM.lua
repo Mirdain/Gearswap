@@ -162,21 +162,13 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 
-	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {})
 
-	})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
 
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, { 
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {})
 
-	})
-
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode, { 
-
-	})
-
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, { 
-
-	})
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, {})
 
 	sets.OffenseMode.SB = set_combine(sets.OffenseMode, { 
 		hands="Volte Mittens",
@@ -207,6 +199,17 @@ function get_sets()
 		right_ear="Eabani Earring",
 	}
 
+	sets.Enspell = {}
+
+	sets.Saboteur = {hands="Leth. Ganth. +3",}
+
+	sets.TreasureHunter = {
+		ammo="Per. Lucky Egg",
+		head="Volte Cap",
+	    legs="Volte Hose",
+		waist="Chaac Belt",
+	}
+
 	-- ===================================================================================================================
 	--		sets.Precast
 	-- ===================================================================================================================
@@ -233,14 +236,10 @@ function get_sets()
 	} -- 50%+ total Fast Cast and 11% Quick Magic
 
 	-- Used for Enhancing Magic
-	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {
-
-	})
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {})
 
 	-- Used for Healing Magic
-	sets.Precast.Cure = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {
-
-	})
+	sets.Precast.Cure = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {})
 
 	sets.Precast.RA = set_combine(sets.Precast, {
 		ammo=Ammo.RA,
@@ -249,28 +248,22 @@ function get_sets()
     })	
 
 	-- Flurry
-	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
-
-	}) 
+	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {}) 
 
 	-- Flurry II
-	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
-
-    })
+	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { })
 
 	-- ===================================================================================================================
 	--		sets.midcast
 	-- ===================================================================================================================
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
+
+	sets.Midcast.Utsusemi = set_combine(sets.Midcast, {})
 
 	-- Ranged Attack Gear (Normal Midshot)
-    sets.Midcast.RA = set_combine(sets.Midcast, {
-
-    })
+    sets.Midcast.RA = set_combine(sets.Midcast, {})
 
 	-- Ranged Attack Gear (High Accuracy Midshot)
     sets.Midcast.RA.ACC = set_combine(sets.Midcast.RA, {
@@ -278,14 +271,10 @@ function get_sets()
     })
 
 	-- Ranged Attack Gear (Physical Damage Limit)
-    sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
-
-    })
+    sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {})
 
 	-- Ranged Attack Gear (Critical Build)
-    sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-
-    })
+    sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {})
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
@@ -307,9 +296,7 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     } -- 50% Cure I, 16% Cure II
 
-	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {
-	
-	})
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, {})
 
 	-- Regen
 	sets.Midcast.Regen = {
@@ -378,9 +365,7 @@ function get_sets()
 	}
 
 	-- Skill Based ('Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga')
-	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
-
-	})
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {})
 
 	 -- Potency Basted ('Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II')
 	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
@@ -400,10 +385,6 @@ function get_sets()
 		waist={ name="Obstin. Sash", augments={'Path: A',}}, -- 5%
 		neck={ name="Dls. Torque +2", augments={'Path: A',}}, -- 25%
 	})
-
-	sets.Enspell = {}
-
-	sets.Saboteur = {hands="Leth. Ganth. +3",}
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
@@ -439,17 +420,11 @@ function get_sets()
 		legs="Leth. Fuseau +3",
 	})
 
-	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
 
-	})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
 
-	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
-
-	})
-
-	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
-
-	})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
 
 	sets.Midcast.Nuke = {
 		sub="Ammurapi Shield",
@@ -487,48 +462,13 @@ function get_sets()
 	sets.JA["Composure"] = {}
 
 	-- Dancer JA Section
-
-	-------------------------------------------------------------------------------
-	-- Flourishes provide buffs to the Dancer and debuffs to the target monster. --
-	-------------------------------------------------------------------------------
 	sets.Flourish = set_combine(sets.Idle.DT, {})
 
-	-- Flourishes I : Monster Control																	
-	sets.Flourish["Animated Flourish"] = set_combine(sets.Flourish, { }) 								-- Volatile Enmity spike like Provoke
-	sets.Flourish["Desperate Flourish"] = set_combine(sets.Flourish, { })								-- Gravity effect 
-	sets.Flourish["Violent Flourish"] = set_combine(sets.Flourish, { }) 								-- Stun effect 
-
-	-- Flourishes II : Skillchain Enhancers																			
-	sets.Flourish["Reverse Flourish"] = set_combine(sets.Flourish, { }) 								-- Returns TP in exchange for Finishing Moves
-	sets.Flourish["Building Flourish"] = set_combine(sets.Flourish, { })								-- Increases the strength of the next Weapon Skill
-
-	-------------------------------------------------------------------------------
-	----------- Jigs duration can be increased using various equipment. ----------- 
-	-------------------------------------------------------------------------------
 	sets.Jig = set_combine(sets.Idle.DT, { })
 
-	sets.Jig["Spectral Jig"] = sets.Jig
-	sets.Jig["Chocobo Jig"] = sets.Jig
-
-	-------------------------------------------------------------------------------
-	----- Step Accuracy depends on your melee hit rate (including your normal -----
-	---- Accuracy equipment). All Steps tested have shown an innate 10 Accuracy --- 
-	-- bonus, which can be further enhanced through various pieces of equipment, -- 
-	----------------------------- merits, and Presto. -----------------------------
-	-------------------------------------------------------------------------------
-
 	sets.Step = set_combine(sets.OffenseMode.DT, {})
-	
-	sets.JA["Quickstep"] = sets.Step
-	sets.JA["Box Step"] = sets.Step
-	sets.JA["Stutter Step"] = sets.Step
 
 	sets.Samba = set_combine(sets.Idle.DT, {})
-
-	sets.Samba["Haste Samba"] = {}
-    sets.Samba["Drain Samba"] = {}
-    sets.Samba["Drain Samba II"] = {}
-	sets.Samba["Aspir Samba"] = {}
 
 	-------------------------------------------------------------------------------
 	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
@@ -539,12 +479,6 @@ function get_sets()
 		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
 		--hands="Slither Gloves +1", -- 5
 	}) -- 10% Potency
-
-	sets.Waltz["Curing Waltz"] = sets.Waltz
-	sets.Waltz["Curing Waltz II"] = sets.Waltz
-	sets.Waltz["Curing Waltz III"] = sets.Waltz
-	sets.Waltz["Divine Waltz"] = sets.Waltz
-	sets.Waltz["Healing Waltz"] = sets.Waltz
 
 	-- ===================================================================================================================
 	--		sets.WS
@@ -625,13 +559,6 @@ function get_sets()
 	sets.WS["Savage Blade"] = sets.WS.WSD
 
 	sets.WS["Black Halo"] = sets.WS.WSD
-
-	sets.TreasureHunter = {
-		ammo="Per. Lucky Egg",
-		head="Volte Cap",
-	    legs="Volte Hose",
-		waist="Chaac Belt",
-	}
 
 end
 
