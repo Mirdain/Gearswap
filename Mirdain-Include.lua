@@ -1181,6 +1181,7 @@ do
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then return end
 		if spell.type == 'Item' then return end
+		if spell.type == 'JobAbility' then return end
 		if pet.isvalid and pet_midaction() then return end
 
 		--Default gearset
