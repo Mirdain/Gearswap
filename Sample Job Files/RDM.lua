@@ -1,5 +1,5 @@
 
---Inyana
+--Yavanna
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -22,6 +22,7 @@ Lockstyle_List = {1,2,6,12}
 Food = "Tropical Crepe"
 
 --Set default mode (TP,ACC,DT)
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','Enspell')
 state.OffenseMode:set('DT')
 
 --Command to Lock Style and Set the correct macros
@@ -119,17 +120,24 @@ function get_sets()
 		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10/0
     }
+	sets.Idle.TP = sets.Idle
+	sets.Idle.ACC = sets.Idle
+	sets.Idle.DT = sets.Idle
+	sets.Idle.PDL = sets.Idle
+	sets.Idle.SB = sets.Idle
+	sets.Idle.MEVA = sets.Idle
+	sets.Idle.Enspell = sets.Idle
+
 	-- Gear to swap out for Movement
 	sets.Movement = {
-		left_ring="Defending Ring",
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}}
 	}
 
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -137,6 +145,7 @@ function get_sets()
 	--		sets.OffenseMode
 	-- ===================================================================================================================
 
+	-- 'TP','ACC','DT','PDL','SB','Enspell'
 	sets.OffenseMode = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Malignance Chapeau",
@@ -157,16 +166,45 @@ function get_sets()
 
 	})
 
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode, { 
-	
-	})
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, { 
-	
+
+	})
+
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, { 
+
+	})
+
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, { 
+
+	})
+
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode, { 
+		hands="Volte Mittens",
+		legs="Volte Tights",
+		neck="Bathy Choker +1",
+		waist="Sarissapho. Belt",
+	})
+
+	sets.OffenseMode.Enspell = set_combine(sets.OffenseMode, { 
+	    sub="Ammurapi Shield",
+		range="Ullr",
+		head="Umuthi Hat",
+		body="Lethargy Sayon +3",
+		hands="Aya. Manopolas +2",
+		legs={ name="Viti. Tights +3", augments={'Enspell Damage','Accuracy',}},
+		feet="Leth. Houseaux +3",
+		neck="Quanpur Necklace",
+		waist="Orpheus's Sash",
+		left_ear="Malignance Earring",
+		right_ear="Leth. Earring +1",
+		left_ring="Freke Ring",
+		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
 	sets.DualWield = {
 		waist="Reiki Yotai",
-		left_ear="Eabani Earring",
+		right_ear="Eabani Earring",
 	}
 
 	-- ===================================================================================================================
@@ -176,30 +214,32 @@ function get_sets()
 	-- Used for Magic Spells
 	sets.Precast = {}
 
-	-- 50% Fast Cast is needed on RDM (Fast Cast V - 30%)
+	-- 42% Fast Cast is needed on RDM (Fast Cast IX - 38%)
+	-- 10% is Quick Magic limit
 	sets.Precast.FastCast = {
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		ammo="Impatiens", -- 2 Quick Magic
 		head="Bunzi's Hat", -- 10
 		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}}, -- 15
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}}, -- 7
 		feet={ name="Bunzi's Sabots", augments={'Path: A',}},
-		neck="Voltsurge Torque", -- 4
-		waist="Embla Sash",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=3},
+		waist="Witful Belt", -- 3 Quick Magic
 		left_ear={ name="Etiolation Earring", priority=1}, -- Used to Keep HP/MP pool
 		right_ear={ name="Leth. Earring +1",}, -- 8
-		left_ring="Kishar Ring", -- 4
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 66% total Fast Cast (Lowered with Quick Magic)
+		left_ring="Lebeche Ring", -- 2 Quick Magic
+		right_ring={ name="Etana Ring", priority=2,},
+		back="Perimede Cape", -- 4 Quick Magic
+	} -- 50%+ total Fast Cast and 11% Quick Magic
 
-	-- Used for Raises and Cures
-	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
-		-- Cap is 10%
-	    ammo="Impatiens", -- 2
-	    waist="Witful Belt", -- 3
-		left_ring="Lebeche Ring", -- 2
-	    back="Perimede Cape", -- 4
+	-- Used for Enhancing Magic
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {
+
+	})
+
+	-- Used for Healing Magic
+	sets.Precast.Cure = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {
+
 	})
 
 	sets.Precast.RA = set_combine(sets.Precast, {
@@ -208,17 +248,12 @@ function get_sets()
 		right_ring="Crepuscular Ring", -- 3
     })	
 
-	-- Only the bullet needs to be set for ACC sets (so that it will match the sets.Midcast.RA.ACC)
-    sets.Precast.RA.ACC = set_combine(sets.Precast.RA, {
-		ammo=Ammo.ACC,
-    })
-
-	-- Flurry - 55 Snapshot Needed
+	-- Flurry
 	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
 
 	}) 
 
-	-- Flurry II - 40 Snapshot Needed
+	-- Flurry II
 	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { 
 
     })
@@ -276,6 +311,11 @@ function get_sets()
 	
 	})
 
+	-- Regen
+	sets.Midcast.Regen = {
+		feet={ name="Bunzi's Sabots", augments={'Path: A',}},
+	}
+
 	-- Enhancing Duration on SELF
 	sets.Midcast.Enhancing = {
 		sub="Ammurapi Shield",
@@ -301,14 +341,18 @@ function get_sets()
 		legs="Leth. Fuseau +3",
 	})
 
-	-- Regen
-	sets.Midcast.Regen = {
-		feet={ name="Bunzi's Sabots", augments={'Path: A',}},
-	}
-
 	-- Spells that require SKILL - RDM only needs 500 or more except Temper II
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
-
+		sub="Ammurapi Shield",
+		head="Befouled Crown",
+		body={ name="Viti. Tabard +3", augments={'Enhances "Chainspell" effect',}},
+		hands={ name="Viti. Gloves +3", augments={'Enhancing Magic duration',}},
+		legs="Atrophy Tights +3",
+		feet="Leth. Houseaux +3",
+		neck="Incanter's Torque",
+		waist="Olympus Sash",
+		left_ear="Andoaa Earring",
+		right_ear="Mimir Earring",
 	})
 
 	-- used to boost Gain Spells
@@ -490,10 +534,10 @@ function get_sets()
 	-- Waltz Potency gear caps at 50%, while Waltz received potency caps at 30%. -- 
 	-------------------------------------------------------------------------------
 	sets.Waltz = set_combine(sets.OffenseMode.DT, {
-		ammo="Yamarang", -- 5
+		legs="Dashing Subligar", -- 10
+		--ammo="Yamarang", -- 5
 		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
 		--hands="Slither Gloves +1", -- 5
-		legs="Dashing Subligar", -- 10
 	}) -- 10% Potency
 
 	sets.Waltz["Curing Waltz"] = sets.Waltz
@@ -522,7 +566,9 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	sets.WS.ACC = {}
+	sets.WS.ACC = set_combine(sets.WS, {
+	
+	})
 
 	sets.WS.PDL = set_combine(sets.WS, 
 	{
@@ -568,11 +614,11 @@ function get_sets()
 		right_ring="Archon Ring",
 	})
 
-	sets.WS["Red Lotus Blade"] = sets.WS.MAB
-
 	sets.WS["Aeolian Edge"] = set_combine(sets.WS.MAB, {
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	})
+
+	sets.WS["Red Lotus Blade"] = sets.WS.MAB
 
 	sets.WS["Chant du Cygne"] = sets.WS.CRIT
 
@@ -593,8 +639,6 @@ end
 -- DO NOT EDIT BELOW THIS LINE UNLESS YOU NEED TO MAKE JOB SPECIFIC RULES
 -------------------------------------------------------------------------------------------------------------------
 
-Enspell_Buff = false
-
 -- Called when the player's subjob changes.
 function sub_job_change_custom(new, old)
 	-- Typically used for Macro pallet changing
@@ -606,14 +650,14 @@ function pretarget_custom(spell,action)
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 -- Augment basic equipment sets
 function midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	if buffactive['Saboteur'] and spell.skill == 'Enfeebling Magic' then
 		equipSet = sets.Saboteur
 	end
@@ -622,40 +666,28 @@ end
 
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
-	if not buffactive['Composure'] and spell.name ~=  "Composure" then
-		--add_to_chat(8,'Composure is down')
-	end
-	coroutine.schedule(Enspell_Check,1) -- windower is not firing buff_change correctly with Enspells and has a delay
+	local equipSet = {}
 
-	if player.status == "Engaged" and Enspell_Buff then
-		equipSet = set_combine(equipSet, sets.Enspell)
-	end
 	return equipSet
 end
 
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
-	Enspell_Check()
+	local equipSet = {}
 	return equipSet
 end
 
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
-	if player.status == "Engaged" and Enspell_Buff then
-		equipSet = set_combine(equipSet, sets.Enspell)
-	end
+	local equipSet = {}
+
 	return equipSet
 end
 
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
-	if player.status == "Engaged" and Enspell_Buff then
-		equipSet = set_combine(equipSet, sets.Enspell)
-	end
+	local equipSet = {}
+
 	return equipSet
 end
 
@@ -669,48 +701,34 @@ function user_file_unload()
 
 end
 
-function Enspell_Check()
-	-- Tier I
-	if buffactive["Enfire"] or buffactive["Enwater"] or buffactive["Enthunder"] or buffactive["Enstone"] or buffactive["Enblizzard"] or buffactive["Enaero"] then
-		Enspell_Buff = true
-		send_command('gs c update auto')
-	-- Tier II
-	elseif buffactive["Enfire II"] or buffactive["Enwater II"] or buffactive["Enthunder II"] or buffactive["Enstone II"] or buffactive["Enblizzard II"] or buffactive["Enaero II"] then
-		Enspell_Buff = true
-		send_command('gs c update auto')
-	else
-		Enspell_Buff = false
-	end
-end
-
 --Function used to automate Job Ability use
 function check_buff_JA()
-	buff = 'None'
+	local buff = 'None'
 
 	return buff
 end
 
 --Function used to automate Spell use
 function check_buff_SP()
-	buff = 'None'
+	local buff = 'None'
 
 	return buff
 end
 
 function pet_change_custom(pet,gain)
-	equipSet = {}
+	local equipSet = {}
 	
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
