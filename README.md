@@ -1,4 +1,4 @@
-# Version 1.3.1
+# Version 1.4
 Use //gs c version to check your active version
 
 ### Write up: `Sotel` 
