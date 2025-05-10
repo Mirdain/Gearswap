@@ -391,7 +391,6 @@ do
 
 	local DualWield = false
 	local TwoHand = false
-	local reloading = true
 
 	local SpellCastTime = 0
 	local Spellstart = os.clock()
@@ -869,6 +868,14 @@ do
 				warn('sets.JA not found!')
 			end
 
+		-- Items
+		elseif spell.type == 'Item' then 
+			if sets.Idle then
+				built_set = sets.Idle
+			else
+				warn('sets.Idle not found!')
+			end
+
 		-- Scholar
 		elseif spell.type == 'Scholar' then
 			if sets.JA then
@@ -1025,81 +1032,72 @@ do
 
 		-- Magic based actions
 		else
-			-- Don't swap gear for items
-			if spell.type ~= 'Item' then
-				-- Precast
-				if sets.Precast then
-					built_set = set_combine(built_set, sets.Precast)
-					-- FastCast
-					if sets.Precast.FastCast then
-						built_set = set_combine(built_set, sets.Precast.FastCast)
+			-- Precast
+			if sets.Precast then
+				built_set = set_combine(built_set, sets.Precast)
+				-- FastCast
+				if sets.Precast.FastCast then
+					built_set = set_combine(built_set, sets.Precast.FastCast)
 
-						-- Augment with Enhancing set
-						if spell.skill == 'Enhancing Magic' then
-							if sets.Precast.Enhancing then
-								built_set = set_combine(built_set, sets.Precast.Enhancing)
-							else
-								warn('sets.Precast.Enhancing not found!')
-							end
+					-- Augment with Enhancing set
+					if spell.skill == 'Enhancing Magic' then
+						if sets.Precast.Enhancing then
+							built_set = set_combine(built_set, sets.Precast.Enhancing)
+						else
+							warn('sets.Precast.Enhancing not found!')
 						end
-
-						-- Specified Sets
-						if sets.Precast[spell.english] then
-							built_set = set_combine(built_set, sets.Precast[spell.english])
-
-						-- Augment with Cure Casting set
-						elseif spell.name:contains('Cure') or spell.name:contains('Cura') then
-							if sets.Precast.Cure then
-								built_set = set_combine(built_set, sets.Precast.Cure)
-							else
-								warn('sets.Precast.Cure not found!')
-							end
-								
-						-- Ninjutsu
-						elseif spell.type == 'Ninjutsu' and UtsusemiSpell:contains(spell.name) then
-							do_Utsu_checks(spell)
-							if sets.Precast.Utsusemi then
-								built_set = set_combine(built_set, sets.Precast.Utsusemi)
-							else
-								warn('sets.Precast.Utsusemi not found!')
-							end
-								
-						-- Blue Magic
-						elseif spell.type == 'BlueMagic' then
-							if sets.Precast.Blue_Magic then
-								built_set = set_combine(built_set, sets.Precast.Blue_Magic)
-							else
-								warn('sets.Precast.Blue_Magic not found!')
-							end
-								
-						-- BardSong
-						elseif spell.type == 'BardSong' then
-							if sets.Precast.Songs then
-								built_set = set_combine(built_set, sets.Precast.Songs)
-								-- Song Count
-								if SongCount:contains(spell.name) then
-									built_set = set_combine(built_set, {range=Instrument.Count})
-								-- Equip Marsyas
-								elseif spell.name == "Honor March" then
-									built_set = set_combine(built_set, {range=Instrument.Honor})
-								-- Equip Loughnashade
-								elseif spell.name == "Aria of Passion" then
-									built_set = set_combine(built_set, {range=Instrument.Aria})
-								-- Default song
-								else
-									built_set = set_combine(built_set, {range=Instrument.Potency})
-								end
-							else
-								warn('sets.Precast.Songs not found!')
-							end
-						end
-
-					else
-						warn('sets.Precast.FastCast not found!')
 					end
+
+					-- Specified Sets
+					if sets.Precast[spell.english] then
+						built_set = set_combine(built_set, sets.Precast[spell.english])
+
+					-- Augment with Cure Casting set
+					elseif spell.name:contains('Cure') or spell.name:contains('Cura') then
+						if sets.Precast.Cure then
+							built_set = set_combine(built_set, sets.Precast.Cure)
+						else
+							warn('sets.Precast.Cure not found!')
+						end
+								
+					-- Ninjutsu
+					elseif spell.type == 'Ninjutsu' and UtsusemiSpell:contains(spell.name) then
+						do_Utsu_checks(spell)
+						if sets.Precast.Utsusemi then
+							built_set = set_combine(built_set, sets.Precast.Utsusemi)
+						else
+							warn('sets.Precast.Utsusemi not found!')
+						end
+								
+					-- Blue Magic
+					elseif spell.type == 'BlueMagic' then
+						if sets.Precast.Blue_Magic then
+							built_set = set_combine(built_set, sets.Precast.Blue_Magic)
+						else
+							warn('sets.Precast.Blue_Magic not found!')
+						end
+								
+					-- BardSong
+					elseif spell.type == 'BardSong' then
+						if sets.Precast.Songs then
+							built_set = set_combine(built_set, sets.Precast.Songs)
+							-- Equip Marsyas
+							if spell.name == "Honor March" then
+								built_set = set_combine(built_set, {range=Instrument.Honor})
+							-- Equip Loughnashade
+							elseif spell.name == "Aria of Passion" then
+								built_set = set_combine(built_set, {range=Instrument.Aria})
+							end
+						else
+							warn('sets.Precast.Songs not found!')
+						end
+					end
+
 				else
-					warn('sets.Precast not found!')
+					warn('sets.Precast.FastCast not found!')
 				end
+			else
+				warn('sets.Precast not found!')
 			end
 		end
 
@@ -1118,6 +1116,7 @@ do
 			else
 				if sets.Weapons then
 					if sets.Weapons[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 						if not TwoHand and not DualWield then
 							if sets.Weapons.Shield then
 								built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1125,7 +1124,6 @@ do
 								warn('sets.Weapons.Shield not found!')
 							end
 						end
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 					else
 						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
 					end
@@ -1179,28 +1177,28 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcastequip(spell)
+
+		-- WeaponSkill
+		if spell.type == 'WeaponSkill' then return end
+		if spell.type == 'Item' then return end
+		if pet.isvalid and pet_midaction() then return end
+
 		--Default gearset
 		local built_set = {}
+
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
-		--Cancel for SMN if Avatar is mid action
-		if pet.isvalid and pet_midaction() then return end
+
 		-- Merget the Midcast Set
 		if sets.Midcast then 
 			built_set = set_combine(built_set, sets.Midcast)
 			-- Spell interruption Down for the rest of the actions
 			if sets.Midcast.SIRD and spell.action_type ~= 'Ranged Attack' then built_set = set_combine(built_set, sets.Midcast.SIRD) end
-			-- Item
-			if spell.type == 'Item' then 
-				if sets.Idle then
-					built_set = sets.Idle
-				else
-					warn('sets.Idle not found!')
-				end
 			-- Ranged Attack
 			elseif spell.action_type == 'Ranged Attack' then
 				if sets.Midcast.RA then 
 					built_set = set_combine(built_set, sets.Midcast.RA)
+
 					-- Generic
 					local message = ''
 					if state.OffenseMode.value ~= 'TP' and sets.Midcast[state.OffenseMode.value] and sets.sets.Midcast[state.OffenseMode.value].RA then
@@ -1223,6 +1221,7 @@ do
 							message = 'Ranged Attack with True Shot'
 						end
 					else message = 'Ranged Attack Set' end
+
 					-- Buffs
 					if buffactive['Triple Shot'] and sets.Midcast.RA.TripleShot then 
 						built_set = set_combine(built_set, sets.Midcast.RA.TripleShot)
@@ -1234,6 +1233,7 @@ do
 						built_set = set_combine(built_set, sets.Midcast.RA.Barrage)
 						message = 'Using Barrage Set'
 					end
+
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.Midcast.AM3 and sets.Midcast.AM3.RA and sets.Midcast.AM3.RA[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.AM3.RA[state.WeaponMode.value])
@@ -1248,6 +1248,7 @@ do
 						built_set = set_combine(built_set, sets.Midcast.AM.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath (Ranged)'
 					end
+
 					info(message)
 				else
 					info('No sets.Midcast.RA defined!')
@@ -1449,7 +1450,6 @@ do
 					else
 						info('No sets.Midcast.Enfeebling defined!')
 					end
-				end
 			-- Black Magic
 			elseif spell.type == 'BlackMagic' then
 				-- Defined Gear Set
@@ -1828,17 +1828,17 @@ do
 				log(built_set)
 			else
 				if sets.Weapons then
+					if sets.Weapons[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+					else
+						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+					end
 					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
 						else
 							warn('sets.Weapons.Shield not found!')
 						end
-					end
-					if sets.Weapons[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					else
-						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
 					end
 				else
 					warn('sets.Weapons not found!')
@@ -1851,6 +1851,7 @@ do
 			if sets.Weapons.Songs then
 				built_set = set_combine(built_set, sets.Weapons.Songs)
 				if sets.Weapons.Songs.Midcast then
+					built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 					if not DualWield and not TwoHand then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1858,7 +1859,6 @@ do
 							warn('sets.Weapons.Shield not found!')
 						end
 					end
-					built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 				else
 					warn('sets.Weapons.Songs.Midcast not found!')
 				end
@@ -2108,13 +2108,13 @@ do
 				if state.WeaponMode.value == "Locked" then
 					built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
 				else
-					if not TwoHand and not DualWield then
-						if sets.Weapons.Shield then
-							built_set = set_combine(built_set, sets.Weapons.Shield)
-						end
-					end
 					if sets.Weapons[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+						if not TwoHand and not DualWield then
+							if sets.Weapons.Shield then
+								built_set = set_combine(built_set, sets.Weapons.Shield)
+							end
+						end
 					end
 				end
 				log('Midcast set equiping Offense Mode Gear')
@@ -2680,8 +2680,13 @@ do
 
 	-- Called when the player's subjob changes.
 	function sub_job_change(new, old)
-		windower.send_command('wait 2;input /lockstyleset '..LockStylePallet..';')
-		sub_job_change_custom()
+		coroutine.schedule(dual_wield_check, 2)
+		coroutine.schedule(two_hand_check, 2)
+		coroutine.schedule(equip_set, 2)
+		windower.send_command('wait 3;input /lockstyleset '..LockStylePallet..';')
+		if sub_job_change_custom then
+			sub_job_change_custom()
+		end
 	end
 
 	-- Check if you have the dual wield trait
@@ -3328,8 +3333,18 @@ do
 				if sets.OffenseMode[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.OffenseMode[state.OffenseMode.value])
 
-					-- Check the weapons
 					if state.WeaponMode.value ~= "Locked" then
+
+						-- Check the weapons
+						if sets.Weapons then
+							if sets.Weapons[state.WeaponMode.value] then
+								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+							else
+								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+							end
+						else
+							warn('sets.Weapons not found!')
+						end
 
 						-- Equip sub weapon based off mode
 						if not DualWield and not TwoHand then
@@ -3346,15 +3361,6 @@ do
 							end
 						end
 
-						if sets.Weapons then
-							if sets.Weapons[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-							else
-								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
-							end
-						else
-							warn('sets.Weapons not found!')
-						end
 					end
 
 					-- Ranged Mode
@@ -3435,17 +3441,18 @@ do
 						log(built_set)
 					else
 						if sets.Weapons then
+							if sets.Weapons[state.WeaponMode.value] then
+								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+							else
+								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+							end
+
 							if not TwoHand and not DualWield then
 								if sets.Weapons.Shield then
 									built_set = set_combine(built_set, sets.Weapons.Shield)
 								else
 									warn('sets.Weapons.Shield not found!')
 								end
-							end
-							if sets.Weapons[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-							else
-								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
 							end
 						else
 							warn('sets.Weapons not found!')
@@ -3492,7 +3499,9 @@ do
 	end
 
 	-- Start the engine with a 5 sec delay
-	coroutine.schedule(main_engine, 4)
+	coroutine.schedule(main_engine, 2)
 	coroutine.schedule(display_box_update, 2)
+	coroutine.schedule(dual_wield_check, 2)
+	coroutine.schedule(two_hand_check, 2)
 	coroutine.schedule(equip_set, 2)
 end
