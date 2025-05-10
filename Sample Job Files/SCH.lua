@@ -1,4 +1,4 @@
---Inyana
+--Yavanna
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -28,15 +28,7 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Weapon Modes
 state.WeaponMode:options('Musa','Mpaca','Unlocked','Locked')
-state.WeaponMode:set('Unlocked')
-
--- Set to true to run organizer on job changes
-Organizer = false
-
-elemental_ws = S{'Aeolian Edge'}
-
--- HP Goal: 2200
--- MP Goal: 1400
+state.WeaponMode:set('Musa')
 
 function get_sets()
 
@@ -58,12 +50,19 @@ function get_sets()
 		sub="Enki Strap",
 	}
 	
+	sets.Weapons.Shield ={
+		main="Daybreak",
+		sub="Genmei Shield",
+	}
+
 	sets.Weapons.Sleep ={
 		main="Opashoro",
 	}
 
 	-- Standard idle set
 	sets.Idle = { -- HP:2151 MP:1493
+		main="Daybreak",
+		sub="Genmei Shield",
 		ammo="Staunch Tathlum +1", -- 3/3
 		head="Arbatel Bonnet +3", -- 10/10
 		body="Arbatel Gown +3", -- 12/12 -- +3 Refresh
@@ -85,6 +84,13 @@ function get_sets()
 		right_ring="Defending Ring",
 	    waist="Embla Sash", -- +3 Submlimation when active
 	})
+	sets.Idle.Resting = sets.Idle
+	sets.Idle.TP = sets.Idle
+	sets.Idle.ACC = sets.Idle
+	sets.Idle.DT = sets.Idle
+	sets.Idle.PDL = sets.Idle
+	sets.Idle.SB = sets.Idle
+	sets.Idle.MEVA = sets.Idle
 
 	-- Set to swap into when player is moving
 	sets.Movement = {
@@ -94,8 +100,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -133,28 +139,24 @@ function get_sets()
 
 	sets.Precast.FastCast = {
 		-- 10 FC from Musa staff 
-		ammo="Hasty Pinion +1", -- 2% Haste
+		ammo="Impatiens", -- Quick Magic
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
 		body="Pinga Tunic +1", -- 15% FC, Haste
 		hands="Acad. Bracers +3", -- 9% FC, 3% Haste
 		legs="Pinga Pants +1", -- 13% FC, 5% Haste
 		feet="Acad. Loafers +3", -- 12% Grimoire, 3% Haste
 		neck="Voltsurge Torque", -- 4% FC
-		waist="Embla Sash", -- 5% FC
+		waist="Witful Belt", -- 3% FC and 3 Quick Magic 
 		left_ear="Malignance Earring", -- 4% FC
 		right_ear="Etiolation Earring", -- 1% FC
-		left_ring="Weather. Ring", -- 5% FC
-		right_ring="Kishar Ring", -- 4% FC
+		left_ring="Weather. Ring", -- 5% FC 3 Quick Magic
+		right_ring="Lebeche Ring", -- 2 Quick Magic
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10% FC
 	} -- 80 Fastcast, and 25% Grimoire all in one
 
-	-- Used for Raises
-	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, { -- Cap is 10%
-	    ammo="Impatiens", -- 2
-	    waist="Witful Belt", -- 3
-		right_ring="Lebeche Ring", -- 2
-	    back="Perimede Cape", -- 4
-	})
+	sets.Precast.Enhancing = set_combine(sets.Precast.QuickMagic, {})
+
+	sets.Precast.Cure = set_combine(sets.Precast.QuickMagic, {})
 
 	-- Swaps for Grimoire Fast Cast (Should be over 80% FC)
 	sets.Precast.Grimoire = {}
@@ -162,12 +164,28 @@ function get_sets()
 	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Light Arts"] = {}
+	sets.JA["Penury"] = {}
+	sets.JA["Celerity"] = {}
+	sets.JA["Rapture"] = {}
+	sets.JA["Accession"] = {}
+	sets.JA["Perpetuance"] = {}
+	sets.JA["Addendum: White"] = {}
+
 	sets.JA["Dark Arts"] = {}
+	sets.JA["Parsimony"] = {}
+	sets.JA["Alacrity"] = {}
+	sets.JA["Ebullience"] = {}
+	sets.JA["Manifestation"] = {}
+	sets.JA["Focalization"] = {}
+	sets.JA["Immanence"] = {}
+	sets.JA["Addendum: White"] = {}
+
 	sets.JA["Sublimation"] = {}
 	sets.JA["Tabula Rasa"] = {legs={ name="Peda. Pants +3", augments={'Enhances "Tabula Rasa" effect',}}}
 	sets.JA["Modus Veritas"] = {}
 	sets.JA["Libra"] = {}
 	sets.JA["Caper Emissarius"] = {}
+
 	sets.JA["Convert"] = {}
 
 	-- ===================================================================================================================
@@ -175,9 +193,7 @@ function get_sets()
 	-- ===================================================================================================================
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
 
 	-- Cure Set
 	sets.Midcast.Cure = {
@@ -188,7 +204,7 @@ function get_sets()
 		legs={ name="Kaykaus Tights +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
 		neck="Nodens Gorget",
-		waist="Witful Belt",
+		waist="Plat. Mog. Belt",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Mendi. Earring",
 		left_ring="Naji's Loop",
@@ -222,6 +238,22 @@ function get_sets()
 		right_ring={name="Stikini Ring +1", bag="wardrobe3"},
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
+
+	-- Spells that require SKILL
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {})
+
+	--Used for elemental Bar Magic Spells
+	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
+
+	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
+		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
+		back={ name="Bookworm's Cape", augments={'INT+1','MND+2','Helix eff. dur. +10','"Regen" potency+10',}},
+		head="Arbatel Bonnet +3",
+	})
+
+	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
+	})
+
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
@@ -239,25 +271,11 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
-	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
-
-	})
-
-	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
-
-	})
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
 
 	 -- Used for Vagary (6k+ nuke no kill)
 	sets.Midcast.Vagary = {
@@ -276,20 +294,6 @@ function get_sets()
 		right_ring="Kishar Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
-
-	-- Spells that require SKILL
-	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {})
-
-	--Used for elemental Bar Magic Spells
-	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
-
-	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
-		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		head="Arbatel Bonnet +3",
-	})
-
-		sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-	})
 
 	sets.Midcast.Nuke = {
 		main={ name="Bunzi's Rod", augments={'Path: A',}},
@@ -313,9 +317,7 @@ function get_sets()
 	    neck="Quanpur Necklace",
 	}
 
-	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-
-	})
+	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {})
 
 	sets.Midcast.Helix = set_combine(sets.Midcast.Nuke, {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
@@ -390,13 +392,9 @@ function get_sets()
 		body="Crepuscular Cloak",	
 	})
 
-	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {
+	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {})
 
-	})
-
-	sets.Midcast["Stun"] = set_combine(sets.Midcast.Enfeebling.MACC, {
-	
-	})
+	sets.Midcast["Stun"] = set_combine(sets.Midcast.Enfeebling.MACC, {})
 
 	sets.WS = {
 		ammo="Oshasha's Treatise",
@@ -413,10 +411,6 @@ function get_sets()
 		right_ring="Epaminondas's Ring",
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = {}
-	sets.WS.WSD = {}
-	sets.WS.MAB = {}
 
 	-- Set used to tag treasure hunger
 	sets.TreasureHunter = {
@@ -425,6 +419,7 @@ function get_sets()
 		legs="Volte Hose",
 		waist="Chaac Belt",
 	}
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -443,7 +438,7 @@ end
 
 -- Augment basic equipment sets
 function precast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	if spell.type == "WhiteMagic" and (buffactive["Light Arts"] or buffactive["Addendum: White"]) then 
 		log("Grimoire Set (White)")
 		equipSet = set_combine(equipSet, sets.Precast.Grimoire)
@@ -456,7 +451,7 @@ end
 
 -- Augment basic equipment sets
 function midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
 
@@ -525,28 +520,28 @@ end
 
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
@@ -563,30 +558,30 @@ end
 
 --Function used to automate Job Ability use - Checked first
 function check_buff_JA()
-	buff = 'None'
+	local buff = 'None'
 	return buff
 end
 
 --Function used to automate Spell use
 function check_buff_SP()
-	buff = 'None'
+	local buff = 'None'
 	return buff
 end
 
 function pet_change_custom(pet,gain)
-	equipSet = {}
+	local equipSet = {}
 	
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 
 	return equipSet
 end
