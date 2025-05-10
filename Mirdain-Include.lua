@@ -3354,7 +3354,7 @@ do
 							else
 								warn('sets.Weapons.Shield not found!')
 							end
-						else
+						elseif DualWield then
 							if sets.DualWield then
 								built_set = set_combine(built_set, sets.DualWield)
 							else
