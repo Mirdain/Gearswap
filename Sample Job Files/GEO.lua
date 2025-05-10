@@ -34,9 +34,6 @@ Organizer = false
 state.WeaponMode:options('Idris','Black Halo','Unlocked')
 state.WeaponMode:set('Unlocked')
 
---WS to check for Obi or Orpheus Check
-elemental_ws = S{'Aeolian Edge','Cyclone'}
-
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
@@ -82,10 +79,17 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
 		right_ear="Lugalbanda Earring",
-		left_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
-		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
+		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
+		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}}, -- 5/5
     } -- 50 PDT / 52 MDT (including shield)
+
+	sets.Idle.TP = sets.Idle
+	sets.Idle.ACC = sets.Idle
+	sets.Idle.DT = sets.Idle
+	sets.Idle.PDL = sets.Idle
+	sets.Idle.SB = sets.Idle
+	sets.Idle.MEVA = sets.Idle
 
 	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = set_combine( sets.Idle, { --2278/1482
@@ -153,18 +157,26 @@ function get_sets()
 	sets.Precast.FastCast = {
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}}, -- 3
 		head={ name="Merlinic Hood", augments={'"Mag.Atk.Bns."+22','"Fast Cast"+7','STR+6',}}, -- 15
-		body={ name="Merlinic Jubbah", augments={'Mag. Acc.+9','"Fast Cast"+6',}}, -- 12
+		body="Zendik Robe", -- 13
 		hands={ name="Agwu's Gages", augments={'Path: A',}}, -- 6
 		legs="Geomancy Pants +3", -- 15
 		feet={ name="Merlinic Crackows", augments={'Mag. Acc.+12','"Fast Cast"+7','INT+9','"Mag.Atk.Bns."+8',}}, -- 12
 		neck="Voltsurge Torque", -- 4
-		waist="Embla Sash", -- 5
+		waist="Witful Belt", -- 3 and 3 Quick Magic
 		left_ear="Etiolation Earring", -- 1
 		right_ear="Malignance Earring", -- 4
-		left_ring="Etana Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
-	} -- 87
+		left_ring="Lebeche Ring", -- 2 Quick Magic
+		right_ring="Kishar Ring", -- 4
+		back="Perimede Cape", -- 4 Quick Magic
+	} -- 80% Fast Cast with 9% Quick Magic
+
+	sets.Precast.Cure = {}
+	sets.Precast.Enhancing = {}
+	sets.Precast.Elemental = {}
+	sets.Precast.Utsusemi = {}
+	sets.Precast.Blue_Magic = {}
+	sets.Precast.Songs = {}
+
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {
@@ -172,8 +184,7 @@ function get_sets()
 	})
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
-	sets.Midcast.SIRD = {
-	}
+	sets.Midcast.SIRD = {}
 
 	-- Cure Set
 	sets.Midcast.Cure = {
@@ -194,6 +205,9 @@ function get_sets()
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Cure" potency +10%','Phys. dmg. taken-10%',}}, -- 10
     }
 
+	-- CuragaSet
+	sets.Midcast.Curaga = set_combine( sets.Midcast.Cure, {})
+
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
 		sub="Ammurapi Shield",
@@ -212,9 +226,16 @@ function get_sets()
 		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
 	}
 
-	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
-	
-	});
+	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
+	sets.Midcast.Enhancing.Elemental = {}
+
+	--'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'
+	sets.Midcast.Enhancing.Status = {}
+
+	--'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'
+	sets.Midcast.Enhancing.Skill = {}
+
+	sets.Midcast.Enhancing.Others = {}
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
@@ -259,9 +280,6 @@ function get_sets()
 
 	})
 
-	-- CuragaSet
-	sets.Midcast.Curaga = set_combine( sets.Midcast.Cure, {})
-
 	-- Cursna Set
 	sets.Midcast.Cursna = set_combine( sets.Midcast.Cure, {
 	    left_ring="Menelaus's Ring",
@@ -274,29 +292,27 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe3"},
 		waist="Siegel Sash",
 	})
+
 	-- Aquaveil Set
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
 		head={ name="Amalric Coif +1", augments={'MP+80','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+		hands="Regal Cuffs",
 	})
 
 	-- Stun Set
 	sets.Midcast["Stun"] = set_combine( sets.Midcast.Nuke,{
+
 	})
 
 	sets.Midcast["Erase"] = sets.Precast.FastCast
 
-	-- Refresh Set
-	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-
-	})
-	-- Aspir Set
-	sets.Midcast.Aspir = {
-
-	}
-	-- Drain Set
-	sets.Midcast.Drain = {
-
-	}
+	sets.Midcast.Refresh = {}
+	sets.Midcast.Aspir = {}
+	sets.Midcast.Drain = {}
+	sets.Midcast.Regen = {}
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
 
 	sets.Geomancy = {}
 
@@ -386,9 +402,6 @@ function get_sets()
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
 
-	-- Set to equip when charmed
-	sets.Charm = {}
-
 	sets.TreasureHunter = {
 		ammo="Per. Lucky Egg",
 		waist="Chaac Belt",
@@ -418,19 +431,19 @@ function pretarget_custom(spell,action)
 end
 -- Augment basic equipment sets
 function precast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	-- Maintain the High HP of the Luopan
 	if Geomancy_List:contains(spell.english) then
 		equipSet = set_combine(equipSet, sets.Luopan)
@@ -441,37 +454,37 @@ function aftercast_custom(spell)
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_change_custom(pet,gain)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
-	equipSet = {}
+	local equipSet = {}
 	equipSet = Luopan(equipSet)
 	return equipSet
 end
@@ -486,19 +499,19 @@ function user_file_unload()
 end
 
 function check_buff_JA()
-	buff = 'None'
+	local buff = 'None'
 	--local ja_recasts = windower.ffxi.get_ability_recasts()
 	return buff
 end
 
 function check_buff_SP()
-	buff = 'None'
+	local buff = 'None'
 	--local sp_recasts = windower.ffxi.get_spell_recasts()
 	return buff
 end
 
 function Luopan(equipSet) --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
-	equipSet = {}
+	local equipSet = {}
 	local head_item = player.equipment.head
 	local relic_equiped = false
 	if head_item and head_item:contains("Bagua") then
@@ -513,6 +526,6 @@ end
 Cycle_Time = 5
 function Cycle_Timer()
 	if player.status == "Idle" then
-		--equip(set_combine(choose_set(),choose_set_custom()))
+		equip(Luopan(equipSet))
 	end
 end
