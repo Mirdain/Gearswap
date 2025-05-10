@@ -1118,7 +1118,6 @@ do
 			else
 				if sets.Weapons then
 					if sets.Weapons[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 						if not TwoHand and not DualWield then
 							if sets.Weapons.Shield then
 								built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1126,6 +1125,7 @@ do
 								warn('sets.Weapons.Shield not found!')
 							end
 						end
+						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 					else
 						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
 					end
@@ -1141,7 +1141,6 @@ do
 				if sets.Weapons.Songs then
 					built_set = set_combine(built_set, sets.Weapons.Songs)
 					if sets.Weapons.Songs.Midcast then
-						built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 						if not DualWield and not TwoHand then
 							if sets.Weapons.Shield then
 								built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1149,6 +1148,7 @@ do
 								warn('sets.Weapons.Shield not found!')
 							end
 						end
+						built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 					else
 						warn('sets.Weapons.Songs.Midcast not found!')
 					end
@@ -1828,17 +1828,17 @@ do
 				log(built_set)
 			else
 				if sets.Weapons then
-					if sets.Weapons[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					else
-						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
-					end
 					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
 						else
 							warn('sets.Weapons.Shield not found!')
 						end
+					end
+					if sets.Weapons[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+					else
+						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
 					end
 				else
 					warn('sets.Weapons not found!')
@@ -1851,7 +1851,6 @@ do
 			if sets.Weapons.Songs then
 				built_set = set_combine(built_set, sets.Weapons.Songs)
 				if sets.Weapons.Songs.Midcast then
-					built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 					if not DualWield and not TwoHand then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1859,6 +1858,7 @@ do
 							warn('sets.Weapons.Shield not found!')
 						end
 					end
+					built_set = set_combine(built_set, sets.Weapons.Songs.Midcast)
 				else
 					warn('sets.Weapons.Songs.Midcast not found!')
 				end
@@ -2108,13 +2108,13 @@ do
 				if state.WeaponMode.value == "Locked" then
 					built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
 				else
-					if sets.Weapons[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					end
 					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
 						end
+					end
+					if sets.Weapons[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 					end
 				end
 				log('Midcast set equiping Offense Mode Gear')
@@ -2450,10 +2450,10 @@ do
 						else
 							state.WeaponMode:set(state.WeaponMode[1])
 						end
-						two_hand_check()
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
 						display_box_update()
 						coroutine.schedule(equip_set, .25)
+						coroutine.schedule(two_hand_check, .25)
 						return
 					end
 				end
@@ -2461,10 +2461,10 @@ do
 				local mode = {}
 				mode = string.split(cmd," ",2)
 				state.WeaponMode:set(mode[2])
-				two_hand_check()
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
 				display_box_update()
 				coroutine.schedule(equip_set, .25)
+				coroutine.schedule(two_hand_check, .25)
 				return
 			end
 		elseif command:contains('jobmode2') then
@@ -3327,73 +3327,78 @@ do
 				built_set = sets.OffenseMode
 				if sets.OffenseMode[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.OffenseMode[state.OffenseMode.value])
-					if sets.Weapons then
-						if sets.Weapons[state.WeaponMode.value] then
-							built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 
-							-- Ranged Mode
-							if state.JobMode.value == "Ranged" then
-								log('Ranged Mode')
-								if sets.OffenseMode.Ranged then
-									built_set = set_combine(built_set, sets.OffenseMode.Ranged)
-								else
-									warn('sets.OffenseMode.Ranged not found!')
-								end
-							end
+					-- Check the weapons
+					if state.WeaponMode.value ~= "Locked" then
 
-							-- Equip sub weapon based off mode
-							if not DualWield and not TwoHand then
-								if sets.Weapons.Shield then
-									built_set = set_combine(built_set, sets.Weapons.Shield)
-								else
-									warn('sets.Weapons.Shield not found!')
-								end
+						-- Equip sub weapon based off mode
+						if not DualWield and not TwoHand then
+							if sets.Weapons.Shield then
+								built_set = set_combine(built_set, sets.Weapons.Shield)
 							else
-								if sets.DualWield then
-									built_set = set_combine(built_set, sets.DualWield)
-								else
-									warn('sets.DualWield not found!')
-								end
-							end
-
-							-- Check if AM3 is active
-							if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.OffenseMode.AM3[state.WeaponMode.value])
-
-							elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.OffenseMode.AM2[state.WeaponMode.value])
-
-							elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.OffenseMode.AM1[state.WeaponMode.value])
-
-							elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.OffenseMode.AM[state.WeaponMode.value])
-							end
-
-							-- Check if TreasureMode is activew
-							if state.TreasureMode.value ~= 'None' then
-								if sets.TreasureHunter then
-									-- Equip TH gear if mob is not marked as tagged
-									if not th_info.tagged_mobs[player.target.id] then
-										built_set = set_combine(built_set, sets.TreasureHunter)
-
-									-- Equip TH gear if TreasureMode is Full Time
-									elseif state.TreasureMode.value == 'Full Time' then
-										built_set = set_combine(built_set, sets.TreasureHunter)
-
-									-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
-									elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
-										built_set = set_combine(built_set, sets.TreasureHunter)
-									end
-								else
-									warn('sets.TreasureHunter not found!')
-								end
+								warn('sets.Weapons.Shield not found!')
 							end
 						else
-							warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+							if sets.DualWield then
+								built_set = set_combine(built_set, sets.DualWield)
+							else
+								warn('sets.DualWield not found!')
+							end
 						end
-					else
-						warn('sets.Weapons not found!')
+
+						if sets.Weapons then
+							if sets.Weapons[state.WeaponMode.value] then
+								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+							else
+								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+							end
+						else
+							warn('sets.Weapons not found!')
+						end
+					end
+
+					-- Ranged Mode
+					if state.JobMode.value == "Ranged" then
+						log('Ranged Mode')
+						if sets.OffenseMode.Ranged then
+							built_set = set_combine(built_set, sets.OffenseMode.Ranged)
+						else
+							warn('sets.OffenseMode.Ranged not found!')
+						end
+					end
+
+					-- Check if AM3 is active
+					if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.OffenseMode.AM3[state.WeaponMode.value])
+
+					elseif buffactive['Aftermath: Lv.2'] and sets.OffenseMode.AM2 and sets.OffenseMode.AM2[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.OffenseMode.AM2[state.WeaponMode.value])
+
+					elseif buffactive['Aftermath: Lv.1'] and sets.OffenseMode.AM1 and sets.OffenseMode.AM1[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.OffenseMode.AM1[state.WeaponMode.value])
+
+					elseif buffactive['Aftermath'] and sets.OffenseMode.AM and sets.OffenseMode.AM[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.OffenseMode.AM[state.WeaponMode.value])
+					end
+
+					-- Check if TreasureMode is activew
+					if state.TreasureMode.value ~= 'None' then
+						if sets.TreasureHunter then
+							-- Equip TH gear if mob is not marked as tagged
+							if not th_info.tagged_mobs[player.target.id] then
+								built_set = set_combine(built_set, sets.TreasureHunter)
+
+							-- Equip TH gear if TreasureMode is Full Time
+							elseif state.TreasureMode.value == 'Full Time' then
+								built_set = set_combine(built_set, sets.TreasureHunter)
+
+							-- Equip TH gear if TreasureMode is SATA and either SA, TA or Feint is active
+							elseif state.TreasureMode.value == 'SATA' and (buffactive['Sneak Attack'] or buffactive['Trick Attack'] or buffactive['Feint']) then
+								built_set = set_combine(built_set, sets.TreasureHunter)
+							end
+						else
+							warn('sets.TreasureHunter not found!')
+						end
 					end
 				else
 					warn('sets.OffenseMode['..state.OffenseMode.value..'] not found!')
@@ -3412,24 +3417,39 @@ do
 					built_set = set_combine(built_set, sets.Idle[state.OffenseMode.value])
 				else
 					warn('sets.Idle['..state.OffenseMode.value..'] not found!')
-				end			
-					
-				if sets.Weapons then
-					if sets.Weapons[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					else
-						warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
-					end
-				else
-					warn('sets.Weapons not found!')
-				end
+				end		
 
-				-- Sub weapons
-				if not DualWield and not TwoHand then
-					if sets.Weapons.Shield then
-						built_set = set_combine(built_set, sets.Weapons.Shield)
+				-- Resting condition
+				if player.status == "Resting" then
+					if sets.Idle.Resting then
+						built_set = set_combine(built_set, sets.Idle.Resting)
 					else
-						warn('sets.Weapons.Shield not found!')
+						warn('sets.Idle.Resting not found!')
+					end
+				end
+				
+				-- Weapons
+				if state.WeaponMode.value ~= "Unlocked" then
+					if state.WeaponMode.value == "Locked" then
+						built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+						log(built_set)
+					else
+						if sets.Weapons then
+							if not TwoHand and not DualWield then
+								if sets.Weapons.Shield then
+									built_set = set_combine(built_set, sets.Weapons.Shield)
+								else
+									warn('sets.Weapons.Shield not found!')
+								end
+							end
+							if sets.Weapons[state.WeaponMode.value] then
+								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+							else
+								warn('sets.Weapons['..state.WeaponMode.value..'] not found!')
+							end
+						else
+							warn('sets.Weapons not found!')
+						end
 					end
 				end
 
@@ -3460,15 +3480,6 @@ do
 					end
 				end
 
-				-- Resting condition
-				if player.status == "Resting" then
-					if sets.Idle.Resting then
-						built_set = set_combine(built_set, sets.Idle.Resting)
-					else
-						warn('sets.Idle.Resting not found!')
-					end
-				end
-
 			else
 				warn('sets.Idle not found!')
 			end
@@ -3482,7 +3493,6 @@ do
 
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(main_engine, 4)
-	coroutine.schedule(dual_wield_check, 3)
 	coroutine.schedule(display_box_update, 2)
-
+	coroutine.schedule(equip_set, 2)
 end
