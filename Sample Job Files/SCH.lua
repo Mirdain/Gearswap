@@ -335,12 +335,12 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	})
 
-	sets.Helix.Dark = set_combine(sets.Midcast.Helix, {
+	sets.Helix.Dark = set_combine(sets.Helix, {
         head="Pixie Hairpin +1",
         left_ring="Archon Ring",
     })
 
-    sets.Helix.Light = set_combine(sets.Midcast.Helix, {
+    sets.Helix.Light = set_combine(sets.Helix, {
         main="Daybreak",
         left_ring="Weather. Ring"
     })
