@@ -28,7 +28,7 @@ jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Weapon Modes
 state.WeaponMode:options('Musa','Mpaca','Unlocked','Locked')
-state.WeaponMode:set('Musa')
+state.WeaponMode:set('Unlocked')
 
 function get_sets()
 
@@ -61,8 +61,8 @@ function get_sets()
 
 	-- Standard idle set
 	sets.Idle = { -- HP:2151 MP:1493
-		main="Daybreak",
-		sub="Genmei Shield",
+		main={ name="Mpaca's Staff", augments={'Path: A',}},
+		sub="Enki Strap",
 		ammo="Staunch Tathlum +1", -- 3/3
 		head="Arbatel Bonnet +3", -- 10/10
 		body="Arbatel Gown +3", -- 12/12 -- +3 Refresh
@@ -197,6 +197,8 @@ function get_sets()
 
 	-- Cure Set
 	sets.Midcast.Cure = {
+		main={ name="Musa", augments={'Path: C',}},
+		sub="Enki Strap",
 		ammo="Hasty Pinion +1",
 		head="Arbatel Bonnet +3",
 		body={ name="Kaykaus Bliaut +1", augments={'MP+80','"Cure" potency +6%','"Conserve MP"+7',}},
@@ -462,39 +464,6 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	local equipSet = {}
-
-	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
-
-		if spell.name:contains('helix') then
-			equipSet = set_combine(equipSet, sets.Helix)
-			if spell.element == 'Dark' then
-				equipSet = set_combine(equipSet, sets.Helix.Dark)
-			elseif spell.element == 'Light' then
-				equipSet = set_combine(equipSet, sets.Helix.Light)
-			end
-		end
-
-		if spell.element == "Earth" and not spell.name:contains('helix') then
-			equipSet = set_combine(equipSet, sets.Midcast.Nuke.Earth)
-			windower.add_to_chat(8,'Earth Element Detected!')
-		end
-	end
-
-	-- This function swaps in elemental buffs
-	if spell.name:contains('Cure') then
-		-- Matching bonus
-		if spell.element == world.weather_element or spell.element == world.day_element then
-			equipSet = set_combine(equipSet, {waist="Hachirin-no-Obi"})
-			if state.WeaponMode.value == "Unlocked" then
-				equipSet = set_combine(equipSet, {main="Chatoyant Staff"})
-				log('Element Match found for Curing - Swapping Waist and Weapon')
-			else
-				log('Element Match found for Curing - Swapping Waist')
-			end
-		else
-			log('No Day/Weather match and too far.  Using default')
-		end
-	end
 
 	if buffactive["Immanence"] then
 		log("Immanence Set")
