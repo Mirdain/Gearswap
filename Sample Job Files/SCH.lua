@@ -319,7 +319,7 @@ function get_sets()
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {})
 
-	sets.Midcast.Helix = set_combine(sets.Midcast.Nuke, {
+	sets.Helix = set_combine(sets.Midcast.Nuke, {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head={ name="Agwu's Cap", augments={'Path: A',}},
 		body={ name="Agwu's Robe", augments={'Path: A',}},
@@ -334,6 +334,16 @@ function get_sets()
 		right_ring="Freke Ring",
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	})
+
+	sets.Helix.Dark = set_combine(sets.Midcast.Helix, {
+        head="Pixie Hairpin +1",
+        left_ring="Archon Ring",
+    })
+
+    sets.Helix.Light = set_combine(sets.Midcast.Helix, {
+        main="Daybreak",
+        left_ring="Weather. Ring"
+    })
 
 	sets.Perpetuance = {
 		hands="Arbatel Bracers +3",
@@ -456,8 +466,12 @@ function midcast_custom(spell)
 	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
 
 		if spell.name:contains('helix') then
-			equipSet = set_combine(equipSet, sets.Midcast.Helix)
-			windower.add_to_chat(8,'Helix Detected!')
+			equipSet = set_combine(equipSet, sets.Helix)
+			if spell.element == 'Dark' then
+				equipSet = set_combine(equipSet, sets.Helix.Dark)
+			elseif spell.element == 'Light' then
+				equipSet = set_combine(equipSet, sets.Helix.Light)
+			end
 		end
 
 		if spell.element == "Earth" and not spell.name:contains('helix') then
