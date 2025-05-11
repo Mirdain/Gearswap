@@ -1359,12 +1359,14 @@ do
 								else warn('sets.Helix.Light not found!') end
 							end
 						else warn('sets.Helix not found!') end
-					elseif spell.element == "Earth" then
-						built_set = set_combine(built_set, sets.Midcast.Nuke.Earth)
-						windower.add_to_chat(8,'Earth Element Detected!')
+					else
+						if spell.element == "Earth" then
+							built_set = set_combine(built_set, sets.Midcast.Nuke.Earth)
+							windower.add_to_chat(8,'Earth Element Detected!')
+						end
+						-- Check for an elemental set
+						built_set = elemental_check(spell, built_set)
 					end
-					-- Check for an elemental set
-					built_set = elemental_check(spell, built_set)
 				end
 			-- Bard Song
 			elseif spell.type == 'BardSong' then
