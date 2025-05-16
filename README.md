@@ -318,7 +318,6 @@ sets.Precast = {}
 sets.Precast.FastCast = {}
 sets.Precast.FastCast.Enhancing = {}
 sets.Precast.Cure = {}
-sets.Precast.QuickMagic = {}
 sets.Precast.Utsusemi = {}
 sets.Precast.RA = {}
 sets.Precast.RA.Flurry = {}
