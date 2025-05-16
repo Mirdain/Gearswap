@@ -1,4 +1,4 @@
---Elendnur
+--Hurin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -21,6 +21,7 @@ Lockstyle_List = {1,2,6,12}
 Food = "Tropical Crepe"
 
 --Set default mode (TP,ACC,DT)
+state.OffenseMode:options('TP','ACC','DT','PDT','MEVA')
 state.OffenseMode:set('DT')
 
 --Weapon Modes
@@ -38,6 +39,8 @@ function get_sets()
 		main={ name="Mpaca's Staff", augments={'Path: A',}},
 		sub="Enki Strap",
 	}
+
+	sets.Weapons.Shield ={}
 
 	sets.Weapons['Unlocked'] ={
 		main={ name="Mpaca's Staff", augments={'Path: A',}},
@@ -61,6 +64,21 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
     }
 
+	-- 'TP','ACC','DT','PDT','MEVA'
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
+	-- Set is only applied when sublimation is charging
+	sets.Idle.Sublimation = set_combine(sets.Idle, {
+	    waist="Embla Sash", -- +3 Submlimation when active
+	})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
+
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
 		feet="Herald's Gaiters",
@@ -75,14 +93,11 @@ function get_sets()
 	}
 
 	sets.OffenseMode = {}
-	-- Base TP set
-	sets.OffenseMode.TP = {}
-
-	-- TP set when in -Damage Taken mode
-	sets.OffenseMode.DT = {}
-
-	-- TP set to use when mode is in accuracy
-	sets.OffenseMode.ACC = {}
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
 
 	sets.Precast = {}
 
@@ -160,6 +175,10 @@ function get_sets()
 		right_ring="Stikini Ring +1",
 		back="Perimede Cape",
 	}
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {});
+	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {});
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {});
+
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
 	    main="Daybreak",
@@ -179,6 +198,17 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Drain = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Aspir = set_combine(sets.Midcast.Enfeebling, {})
+
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.Enhancing = set_combine(sets.Midcast.Enhancing, {})
+
 	sets.Midcast.Nuke = {
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="Ea Hat +1",
@@ -195,25 +225,11 @@ function get_sets()
 		back={ name="Taranus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Phys. dmg. taken-10%',}},
 	}
 
+	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, { })
+
 	sets.Midcast.Nuke.Earth = {
 	    neck="Quanpur Necklace",
 	}
-
-	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {
-
-	})
-
-	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
-
-	})
-
-	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
-
-	})
 
 	sets.Midcast['Impact'] = set_combine(sets.Midcast.Nuke, {
 		hands="Wicce Gloves +3",
@@ -300,15 +316,9 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	local equipSet = {}
-	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) then
-		if player.MPP < 30 then
-			windower.add_to_chat(8,'Player Less than 30% MP - Recover MP!')
-			equipSet = sets.MP_Recover
-		end
-		if spell.element == "Earth" then
-			equipSet = set_combine(equipSet, sets.Midcast.Nuke.Earth)
-			windower.add_to_chat(8,'Earth Element Detected!')
-		end
+	if spell.skill == 'Elemental Magic' and not Elemental_Enfeeble:contains(spell.name) and player.MPP < 30 then
+		windower.add_to_chat(8,'Player Less than 30% MP - Recover MP!')
+		equipSet = sets.MP_Recover
 	end
 	return equipSet
 end

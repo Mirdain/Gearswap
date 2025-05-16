@@ -1,5 +1,5 @@
 
---Salidar
+--Luthien
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -16,10 +16,11 @@ Food = "Tropical Crepe"
 state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Staff')
 state.WeaponMode:set('Mordant Rime')
 
-Elemental_WS = S{'Aeolian Edge', 'Burning Blade','Shining Strike','Shining Blade'}
-
 --Default to DT Mode
 state.OffenseMode:set('TP')
+
+-- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -31,12 +32,12 @@ function get_sets()
 
 	sets.Weapons['Mordant Rime'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Crepuscular Knife",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Aeolian Edge'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub="Tauret",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Shining Strike'] = {
@@ -46,7 +47,7 @@ function get_sets()
 
 	sets.Weapons['Shining Blade'] = {
 		main="Naegling",
-		sub="Crepuscular Knife",
+		sub="Daybreak",
 	}
 
 	sets.Weapons['Savage Blade'] = {
@@ -121,6 +122,12 @@ function get_sets()
 		right_ring="Shadow Ring",
 		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Mag. Evasion+15',}},
     } -- PDT 60%%, MDT 56%
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +3"}
@@ -145,16 +152,16 @@ function get_sets()
 		feet="Nyame Sollerets",
 		neck={ name="Bard's Charm +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1", -- swapped out with Dual Wield
-		left_ear="Crep. Earring", -- swapped out with Dual Wield
-		right_ear="Telos Earring",
-		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		left_ear="Telos Earring",
+		right_ear="Balder Earring +1",
+		left_ring="Lehko's Ring",
 		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
 		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
 	})
 
@@ -168,43 +175,43 @@ function get_sets()
 		left_ring="Sroda Ring",
 	})
 
+	--This set is used when OffenseMode is PDL and Enaged
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
+		waist="Carrier's Sash",
+	})
+
 	--The following sets augment the base TP set
 	sets.DualWield = {
 		waist="Reiki Yotai",
-		left_ear="Eabani Earring",
+		--left_ear="Eabani Earring",
 	}
 
 	sets.Precast = {}
 
 	-- Used for Magic Spells
 	sets.Precast.FastCast = {
-		range=Instrument.FastCast, -- 6
-		head="Bunzi's Hat", -- 10
+		range=Instrument.QuickMagic, -- 4 Quick Magic
+		head={ name="Bunzi's Hat", augments={'Path: A',}}, -- 10
 		body="Inyanga Jubbah +2", -- 14
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
-		legs="Volte Brais", -- 8
+		legs="Volte Brais", -- 9
 		feet="Fili Cothurnes +3", -- 13
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
-		waist="Embla Sash", -- 5
-		left_ear={ name="Etiolation Earring", priority=1}, -- 1
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
+		neck="Voltsurge Torque", -- 4
+		waist="Witful Belt", -- 3 3 Quick Magic
+		left_ear="Etiolation Earring", -- 1
+		right_ear={ name="Tuisto Earring", priority=1,},
 		left_ring="Kishar Ring", -- 4
-		right_ring="Weather. Ring", -- 5
+		right_ring="Weather. Ring", -- 5 3 Quick Magic
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
 	} -- 81 FC
 
 	-- Used for Songs (now easy to max Fast Cast so not needed)
-	sets.Precast.Songs = sets.Precast.FastCast
+	sets.Precast.Songs = set_combine(sets.Precast.FastCast, {
+		head="Fili Calot +3",
+	})
 
 	-- Used for "-Cure casting time"
 	sets.Precast.Cure = {}
-
-	-- Used for Raises and Cure spells
-	sets.Precast.QuickMagic = set_combine( sets.Precast.FastCast, {
-		range=Instrument.QuickMagic, -- 4
-		waist="Witful Belt", -- 3
-		right_ring="Weather. Ring", -- 3
-	}) -- 10% Quick Magic
 
 	-- Default song duration / strength
 	sets.Midcast = set_combine(sets.Idle, {
@@ -324,13 +331,7 @@ function get_sets()
 	sets.Midcast.Sirvente = {}
 	sets.Midcast.Aria = {}
 
-
-	sets.Utsusemi = set_combine(sets.Idle, {
-	
-	})
-
-	sets.Midcast['Utsusemi: Ichi'] = sets.Utsusemi
-	sets.Midcast['Utsusemi: Ni'] = sets.Utsusemi
+	sets.Midcast.Utsusemi = set_combine(sets.Idle, {})
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
@@ -396,8 +397,11 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.WS.ACC = set_combine(sets.WS, {
-	
+	sets.WS.ACC = set_combine(sets.WS, {})
+
+	sets.WS.MEVA = set_combine(sets.WS, {
+	    neck="Warder's Charm +1",
+		waist="Carrier's Sash",
 	})
 
 	sets.WS.CRIT = set_combine(sets.WS, {
@@ -433,10 +437,6 @@ function get_sets()
 	sets.WS["Shell Crusher"] = set_combine( sets.WS.WSD, {
 		right_ring="Sroda Ring",
 	})
-
-	sets.Charm = set_combine( sets.Idle, {
-
-    })
 
 	sets.TreasureHunter = {
 		body="Volte Jupon",

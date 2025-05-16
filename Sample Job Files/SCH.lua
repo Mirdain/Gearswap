@@ -21,6 +21,7 @@ Lockstyle_List = {1,2,6,12}
 Food = "Tropical Crepe"
 
 --Set default mode (TP,ACC,DT)
+state.OffenseMode:options('TP','ACC','DT','PDT','MEVA')
 state.OffenseMode:set('DT')
 
 --Command to Lock Style and Set the correct macros
@@ -78,19 +79,22 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 5/5
     } -- 57 PDT / 58 MDT
 
+	-- 'TP','PDL','ACC','DT','PDT','MEVA'
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
+
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
 		head="Acad. Mortar. +3", -- +4 Submlimation when active
 		right_ring="Defending Ring",
 	    waist="Embla Sash", -- +3 Submlimation when active
 	})
-	sets.Idle.Resting = sets.Idle
-	sets.Idle.TP = sets.Idle
-	sets.Idle.ACC = sets.Idle
-	sets.Idle.DT = sets.Idle
-	sets.Idle.PDL = sets.Idle
-	sets.Idle.SB = sets.Idle
-	sets.Idle.MEVA = sets.Idle
 
 	-- Set to swap into when player is moving
 	sets.Movement = {
@@ -122,14 +126,11 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
 
-	-- Base TP set
 	sets.OffenseMode.TP = set_combine(sets.OffenseMode, { })
-
-	-- TP set when in -Damage Taken mode
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode, { })
-
-	-- TP set to use when mode is in accuracy
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
 
 	-- Set to use when Dual Wielding
 	sets.DualWield = {}
@@ -139,6 +140,8 @@ function get_sets()
 
 	sets.Precast.FastCast = {
 		-- 10 FC from Musa staff 
+		main={ name="Musa", augments={'Path: C',}},
+		sub="Enki Strap",
 		ammo="Impatiens", -- Quick Magic
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
 		body="Pinga Tunic +1", -- 15% FC, Haste
@@ -154,9 +157,9 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10% FC
 	} -- 80 Fastcast, and 25% Grimoire all in one
 
-	sets.Precast.Enhancing = set_combine(sets.Precast.QuickMagic, {})
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {})
 
-	sets.Precast.Cure = set_combine(sets.Precast.QuickMagic, {})
+	sets.Precast.Cure = set_combine(sets.Precast.FastCast, {})
 
 	-- Swaps for Grimoire Fast Cast (Should be over 80% FC)
 	sets.Precast.Grimoire = {}
@@ -226,6 +229,8 @@ function get_sets()
 
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
+		main={ name="Musa", augments={'Path: C',}},
+		sub="Enki Strap",
 		ammo="Psilomene",
 		head={ name="Telchine Cap", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
@@ -244,6 +249,8 @@ function get_sets()
 	-- Spells that require SKILL
 	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {})
 
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {})
+
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
 
@@ -253,8 +260,7 @@ function get_sets()
 		head="Arbatel Bonnet +3",
 	})
 
-	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
-	})
+	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, { })
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
@@ -315,9 +321,7 @@ function get_sets()
 		back={ name="Lugh's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','"Mag.Atk.Bns."+10','Damage taken-5%',}},
 	}
 
-	sets.Midcast.Nuke.Earth = {
-	    neck="Quanpur Necklace",
-	}
+	sets.Midcast.Nuke.Earth = set_combine(sets.Midcast.Nuke, { neck="Quanpur Necklace", })
 
 	sets.Midcast.Burst = set_combine(sets.Midcast.Nuke, {})
 
@@ -347,38 +351,6 @@ function get_sets()
         left_ring="Weather. Ring"
     })
 
-	sets.Perpetuance = {
-		hands="Arbatel Bracers +3",
-	}
-
-	sets.Immanence = {
-		hands="Arbatel Bracers +3",
-	}
-
-	sets.Ebullience = {
-		head="Arbatel Bonnet +3",
-	}
-
-	sets.Rapture = {
-		head="Arbatel Bonnet +3",
-	}
-	-- not swapped due to duration
-	sets.Penury = {
-		legs="Arbatel Pants +3",
-	}
-
-	sets.Parsimony = {
-		legs="Arbatel Pants +3",
-	}
-
-	sets.Klimaform = {
-		feet="Arbatel Loafers +3",
-	}
-
-	sets.Storms = {
-		feet="Arbatel Loafers +3", -- Pedagogy Loafers +3
-	}
-
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
 		ammo="Hasty Pinion +1",
@@ -407,6 +379,15 @@ function get_sets()
 	sets.Midcast["Embrava"] = set_combine(sets.Midcast.Enhancing, {})
 
 	sets.Midcast["Stun"] = set_combine(sets.Midcast.Enfeebling.MACC, {})
+
+	sets.Perpetuance = { hands="Arbatel Bracers +3", }
+	sets.Immanence = { hands="Arbatel Bracers +3", }
+	sets.Ebullience = { head="Arbatel Bonnet +3", }
+	sets.Rapture = { head="Arbatel Bonnet +3", }
+	sets.Penury = { legs="Arbatel Pants +3", } -- not swapped due to duration
+	sets.Parsimony = { legs="Arbatel Pants +3", }
+	sets.Klimaform = { feet="Arbatel Loafers +3", }
+	sets.Storms = { feet="Pedagogy Loafers +3", }
 
 	sets.WS = {
 		ammo="Oshasha's Treatise",

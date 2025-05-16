@@ -128,6 +128,11 @@ function get_sets()
 	sets.Idle.MEVA = sets.Idle
 	sets.Idle.Enspell = sets.Idle
 
+	-- Set is only applied when sublimation is charging
+	sets.Idle.Sublimation = set_combine(sets.Idle, {
+	    waist="Embla Sash", -- +3 Submlimation when active
+	})
+
 	-- Gear to swap out for Movement
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}}
@@ -162,13 +167,11 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 
-	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {})
-
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
-
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {})
-
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, {})
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
 
 	sets.OffenseMode.SB = set_combine(sets.OffenseMode, { 
 		hands="Volte Mittens",
@@ -419,6 +422,8 @@ function get_sets()
 		body="Atrophy Tabard +3",
 		legs="Leth. Fuseau +3",
 	})
+
+	sets.Midcast.Phalanx = set_combine(sets.Midcast.Enhancing.Skill, { })
 
 	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
 

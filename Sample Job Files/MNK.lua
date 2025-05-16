@@ -50,6 +50,8 @@ function get_sets()
 	sets.Weapons['Club'] = {
 		main="Warp Cudgel",
 	}
+	sets.Weapons.Shield = {}
+	sets.Weapons.Sleep = {}
 
 	-- Idle sets
 	sets.Idle = {
@@ -67,12 +69,15 @@ function get_sets()
 		right_ring="Shadow Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
     }
-	sets.Idle.TP = sets.Idle
-	sets.Idle.ACC = sets.Idle
-	sets.Idle.DT = sets.Idle
-	sets.Idle.PDL = sets.Idle
-	sets.Idle.SB = sets.Idle
-	sets.Idle.MEVA = sets.Idle
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
 
 	-- Engaged Sets
 	sets.OffenseMode = {}
@@ -91,13 +96,7 @@ function get_sets()
 		right_ring="Gere Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
 	}
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-		head={ name="Mpaca's Cap", augments={'Path: A',}},
-		body={ name="Mpaca's Doublet", augments={'Path: A',}},
-		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
-		legs="Bhikku Hose +3",
-		feet={ name="Mpaca's Boots", augments={'Path: A',}},
-	})
+
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
 	    head="Ken. Jinpachi +1",
 		body="Ken. Samue +1",
@@ -105,12 +104,18 @@ function get_sets()
 		legs="Ken. Hakama +1",
 		feet="Ken. Sune-Ate +1",
 	})
+
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
+		head={ name="Mpaca's Cap", augments={'Path: A',}},
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
+		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
+		legs="Bhikku Hose +3",
+		feet={ name="Mpaca's Boots", augments={'Path: A',}},
+	})
+
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.DT,{
 	    ammo="Crepuscular Pebble",
 		legs={ name="Mpaca's Hose", augments={'Path: A',}},
-	})
-	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
-		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	})
 
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
@@ -125,6 +130,9 @@ function get_sets()
 		right_ear={ name="Schere Earring", augments={'Path: A',}}, -- SB 3
 	}) -- 35 + 16% SB I + %25 SB II = 76 one under
 
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	})
 	-- Augments the OffenseMode when in DT stance
 	sets.Foot_Work = { feet="Anch. Gaiters +3", }
 

@@ -1,5 +1,5 @@
 
---Elendnur
+--Hurin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -85,13 +85,14 @@ function get_sets()
 		back={ name="Ankou's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	sets.Idle.DT = set_combine(sets.Idle, {
-
-	})
-
-	--Regain set
-	sets.Idle.TP = set_combine(sets.Idle, {
-
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
 	})
 	
 	sets.Movement = {
@@ -145,13 +146,10 @@ function get_sets()
 		right_ear={ name="Schere Earring", augments={'Path: A',}},
 	}
 
-	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.DT, sets.Subtle_Blow, {
-
-	})
-	
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {
-
-	})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
+	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.DT, sets.Subtle_Blow, {})
 
 	sets.DualWield = {}
 
@@ -173,35 +171,21 @@ function get_sets()
 	sets.Enmity = {}
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
+	sets.Midcast.SIRD = set_combine(sets.Midcast, {})
+	sets.Midcast.Enhancing = set_combine(sets.Midcast, {})
 
-	sets.Midcast.SIRD = {}
+	sets.Midcast.Enfeebling = set_combine(sets.Midcast, {})
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Drain = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Enfeebling.Aspir = set_combine(sets.Midcast.Enfeebling, {})
 
-	sets.Midcast.Enfeebling = set_combine(sets.Midcast, {
-	
-	})
-
-	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {
-	
-	})
-
-	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, {
-	
-	})
-
-	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {
-	
-	})
-
-	sets.Midcast.Enfeebling.Drain = set_combine(sets.Midcast.Enfeebling, {
-	
-	})
-
-	sets.Midcast.Enfeebling.Aspir = set_combine(sets.Midcast.Enfeebling, {
-	
-	})
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.Enhancing = set_combine(sets.Midcast.Enhancing, {})
 	
 	--Job Abilities
 	sets.JA = {}
@@ -241,7 +225,6 @@ function get_sets()
 
 	sets.WS.PDL = set_combine(sets.WS, {
 
-
 	})
 
 	sets.WS.WSD = set_combine(sets.WS, {
@@ -256,7 +239,7 @@ function get_sets()
 	
 	})
 
-	sets.WS.SB = set_combine(sets.Subtle_Blow, {
+	sets.WS.SB = set_combine(sets.WS, sets.Subtle_Blow, {
 	
 	})
 

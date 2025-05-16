@@ -1,5 +1,5 @@
 
---Mirdain
+--Turin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -40,7 +40,7 @@ MacroBook = "12"
 MacroSet = Macro_Sub_Job()
 
 --Modes for specific to Paladin.  These are defined below in "Weapons".
-state.WeaponMode:options('Epeolatry','Naegling','Club','Great Axe')
+state.WeaponMode:options('Epeolatry','Naegling','Club','Great Axe','Axe')
 state.WeaponMode:set('Epeolatry')
 
 --Enable JobMode for UI.
@@ -79,6 +79,12 @@ function get_sets()
 
 	sets.Weapons['Naegling'] = {
 		main="Naegling",
+		sub="Dolichenus",
+	}
+
+	sets.Weapons['Axe'] = {
+		main="Dolichenus",
+		sub="Naegling",
 	}
 
 	sets.Weapons['Great Axe'] = {
@@ -89,6 +95,9 @@ function get_sets()
 	sets.Weapons['Club'] = {
 		main={ name="Loxotic Mace +1", augments={'Path: A',}},
 	}
+
+	sets.Weapons.Shield = {}
+	sets.Weapons.Sleep = {}
 
 	-- Standard Idle set
 	sets.Idle = {
@@ -147,6 +156,9 @@ function get_sets()
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1}, -- 3/5
 	}
 
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+
 	-- This gear will be equiped when the player is moving and not engaged
 	sets.Movement = {
 		left_ring={name="Moonlight Ring", bag="wardrobe1"},
@@ -187,13 +199,16 @@ function get_sets()
 	} -- No fucks given
 
 	-- Gear to swap in for ACC when TP
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {
-
-	})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, { })
 
 	--Physical Damage Taken set for tanking
 	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, {
-
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body="Adamantite Armor",
+		hands="Turms Mittens +1",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		back="Null Shawl",
 	}) -- Maintains Capped PDT with some DPS mixed in
 
 	--Magic Evasion set for tanking
@@ -208,10 +223,6 @@ function get_sets()
 		left_ear="Sherida Earring",
 		right_ear="Telos Earring",
 		back={ name="Ogma's Cape", augments={'HP+60','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
-	})
-
-	sets.OffenseMode.AoE = set_combine(sets.OffenseMode.PDT, {
-
 	})
 
 	-- Set used for hate generation on Job abilities

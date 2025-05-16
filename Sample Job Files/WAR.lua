@@ -1,4 +1,4 @@
---Mirdain
+--Turin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -24,7 +24,7 @@ Lockstyle_List = {1,2,6,12}
 Elemental_WS = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blade', 'Burning Blade', 'Sanguine Blade', 'Energy Drain','Energy Steal','Cyclone','Gust Slash'}
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','PDL','ACC','DT','PDT','MEVA','CRIT')
+state.OffenseMode:options('TP','PDL','ACC','DT','PDT','MEVA','CRIT','SB')
 
 --Set default mode (TP,ACC,DT,PDL)
 state.OffenseMode:set('DT')
@@ -55,7 +55,7 @@ function get_sets()
 	}
 	sets.Weapons['Decimation'] = {
 		main="Dolichenus",
-		sub={ name="Digirbalag", augments={'"Dbl.Atk."+4','Accuracy+11','Attack+8',}},
+		sub="Zantetsuken",
 	}
 	sets.Weapons['Aeolian Edge'] = {
 		main={ name="Ternion Dagger +1", augments={'Path: A',}},
@@ -90,11 +90,18 @@ function get_sets()
 		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=3},
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
+	-- 'TP','PDL','ACC','DT','PDT','MEVA','CRIT','SB'
 
-	sets.Idle.DT = {}
-	sets.Idle.PDT = {}
-	sets.Idle.MEVA = set_combine(sets.Idle,{
-		neck={ name="Warder's Charm +1", augments={'Path: A',}},	
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
 	})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
@@ -116,32 +123,33 @@ function get_sets()
 
 	-- Sets the base equipset for OffenseMode
 	sets.OffenseMode = {
-		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}}, -- 3 DA
 		head="Flam. Zucchetto +2",
 		body="Dagon Breast.",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs="Pumm. Cuisses +3",
 		feet="Pumm. Calligae +3",
-		neck={ name="War. Beads +2", augments={'Path: A',}},
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}}, -- 7 DA
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}}, -- 5 DA
+		left_ear={ name="Schere Earring", augments={'Path: A',}}, -- 3 DA
+		right_ear="Boii Earring +1", -- 8 DA
 		left_ring="Niqmaddu Ring",
-		right_ring="Chirich Ring +1",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
+		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}}, -- 10 DA
 	}
 
-	sets.OffenseMode.TP = set_combine( sets.OffenseMode, {
-
-	})
+	sets.OffenseMode.TP = set_combine( sets.OffenseMode, {})
+	--This set is used when OffenseMode is ACC and Enaged
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
+	--This set is used when OffenseMode is CRIT and Engaged
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {})
 
 	sets.OffenseMode.DT = set_combine( sets.OffenseMode, {
-		head="Sakpata's Helm",
+		head="Sakpata's Helm", -- 5 DA
 		body="Sakpata's Plate",
-		hands="Sakpata's Gauntlets",
-		legs="Sakpata's Cuisses",
-		feet="Sakpata's Leggings",
-		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
+		hands="Sakpata's Gauntlets", -- 6 DA
+		legs="Sakpata's Cuisses", -- 7 DA
+		feet="Sakpata's Leggings", -- 4 DA
 	})
 
 	sets.OffenseMode.PDL = set_combine( sets.OffenseMode, {
@@ -149,13 +157,7 @@ function get_sets()
 		right_ring="Sroda Ring",
 	})
 
-	--This set is used when OffenseMode is ACC and Enaged
-	sets.OffenseMode.ACC = {}
-
-	--This set is used when OffenseMode is CRIT and Engaged
-	sets.OffenseMode.CRIT = {}
-
-	sets.OffenseMode.MEVA = {
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head={ name="Sakpata's Helm", augments={'Path: A',}},
 		body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -169,7 +171,19 @@ function get_sets()
 		left_ring="Moonlight Ring",
 		right_ring="Lehko's Ring",
 		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	})
+
+	sets.Subtle_Blow = {
+		body="Dagon Breast.", -- 10 SB II
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 15 SB I
+		left_ear={ name="Schere Earring", augments={'Path: A',}}, -- 3 SB I
+		-- hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 8 SB I
+		right_ear="Boii Earring +1", -- 8 SB I
+		left_ring="Niqmaddu Ring", -- 5 SB II
 	}
+
+	-- Max SB set (SB 50 and SBII 15) Need auspice (29) to cap
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, sets.Subtle_Blow, { })
 
 	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
 	--If you don't specify a weapon mode it will use it regardless of Mythic,Empy,Relic,Aeonic
@@ -325,6 +339,13 @@ function get_sets()
 	sets.WS.WSD = {}
 	sets.WS.WSD.RA = {}
 
+	sets.WS.MEVA = set_combine(sets.WS, {
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+	    neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
+
 	-- Modes
 	sets.WS.CRIT = {
 		ammo="Yetshila +1",
@@ -346,7 +367,10 @@ function get_sets()
 	sets.WS.ACC = {}
 	sets.WS.ACC.RA = {}
 
-	sets.WS.SB = {}
+	sets.WS.SB = set_combine(sets.Subtle_Blow, {
+
+	})
+
 	sets.WS.SB.RA = {}
 
 	sets.WS.PDL = {}
@@ -369,6 +393,55 @@ function get_sets()
 	sets.WS.AM1.RA['Ukonvasara'] = {}
 	sets.WS.AM2.RA['Ukonvasara'] = {}
 	sets.WS.AM3.RA['Ukonvasara'] = {}
+
+	-- Great Axe WS
+	sets.WS["Ukko's Fury"] = {
+	    ammo="Yetshila +1",
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Schere Earring", augments={'Path: A',}},
+		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
+		left_ring="Lehko's Ring",
+		right_ring="Niqmaddu Ring",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+	sets.WS["Upheaval"] = {
+	    ammo="Knobkierrie",
+		head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Thrud Earring",
+		left_ring="Niqmaddu Ring",
+		right_ring="Regal Ring",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+	sets.WS["Full Break"] = {
+		ammo="Knobkierrie",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="War. Beads +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear="Thrud Earring",
+		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
+		left_ring="Karieyh Ring +1",
+		right_ring="Regal Ring",
+		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
+
 
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}

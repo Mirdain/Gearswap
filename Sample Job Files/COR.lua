@@ -1,4 +1,4 @@
---Maedhros
+-- Maedhros
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -34,9 +34,6 @@ UI_Name = 'TP Mode'
 --Melee or Ranged Mode
 state.JobMode:options('Standard','Melee','Ranged')
 state.JobMode:set('Standard')
-
--- load addons
---send_command('lua l autocor')
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -125,12 +122,13 @@ function get_sets()
 		right_ring="Shadow Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
-	sets.Idle.TP = sets.Idle
-	sets.Idle.ACC = sets.Idle
-	sets.Idle.DT = sets.Idle
-	sets.Idle.PDL = sets.Idle
-	sets.Idle.CRIT = sets.Idle
-	sets.Idle.MEVA = sets.Idle
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},

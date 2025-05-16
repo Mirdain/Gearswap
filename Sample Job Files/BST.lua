@@ -1,5 +1,5 @@
 
---Relyk
+-- Maedhros
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -70,6 +70,7 @@ function get_sets()
 	sets.Weapons.Shield = {
 		--sub="Sacro Bulwark"
 	}
+	sets.Weapons.Sleep = {}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
@@ -95,6 +96,10 @@ function get_sets()
 		right_ring="C. Palug Ring",
 		back={ name="Artio's Mantle", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Mag. Acc.+10','Pet: "Regen"+10','Pet: Damage taken -5%',}},
 	})
+
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -126,9 +131,7 @@ function get_sets()
 	}
 
 	--Base TP set to build off
-	sets.OffenseMode.TP = set_combine (sets.OffenseMode, {
-
-	})
+	sets.OffenseMode.TP = set_combine (sets.OffenseMode, {})
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
@@ -140,13 +143,9 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
 
-	})
-
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode,{
-
-	})
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode,{})
 
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
 		neck="Warder's Charm +1",
@@ -189,14 +188,10 @@ function get_sets()
 	}
 
 	-- TP based Ready moves
-	sets.Pet_Midcast.TP = set_combine(sets.Pet_Midcast, {
-
-	})
+	sets.Pet_Midcast.TP = set_combine(sets.Pet_Midcast, {})
 
 	-- Magic Attack Bonus Ready moves
-	sets.Pet_Midcast.MAB = set_combine(sets.Pet_Midcast, {
-
-	})
+	sets.Pet_Midcast.MAB = set_combine(sets.Pet_Midcast, {})
 
 	-- Debuff moves that need MACC
 	sets.Pet_Midcast.MACC = set_combine(sets.Pet_Midcast, {

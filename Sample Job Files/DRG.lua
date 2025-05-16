@@ -1,4 +1,4 @@
---Elendnur
+--Hurin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -12,7 +12,7 @@ MacroSet = "1"
 Food = "Sublime Sushi"
 
 --Uses Items Automatically
-AutoItem = true
+AutoItem = false
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = false
@@ -70,18 +70,20 @@ function get_sets()
 		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%'}},
 	}
 
-	sets.Idle.DT = set_combine(sets.Idle, {
-
-	})
-
 	sets.Idle.Pet = set_combine(sets.Idle, {
 		head="Peltast's Mezail +3",
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+
 	})
-
-	--Regain set
-	sets.Idle.TP = set_combine(sets.Idle, {
-
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
 	})
 	
 	sets.Movement = {
@@ -140,13 +142,8 @@ function get_sets()
 		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
-	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.TP, {
-
-	})
-	
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
-
-	})
+	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.TP, {})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {})
 
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.TP, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -163,9 +160,7 @@ function get_sets()
 		right_ring="Moonlight Ring",
 		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	})
-
-	    
-
+  
 	sets.DualWield = {}
 
 	sets.Precast = {}
@@ -188,17 +183,9 @@ function get_sets()
 	sets.Enmity = {}
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
-
-	sets.Midcast.Enhancing = set_combine(sets.Idle, {
-	
-	})
-
-	sets.Midcast.Enfeebling = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
+	sets.Midcast.Enhancing = set_combine(sets.Idle, {})
+	sets.Midcast.Enfeebling = set_combine(sets.Idle, {})
 	
 	--Job Abilities
 	sets.JA = {}

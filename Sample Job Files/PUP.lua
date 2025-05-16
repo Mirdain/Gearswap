@@ -1,5 +1,5 @@
 
---Colonnello
+--Morwen
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -48,13 +48,9 @@ function get_sets()
 		ammo="Automat. Oil +3",
 	}
 
-	sets.Weapons['Club'] = {
+	sets.Weapons['Club'] = {}
 
-	}
-
-	sets.Weapons['Pole'] = {
-
-	}
+	sets.Weapons['Pole'] = {}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
@@ -73,6 +69,14 @@ function get_sets()
     }
 
 	sets.Idle.Pet = {}
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -102,23 +106,10 @@ function get_sets()
 		back={ name="Visucius's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	--Base TP set to build off
-	sets.OffenseMode.TP = set_combine (sets.OffenseMode, {
-
-	})
-	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP,{
-
-	})
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP,{
-
-	})
-
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP,{
-
-	})
-
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
+	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.TP,{
 		neck="Warder's Charm +1",
 	})

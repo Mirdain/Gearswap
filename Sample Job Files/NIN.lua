@@ -1,5 +1,5 @@
 
---Mirdain
+--Turin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -22,10 +22,11 @@ Random_Lockstyle = false
 Lockstyle_List = {1,2,6,12}
 
 --Set default mode (TP,ACC,DT)
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
 state.OffenseMode:set('DT')
 
 --Modes for specific to Ninja
-state.WeaponMode:options('Kannagi','Savage Blade','Karambit','Aeolian Edge','Abyssea')
+state.WeaponMode:options('Kannagi','Savage Blade','Karambit','Aeolian Edge','Abyssea','Ninjitsu')
 state.WeaponMode:set('Kannagi')
 
 elemental_ws = S{'Aeolian Edge', 'Blade: Teki', 'Blade: To','Blade: Chi','Blade: Ei','Blade: Yu'}
@@ -40,6 +41,11 @@ function get_sets()
 
 	sets.Weapons['Kannagi'] = {
 		main={ name="Kannagi", augments={'Path: A',}},
+		sub="Gokotai",
+	}
+
+	sets.Weapons['Ninjitsu'] = {
+		main="Tauret",
 		sub="Gokotai",
 	}
 
@@ -63,6 +69,9 @@ function get_sets()
 		sub="",
 	}
 
+	sets.Weapons.Shield = {}
+	sets.Weapons.Sleep = {}
+
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
@@ -79,6 +88,16 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Andartia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
+
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
 
 	--Defined below based off time of day
 	sets.Movement = {}
@@ -142,6 +161,12 @@ function get_sets()
 		legs="Malignance Tights",
 		feet="Malignance Boots",
 	})
+
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	})
+
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT,{ })
 
 	sets.DualWield = {}
 
@@ -214,25 +239,25 @@ function get_sets()
 		waist="Eschan Stone",
 		left_ear="Hermetic Earring",
 		right_ear="Crep. Earring",
-		left_ring={ name="Stikini Ring +1", bag="wardrobe3",},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe4",},
+		left_ring={ name="Stikini Ring +1", bag="wardrobe1",},
+		right_ring={ name="Stikini Ring +1", bag="wardrobe2",},
 		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
 	-- High MAB for spells
 	sets.Midcast.Nuke = {
-		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
-		head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
-		feet="Nyame Sollerets",
-		neck="Sanctity Necklace",
-		waist="Eschan Stone",
-		left_ear="Hecate's Earring",
-		right_ear="Friomisi Earring",
-		left_ring="Dingir Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
+    ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+    head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Mpaca's Boots", augments={'Path: A',}},
+    neck="Sanctity Necklace",
+    waist="Orpheus's Sash",
+    left_ear="Hermetic Earring",
+    right_ear="Friomisi Earring",
+	left_ring={ name="Stikini Ring +1", bag="wardrobe1",},
+	right_ring={ name="Stikini Ring +1", bag="wardrobe2",},
+    back={ name="Andartia's Mantle", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10',}},
 	}
 
 	-- Specific gear for spells

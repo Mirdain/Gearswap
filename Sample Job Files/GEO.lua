@@ -1,5 +1,5 @@
 
---Morwen
+-- Morwen
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -73,30 +73,31 @@ function get_sets()
 		head="Azimuth Hood +3", -- 11/11
 		body="Azimuth Coat +3",
 		hands="Azimuth Gloves +3", -- 12/12
-		legs={ name="Nyame Flanchard", augments={'Path: B',}}, -- 8/8
+		legs={ name="Agwu's Slops", augments={'Path: A',}}, -- 10/10
 		feet="Azimuth Gaiters +3", -- 10/10
 		neck={ name="Loricate Torque +1", augments={'Path: A',}}, -- 6/6
 		waist="Carrier's Sash",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/5
+		left_ear="Sanare Earring",
 		right_ear="Lugalbanda Earring",
 		left_ring={ name="Stikini Ring +1",  bag="wardrobe1"},
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}}, -- 5/5
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
     } -- 50 PDT / 52 MDT (including shield)
 
-	sets.Idle.TP = sets.Idle
-	sets.Idle.ACC = sets.Idle
-	sets.Idle.DT = sets.Idle
-	sets.Idle.PDL = sets.Idle
-	sets.Idle.SB = sets.Idle
-	sets.Idle.MEVA = sets.Idle
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {})
 
 	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = set_combine( sets.Idle, { --2278/1482
 		head="Azimuth Hood +3", -- 11/11
 		neck={ name="Bagua Charm +2", augments={'Path: A',}},
+		body="Adamantite Armor",
+		feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
 		left_ring="Defending Ring",
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		hands="Geo. Mitaines +3",
     }) -- 54 PDT / 45 MDT (with shield)
 
@@ -114,6 +115,12 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
+	sets.TreasureHunter = {
+		ammo="Per. Lucky Egg",
+		waist="Chaac Belt",
+		hands={ name="Merlinic Dastanas", augments={'Accuracy+20','"Conserve MP"+4','"Treasure Hunter"+2','Accuracy+18 Attack+18','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
+	}
+
 	sets.OffenseMode = {
 		head="Azimuth Hood +3",
 		body={ name="Nyame Mail", augments={'Path: B',}},
@@ -126,24 +133,13 @@ function get_sets()
 		right_ear="Telos Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
 	}
 
-	-- Base TP set
-	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{
-	})
-
-	-- TP set when in -Damage Taken mode
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{
-	})
-	
-	-- TP set to use when mode is in accuracy
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{
-	})
-
-	--This set is used when OffenseMode is PDL and Enaged
-	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
-	})
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{})
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode,{})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{})
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {})
 
 	--Swap in when dual wielding
 	sets.DualWield = {
@@ -167,7 +163,9 @@ function get_sets()
 		right_ear="Malignance Earring", -- 4
 		left_ring="Lebeche Ring", -- 2 Quick Magic
 		right_ring="Kishar Ring", -- 4
-		back="Perimede Cape", -- 4 Quick Magic
+		-- Have to use Fast Cast due to Head Locked out with Pet above 67%
+		back={ name="Nantosuelta's Cape", augments={'HP+60','HP+20','"Fast Cast"+10',}},
+		--back="Perimede Cape", -- 4 Quick Magic
 	} -- 80% Fast Cast with 9% Quick Magic
 
 	sets.Precast.Cure = {}
@@ -223,7 +221,7 @@ function get_sets()
 		right_ear="Etiolation Earring",
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
 	}
 
 	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
@@ -276,9 +274,7 @@ function get_sets()
 	}
 
 	-- Used for Burst Mode
-	sets.Midcast.Burst = set_combine( sets.Midcast.Nuke, {
-
-	})
+	sets.Midcast.Burst = set_combine( sets.Midcast.Nuke, {})
 
 	-- Cursna Set
 	sets.Midcast.Cursna = set_combine( sets.Midcast.Cure, {
@@ -300,11 +296,13 @@ function get_sets()
 	})
 
 	-- Stun Set
-	sets.Midcast["Stun"] = set_combine( sets.Midcast.Nuke,{
+	sets.Midcast["Stun"] = set_combine( sets.Midcast.Nuke,{})
 
+	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
+
+	sets.Midcast["Dispelga"] = set_combine (sets.Midcast.Enfeebling.MACC, sets.TreasureHunter,{
+		main="Daybreak"
 	})
-
-	sets.Midcast["Erase"] = sets.Precast.FastCast
 
 	sets.Midcast.Refresh = {}
 	sets.Midcast.Aspir = {}
@@ -367,7 +365,7 @@ function get_sets()
 	sets.JA["Ecliptic Attrition"] = {} 
 	sets.JA["Life Cycle"] = {
 		body="Geomancy Tunic +3",
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
 	}
 	sets.JA["Blaze of Glory"] = {}
 	sets.JA["Dematerialzie"] = {}
@@ -396,23 +394,11 @@ function get_sets()
 		right_ear="Telos Earring",
 		left_ring="Epaminondas's Ring",
 		right_ring="Cornelia's Ring",
-		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Damage taken-5%',}},
+		back={ name="Nantosuelta's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Pet: "Regen"+10','Pet: "Regen"+5',}},
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
 	sets.WS.ACC = {}
-
-	sets.TreasureHunter = {
-		ammo="Per. Lucky Egg",
-		waist="Chaac Belt",
-		hands={ name="Merlinic Dastanas", augments={'Accuracy+20','"Conserve MP"+4','"Treasure Hunter"+2','Accuracy+18 Attack+18','Mag. Acc.+16 "Mag.Atk.Bns."+16',}},
-	}
-
-	sets.Midcast["Diaga"] = set_combine (sets.Midcast.Enfeebling, sets.TreasureHunter)
-
-	sets.Midcast["Dispelga"] = set_combine (sets.Midcast.Enfeebling.MACC, sets.TreasureHunter,{
-		main="Daybreak"
-	})
 
 end
 
@@ -432,13 +418,13 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -448,44 +434,48 @@ function aftercast_custom(spell)
 	if Geomancy_List:contains(spell.english) then
 		equipSet = set_combine(equipSet, sets.Luopan)
 	else
-		equipSet = Luopan(equipSet)
+		equipSet = set_combine(equipSet, Luopan())
 	end
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	-- Maintain the High HP of the Luopan when you use Blaze of Glory
+	if name == "Blaze of Glory" and not gain then
+		equipSet = set_combine(equipSet, sets.Luopan)
+	end
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 
 function pet_change_custom(pet,gain)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
 	local equipSet = {}
-	equipSet = Luopan(equipSet)
+	equipSet = set_combine(equipSet, Luopan())
 	return equipSet
 end
 
@@ -510,22 +500,27 @@ function check_buff_SP()
 	return buff
 end
 
-function Luopan(equipSet) --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
+function Luopan() --  This maintains the extra 600hp during midcast of spells when Luopan is deployed
 	local equipSet = {}
 	local head_item = player.equipment.head
 	local relic_equiped = false
-	if head_item and head_item:contains("Bagua") then
-		relic_equiped = true
-	end
-	if pet.isvalid and pet.hpp >= 70 and relic_equiped then
-		equipSet = set_combine(equipSet, sets.Luopan)
+	if head_item and head_item:contains("Bagua") then relic_equiped = true end
+	-- Swap the right head
+	if pet.isvalid and relic_equiped then
+		if pet.hpp > 68 then
+			log('Relic ['..pet.hpp..']% HP')
+			equipSet = sets.Luopan
+		else
+			log('Regen ['..pet.hpp..']% HP')
+			equip_set()
+		end
 	end
 	return equipSet
 end
 
-Cycle_Time = 5
+Cycle_Time = 2
 function Cycle_Timer()
 	if player.status == "Idle" then
-		equip(Luopan(equipSet))
+		Luopan()
 	end
 end

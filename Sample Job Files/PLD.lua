@@ -1,5 +1,5 @@
 
---Salidar
+-- Luthien
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -134,7 +134,7 @@ function get_sets()
 	}
 
 	sets.Idle.DT = set_combine( sets.Idle, {
-		sub="Duban",
+		sub="Aegis",
 		ammo="Staunch Tathlum +1",
 	})
 
@@ -145,6 +145,14 @@ function get_sets()
 	})
 
 	sets.Idle.MEVA = set_combine( sets.Idle, {
+		sub="Aegis",
+		ammo="Staunch Tathlum +1",
+		neck="Warder's Charm +1",
+		right_ear="Sanare Earring",
+		waist="Plat. Mog. Belt",
+	})
+
+	sets.MEVA = set_combine( sets.Idle.MEVA, {
 		sub="Aegis",
 		ammo="Staunch Tathlum +1",
 		neck="Warder's Charm +1",
@@ -211,7 +219,10 @@ function get_sets()
 
 	--This set is used when OffenseMode is MEVA and Enaged (Augments the TP base set)
 	sets.OffenseMode.MEVA = set_combine( sets.Idle.MEVA, {
-		left_ear="Ethereal Earring",
+		left_ear="Telos Earring",
+		right_ear="Chev. Earring +1",
+		left_ring="Lehko's Ring",
+		back="Null Shawl",
 	})
 
 	--This set is used when OffenseMode is AoE and Enaged (Augments the TP base set)
@@ -241,7 +252,7 @@ function get_sets()
 	sets.Precast.FastCast = { -- 61 FC with 3029/890
 		ammo="Sapience Orb", -- 2
 		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, -- 14
-		body="Sacro Breastplate", -- 10
+		body="Rev. Surcoat +3", -- 10
 		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
 		legs={ name="Odyssean Cuisses", augments={'"Fast Cast"+6','Accuracy+13','Attack+2',}}, -- 6
 		feet={ name="Odyssean Greaves", augments={'Rng.Acc.+14','MND+8','"Fast Cast"+6','Accuracy+19 Attack+19',}}, -- 11
@@ -249,7 +260,7 @@ function get_sets()
 		waist={ name="Plat. Mog. Belt", priority=1},
 		left_ear={ name="Tuisto Earring", priority=2},
 		right_ear="Etiolation Earring", -- 1
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		left_ring="Weather. Ring", -- 5
 		right_ring="Kishar Ring", -- 4
 		back={ name="Rudianos's Mantle", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
 	}
@@ -278,20 +289,20 @@ function get_sets()
 
 	-- Cure Set (special SIRD set)
 	sets.Midcast.Cure = {
-		ammo="Staunch Tathlum +1", -- 11
-		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, -- 20
-		body={ name="Souv. Cuirass +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}}, -- 11 Cure
-		hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}}, -- 20
-		feet={ name="Odyssean Greaves", augments={'"Cure" potency +6%','MND+9','"Mag.Atk.Bns."+11',}}, -- 20 / 13 Cure
-		neck="Sacro Gorget", -- 10 Cure
-		waist="Audumbla Sash", -- 10
-		left_ear={ name="Nourish. Earring +1", augments={'Path: A',}}, -- 5 / 7 Cure
-		right_ear="Chev. Earring +1", -- 11 cure
-		left_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=3},
-		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Cure" potency +10%','Spell interruption rate down-10%',}}, -- 10 / 10 Cure
-	} -- 96 + 10 Merits = 106 SIRD
+		ammo="Staunch Tathlum +1", -- 11 SIRD / 3 DT
+		head={ name="Sakpata's Helm", augments={'Path: A',}}, -- 7 DT / 5 Cure
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 8 DT
+		legs={ name="Founder's Hose", augments={'MND+8','Mag. Acc.+14','Attack+13','Breath dmg. taken -3%',}}, -- 30 SIRD
+		feet={ name="Odyssean Greaves", augments={'"Cure" potency +6%','MND+9','"Mag.Atk.Bns."+11',}}, -- 20 SIRD / 13 Cure
+		neck="Moonlight Necklace", -- 15 SIRD
+		waist={ name="Plat. Mog. Belt", priority=2}, -- 3 DT
+		left_ear={ name="Nourish. Earring +1", augments={'Path: A',}}, -- 5 SIRD / 6 Cure
+		right_ear="Chev. Earring +1", -- 3 DT / 11 Cure
+		left_ring={ name="Moonlight Ring", bag="wardrobe1", priority=1}, -- 5 DT
+		right_ring="Defending Ring", -- 10 DT
+		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Cure" potency +10%','Spell interruption rate down-10%',}}, -- 10 SIRD / 10 Cure
+	} -- 91 + 10 Merits = 101 SIRD / 49 DT / 56 Cure
 
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
@@ -349,12 +360,16 @@ function get_sets()
 	
 	})
 
+	sets.Cover = { 
+		body={ name="Cab. Surcoat +3", augments={'Enhances "Fealty" effect',}}
+	}
+
 	sets.JA = {}
 	sets.JA["Invincible"] = set_combine( sets.Enmity, { legs={ name="Cab. Breeches +3", augments={'Enhances "Invincible" effect',}} })
 	sets.JA["Shield Bash"] = set_combine( sets.Enmity, { hands={ name="Cab. Gauntlets +3", augments={'Enhances "Chivalry" effect',}} })
 	sets.JA["Holy Circle"] = set_combine( sets.Enmity, { })
 	sets.JA["Sentinel"] = set_combine( sets.Enmity, { feet={ name="Cab. Leggings +3", augments={'Enhances "Guardian" effect',}} })
-	sets.JA["Cover"] = set_combine( sets.Enmity, { feet={ name="Cab. Leggings +3", augments={'Enhances "Guardian" effect',}} })
+	sets.JA["Cover"] = set_combine( sets.Enmity, { }) -- Need AF head
 	sets.JA["Provoke"] = set_combine( sets.Enmity, { })
 	sets.JA["Rampart"] = set_combine( sets.Enmity, { head={ name="Cab. Coronet +3", augments={'Enhances "Iron Will" effect',}} })
 	sets.JA["Divine Emblem"] = set_combine( sets.Enmity, { })
@@ -446,6 +461,9 @@ function midcast_custom(spell)
 		if buffactive['Rampart'] and (spell.type == 'WhiteMagic' or spell.type == 'BlueMagic') then
 			equipSet = sets.Midcast.Rampart
 		end
+		if state.OffenseMode.value == 'MEVA' and not spell.name:contains('Cure') then
+			equipSet = set_combine(equipSet, sets.MEVA)
+		end
 	return equipSet
 end
 -- Augment basic equipment sets
@@ -458,11 +476,15 @@ end
 function buff_change_custom(name,gain)
 	equipSet = {}
 
-	if name == "Rampart" and gain == false then
-		send_command('input /p Rampart [OFF]')
-	elseif name == "Sentinel" and gain == false then
+	if buffactive['Cover'] and gain then
+		equipSet = sets.Cover
+	end
+
+	if name == "Rampart" and not gain then
+		send_command('input /ap Rampart [OFF]')
+	elseif name == "Sentinel" and not gain then
 		send_command('input /p Sentinel [OFF]')
-	elseif name == "Invincible" and gain == false then
+	elseif name == "Invincible" and not gain then
 		send_command('input /p Invincible [OFF]')
 	end
 
@@ -471,7 +493,9 @@ end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
 	equipSet = {}
-
+	 if buffactive['Cover'] then
+		equipSet = sets.Cover
+	 end
 	return equipSet
 end
 --Function is called when the player changes states

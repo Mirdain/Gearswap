@@ -1,5 +1,5 @@
 
---Mirdain
+--Turin
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -38,7 +38,7 @@ function get_sets()
 
 	sets.Weapons['Aeneas'] = {
 		main={ name="Aeneas", augments={'Path: A',}},
-		sub="Tauret",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Naegling'] = {
@@ -58,19 +58,22 @@ function get_sets()
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck={ name="Loricate Torque +1", augments={'Path: A',}},
-		waist="Carrier's Sash",
-		left_ear="Eabani Earring",
+		head="Null Masque",
+		body="Adamantite Armor",
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		waist="Null Belt",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Sanare Earring",
-		left_ring="Purity Ring",
-		right_ring="Defending Ring",
-		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		left_ring={ name="Moonlight Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
+		back="Null Shawl",
     }
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
 
 	sets.Movement = {
 		feet="Fajin Boots",
@@ -79,8 +82,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 
 	}
@@ -93,32 +96,35 @@ function get_sets()
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-		feet={ name="Herculean Boots", augments={'AGI+6','Crit.hit rate+3','Quadruple Attack +2','Accuracy+6 Attack+6',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
 		neck={ name="Asn. Gorget +2", augments={'Path: A',}},
 		waist="Windbuffet Belt +1",
-		right_ear="Sherida Earring",
-		left_ear="Telos Earring",
+		right_ear="Skulk. Earring +1",
+		left_ear="Sherida Earring",
 		left_ring="Gere Ring",
-		right_ring="Epona's Ring",
-		back={ name="Toutatis's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		right_ring="Lehko's Ring",
+		back="Null Shawl",
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
 		head="Malignance Chapeau",
-		body="Malignance Tabard",
+		body="Adamantite Armor",
 		hands="Malignance Gloves",
-		legs="Malignance Tights",
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
 		feet="Malignance Boots",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
+		left_ring={ name="Moonlight Ring", priority=3},
+		waist={ name="Plat. Mog. Belt", priority=2},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {}
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {})
 
-	--Dual Wield
-	sets.DualWield = {
-	    left_ear="Eabani Earring",
-	    waist="Reiki Yotai",
+	--Dual Wield need only 6 if not getting haste samba
+	sets.DualWield = { 
+	    --left_ear="Eabani Earring",
+	    --waist="Reiki Yotai",
 	}
 
 	sets.Precast = {}
@@ -132,12 +138,12 @@ function get_sets()
 		legs={ name="Herculean Trousers", augments={'Mag. Acc.+17','"Fast Cast"+6','STR+9',}}, -- 6
 		feet={ name="Herculean Boots", augments={'"Fast Cast"+6',}}, -- 6
 		neck="Voltsurge Torque", --4
-		waist="Tempus Fugit",
+		waist={name = "Plat. Mog. Belt", priority=2 },
 		left_ear="Etiolation Earring", -- 1
-		right_ear="Tuisto Earring",
+		right_ear={ name="Tuisto Earring", priority=3},
 		left_ring="Prolix Ring", -- 3
-		right_ring="Moonlight Ring",
-	} -- 51
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=1},
+	} -- 51 -- Need cape for another 10%
 
 	sets.Enmity = {
 	    ammo="Sapience Orb", -- 2
@@ -204,8 +210,8 @@ function get_sets()
 		legs="Dashing Subligar", -- 10%
 		feet="Malignance Boots",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
-		waist="Carrier's Sash",
-		left_ear="Eabani Earring",
+		waist="Plat. Mog. Belt",
+		left_ear="Tuisto Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ring="Defending Ring",
 		left_ring="Moonlight Ring",
@@ -238,7 +244,7 @@ function get_sets()
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		left_ring="Karieyh Ring +1",
-		right_ring="Cornelia's Ring",
+		right_ring="Epaminondas's Ring",
 		back={ name="Toutatis's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 	--WS Sets

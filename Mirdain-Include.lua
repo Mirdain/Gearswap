@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.4.1'
+Mirdain_GS = '1.5'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -409,6 +409,7 @@ do
 	local main_engine_time = os.clock()
 
 	local Require_Update = false
+	local Use_Item_Command = ''
 
 	-- Tracking vars for TH
 	local th_info = {}
@@ -639,6 +640,7 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function precastequip(spell)
+		log('precastequip Called')
 		--Cancel for SMN if Avatar is mid action
 		if pet.isvalid and pet_midaction() then return end
 		--Default gearset
@@ -758,7 +760,7 @@ do
 					end
 				end
 				-- Check if an Obi or Orpheus is to be Equiped
-				built_set =  elemental_check(spell, built_set)
+				if Elemental_WS:contains(spell.name) then built_set =  elemental_check(spell, built_set) end
 				info(message)
 			else warn('sets.WS not found!') end
 		-- Ranged attack
@@ -804,6 +806,7 @@ do
 			else warn('sets.JA not found!') end
 		-- Items
 		elseif spell.type == 'Item' then 
+			log('Item Use - Precast')
 			if sets.Idle then
 				built_set = sets.Idle
 			else warn('sets.Idle not found!') end
@@ -1240,6 +1243,8 @@ do
 				-- Defined Gear Set
 				if sets.Midcast[spell.english] then
 					built_set = set_combine(built_set, sets.Midcast[spell.english])
+					-- Check for an elemental set
+					if spell.skill == 'Elemental Magic' and not spell.name:contains('helix') then built_set = elemental_check(spell, built_set) end
 					info( '['..spell.english..'] Set')
 				-- Aspir Gear
 				elseif spell.name:contains('Aspir') then
@@ -1331,7 +1336,7 @@ do
 						else warn('sets.Midcast.Enfeebling.MACC not found!') end
 					else warn('sets.Midcast.Enfeebling not found!') end
 				-- Standard Offensive Spells
-				else
+				elseif spell.skill == 'Elemental Magic' then
 					local element = res.spells[spell.id].element
 					local element_name = res.elements[element].en
 					if spell.target.id == last_skillchain_id and os.clock() - last_skillchain_time < 8 and last_skillchain_elements[element_name] then
@@ -1418,6 +1423,8 @@ do
 				-- Defined Set
 				if sets.Midcast[spell.english] then
 					built_set = set_combine(built_set, sets.Midcast[spell.english])
+					-- Check for an elemental set
+					if BlueNuke:contains(spell.english) then built_set = elemental_check(spell, built_set) end
 					info( '['..spell.english..'] Set')
 				-- Defined Blue Nukes
 				elseif BlueNuke:contains(spell.english) then
@@ -2269,11 +2276,17 @@ do
 		enable(slot)
 		equip({[slot]=item_table.en})
 		disable(slot)
-		local delay = item_table.cast_delay + item_table.cast_time + .5
-		log(delay)
-		windower.send_command('wait '..item_table.cast_delay + 3 ..';input /item "'..item_table.en..'" <me>')
-		coroutine.schedule(Unlock, delay)
-		coroutine.schedule(choose_set, delay)
+		local delay_use = item_table.cast_delay + 2
+		local delay_unlock = delay_use + item_table.cast_time + 2
+		Use_Item_Command = item_table.en
+		coroutine.schedule(Use_Item, delay_use)
+		coroutine.schedule(Unlock, delay_unlock)
+		coroutine.schedule(equip_set, delay_unlock)
+	end
+
+	function Use_Item()
+		log('/item "'..Use_Item_Command..'" '..player.id)
+		windower.chat.input('/item "'..Use_Item_Command..'" <me>')
 	end
 
 	-- Unbind Keys when the file is unloaded
@@ -2458,10 +2471,12 @@ do
 	end
 
 	function Unlock()
+		log('Unlock Called')
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	end
 
 	function Lock()
+		log('Lock Called')
 		disable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 	end
 
@@ -2569,14 +2584,40 @@ do
 	end
 
 	function elemental_check(spell, built_set)
+		-- Rule for Cures
+		if spell.name:contains('Cure') or spell.name:contains('Cura') then
+			if world.weather_element == spell.element or spell.element == world.day_element then
+
+				-- Verify player has the gear
+				local Obi = player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] or player.wardrobe2["Hachirin-no-Obi"]
+				or player.wardrobe3["Hachirin-no-Obi"] or player.wardrobe4["Hachirin-no-Obi"] or player.wardrobe5["Hachirin-no-Obi"] 
+				or player.wardrobe6["Hachirin-no-Obi"] or player.wardrobe7["Hachirin-no-Obi"] or player.wardrobe8["Hachirin-no-Obi"]
+				local Staff = player.inventory["Chatoyant Staff"] or player.wardrobe["Chatoyant Staff"] or player.wardrobe2["Chatoyant Staff"]
+				or player.wardrobe3["Chatoyant Staff"] or player.wardrobe4["Chatoyant Staff"] or player.wardrobe5["Chatoyant Staff"] 
+				or player.wardrobe6["Chatoyant Staff"] or player.wardrobe7["Chatoyant Staff"] or player.wardrobe8["Chatoyant Staff"]
+
+				-- Check for bonus
+				if spell.element == world.day_element then
+					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
+					if Staff then built_set = set_combine(built_set, {main="Chatoyant Staff"}) end
+					windower.add_to_chat(8,'[' ..world.day_element.. '] day - using Bonus Gear')
+				elseif world.weather_element == spell.element then
+					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
+					if Staff then built_set = set_combine(built_set, {main="Chatoyant Staff"}) end
+					windower.add_to_chat(8,'Weather is ['.. world.weather_element .. '] - using Bonus Gear')
+				end
+			end
 		-- This function swaps in the Orpheus or Hachirin as needed
-		if Elemental_WS:contains(spell.name) or spell.type == 'BlackMagic' or spell.type == 'BlueMagic' then
+		else
+
+			-- Check for player gear
 			local Osash = player.inventory["Orpheus's Sash"] or player.wardrobe["Orpheus's Sash"] or player.wardrobe2["Orpheus's Sash"]
 			or player.wardrobe3["Orpheus's Sash"] or player.wardrobe4["Orpheus's Sash"] or player.wardrobe5["Orpheus's Sash"] 
 			or player.wardrobe6["Orpheus's Sash"] or player.wardrobe7["Orpheus's Sash"] or player.wardrobe8["Orpheus's Sash"]
 			local Obi = player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] or player.wardrobe2["Hachirin-no-Obi"]
 			or player.wardrobe3["Hachirin-no-Obi"] or player.wardrobe4["Hachirin-no-Obi"] or player.wardrobe5["Hachirin-no-Obi"] 
 			or player.wardrobe6["Hachirin-no-Obi"] or player.wardrobe7["Hachirin-no-Obi"] or player.wardrobe8["Hachirin-no-Obi"]
+
 			-- Matching double weather (w/o day conflict).
 			if spell.element == world.weather_element and world.weather_intensity == 2 and Obi then
 				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
@@ -2594,26 +2635,7 @@ do
 				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
 				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			end
-		-- Rule for Cures
-		elseif spell.name:contains('Cure') or spell.name:contains('Cura') then
-			if world.weather_element == spell.element or spell.element == world.day_element then
-				local Obi = player.inventory["Hachirin-no-Obi"] or player.wardrobe["Hachirin-no-Obi"] or player.wardrobe2["Hachirin-no-Obi"]
-				or player.wardrobe3["Hachirin-no-Obi"] or player.wardrobe4["Hachirin-no-Obi"] or player.wardrobe5["Hachirin-no-Obi"] 
-				or player.wardrobe6["Hachirin-no-Obi"] or player.wardrobe7["Hachirin-no-Obi"] or player.wardrobe8["Hachirin-no-Obi"]
-				local Staff = player.inventory["Chatoyant Staff"] or player.wardrobe["Chatoyant Staff"] or player.wardrobe2["Chatoyant Staff"]
-				or player.wardrobe3["Chatoyant Staff"] or player.wardrobe4["Chatoyant Staff"] or player.wardrobe5["Chatoyant Staff"] 
-				or player.wardrobe6["Chatoyant Staff"] or player.wardrobe7["Chatoyant Staff"] or player.wardrobe8["Chatoyant Staff"]
-				-- Check for bonus
-				if spell.element == world.day_element then
-					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
-					if Staff then built_set = set_combine(built_set, {main="Chatoyant Staff"}) end
-					windower.add_to_chat(8,'[' ..world.day_element.. '] day - using Bonus Gear')
-				elseif world.weather_element == spell.element then
-					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
-					if Staff then built_set = set_combine(built_set, {main="Chatoyant Staff"}) end
-					windower.add_to_chat(8,'Weather is ['.. world.weather_element .. '] - using Bonus Gear')
-				end
-			end
+
 		end
 		return built_set
 	end
