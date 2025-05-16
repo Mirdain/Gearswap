@@ -63,13 +63,14 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
-	sets.Idle.TP = sets.Idle
-	sets.Idle.ACC = sets.Idle
-	sets.Idle.DT = sets.Idle
-	sets.Idle.PDL = sets.Idle
-	sets.Idle.CRIT = sets.Idle
-	sets.Idle.MEVA = sets.Idle
-	sets.Idle.Resting = sets.Idle
+	sets.Idle.TP = set_combine(sets.Idle, {})
+	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	sets.Movement = {
 		feet="Danzo Sune-Ate"
