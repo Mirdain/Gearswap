@@ -1599,7 +1599,7 @@ do
 			if buffactive['Pianissimo'] then
 				if Instrument then
 					if Instrument.Pianissimo then
-						built_set = set_combine(built_set, Instrument.Pianissimo)
+						built_set = set_combine(built_set, {range=Instrument.Pianissimo})
 					else warn('Instrument.Pianissimo not found!') end
 				else warn('Instrument not found!') end
 			end
