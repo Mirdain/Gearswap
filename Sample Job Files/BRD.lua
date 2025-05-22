@@ -20,7 +20,7 @@ state.WeaponMode:set('Mordant Rime')
 state.OffenseMode:set('TP')
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA')
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -90,9 +90,10 @@ function get_sets()
 	}
 
 	-- Instruments to use
-	Instrument ={}
+	Instrument = {}
 	Instrument.Count = { name="Daurdabla" }
 	Instrument.Potency = { name="Gjallarhorn" }
+	Instrument.Pianissimo = { name="Gjallarhorn" } -- Swap to miracle Cheer if have
 	Instrument.Honor = { name="Marsyas" }
 	Instrument.Aria = { name="Loughnashade" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }

@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5'
+Mirdain_GS = '1.4.1'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -168,6 +168,20 @@ sets.Ready.TP = {}
 sets.Ready.Debuff = {}
 sets.Ready.Standard = {}	
 
+Instrument = {}
+Instrument.Count = {}
+Instrument.Potency = {}
+Instrument.Pianissimo = {}
+Instrument.Honor = {}
+Instrument.Aria = {}
+Instrument.AOE_Sleep = {}
+Instrument.Idle = {}
+Instrument.TP = {}
+Instrument.Mordant = {}
+Instrument.QuickMagic = {}
+Instrument.FastCast = {}
+Instrument.MAB = {}
+
 state = state or {}
 
 --Modes for Melee
@@ -236,7 +250,6 @@ command_BP = "None"
 
 is_Busy = false
 AutoItem = false
-Cycle_Time = false
 Random_Lockstyle = false
 Lockstyle_List = {}
 
@@ -1581,6 +1594,16 @@ do
 					end
 				else warn('sets.Weapons.Songs.Midcast not found!') end
 			else warn('sets.Weapons.Songs not found!') end
+
+			--Check for pianissimo Weapon
+			if buffactive['Pianissimo'] then
+				if Instrument then
+					if Instrument.Pianissimo then
+						built_set = set_combine(built_set, Instrument.Pianissimo)
+					else warn('Instrument.Pianissimo not found!') end
+				else warn('Instrument not found!') end
+			end
+				
 		end
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] and sets.TreasureHunter then
@@ -2714,20 +2737,24 @@ do
 			Location.y = position.y
 			Location.z = position.z
 		end
+
 		if Require_Update and not is_busy then equip_set() Require_Update = false end
-		-- 60 second cycle timer
+
+		-- 30 second cycle timer
 		if now - UpdateTime1 > 30 then
+			log('Update Timer 1')
 			dual_wield_check()
 			cleanup_tagged_mobs()
 			UpdateTime1 = now
 		end
+
 		-- function used for periodic updates - feature
-		if Cycle_Time then
-			if now - UpdateTime2 > Cycle_Time then
-				Cycle_Timer()
-				UpdateTime2 = now
-			end
+		if Cycle_Timer and now - UpdateTime2 > 2 and not is_busy then
+			log('Update Timer 2')
+			Cycle_Timer()
+			UpdateTime2 = now
 		end
+
 		main_engine_time = os.clock()
 	end
 
