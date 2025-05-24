@@ -394,6 +394,8 @@ function get_sets()
 		legs="Dashing Subligar", -- 10
 	}) -- 20% Potency
 
+	sets.Fold = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}}
+
 	--Base Set used for all rolls
 	sets.PhantomRoll = {
 		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
@@ -591,7 +593,7 @@ end
 function precast_custom(spell)
 	equipSet = {}
 	if spell.english == 'Fold' then
-		equipSet = set_combine(equipSet, {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}})
+		equipSet = set_combine(equipSet, sets.Fold)
     end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
@@ -600,7 +602,7 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 	if spell.english == 'Fold' then
-		equipSet = set_combine(equipSet, {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}})
+		equipSet = set_combine(equipSet, sets.Fold)
     end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
