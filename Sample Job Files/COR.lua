@@ -590,7 +590,7 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if spell.english == 'Fold' then
+	if spell.english == 'Fold' and buffactive['Bust'] == 2 then
 		equipSet = set_combine(equipSet, {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}})
     end
 	equipSet = Job_Mode_Check(equipSet)
