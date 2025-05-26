@@ -1596,7 +1596,7 @@ do
 			else warn('sets.Weapons.Songs not found!') end
 
 			--Check for pianissimo Weapon
-			if buffactive['Pianissimo'] then
+			if buffactive['Pianissimo'] and not SongCount:contains(spell.name) and not spell.name == "Honor March" and not spell.name == "Aria of Passion" then
 				if Instrument then
 					if Instrument.Pianissimo then
 						built_set = set_combine(built_set, {range=Instrument.Pianissimo})

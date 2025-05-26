@@ -394,8 +394,8 @@ function get_sets()
 		legs="Dashing Subligar", -- 10
 	}) -- 20% Potency
 
-	sets.FoldDoubleBust = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}} 
-	sets.Fold = {}
+	-- Used when Double Bust is active
+	sets.Fold = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}} 
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = {
@@ -593,12 +593,8 @@ end
 -- Augment basic equipment sets
 function precast_custom(spell)
 	equipSet = {}
-	if spell.english == 'Fold' then
-		if buffactive['Bust'] == 2 then
-			equipSet = set_combine(equipSet, sets.FoldDoubleBust)
-		else
-			equipSet = set_combine(equipSet, sets.Fold)
-		end
+	if spell.english == 'Fold' and buffactive['Bust'] == 2 then
+		equipSet = set_combine(equipSet, sets.Fold)
     end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
@@ -606,12 +602,8 @@ end
 -- Augment basic equipment sets
 function midcast_custom(spell)
 	equipSet = {}
-	if spell.english == 'Fold' then
-		if buffactive['Bust'] == 2 then
-			equipSet = set_combine(equipSet, sets.FoldDoubleBust)
-		else
-			equipSet = set_combine(equipSet, sets.Fold)
-		end
+	if spell.english == 'Fold' and buffactive['Bust'] == 2 then
+		equipSet = set_combine(equipSet, sets.Fold)
     end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
