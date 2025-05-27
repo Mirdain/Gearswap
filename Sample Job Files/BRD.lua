@@ -93,7 +93,7 @@ function get_sets()
 	Instrument = {}
 	Instrument.Count = { name="Daurdabla" }
 	Instrument.Potency = { name="Gjallarhorn" }
-	Instrument.Pianissimo = { name="Gjallarhorn" } -- Swap to miracle Cheer if have
+	Instrument.Pianissimo = { name="Miracle Cheer" } -- Swap to Miracle Cheer if have
 	Instrument.Honor = { name="Marsyas" }
 	Instrument.Aria = { name="Loughnashade" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }

@@ -801,7 +801,12 @@ do
 		elseif spell.type == 'JobAbility' then
 			if sets.JA then
 				built_set = set_combine(built_set, sets.JA)
-				if sets.JA[spell.english] then
+				if spell.name == 'Double-Up' then -- Double Up for distance
+					if sets.PhantomRoll then
+						built_set = set_combine(built_set, sets.PhantomRoll)
+						info('['..spell.english..'] Set')
+					else warn('sets.PhantomRoll not found!') end
+				elseif sets.JA[spell.english] then
 					built_set = set_combine(built_set, sets.JA[spell.english])
 					--Summon the correct jug pet
 					if spell.name == 'Bestial Loyalty' or spell.name == 'Call Beast' then
@@ -810,11 +815,6 @@ do
 						else warn('sets.Jugs['..state.JobMode.value..'] not found!') end
 					end
 					info('['..spell.english..'] Set')
-				elseif spell.id == 123 then -- Double Up for distance
-					if sets.PhantomRoll then
-						built_set = set_combine(built_set, sets.PhantomRoll)
-						info('['..spell.english..'] Set')
-					else warn('sets.PhantomRoll not found!') end
 				else info('JA not set for ['..spell.english..']') end
 			else warn('sets.JA not found!') end
 		-- Items
@@ -861,6 +861,7 @@ do
 			else warn('sets.JA not found!') end
 		-- CorsairRoll
 		elseif spell.type == 'CorsairRoll' then
+			log('CorsairRoll')
 			if sets.PhantomRoll then
 				built_set = set_combine(built_set, sets.PhantomRoll)
 				if sets.PhantomRoll[spell.english] then
@@ -979,7 +980,8 @@ do
 		end
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
-		if state.WeaponMode.value ~= "Unlocked" then
+		if state.WeaponMode.value ~= "Unlocked" and not spell.type == 'CorsairRoll' and not spell.name == 'Double-Up' then
+			log('Update Weapons')
 			if state.WeaponMode.value == "Locked" then
 				built_set = set_combine(built_set, { main = player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
 			else
@@ -1031,6 +1033,7 @@ do
 		if spell.type == 'WeaponSkill' then return end
 		if spell.type == 'Item' then return end
 		if spell.type == 'JobAbility' then return end
+		if spell.type == 'CorsairRoll' then log('abort midcast') return end
 		if pet.isvalid and pet_midaction() then return end
 		--Default gearset
 		local built_set = {}
@@ -1594,16 +1597,14 @@ do
 					end
 				else warn('sets.Weapons.Songs.Midcast not found!') end
 			else warn('sets.Weapons.Songs not found!') end
-
 			--Check for pianissimo Weapon
-			if buffactive['Pianissimo'] and not SongCount:contains(spell.name) and not spell.name == "Honor March" and not spell.name == "Aria of Passion" then
+			if spell.target.type ~= 'SELF' and spell.name ~= "Honor March" and spell.name ~= "Aria of Passion" and not SongCount:contains(spell.name) then
 				if Instrument then
 					if Instrument.Pianissimo then
 						built_set = set_combine(built_set, {range=Instrument.Pianissimo})
 					else warn('Instrument.Pianissimo not found!') end
 				else warn('Instrument not found!') end
 			end
-				
 		end
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if 	state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] and sets.TreasureHunter then
