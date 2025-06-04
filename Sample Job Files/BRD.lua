@@ -93,7 +93,8 @@ function get_sets()
 	Instrument = {}
 	Instrument.Count = { name="Daurdabla" }
 	Instrument.Potency = { name="Gjallarhorn" }
-	Instrument.Pianissimo = { name="Miracle Cheer" } -- Swap to Miracle Cheer if have
+	Instrument.Pianissimo = { name="Gjallarhorn" } -- Possible swap to Miracle Cheer
+	Instrument.Ballad = { name="Miracle Cheer" } -- Possible swap to Miracle Cheer
 	Instrument.Honor = { name="Marsyas" }
 	Instrument.Aria = { name="Loughnashade" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }
@@ -136,8 +137,8 @@ function get_sets()
 	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 

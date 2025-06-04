@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.4.1'
+Mirdain_GS = '1.5'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -230,9 +230,6 @@ state.RAMode:set('Bullet')
 
 --State for Ammunition check
 state.warned = M(false)
-
---Unlock any previously locked gear
-enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 
 --Ammunition
 Ammo = {}
@@ -474,6 +471,9 @@ do
 		[768] = {id=768,english='Umbra',elements={'Dark','Ice','Water','Earth'}},
 		[769] = {id=769,english='Radiance',elements={'Light','Lightning','Wind','Fire'}},
 		[770] = {id=770,english='Umbra',elements={'Dark','Ice','Water','Earth'}},}
+
+	--Unlock any previously locked gear
+	enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','waist','legs','feet')
 
 	-------------------------------------------------------------------------------------------------------------------
 	-- This function is called from the default GearSwap Function "pretarget" to validate the user action
@@ -812,7 +812,7 @@ do
 					if spell.name == 'Bestial Loyalty' or spell.name == 'Call Beast' then
 						if sets.Jugs[state.JobMode.value] then
 							built_set = set_combine(built_set, sets.Jugs[state.JobMode.value])
-						else warn('sets.Jugs['..state.JobMode.value..'] not found!') end
+						else warn('sets.Jugs.'..state.JobMode.value..' not found!') end
 					end
 					info('['..spell.english..'] Set')
 				else info('JA not set for ['..spell.english..']') end
@@ -993,7 +993,7 @@ do
 								built_set = set_combine(built_set, sets.Weapons.Shield)
 							else warn('sets.Weapons.Shield not found!') end
 						end
-					else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
+					else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
 				else warn('sets.Weapons not found!') end
 			end
 		end
@@ -1400,8 +1400,6 @@ do
 					built_set = set_combine(built_set, {range=Instrument.Count})
 				-- Potency / Instruments
 				else
-					-- Augment the specific Song
-					built_set = set_combine(built_set, equip_song_gear(spell))
 					-- Defined Gear Set
 					if sets.Midcast[spell.english] then
 						built_set = set_combine(built_set, sets.Midcast[spell.english])
@@ -1433,6 +1431,8 @@ do
 						info( '['..spell.english..'] Set (Potency)')
 						built_set = set_combine(built_set, {range=Instrument.Potency})
 					end
+					-- Augment the specific Song if set
+					built_set = set_combine(built_set, equip_song_gear(spell))
 				end
 			-- BlueMagic
 			elseif spell.type == 'BlueMagic' then
@@ -1575,7 +1575,7 @@ do
 				if sets.Weapons then
 					if sets.Weapons[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-					else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
+					else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
 					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
@@ -1597,12 +1597,21 @@ do
 					end
 				else warn('sets.Weapons.Songs.Midcast not found!') end
 			else warn('sets.Weapons.Songs not found!') end
-			--Check for pianissimo Weapon
+			
 			if spell.target.type ~= 'SELF' and spell.name ~= "Honor March" and spell.name ~= "Aria of Passion" and not SongCount:contains(spell.name) then
 				if Instrument then
+					--Check for pianissimo Weapons
 					if Instrument.Pianissimo then
 						built_set = set_combine(built_set, {range=Instrument.Pianissimo})
 					else warn('Instrument.Pianissimo not found!') end
+					--Check for Ballad Weapon
+					if spell.name:contains('Ballad') then
+						if Instrument then
+							if Instrument.Ballad then
+								built_set = set_combine(built_set, {range=Instrument.Ballad})
+							else warn('Instrument.Ballad not found!') end
+						else warn('Instrument not found!') end
+					end
 				else warn('Instrument not found!') end
 			end
 		end
@@ -2125,6 +2134,7 @@ do
 						end
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
 						display_box_update()
+						if self_command_custom then self_command_custom(command) end
 						coroutine.schedule(equip_set, .25)
 						coroutine.schedule(two_hand_check, .25)
 						return
@@ -2136,6 +2146,7 @@ do
 				state.WeaponMode:set(mode[2])
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
 				display_box_update()
+				if self_command_custom then self_command_custom(command) end
 				coroutine.schedule(equip_set, .25)
 				coroutine.schedule(two_hand_check, .25)
 				return
@@ -2151,6 +2162,7 @@ do
 						end
 						info(UI_Name2..': ['..state.JobMode2.value..']')
 						display_box_update()
+						if self_command_custom then self_command_custom(command) end
 						coroutine.schedule(equip_set, .25)
 						return
 					end
@@ -2161,6 +2173,7 @@ do
 				state.JobMode2:set(mode[2])
 				info(UI_Name2..': ['..state.JobMode2.value..']')
 				display_box_update()
+				if self_command_custom then self_command_custom(command) end
 				coroutine.schedule(equip_set, .25)
 				return
 			end
@@ -3006,7 +3019,7 @@ do
 						if sets.Weapons then
 							if sets.Weapons[state.WeaponMode.value] then
 								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-							else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
+							else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
 						else warn('sets.Weapons not found!') end
 						-- Equip sub weapon based off mode
 						if not DualWield and not TwoHand then
@@ -3056,7 +3069,7 @@ do
 							end
 						else warn('sets.TreasureHunter not found!') end
 					end
-				else warn('sets.OffenseMode['..state.OffenseMode.value..'] not found!') end
+				else warn('sets.OffenseMode.'..state.OffenseMode.value..' not found!') end
 			else warn('sets.OffenseMode not found!') end
 		-- Idle sets
 		else
@@ -3065,7 +3078,7 @@ do
 				-- Idle state
 				if sets.Idle[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.Idle[state.OffenseMode.value])
-				else warn('sets.Idle['..state.OffenseMode.value..'] not found!') end		
+				else warn('sets.Idle.'..state.OffenseMode.value..' not found!') end		
 				-- Resting condition
 				if player.status == "Resting" then
 					if sets.Idle.Resting then
@@ -3081,7 +3094,7 @@ do
 						if sets.Weapons then
 							if sets.Weapons[state.WeaponMode.value] then
 								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-							else warn('sets.Weapons['..state.WeaponMode.value..'] not found!') end
+							else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
 							-- Check for sub weapon
 							if not TwoHand and not DualWield then
 								if sets.Weapons.Shield then

@@ -196,8 +196,8 @@ function get_sets()
 	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -607,7 +607,6 @@ function get_sets()
 		right_ring="Weather. Ring",
 	})
 
-	sets.Charm = {}
 
 	sets.TreasureHunter = {
 	    legs={ name="Herculean Trousers", augments={'Attack+8','Mag. Acc.+13 "Mag.Atk.Bns."+13','"Treasure Hunter"+2','Accuracy+16 Attack+16',}},
@@ -705,7 +704,7 @@ function check_buff_SP()
 	return buff
 end
 
-function Smart_Ammo ()
+function Smart_Ammo()
 	for i = 1, #Ranged_Weapons do
 		if state.WeaponMode.value == Ranged_Weapons[i].WeaponMode then
 			if state.RAMode.value ~= Ranged_Weapons[i].Type then
