@@ -3012,7 +3012,11 @@ do
 								equip(set_combine(choose_set(), setToEquip))
 							elseif data.category == 4 then
 								-- Finished casting spell on me
-								equip(choose_set())
+								if choose_set_custom then
+									equip(set_combine(choose_set(), choose_set_custom()))
+								else
+									equip(set_combine(choose_set()))
+								end
 							end
 						end
 					end
