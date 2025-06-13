@@ -1030,19 +1030,19 @@ do
 
 	function midcastequip(spell)
 
-		if spell.type == 'WeaponSkill' then log('abort midcast') return end
-		elseif spell.type == 'JobAbility' then log('abort midcast') return end
-		elseif spell.type == 'Item' then log('abort midcast') return end
-		elseif spell.type == 'Scholar' then log('abort midcast') return end
-		elseif spell.type == 'Ward' then log('abort midcast') return end
-		elseif spell.type == 'Rune' then log('abort midcast') return end
-		elseif spell.type == 'Effusion' then log('abort midcast') return end
-		elseif spell.type == 'CorsairRoll' then log('abort midcast') return end
-		elseif spell.type == 'CorsairShot' then log('abort midcast') return end
-		elseif spell.type == 'Waltz' then log('abort midcast') return end
-		elseif spell.type == 'Jig' then log('abort midcast') return end
-		elseif spell.type == 'Samba' then log('abort midcast') return end
-		elseif spell.type == 'Step' then log('abort midcast') return end
+		if spell.type == 'WeaponSkill' then log('abort midcast') return
+		elseif spell.type == 'JobAbility' then log('abort midcast') return
+		elseif spell.type == 'Item' then log('abort midcast') return
+		elseif spell.type == 'Scholar' then log('abort midcast') return
+		elseif spell.type == 'Ward' then log('abort midcast') return
+		elseif spell.type == 'Rune' then log('abort midcast') return
+		elseif spell.type == 'Effusion' then log('abort midcast') return
+		elseif spell.type == 'CorsairRoll' then log('abort midcast') return
+		elseif spell.type == 'CorsairShot' then log('abort midcast') return
+		elseif spell.type == 'Waltz' then log('abort midcast') return
+		elseif spell.type == 'Jig' then log('abort midcast') return
+		elseif spell.type == 'Samba' then log('abort midcast') return
+		elseif spell.type == 'Step' then log('abort midcast') return
 		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return end
 		
 		if pet.isvalid and pet_midaction() then return end
