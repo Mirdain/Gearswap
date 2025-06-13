@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5'
+Mirdain_GS = '1.5.1'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -279,8 +279,8 @@ Enfeebling_Song = S{ 'Foe Requiem','Foe Requiem II','Foe Requiem III','Foe Requi
 	'Ice Threnody II', 'Wind Threnody II', 'Earth Threnody II', 'Ltng. Threnody II', 'Water Threnody II', 'Light Threnody II','Dark Threnody II','Magic Finale', 'Pining Nocturne'}
 
 Enfeeble_Acc = S{'Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga'}
-Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II'}
-Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga','Bind','Bind II'}
+Enfeeble_Potency = S{'Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II','Gravity','Gravity II'}
+Enfeeble_Duration = S{'Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Inundation','Break','Breakaga','Bind','Bind II'}
 
 Dark_Acc = S{'Death','Kaustra','Stun'}
 Dark_Absorb = S{'Absorb-ACC','Absorb-AGI','Absorb-Attri','Absorb-CHR','Absorb-DEX','Absorb-INT','Absorb-MND','Absorb-STR','Absorb-TP','Absorb-VIT','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III'}
@@ -1029,11 +1029,22 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function midcastequip(spell)
-		-- WeaponSkill
-		if spell.type == 'WeaponSkill' then return end
-		if spell.type == 'Item' then return end
-		if spell.type == 'JobAbility' then return end
-		if spell.type == 'CorsairRoll' then log('abort midcast') return end
+
+		if spell.type == 'WeaponSkill' then log('abort midcast') return end
+		elseif spell.type == 'JobAbility' then log('abort midcast') return end
+		elseif spell.type == 'Item' then log('abort midcast') return end
+		elseif spell.type == 'Scholar' then log('abort midcast') return end
+		elseif spell.type == 'Ward' then log('abort midcast') return end
+		elseif spell.type == 'Rune' then log('abort midcast') return end
+		elseif spell.type == 'Effusion' then log('abort midcast') return end
+		elseif spell.type == 'CorsairRoll' then log('abort midcast') return end
+		elseif spell.type == 'CorsairShot' then log('abort midcast') return end
+		elseif spell.type == 'Waltz' then log('abort midcast') return end
+		elseif spell.type == 'Jig' then log('abort midcast') return end
+		elseif spell.type == 'Samba' then log('abort midcast') return end
+		elseif spell.type == 'Step' then log('abort midcast') return end
+		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return end
+		
 		if pet.isvalid and pet_midaction() then return end
 		--Default gearset
 		local built_set = {}
