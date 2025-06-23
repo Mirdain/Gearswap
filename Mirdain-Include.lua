@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.1'
+Mirdain_GS = '1.5.3'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -958,16 +958,66 @@ do
 						else warn('sets.Precast.Blue_Magic not found!') end		
 					-- BardSong
 					elseif spell.type == 'BardSong' then
-						if sets.Precast.Songs then
-							built_set = set_combine(built_set, sets.Precast.Songs)
-							-- Equip Marsyas
-							if spell.name == "Honor March" then
-								built_set = set_combine(built_set, {range=Instrument.Honor})
-							-- Equip Loughnashade
-							elseif spell.name == "Aria of Passion" then
-								built_set = set_combine(built_set, {range=Instrument.Aria})
+						if buffactive['Nightingale'] then
+							-- Default BRD song gear is in Midcast
+							if sets.Midcast then 
+								built_set = set_combine(built_set, sets.Midcast)
+							else warn('sets.Midcast not found!') end
+							-- Song Count for Dummy Songs
+							if SongCount:contains(spell.name) then
+								if sets.Midcast.DummySongs then
+									built_set = set_combine(built_set, sets.Midcast.DummySongs)
+									info( '['..spell.english..'] Set (Song Count)')
+								else warn('sets.Midcast.DummySongs not found!') end
+								built_set = set_combine(built_set, { range=Instrument.Count })
+							-- Potency / Instruments
+							else
+								-- Defined Gear Set
+								if sets.Midcast[spell.english] then
+									built_set = set_combine(built_set, sets.Midcast[spell.english])
+									info( '['..spell.english..'] Set')
+								-- Equip Marsyas
+								elseif spell.name == "Honor March" then
+									built_set = set_combine(built_set, {range=Instrument.Honor})
+									info( '['..spell.english..'] Set')
+								-- Equip Loughnashade
+								elseif spell.name == "Aria of Passion" then
+									built_set = set_combine(built_set, {range=Instrument.Aria})
+									info( '['..spell.english..'] Set')
+								-- Equip Harp
+								elseif spell.name:contains('Horde') then
+									if sets.Midcast.Enfeebling then
+										built_set = set_combine(built_set, sets.Midcast.Enfeebling)
+									else warn('sets.Midcast.Enfeebling not found!') end
+									built_set = set_combine(built_set, {range=Instrument.AOE_Sleep})
+									info( '['..spell.english..'] Set (AOE Sleep)')
+								-- Normal Enfeebles
+								elseif Enfeebling_Song:contains(spell.english) then
+									if sets.Midcast.Enfeebling then
+										built_set = set_combine(built_set, sets.Midcast.Enfeebling)
+									else warn('sets.Midcast.Enfeebling not found!') end
+									built_set = set_combine(built_set, {range=Instrument.Potency})
+									info( '['..spell.english..'] Set (Enfeebling)')
+								-- Augment the buff songs
+								else
+									info( '['..spell.english..'] Set (Potency)')
+									built_set = set_combine(built_set, {range=Instrument.Potency})
+								end
+								-- Augment the specific Song if set
+								built_set = set_combine(built_set, equip_song_gear(spell, built_set['range']))
 							end
-						else warn('sets.Precast.Songs not found!') end
+						else
+							if sets.Precast.Songs then
+								built_set = set_combine(built_set, sets.Precast.Songs)
+								-- Equip Marsyas
+								if spell.name == "Honor March" then
+									built_set = set_combine(built_set, {range=Instrument.Honor})
+								-- Equip Loughnashade
+								elseif spell.name == "Aria of Passion" then
+									built_set = set_combine(built_set, {range=Instrument.Aria})
+								end
+							else warn('sets.Precast.Songs not found!') end
+						end
 					end
 				else warn('sets.Precast.FastCast not found!') end
 			else warn('sets.Precast not found!') end
@@ -1030,22 +1080,22 @@ do
 
 	function midcastequip(spell)
 
-		if spell.type == 'WeaponSkill' then log('abort midcast') return
-		elseif spell.type == 'JobAbility' then log('abort midcast') return
-		elseif spell.type == 'Item' then log('abort midcast') return
-		elseif spell.type == 'Scholar' then log('abort midcast') return
-		elseif spell.type == 'Ward' then log('abort midcast') return
-		elseif spell.type == 'Rune' then log('abort midcast') return
-		elseif spell.type == 'Effusion' then log('abort midcast') return
-		elseif spell.type == 'CorsairRoll' then log('abort midcast') return
-		elseif spell.type == 'CorsairShot' then log('abort midcast') return
-		elseif spell.type == 'Waltz' then log('abort midcast') return
-		elseif spell.type == 'Jig' then log('abort midcast') return
-		elseif spell.type == 'Samba' then log('abort midcast') return
-		elseif spell.type == 'Step' then log('abort midcast') return
-		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return end
+		if spell.type == 'WeaponSkill' then log('abort midcast') return {}
+		elseif spell.type == 'JobAbility' then log('abort midcast') return {}
+		elseif spell.type == 'Item' then log('abort midcast') return {}
+		elseif spell.type == 'Scholar' then log('abort midcast') return {}
+		elseif spell.type == 'Ward' then log('abort midcast') return {}
+		elseif spell.type == 'Rune' then log('abort midcast') return {}
+		elseif spell.type == 'Effusion' then log('abort midcast') return {}
+		elseif spell.type == 'CorsairRoll' then log('abort midcast') return {}
+		elseif spell.type == 'CorsairShot' then log('abort midcast') return {}
+		elseif spell.type == 'Waltz' then log('abort midcast') return {}
+		elseif spell.type == 'Jig' then log('abort midcast') return {}
+		elseif spell.type == 'Samba' then log('abort midcast') return {}
+		elseif spell.type == 'Step' then log('abort midcast') return {}
+		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return {} end
 		
-		if pet.isvalid and pet_midaction() then return end
+		if pet.isvalid and pet_midaction() then return {} end
 		--Default gearset
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
@@ -1443,7 +1493,7 @@ do
 						built_set = set_combine(built_set, {range=Instrument.Potency})
 					end
 					-- Augment the specific Song if set
-					built_set = set_combine(built_set, equip_song_gear(spell))
+					built_set = set_combine(built_set, equip_song_gear(spell, built_set['range']))
 				end
 			-- BlueMagic
 			elseif spell.type == 'BlueMagic' then
@@ -1597,6 +1647,7 @@ do
 		end
 		--Swap in bard song weapons no matter the mode
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
+			-- Weapons
 			if sets.Weapons.Songs then
 				built_set = set_combine(built_set, sets.Weapons.Songs)
 				if sets.Weapons.Songs.Midcast then
@@ -1608,7 +1659,7 @@ do
 					end
 				else warn('sets.Weapons.Songs.Midcast not found!') end
 			else warn('sets.Weapons.Songs not found!') end
-			
+			-- Instruments
 			if spell.target.type ~= 'SELF' and spell.name ~= "Honor March" and spell.name ~= "Aria of Passion" and not SongCount:contains(spell.name) then
 				if Instrument then
 					--Check for pianissimo Weapons
@@ -2275,7 +2326,7 @@ do
 	end
 
 	-- Determines correct gear for the songs
-	function equip_song_gear(spell)
+	function equip_song_gear(spell, instruments)
 		local song_set = {}
 			if string.find(spell.english,'Finale') and sets.Midcast.Finale then song_set = sets.Midcast.Finale
 		elseif string.find(spell.english,'Lullaby') and sets.Midcast.Lullaby then song_set = sets.Midcast.Lullaby
@@ -2300,6 +2351,7 @@ do
 		else
 			info('['..spell.english..'] set not found!')
 		end
+		song_set['range'] = instruments
 		return song_set
 	end
 
@@ -2325,11 +2377,11 @@ do
 		equip({[slot]=item_table.en})
 		disable(slot)
 		local delay_use = item_table.cast_delay + 2
-		local delay_unlock = delay_use + item_table.cast_time + 2
+		local delay_unlock = delay_use + item_table.cast_time + 3
 		Use_Item_Command = item_table.en
 		coroutine.schedule(Use_Item, delay_use)
-		coroutine.schedule(Unlock, delay_unlock)
-		coroutine.schedule(equip_set, delay_unlock)
+		coroutine.schedule(Unlock, delay_unlock + 2)
+		coroutine.schedule(equip_set, delay_unlock + 3)
 	end
 
 	function Use_Item()
@@ -2571,63 +2623,51 @@ do
 		gs_debug:text(lines:concat('\n'))
 	end
 
-	function log(msg)
-		if settings.debug then
-			if msg == nil then
-				windower.add_to_chat(80,'----Value is Nil----')
-			elseif type(msg) == "table" then
-				for index, value in pairs(msg) do
-					windower.add_to_chat(80,'----'..tostring(value)..'----')
-				end
-			elseif type(msg) == "number" then
-				windower.add_to_chat(80,'----'..tostring(msg)..'----')
-			elseif type(msg) == "string" then
-				windower.add_to_chat(80,'----'..msg..'----')
-			elseif type(msg) == "boolean" then
-				windower.add_to_chat(80,'----'..tostring(msg)..'----')
-			else
-				windower.add_to_chat(80,'----Unknown Debug Message----')
-			end
-		end
+	function log (msg)
+		if settings.debug then print(80, msg) end
 	end
 
-	function info(msg)
-		if settings.info then
-			if msg == nil then
-				windower.add_to_chat(8,'Value is Nil')
-			elseif type(msg) == "table" then
-				for index, value in pairs(msg) do
-					windower.add_to_chat(8,tostring(value))
-				end
-			elseif type(msg) == "number" then
-				windower.add_to_chat(8,tostring(msg))
-			elseif type(msg) == "string" then
-				windower.add_to_chat(8,msg)
-			elseif type(msg) == "boolean" then
-				windower.add_to_chat(8,tostring(msg))
-			else
-				windower.add_to_chat(8,'Unknown Debug Message')
-			end
-		end
+	function info (msg)
+		if settings.info then print(7, msg) end
 	end
 
-	function warn(msg)
-		if settings.warn then
-			if msg == nil then
-				windower.add_to_chat(12,'----Value is Nil----')
-			elseif type(msg) == "table" then
-				for index, value in pairs(msg) do
-					windower.add_to_chat(12,'----'..tostring(value)..'----')
+	function warn (msg)
+		if settings.warn then print(12, msg) end
+	end
+
+	function print(mode, msg)
+		if msg == nil then
+			windower.add_to_chat(mode,'Value is Nil')
+		elseif type(msg) == "table" then
+			for index, value in pairs(msg) do
+				if type(value) == "table" then
+					for index2, value2 in pairs(value) do
+						if type(value2) == "table" then
+							for index3, value3 in pairs(value2) do
+								if type(value3) == "table" then
+									for index4, value4 in pairs(value3) do
+										windower.add_to_chat(mode,'---- ['..tostring(index)..'] ['..tostring(index2)..'] ['..tostring(index3)..'] ['..tostring(index4)..'] '..tostring(value4)..' ----')
+									end
+								else
+									windower.add_to_chat(mode,'---- ['..tostring(index)..'] ['..tostring(index2)..'] ['..tostring(index3)..'] '..tostring(value3)..' ----')
+								end
+							end
+						else
+							windower.add_to_chat(mode,'---- ['..tostring(index)..'] ['..tostring(index2)..'] '..tostring(value2)..' ----')
+						end
+					end
+				else
+					windower.add_to_chat(mode,'---- ['..tostring(index)..'] '..tostring(value)..' ----')
 				end
-			elseif type(msg) == "number" then
-				windower.add_to_chat(12,'----'..tostring(msg)..'----')
-			elseif type(msg) == "string" then
-				windower.add_to_chat(12,'----'..msg..'----')
-			elseif type(msg) == "boolean" then
-				windower.add_to_chat(12,'----'..tostring(msg)..'----')
-			else
-				windower.add_to_chat(12,'----Unknown Debug Message----')
 			end
+		elseif type(msg) == "number" then
+			windower.add_to_chat(mode,tostring(msg))
+		elseif type(msg) == "string" then
+			windower.add_to_chat(mode,msg)
+		elseif type(msg) == "boolean" then
+			windower.add_to_chat(mode,tostring(msg))
+		else
+			windower.add_to_chat(mode,'Unknown Message')
 		end
 	end
 
