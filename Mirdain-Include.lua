@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.3'
+Mirdain_GS = '1.5.4'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -420,6 +420,7 @@ do
 
 	local Require_Update = false
 	local Use_Item_Command = ''
+	local available_bullets = 0
 
 	-- Tracking vars for TH
 	local th_info = {}
@@ -720,6 +721,8 @@ do
 						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
 						message = message..' and Aftermath (Ranged)'
 					end
+					do_bullet_checks(spell, built_set)
+					message = message..' ['..available_bullets..'x]'
 				else
 					if sets.WS[spell.english] then
 						-- Set is defined
@@ -797,6 +800,9 @@ do
 					end
 				else warn('sets.Precast.RA not found!') end
 			else warn('sets.Precast not found!') end
+			if built_set.ammo ~= "" and built_set.ranged ~= "" then
+				do_bullet_checks(spell, built_set)
+			end
 		-- JobAbility
 		elseif spell.type == 'JobAbility' then
 			if sets.JA then
@@ -967,7 +973,6 @@ do
 							if SongCount:contains(spell.name) then
 								if sets.Midcast.DummySongs then
 									built_set = set_combine(built_set, sets.Midcast.DummySongs)
-									info( '['..spell.english..'] Set (Song Count)')
 								else warn('sets.Midcast.DummySongs not found!') end
 								built_set = set_combine(built_set, { range=Instrument.Count })
 							-- Potency / Instruments
@@ -975,32 +980,26 @@ do
 								-- Defined Gear Set
 								if sets.Midcast[spell.english] then
 									built_set = set_combine(built_set, sets.Midcast[spell.english])
-									info( '['..spell.english..'] Set')
 								-- Equip Marsyas
 								elseif spell.name == "Honor March" then
 									built_set = set_combine(built_set, {range=Instrument.Honor})
-									info( '['..spell.english..'] Set')
 								-- Equip Loughnashade
 								elseif spell.name == "Aria of Passion" then
 									built_set = set_combine(built_set, {range=Instrument.Aria})
-									info( '['..spell.english..'] Set')
 								-- Equip Harp
 								elseif spell.name:contains('Horde') then
 									if sets.Midcast.Enfeebling then
 										built_set = set_combine(built_set, sets.Midcast.Enfeebling)
 									else warn('sets.Midcast.Enfeebling not found!') end
 									built_set = set_combine(built_set, {range=Instrument.AOE_Sleep})
-									info( '['..spell.english..'] Set (AOE Sleep)')
 								-- Normal Enfeebles
 								elseif Enfeebling_Song:contains(spell.english) then
 									if sets.Midcast.Enfeebling then
 										built_set = set_combine(built_set, sets.Midcast.Enfeebling)
 									else warn('sets.Midcast.Enfeebling not found!') end
 									built_set = set_combine(built_set, {range=Instrument.Potency})
-									info( '['..spell.english..'] Set (Enfeebling)')
 								-- Augment the buff songs
 								else
-									info( '['..spell.english..'] Set (Potency)')
 									built_set = set_combine(built_set, {range=Instrument.Potency})
 								end
 								-- Augment the specific Song if set
@@ -1022,12 +1021,7 @@ do
 				else warn('sets.Precast.FastCast not found!') end
 			else warn('sets.Precast not found!') end
 		end
-		-- Check that proper ammo is available if the action requires it
-		if spell.skill == "Marksmanship" or spell.skill == "Archery" then
-			if	player.equipment.ammo ~= "" and player.equipment.ranged ~= "" then
-				do_bullet_checks(spell, built_set)
-			end
-		end
+
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
 		if state.WeaponMode.value ~= "Unlocked" and not spell.type == 'CorsairRoll' and not spell.name == 'Double-Up' then
@@ -1095,6 +1089,7 @@ do
 		elseif spell.type == 'Step' then log('abort midcast') return {}
 		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return {} end
 		
+
 		if pet.isvalid and pet_midaction() then return {} end
 		--Default gearset
 		local built_set = {}
@@ -1156,6 +1151,7 @@ do
 						built_set = set_combine(built_set, sets.Midcast.AM.RA[state.WeaponMode.value])
 						message = '['..spell.english..'] Set with Aftermath (Ranged)'
 					end
+					message = message..' ['..available_bullets..'x]'
 					info(message)
 				else warn('sets.Midcast.RA not found!') end
 			-- Ninjutsu
@@ -1933,6 +1929,7 @@ do
 				log('Ammo name is: '..bullet_name)
 				return
 			end
+
 			local bullet_min_count = 1
 			if spell.action_type == 'Ranged Attack' then
 				if buffactive['Triple Shot'] then
@@ -1943,11 +1940,23 @@ do
 					bullet_min_count = 8
 				end
 			end
-			local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name] or player.wardrobe2[bullet_name]
-			 or player.wardrobe3[bullet_name] or player.wardrobe4[bullet_name] or player.wardrobe5[bullet_name] 
-			 or player.wardrobe6[bullet_name] or player.wardrobe7[bullet_name] or player.wardrobe8[bullet_name]
-			-- If no ammo is available, give appropriate warning and end.
-			if not available_bullets then
+
+			available_bullets = 0
+
+			if player.inventory[bullet_name] then available_bullets = available_bullets + player.inventory[bullet_name].count end
+			if player.wardrobe[bullet_name] then available_bullets = available_bullets + player.wardrobe[bullet_name].count end
+			if player.wardrobe2[bullet_name] then available_bullets = available_bullets + player.wardrobe2[bullet_name].count end
+			if player.wardrobe3[bullet_name] then available_bullets = available_bullets + player.wardrobe3[bullet_name].count end
+			if player.wardrobe4[bullet_name] then available_bullets = available_bullets + player.wardrobe4[bullet_name].count end
+			if player.wardrobe5[bullet_name] then available_bullets = available_bullets + player.wardrobe5[bullet_name].count end
+			if player.wardrobe6[bullet_name] then available_bullets = available_bullets + player.wardrobe6[bullet_name].count end
+			if player.wardrobe7[bullet_name] then available_bullets = available_bullets + player.wardrobe7[bullet_name].count end
+			if player.wardrobe8[bullet_name] then available_bullets = available_bullets + player.wardrobe8[bullet_name].count end
+
+			log('Bullet Count ['..available_bullets..']')
+
+			if available_bullets == 0 then
+				-- If no ammo is available, give appropriate warning and end.
 				if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
 					add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
 					return
@@ -1960,15 +1969,16 @@ do
 					return
 				end
 			end
+
 			-- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-			if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets.count <= bullet_min_count then
+			if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets <= bullet_min_count then
 				add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
 				cancel_spell()
 				return
 			end
 			-- Low ammo warning.
-			if spell.type ~= 'CorsairShot' and state.warned.value == false and available_bullets.count > 1 and available_bullets.count <= Ammo_Warning_Limit then
-				local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets.count)..'x '..bullet_name..' *****'
+			if spell.type ~= 'CorsairShot' and state.warned.value == false and available_bullets > 1 and available_bullets <= Ammo_Warning_Limit then
+				local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets)..'x '..bullet_name..' *****'
 				local border = ""
 				for i = 2, #msg do border = border .. "*" end
 				windower.send_command('send @others input /echo '..msg..'')
@@ -1976,7 +1986,7 @@ do
 				add_to_chat(167, msg)
 				add_to_chat(167, border)
 				state.warned:set()
-			elseif available_bullets.count > Ammo_Warning_Limit and state.warned then
+			elseif available_bullets > Ammo_Warning_Limit and state.warned then
 				state.warned:reset()
 			end
 		end
@@ -2358,11 +2368,12 @@ do
 	function use_enchantment(item)
 		local SlotList = {"main","sub","range","ammo","head","body","hands","legs","feet","neck","waist","lear","rear","left_ring","right_ring","back"}
 		local item_table = res.items:with('enl',item) or res.items:with('en',item)
+		local slot =''
+
 		if item_table == nil or not item_table.targets:contains('Self') then
 			info("Invalid item.")
 			return
 		end
-		local slot =''
 		if item_table.slots:contains(0) then
 			slot = 'main'
 		else
@@ -2376,12 +2387,12 @@ do
 		enable(slot)
 		equip({[slot]=item_table.en})
 		disable(slot)
-		local delay_use = item_table.cast_delay + 2
+		local delay_use = item_table.cast_delay + 3
 		local delay_unlock = delay_use + item_table.cast_time + 3
 		Use_Item_Command = item_table.en
 		coroutine.schedule(Use_Item, delay_use)
-		coroutine.schedule(Unlock, delay_unlock + 2)
-		coroutine.schedule(equip_set, delay_unlock + 3)
+		coroutine.schedule(Unlock, delay_unlock)
+		coroutine.schedule(equip_set, delay_unlock)
 	end
 
 	function Use_Item()
@@ -2807,7 +2818,6 @@ do
 
 		-- 30 second cycle timer
 		if now - UpdateTime1 > 30 then
-			log('Update Timer 1')
 			dual_wield_check()
 			cleanup_tagged_mobs()
 			UpdateTime1 = now
@@ -2815,7 +2825,6 @@ do
 
 		-- function used for periodic updates - feature
 		if Cycle_Timer and now - UpdateTime2 > 2 and not is_busy then
-			log('Update Timer 2')
 			Cycle_Timer()
 			UpdateTime2 = now
 		end
