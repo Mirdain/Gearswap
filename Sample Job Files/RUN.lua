@@ -158,6 +158,8 @@ function get_sets()
 
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	-- This gear will be equiped when the player is moving and not engaged
 	sets.Movement = {
@@ -169,10 +171,12 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
+
+	sets.Embolden = { back={ name="Evasionist's Cape", augments={'Enmity+1','"Embolden"+15','"Dbl.Atk."+1',}},}
 
 	sets.OffenseMode = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -272,15 +276,15 @@ function get_sets()
 		back={ name="Ogma's cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Spell interruption rate down-10%',}}, -- 10
 	} --65 FC
 
-	sets.Precast.FastCast.Enhancing = set_combine(sets.Precast.FastCast, {
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {
 		legs={ name="Futhark Trousers +3", augments={'Enhances "Inspire" effect',}}, -- 7  (15 - 8) 
 		waist="Siegel Sash", -- 8
 	}) -- 80+ FC
 
+	sets.Precast.BlueMagic = set_combine (sets.Precast.FastCast, {})
+
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, sets.Enmity, sets.SIRD, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, sets.Enmity, sets.SIRD, {})
 
 	-- Enhancing Skill
 	sets.Midcast.Enhancing = {
@@ -298,6 +302,29 @@ function get_sets()
 		right_ring={name="Moonlight Ring", bag="wardrobe2", priority=5},
 		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Damage taken-5%',}}, -- 5/5
 	}
+
+	-- Elemental
+	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
+
+	-- Enhancing Duration on OTHERS
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {})
+
+	-- Status
+	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {})
+
+	-- Regen Sets
+	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {})
+
+	sets.Midcast.Cure = {}
+
+	-- Blue Magic
+	sets.Midcast.BlueMagic = {}
+	sets.Midcast.BlueMagic.Skill = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Nuke = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Healing = set_combine(sets.Midcast.Cure, {})
+	sets.Midcast.BlueMagic.ACC = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Enmity = set_combine(sets.Enmity, {})
+
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {}
 
@@ -363,11 +390,10 @@ function get_sets()
     sets.JA["Pflug"] = set_combine(sets.Enmity, { feet="Runeist Bottes +1" })
     sets.JA["Battuta"] = set_combine(sets.Enmity, { head="Futhark Bandeau +3" })
     sets.JA["Vivacious Pulse"] = set_combine(sets.Precast.Divine, { head="Erilaz Galea +3" })
-    sets.JA["Embolden"] = set_combine(sets.Enmity, { back={ name="Evasionist's Cape", augments={'Enmity+1','"Embolden"+15','"Dbl.Atk."+1',}},})
+    sets.JA["Embolden"] = set_combine(sets.Enmity, sets.Embolden)
     sets.JA["Swordplay"] = set_combine(sets.Enmity, { hands="Futhark Mitons +3" })
 	sets.JA["Provoke"] = sets.Enmity
 
-	sets.Embolden = { back={ name="Evasionist's Cape", augments={'Enmity+1','"Embolden"+15','"Dbl.Atk."+1',}},}
 
 	--Default WS set base
 	sets.WS = {
@@ -588,7 +614,7 @@ end
 -- Swaps back when embolden buff is active to extend duration
 function Embolden_Check(spell)
 	equipSet = {}
-	if spell.target.name == player.name then
+	if spell.target.id == player.id then
 		if buffactive['Embolden'] then
 			equipSet = sets.Embolden
 			info('Embolden Set')

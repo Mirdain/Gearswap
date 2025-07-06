@@ -405,7 +405,6 @@ do
 	local SpellCastTime = 0
 	local Spellstart = os.clock()
 
-	local is_Pianissimo = false
 	local is_moving = false
 	local is_first_time_load = true
 
@@ -565,7 +564,7 @@ do
 			local min = math.floor(ability_time)
 			local sec = (ability_time - min) * 60
 			if ability_time > 0 then
-				info(''..spell.name..' ['..string.format("%d.%02d",min,sec)..']')
+				info(''..spell.name..' ['..string.format("%d:%02d",min,sec)..']')
 				cancel_spell()
 				return
 			end
@@ -576,24 +575,11 @@ do
 			local min = math.floor(spell_time)
 			local sec = (spell_time - min) * 60
 			if spell_time > 0 then
-				info(''..spell.name..' ['..string.format("%d.%02d",min,sec)..']')
+				info(''..spell.name..' ['..string.format("%d:%02d",min,sec)..']')
 				cancel_spell()
 				return
 			end
-			--Cancel if null target and redirect to self if bard song
-			if not spell.target.type and spell.type == 'BardSong' then
-				if buffactive['Pianissimo'] then
-					if not is_Pianissimo then
-						cancel_spell()
-						windower.chat.input('/ma "'..spell.name..'" <stpc>')
-						is_Pianissimo = true
-					else
-						is_Pianissimo = false
-					end
-				else
-					change_target('<me>')
-				end
-			elseif spell.target.type then
+			if spell.target.type then
 				local cast_spell = res.spells[spell.id]
 				if not cast_spell.targets then
 					info('Unable to find spell ['..spell.name..']')
@@ -616,33 +602,10 @@ do
 				-- Party Buffs
 				elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
 					if spell.target.type == 'MONSTER' then
-						if spell.type == 'BardSong' then
-							if buffactive['pianissimo'] then
-								if is_Pianissimo == false then
-									cancel_spell()
-									--log('Piassimo Redirect - Select Character')
-									windower.chat.input('/ma \"'..spell.name..'\" <stpc>')
-									is_Pianissimo = true
-								else
-									is_Pianissimo = false
-								end
-							else
-								change_target('<me>')
-								log('Redirect Spell:[SELF TARGET]')
-							end
-						else
-							-- Cancel Spell
-							log('Cancel Spell:[PARTY TARGET]')
-							cancel_spell()
-							return
-						end
-					else
-						if spell.type == 'BardSong' and spell.target.type == 'SELF' and buffactive['Pianissimo'] then
-							log('Pianissimo Redirect - Select Character')
-							cancel_spell()
-							windower.chat.input('/ma \"'..spell.name..'\" <stpc>')
-							return
-						end
+						-- Cancel Spell
+						log('Cancel Spell:[PARTY TARGET]')
+						cancel_spell()
+						return
 					end
 				end
 			end
@@ -959,9 +922,9 @@ do
 						else warn('sets.Precast.Utsusemi not found!') end	
 					-- Blue Magic
 					elseif spell.type == 'BlueMagic' then
-						if sets.Precast.Blue_Magic then
-							built_set = set_combine(built_set, sets.Precast.Blue_Magic)
-						else warn('sets.Precast.Blue_Magic not found!') end		
+						if sets.Precast.BlueMagic then
+							built_set = set_combine(built_set, sets.Precast.BlueMagic)
+						else warn('sets.Precast.BlueMagic not found!') end		
 					-- BardSong
 					elseif spell.type == 'BardSong' then
 						if buffactive['Nightingale'] then
@@ -1106,7 +1069,7 @@ do
 					built_set = set_combine(built_set, sets.Midcast.RA)
 					-- Generic
 					local message = ''
-					if state.OffenseMode.value ~= 'TP' then
+					if state.OffenseMode.value ~= 'TP' and sets.Midcast.RA[state.OffenseMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.RA[state.OffenseMode.value])
 						if state.OffenseMode.value == 'ACC' then
 							message = 'Ranged Attack with Accuracy '
@@ -1127,7 +1090,7 @@ do
 						end
 					else message = 'Ranged Attack Set' end
 					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.MidcastMidcast.RA.AM3 and sets.Midcast.AM3[state.WeaponMode.value] then
+					if buffactive['Aftermath: Lv.3'] and sets.Midcast.RA.AM3 and sets.Midcast.RA.AM3[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.RA.AM3[state.WeaponMode.value])
 						message = message.. ' and with Aftermath 3 ['..state.WeaponMode.value..']'
 					elseif buffactive['Aftermath: Lv.2'] and sets.Midcast.RA.AM2 and sets.Midcast.RA.AM2[state.WeaponMode.value] then
@@ -1501,32 +1464,32 @@ do
 					info( '['..spell.english..'] Set')
 				-- Defined Blue Nukes
 				elseif BlueNuke:contains(spell.english) then
-					if sets.Midcast.Nuke then
-						built_set = set_combine(built_set, sets.Midcast.Nuke)
+					if sets.Midcast.BlueMagic.Nuke then
+						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Nuke)
 						info('Blue Nuke set')
-					else warn('sets.Midcast.Nuke not found!') end
+					else warn('sets.Midcast.BlueMagic.Nuke not found!') end
 					built_set = elemental_check(spell, built_set)
 				-- Spells that benifit from Blue Magic Skill
 				elseif BlueSkill:contains(spell.english) then
-					if sets.Midcast.Skill then
-						built_set = set_combine(built_set, sets.Midcast.Skill)
+					if sets.Midcast.BlueMagic.Skill then
+						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Skill)
 						info('Blue Skill set')
-					else warn('sets.Midcast.Skill not found!') end
+					else warn('sets.Midcast.BlueMagic.Skill not found!') end
 				elseif BlueTank:contains(spell.english) then
-					if sets.Enmity then
-						built_set = set_combine(built_set, sets.Enmity)
+					if sets.Midcast.BlueMagic.Enmity then
+						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Enmity)
 						info('Blue Enmity set')
-					else warn('sets.Enmity not found!') end
+					else warn('sets.Midcast.BlueMagic.Enmity not found!') end
 				elseif BlueHealing:contains(spell.english) then
-					if sets.Midcast.Cure then
-						built_set = set_combine(built_set, sets.Midcast.Cure)
+					if sets.Midcast.BlueMagic.Healing then
+						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Healing)
 						info('Blue Cure set')
-					else warn('sets.Midcast.Cure not found!') end
+					else warn('sets.Midcast.BlueMagic.Healing not found!') end
 				elseif BlueACC:contains(spell.english) then
-					if sets.Midcast.ACC then
-						built_set = set_combine(built_set, sets.Midcast.ACC)
+					if sets.Midcast.BlueMagic.ACC then
+						built_set = set_combine(built_set, sets.Midcast.BlueMagic.ACC)
 						info('Blue Magic Accuracy set')
-					else warn('sets.Midcast.ACC not found!') end
+					else warn('sets.Midcast.BlueMagic.ACC not found!') end
 				-- Default Spell set
 				else info('Midcast not set') end
 				if buffactive["Diffusion"] then

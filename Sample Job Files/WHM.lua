@@ -112,8 +112,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -252,9 +252,7 @@ function get_sets()
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
 		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
 	}
-	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {
-	
-	});
+	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {});
 
 	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
@@ -307,17 +305,9 @@ function get_sets()
 		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Damage taken-5%',}},
 	}
 
-	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {
-
-	})
-
-	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {
-
-	})
-
-	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {
-
-	})
+	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
+	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
+	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
 
 	sets.Midcast["Cursna"] = {
 		main="Yagrush",
