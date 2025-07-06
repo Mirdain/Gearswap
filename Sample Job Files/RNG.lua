@@ -202,14 +202,9 @@ function get_sets()
 	}
 
 	--Base TP set to build off when melee'n
-	sets.OffenseMode = {ammo=Ammo.RA,}
-
-	-- Set is used for when you are engaged and in ranged mode (not actually hitting an enemy)
-	sets.OffenseMode.Ranged = set_combine(sets.Idle, { })
-
-	--Set focuses on maximum TP gain
-	sets.OffenseMode.TP = {
-	    head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+	sets.OffenseMode = {
+		ammo=Ammo.RA,
+		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
@@ -223,8 +218,11 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dual Wield"+10','Damage taken-5%',}},
 	}
 
+	--Set focuses on maximum TP gain
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {})
+
 	--This set is used when OffenseMode is set to DT and enaged
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
 	    head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Amini Glove. +3",
@@ -233,7 +231,7 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is set to PDL and enaged
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, {
 		head="Malignance Chapeau",
 		body="Amini Caban +3",
 		hands="Malignance Gloves",
@@ -242,13 +240,10 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.DT, {
-	})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
 
 	--This set is used when OffenseMode is CRIT and Engaged
-	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode[state.OffenseMode.value], {
-
-	})
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.DT, {})
 
 	--The following sets augment the OffenseMode set above for Dual Wielding
 	sets.DualWield = {
@@ -291,11 +286,6 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'HP+60','HP+20','"Snapshot"+10',}, priority=1}, -- 10 with 2% Velocity Shot
     })	--60 Snapshot / 29 Rapidshot / 11% Velocity Shot
 
-	-- Only the bullet needs to be set for ACC sets (so that it will match the sets.Midcast.RA.ACC)
-    sets.Precast.RA.ACC = set_combine(sets.Precast.RA, {
-		ammo=Ammo.ACC,
-    })
-
 	-- Flurry - 45 Snapshot Needed
 	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
 		head="Orion Beret +3",
@@ -324,12 +314,11 @@ function get_sets()
 	} -- 77 FC for Utsusemi (80 is cap)
 	 
 		--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-		ammo=Ammo.RA,
-	})
+	sets.Midcast = set_combine(sets.Idle, {})
 
 	-- Ranged Attack Gear (Normal Midshot)
     sets.Midcast.RA = set_combine(sets.Midcast, {
+		ammo=Ammo.RA,
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
 		body={ name="Ikenga's Vest", augments={'Path: A',}},
 		hands="Amini Glove. +3",
@@ -351,6 +340,7 @@ function get_sets()
 
 	-- Ranged Attack Gear (Physical Damage Limit)
     sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
+		ammo=Ammo.RA,
 		head={ name="Ikenga's Hat", augments={'Path: A',}},
 		body={ name="Ikenga's Vest", augments={'Path: A',}},
 		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
@@ -365,10 +355,10 @@ function get_sets()
 		range={ name="Fomalhaut", augments={'Path: A',}},
 		ammo="Chrono Bullet",
 		head="Meghanada Visor +2",
-		--body="Nisroch Jerkin", Need more attack
-		body={ name="Ikenga's Vest", augments={'Path: A',}},
-		--hands="Mummu Wrists +2", Need more attack
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
+		body="Nisroch Jerkin",
+		--body={ name="Ikenga's Vest", augments={'Path: A',}},
+		hands="Mummu Wrists +2",
+		--hands={ name="Ikenga's Gloves", augments={'Path: A',}},
 		legs="Amini Bragues +3",
 		feet="Osh. Leggings +1",
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
@@ -392,6 +382,18 @@ function get_sets()
 	sets.Midcast.RA.Barrage = set_combine(sets.Midcast.RA, {
 	    hands="Orion Bracers +3",
     })
+
+	-- Relic Aftermath
+	sets.Midcast.RA.AM = {}
+	--sets.Midcast.RA.AM['Annihilator'] = {}
+
+	-- Empy/Mythic Aftermath
+	sets.Midcast.RA.AM3 = {}
+	--sets.Midcast.RA.AM3['Gastraphetes'] = { }
+	sets.Midcast.RA.AM2 = {}
+	--sets.Midcast.RA.AM2['Gastraphetes'] = { }
+	sets.Midcast.RA.AM1 = {}
+	--sets.Midcast.RA.AM1['Gastraphetes'] = { }
 
 	-- Job Abilities
 	sets.JA = {}
@@ -446,57 +448,17 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}}, -- Add Melee Cape
 	}
 
-	-- Weapon Skill Damage
-	sets.WS.RA = set_combine(sets.WS, {
-		ammo=Ammo.WSD,
-		head="Orion Beret +3",
-		body="Amini Caban +3",
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
-		feet="Amini Bottillons +3",
-		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		waist="Fotia Belt",
-		left_ear="Ishvara Earring",
-		right_ear="Telos Earring",
-		left_ring="Dingir Ring",
-		right_ring="Epaminondas's Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	})
-
 	-- Subtle Blow set used in OffenseMode.SB
 	sets.WS.SB = set_combine(sets.WS, { })
-	sets.WS.SB.RA = set_combine(sets.WS.RA, { })
 
 	-- Physical Damage Limit set used in OffenseMode.PDL
 	sets.WS.PDL = set_combine(sets.WS, { })
-	sets.WS.PDL.RA = set_combine(sets.WS.RA, { 
-		head={ name="Ikenga's Hat", augments={'Path: A',}},
-		body="Amini Caban +3",
-		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
-		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
-		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
-		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		waist="Fotia Belt",
-		left_ear="Ishvara Earring",
-		right_ear="Telos Earring",
-		left_ring="Sroda Ring",
-		right_ring="Dingir Ring",
-		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	})
 
 	-- Accuracy set used in OffenseMode.ACC
 	sets.WS.ACC = set_combine(sets.WS, { })
-	sets.WS.ACC.RA = set_combine(sets.WS.RA, {
-		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
-	})
 
 	-- Critical Hit set used in OffenseMode.SB
-	sets.WS.CRIT = { 
-	
-	}
-	sets.WS.CRIT.RA = { 
-		Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
-	}
+	sets.WS.CRIT = set_combine(sets.WS, { })
 
 	-- Weapon Skill Damage (Melee)
 	sets.WS.WSD = set_combine(sets.WS, {
@@ -526,6 +488,61 @@ function get_sets()
 		right_ring="Dingir Ring",
 	})
 
+	-- Ranged Weapon Skills
+	sets.WS.RA = set_combine(sets.WS, {
+		ammo=Ammo.WSD,
+		head="Orion Beret +3",
+		body="Amini Caban +3",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
+		feet="Amini Bottillons +3",
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Telos Earring",
+		left_ring="Dingir Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
+
+	sets.WS.RA.PDL = set_combine(sets.WS.RA, { 
+		head={ name="Ikenga's Hat", augments={'Path: A',}},
+		body="Amini Caban +3",
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
+		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Telos Earring",
+		left_ring="Sroda Ring",
+		right_ring="Dingir Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
+
+	sets.WS.RA.ACC = set_combine(sets.WS.RA, {
+		ammo=Ammo.ACC, -- Smart_Ammo() will select from your XXXX.RA type
+	})
+
+	sets.WS.RA.CRIT = set_combine(sets.WS.RA, {
+		Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
+	})
+
+	sets.WS.RA.SB = set_combine(sets.WS.RA, { })
+
+	-- Below swaps gear based off Aftermath
+
+	-- Relic Aftermath
+	sets.WS.RA.AM = {}
+	sets.WS.RA.AM['Annihilator'] = {}
+
+	-- Empy/Mythic Aftermath
+	sets.WS.RA.AM3 = {}
+	sets.WS.RA.AM3['Gastraphetes'] = { }
+	sets.WS.RA.AM2 = {}
+	sets.WS.RA.AM2['Gastraphetes'] = { }
+	sets.WS.RA.AM1 = {}
+	sets.WS.RA.AM1['Gastraphetes'] = { }
 
 	-- Gun Weaponskills
 	sets.WS["Hot Shot"] = set_combine(sets.WS.MAB, {})
@@ -643,17 +660,11 @@ end
 function aftercast_custom(spell)
 	equipSet = {}
 	equipSet = Job_Mode_Check(equipSet)
-	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
 	equipSet = {}
-	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -666,9 +677,6 @@ end
 --Function is called when the player changes states
 function status_change_custom(new,old)
 	equipSet = {}
-	if state.JobMode.value == 'Ranged' and new == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end

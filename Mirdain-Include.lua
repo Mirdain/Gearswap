@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.4'
+Mirdain_GS = '1.5.5'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -24,7 +24,6 @@ sets.Cursna_Received = {}
 
 -- State sets
 sets.OffenseMode = {}
-sets.OffenseMode.Ranged = {}
 sets.OffenseMode.AM = {}
 sets.OffenseMode.AM1 = {}
 sets.OffenseMode.AM2 = {}
@@ -111,34 +110,35 @@ sets.Midcast.Aria = {}
 
 -- Midcast for Ranged Attacks and Aftermath
 sets.Midcast.AM = {}
-sets.Midcast.AM.RA = {}
+sets.Midcast.RA.AM = {}
 sets.Midcast.AM1 = {}
-sets.Midcast.AM1.RA = {}
+sets.Midcast.RA.AM1 = {}
 sets.Midcast.AM2 = {}
-sets.Midcast.AM2.RA = {}
+sets.Midcast.RA.AM2 = {}
 sets.Midcast.AM3 = {}
-sets.Midcast.AM3.RA = {}
+sets.Midcast.RA.AM3 = {}
 
 --Weaponskills
 sets.WS = {}
+sets.WS.RA = {}
 sets.WS.ACC =  {}
-sets.WS.ACC.RA = {}
+sets.WS.RA.ACC = {}
 sets.WS.PDL = {}
-sets.WS.PDL.RA = {}
+sets.WS.RA.PDL = {}
 sets.WS.SB = {}
-sets.WS.SB.RA = {}
+sets.WS.RA.SB = {}
 sets.WS.CRIT = {}
-sets.WS.CRIT.RA = {}
+sets.WS.RA.CRIT = {}
 sets.WS.MEVA = {}
-sets.WS.MEVA.RA = {}
+sets.WS.RA.MEVA = {}
 sets.WS.AM = {}
-sets.WS.AM.RA = {}
+sets.WS.RA.AM = {}
 sets.WS.AM1 = {}
-sets.WS.AM1.RA = {}
+sets.WS.RA.AM1 = {}
 sets.WS.AM2 = {}
-sets.WS.AM2.RA = {}
+sets.WS.RA.AM2 = {}
 sets.WS.AM3 = {}
-sets.WS.AM3.RA = {}
+sets.WS.RA.AM3 = {}
 		
 -- Other Sets
 sets.JA = {}
@@ -674,9 +674,9 @@ do
 					if sets.WS[spell.english] then
 						-- Set is defined
 						built_set = set_combine(built_set, sets.WS[spell.english])
-						-- Example would be WS.ACC.RA
-						if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] and sets.WS[state.OffenseMode.value].RA then
-							built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
+						-- Example would be WS.RA.ACC
+						if state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA[state.OffenseMode.value])
 							-- Augment the specified WS
 							if state.OffenseMode.value == 'ACC' then
 								message = '['..spell.english..'] Set with Accuracy (Ranged)'
@@ -692,8 +692,8 @@ do
 						else message = '['..spell.english..'] Set' end
 					else
 						-- Generic
-						if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] and sets.WS[state.OffenseMode.value].RA then
-							built_set = set_combine(built_set, sets.WS[state.OffenseMode.value].RA)
+						if state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA[state.OffenseMode.value])
 							if state.OffenseMode.value == 'ACC' then
 								message = 'Using Default WS Set with Accuracy (Ranged)'
 							elseif state.OffenseMode.value == 'PDL' then
@@ -708,18 +708,18 @@ do
 						else message = 'Using Default WS Set (Ranged)' end
 					end
 					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3.RA and sets.WS.AM3.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM3.RA[state.WeaponMode.value])
-						message = message..' and Level 3 Aftermath (Ranged)'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.AM2 and sets.WS.AM2.RA and sets.WS.AM2.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM2.RA[state.WeaponMode.value])
-						message = message..' and Level 2 Aftermath (Ranged)'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.AM1 and sets.WS.AM1.RA and sets.WS.AM1.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM1.RA[state.WeaponMode.value])
-						message = message..' and Level 1 Aftermath (Ranged)'
-					elseif buffactive['Aftermath'] and sets.WS.AM and sets.WS.AM.RA and sets.WS.AM.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.AM.RA[state.WeaponMode.value])
-						message = message..' and Aftermath (Ranged)'
+					if buffactive['Aftermath: Lv.3'] and sets.WS.RA and sets.WS.RA.AM3 and sets.WS.RA.AM3[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.WS.RA.AM3[state.WeaponMode.value])
+						message = message..' and Level 3 Aftermath (Ranged - '..state.WeaponMode.value..')'
+					elseif buffactive['Aftermath: Lv.2'] and sets.WS.RA and sets.WS.RA.AM2 and sets.WS.RA.AM2[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.WS.RA.AM2[state.WeaponMode.value])
+						message = message..' and Level 2 Aftermath (Ranged - '..state.WeaponMode.value..')'
+					elseif buffactive['Aftermath: Lv.1'] and sets.WS.RA and sets.WS.RA.AM1 and sets.WS.RA.AM1[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.WS.RA.AM1[state.WeaponMode.value])
+						message = message..' and Level 1 Aftermath (Ranged - '..state.WeaponMode.value..')'
+					elseif buffactive['Aftermath'] and sets.WS.RA and sets.WS.RA.AM and sets.WS.AM.RA[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.WS.RA.AM[state.WeaponMode.value])
+						message = message..' and Aftermath (Ranged - '..state.WeaponMode.value..')'
 					end
 					do_bullet_checks(spell, built_set)
 					message = message..' ['..available_bullets..'x]'
@@ -1106,8 +1106,8 @@ do
 					built_set = set_combine(built_set, sets.Midcast.RA)
 					-- Generic
 					local message = ''
-					if state.OffenseMode.value ~= 'TP' and sets.Midcast[state.OffenseMode.value] and sets.sets.Midcast[state.OffenseMode.value].RA then
-						built_set = set_combine(built_set, sets.sets.Midcast[state.OffenseMode.value].RA)
+					if state.OffenseMode.value ~= 'TP' then
+						built_set = set_combine(built_set, sets.Midcast.RA[state.OffenseMode.value])
 						if state.OffenseMode.value == 'ACC' then
 							message = 'Ranged Attack with Accuracy '
 						elseif state.OffenseMode.value == 'PDL' then
@@ -1126,6 +1126,20 @@ do
 							message = 'Ranged Attack with True Shot'
 						end
 					else message = 'Ranged Attack Set' end
+					-- Check if Aftermath is active
+					if buffactive['Aftermath: Lv.3'] and sets.MidcastMidcast.RA.AM3 and sets.Midcast.AM3[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Midcast.RA.AM3[state.WeaponMode.value])
+						message = message.. ' and with Aftermath 3 ['..state.WeaponMode.value..']'
+					elseif buffactive['Aftermath: Lv.2'] and sets.Midcast.RA.AM2 and sets.Midcast.RA.AM2[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Midcast.RA.AM2[state.WeaponMode.value])
+						message = message.. ' and with Aftermath 2 ['..state.WeaponMode.value..']'
+					elseif buffactive['Aftermath: Lv.1'] and sets.Midcast.RA.AM1 and sets.Midcast.RA.AM1[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Midcast.RA.AM1[state.WeaponMode.value])
+						message = message.. ' and with Aftermath 1 ['..state.WeaponMode.value..']'
+					elseif buffactive['Aftermath'] and sets.Midcast.RA.AM and sets.Midcast.RA.AM[state.WeaponMode.value] then
+						built_set = set_combine(built_set, sets.Midcast.RA.AM[state.WeaponMode.value])
+						message = message.. ' and with Aftermath ['..state.WeaponMode.value..']'
+					end
 					-- Buffs
 					if buffactive['Triple Shot'] and sets.Midcast.RA.TripleShot then 
 						built_set = set_combine(built_set, sets.Midcast.RA.TripleShot)
@@ -1136,20 +1150,6 @@ do
 					elseif buffactive['Barrage'] and sets.Midcast.RA.Barrage then 
 						built_set = set_combine(built_set, sets.Midcast.RA.Barrage)
 						message = 'Using Barrage Set'
-					end
-					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.Midcast.AM3 and sets.Midcast.AM3.RA and sets.Midcast.AM3.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Midcast.AM3.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 3 (Ranged)'
-					elseif buffactive['Aftermath: Lv.2'] and sets.Midcast.AM2 and sets.Midcast.AM2.RA and sets.Midcast.AM2.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Midcast.AM2.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 2 (Ranged)'
-					elseif buffactive['Aftermath: Lv.1'] and sets.Midcast.AM1 and sets.Midcast.AM1.RA and sets.Midcast.AM1.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Midcast.AM1.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath 1 (Ranged)'
-					elseif buffactive['Aftermath'] and sets.Midcast.AM and sets.Midcast.AM.RA and sets.Midcast.AM.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.Midcast.AM.RA[state.WeaponMode.value])
-						message = '['..spell.english..'] Set with Aftermath (Ranged)'
 					end
 					message = message..' ['..available_bullets..'x]'
 					info(message)
@@ -2639,7 +2639,7 @@ do
 	end
 
 	function info (msg)
-		if settings.info then print(7, msg) end
+		if settings.info then print(8, msg) end
 	end
 
 	function warn (msg)
@@ -2720,19 +2720,19 @@ do
 			-- Matching double weather (w/o day conflict).
 			if spell.element == world.weather_element and world.weather_intensity == 2 and Obi then
 				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
-				windower.add_to_chat(8,'Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+				info('Weather is Double ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Matching day and weather.
 			elseif spell.element == world.day_element and spell.element == world.weather_element and Obi then
 				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
-				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+				info('[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			-- Target distance less than 6 yalms
 			elseif spell.target.distance < (6 + spell.target.model_size) and Osash then
 				built_set = set_combine(built_set, {waist="Orpheus's Sash"})
-				windower.add_to_chat(8,'Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
+				info('Distance is ['.. round(spell.target.distance,2) .. '] using Orpheus Sash')
 			-- Match day or weather.
 			elseif spell.element == world.day_element or spell.element == world.weather_element and Obi then
 				built_set = set_combine(built_set, {waist="Hachirin-no-Obi"})
-				windower.add_to_chat(8,'[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
+				info('[' ..world.day_element.. '] day and weather is ['.. world.weather_element .. '] - using Hachirin-no-Obi')
 			end
 
 		end
@@ -3095,9 +3095,9 @@ do
 					-- Ranged Mode
 					if state.JobMode.value == "Ranged" then
 						log('Ranged Mode')
-						if sets.OffenseMode.Ranged then
-							built_set = set_combine(built_set, sets.OffenseMode.Ranged)
-						else warn('sets.OffenseMode.Ranged not found!') end
+						if sets.Idle and sets.Idle[state.OffenseMode.value] then
+							built_set = set_combine(built_set, sets.Idle[state.OffenseMode.value])
+						else warn('sets.Idle.'..state.OffenseMode.value..' not found!') end
 					end
 					-- Check if AM3 is active
 					if buffactive['Aftermath: Lv.3'] and sets.OffenseMode.AM3 and sets.OffenseMode.AM3[state.WeaponMode.value] then

@@ -21,7 +21,7 @@ Random_Lockstyle = false
 Lockstyle_List = {1,2,6,12}
 
 -- Add CRIT the base modes to allow AM3 Critical Builds
-state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','MEVA')
+state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','MEVA','SB')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Corsair
@@ -125,6 +125,7 @@ function get_sets()
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.CRIT = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {})
@@ -138,15 +139,23 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
+	sets.Subtle_Blow = {
+		neck="Bathy Choker +1",
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2"},
+	}
 
-	--Base TP set to build off when melee'n
-	sets.OffenseMode.TP = {
+	--The following sets augment the base TP set above for Dual Wielding
+	sets.DualWield = {
+		waist="Reiki Yotai",
+		right_ear="Eabani Earring",
+	}
+
+	sets.OffenseMode = {
 		ammo = Ammo.Bullet.RA,
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -162,21 +171,28 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	}
 
+	--Base TP set to build off when melee'n
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {})
+
 	--This set is used when OffenseMode is DT and Enaged
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
 	    legs="Chas. Culottes +3",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
 	})
 
 	--This set is used when OffenseMode is PDL and Enaged
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, {
 		legs="Malignance Tights",
 	})
 
 	--This set is used when OffenseMode is CRIT and Enaged
-	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {})
 
-	})
+	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
+
+	-- Subtle Blow Set
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {})
 
 	--This set is used when OffenseMode is MEVA and Enaged
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
@@ -193,15 +209,6 @@ function get_sets()
 		right_ring="Defending Ring",
 		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 	})
-
-	--The following sets augment the base TP set above for Dual Wielding
-	sets.DualWield = {
-		waist="Reiki Yotai",
-		right_ear="Eabani Earring",
-	}
-
-	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = {}
 
 	sets.Precast = {}
 	-- 70 snapshot is Cap.  Need 60 due to 10 from gifts
@@ -394,8 +401,7 @@ function get_sets()
 		legs="Dashing Subligar", -- 10
 	}) -- 20% Potency
 
-	-- Used when Double Bust is active
-	sets.Fold = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}} 
+	sets.Fold = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}}
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = {
@@ -457,6 +463,33 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
+	-- Critical Hit set used in OffenseMode.CRIT
+	sets.WS.CRIT = set_combine(sets.WS, { })
+
+	-- Accuracy sets used in OffenseMode.ACC
+	sets.WS.ACC = set_combine(sets.WS, {})
+
+	-- Equipment to augment WS for Physical Damage Limit (Capped Attack)
+	sets.WS.PDL = set_combine(sets.WS, {
+		left_ring="Sroda Ring",
+	})
+
+	sets.WS.SB = sets.Subtle_Blow
+
+	sets.WS.MAB = set_combine(sets.WS, {
+		ammo=Ammo.Bullet.MAB,
+		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+		waist="Eschan Stone",
+		left_ear="Friomisi Earring",
+		right_ear="Crematio Earring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
+
+	sets.WS.MEVA = set_combine(sets.WS, {
+	    neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
+
 	-- Ranged Base Set (Augments the sets.WS)
 	sets.WS.RA = {
 		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
@@ -473,49 +506,16 @@ function get_sets()
 		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	-- Accuracy sets used in OffenseMode.ACC
-	sets.WS.ACC = set_combine(sets.WS, {
-	
-	})
+	sets.WS.RA.ACC = set_combine(sets.WS.RA, {})
 
-	sets.WS.ACC.RA = set_combine(sets.WS, {
-	
-	})
-
-	-- Equipment to augment WS for Physical Damage Limit (Capped Attack)
-	sets.WS.PDL = set_combine(sets.WS, {
-		left_ring="Sroda Ring",
-	})
-
-	sets.WS.PDL.RA = set_combine(sets.WS, {
+	sets.WS.RA.PDL = set_combine(sets.WS.RA, {
 		left_ring="Sroda Ring",
 		head="Ikenga's Hat",
 		legs="Ikenga's Trousers",
 		feet="Ikenga's Clogs",
 	})
 
-	-- Critical Hit set used in OffenseMode.CRIT
-	sets.WS.CRIT = set_combine(sets.WS, { 
-	
-	})
-
-	sets.WS.CRIT.RA = set_combine(sets.WS, {
-
-	})
-
-	sets.WS.MAB = set_combine(sets.WS, {
-		ammo=Ammo.Bullet.MAB,
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
-		waist="Eschan Stone",
-		left_ear="Friomisi Earring",
-		right_ear="Crematio Earring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
-	})
-
-	sets.WS.MEVA = set_combine(sets.WS, {
-	    neck="Warder's Charm +1",
-		waist="Carrier's Sash",
-	})
+	sets.WS.RA.CRIT = set_combine(sets.WS.RA, { })
 
 	--These set are used when a weaponskill is used with that level of aftermath with the correct weapon
 	--They Augment any built weaponskill set - Same formatting as the OffenseModes
@@ -524,13 +524,13 @@ function get_sets()
 	sets.WS.AM2 = {}
 	sets.WS.AM3 = {}
 
-	sets.WS.AM.RA = {}
-	sets.WS.AM1.RA = {}
-	sets.WS.AM2.RA = {}
-	sets.WS.AM3.RA = {}
-	sets.WS.AM1.RA['Armageddon'] = {}
-	sets.WS.AM2.RA['Armageddon'] = {}
-	sets.WS.AM3.RA['Armageddon'] = {}
+	sets.WS.RA.AM = {}
+	sets.WS.RA.AM1 = {}
+	sets.WS.RA.AM2 = {}
+	sets.WS.RA.AM3 = {}
+	sets.WS.RA.AM1['Armageddon'] = {}
+	sets.WS.RA.AM2['Armageddon'] = {}
+	sets.WS.RA.AM3['Armageddon'] = {}
 
 	sets.WS['Aeolian Edge'] = set_combine(sets.WS.MAB, {
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -610,34 +610,21 @@ function midcast_custom(spell)
 end
 -- Augment basic equipment sets
 function aftercast_custom(spell)
-	equipSet = {}
-	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --Function is called when the player gains or loses a buff
 function buff_change_custom(name,gain)
-	equipSet = {}
-	if state.JobMode.value == 'Ranged' and player.status == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --This function is called when a update request the correct equipment set
 function choose_set_custom()
-	equipSet = {}
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
 --Function is called when the player changes states
 function status_change_custom(new,old)
-	equipSet = {}
-	if state.JobMode.value == 'Ranged' and new == "Engaged" then
-		equipSet = set_combine(equipSet, sets.OffenseMode.Ranged)
-	end
 	equipSet = Job_Mode_Check(equipSet)
 	return equipSet
 end
@@ -686,18 +673,15 @@ end
 
 function pet_change_custom(pet,gain)
 	equipSet = {}
-	
 	return equipSet
 end
 
 function pet_aftercast_custom(spell)
 	equipSet = {}
-
 	return equipSet
 end
 
 function pet_midcast_custom(spell)
 	equipSet = {}
-
 	return equipSet
 end
