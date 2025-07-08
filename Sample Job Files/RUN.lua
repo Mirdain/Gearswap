@@ -315,6 +315,8 @@ function get_sets()
 	-- Regen Sets
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {})
 
+	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {})
+
 	sets.Midcast.Cure = {}
 
 	-- Blue Magic
@@ -387,7 +389,7 @@ function get_sets()
 		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Damage taken-5%',}}, -- 5/5
         legs="Futhark Trousers +3"
     })
-    sets.JA["Pflug"] = set_combine(sets.Enmity, { feet="Runeist Bottes +1" })
+    sets.JA["Pflug"] = set_combine(sets.Enmity, { feet="Runeist Bottes +3" })
     sets.JA["Battuta"] = set_combine(sets.Enmity, { head="Futhark Bandeau +3" })
     sets.JA["Vivacious Pulse"] = set_combine(sets.Precast.Divine, { head="Erilaz Galea +3" })
     sets.JA["Embolden"] = set_combine(sets.Enmity, sets.Embolden)

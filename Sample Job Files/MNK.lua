@@ -50,6 +50,7 @@ function get_sets()
 	sets.Weapons['Club'] = {
 		main="Warp Cudgel",
 	}
+
 	sets.Weapons.Shield = {}
 	sets.Weapons.Sleep = {}
 
@@ -69,6 +70,7 @@ function get_sets()
 		right_ring="Shadow Ring",
 		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
     }
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
@@ -133,6 +135,7 @@ function get_sets()
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT,{
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	})
+
 	-- Augments the OffenseMode when in DT stance
 	sets.Foot_Work = { feet="Anch. Gaiters +3", }
 
@@ -315,6 +318,7 @@ function get_sets()
 		body="Volte Jupon",
 		waist="Chaac Belt",
 	}
+
 end
 
 -------------------------------------------------------------------------------------------------------------------

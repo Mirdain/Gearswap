@@ -20,9 +20,6 @@ Random_Lockstyle = false
 --Lockstyle sets to randomly equip
 Lockstyle_List = {1,2,6,12}
 
--- This determines if a WS set is augmented with a sash
-Elemental_WS = S{'Aeolian Edge', 'Seraph Blade', 'Shining Blade','Red Lotus Blade', 'Burning Blade', 'Sanguine Blade', 'Energy Drain','Energy Steal','Cyclone','Gust Slash'}
-
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
 state.OffenseMode:options('TP','PDL','ACC','DT','PDT','MEVA','CRIT','SB')
 
@@ -66,13 +63,13 @@ function get_sets()
 		sub="Utu Grip",
 	}
 	-- This stops GS from chaning weapons (Abyssea Proc etc)
-	sets.Weapons['Unlocked'] ={
+	sets.Weapons['Unlocked'] ={}
 
-	}
 	-- This is used when you do not have dual wield and is not a two handed weapon
 	sets.Weapons.Shield = {
 		sub="Blurred Shield +1",
 	}
+	sets.Weapons.Sleep = {}
 
 	-- Base set for when the player is not engaged or casting.  Other sets build off this set
 	sets.Idle = {
@@ -95,6 +92,7 @@ function get_sets()
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.PDT = set_combine(sets.Idle, {})
 	sets.Idle.CRIT = set_combine(sets.Idle, {})
@@ -112,9 +110,17 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
+	}
+
+	-- 10 + 19 for Auspice
+	sets.Subtle_Blow = {
+		body="Dagon Breast.", -- 10 SB II
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 15 SB I
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 8 SB I
+		left_ring="Niqmaddu Ring", -- 5 SB II
 	}
 
 	--WAR Double attack
@@ -134,8 +140,8 @@ function get_sets()
 		left_ear={ name="Schere Earring", augments={'Path: A',}}, -- 3 DA
 		right_ear="Boii Earring +1", -- 8 DA
 		left_ring="Niqmaddu Ring",
-		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}}, -- 10 DA
+		right_ring="Lehko's Ring",
+		back="Null Shawl",
 	}
 
 	sets.OffenseMode.TP = set_combine( sets.OffenseMode, {})
@@ -145,12 +151,12 @@ function get_sets()
 	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {})
 
 	sets.OffenseMode.DT = set_combine( sets.OffenseMode, {
-		head="Sakpata's Helm", -- 5 DA
+		head="Hjarrandi Helm",
 		body="Sakpata's Plate",
 		hands="Sakpata's Gauntlets", -- 6 DA
 		legs="Sakpata's Cuisses", -- 7 DA
 		feet="Sakpata's Leggings", -- 4 DA
-	})
+	}) -- 100% DA
 
 	sets.OffenseMode.PDL = set_combine( sets.OffenseMode, {
 		ammo="Crepuscular Pebble",
@@ -160,30 +166,14 @@ function get_sets()
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head={ name="Sakpata's Helm", augments={'Path: A',}},
-		body={ name="Sakpata's Plate", augments={'Path: A',}},
-		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
-		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 		waist="Carrier's Sash",
-		left_ear={ name="Schere Earring", augments={'Path: A',}},
-		right_ear="Boii Earring +1",
 		left_ring="Moonlight Ring",
 		right_ring="Lehko's Ring",
-		back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	})
 
-	sets.Subtle_Blow = {
-		body="Dagon Breast.", -- 10 SB II
-		feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 15 SB I
-		left_ear={ name="Schere Earring", augments={'Path: A',}}, -- 3 SB I
-		-- hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 8 SB I
-		right_ear="Boii Earring +1", -- 8 SB I
-		left_ring="Niqmaddu Ring", -- 5 SB II
-	}
-
 	-- Max SB set (SB 50 and SBII 15) Need auspice (29) to cap
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, sets.Subtle_Blow, { })
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, { })
 
 	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
 	--If you don't specify a weapon mode it will use it regardless of Mythic,Empy,Relic,Aeonic
@@ -367,9 +357,7 @@ function get_sets()
 	sets.WS.ACC = {}
 	sets.WS.ACC.RA = {}
 
-	sets.WS.SB = set_combine(sets.Subtle_Blow, {
-
-	})
+	sets.WS.SB = sets.Subtle_Blow
 
 	sets.WS.SB.RA = {}
 
@@ -382,6 +370,7 @@ function get_sets()
 	sets.WS.AM1 = {}
 	sets.WS.AM2 = {}
 	sets.WS.AM3 = {}
+
 	sets.WS.AM1['Ukonvasara'] = {}
 	sets.WS.AM2['Ukonvasara'] = {}
 	sets.WS.AM3['Ukonvasara'] = {}
@@ -390,9 +379,10 @@ function get_sets()
 	sets.WS.AM1.RA = {}
 	sets.WS.AM2.RA = {}
 	sets.WS.AM3.RA = {}
-	sets.WS.AM1.RA['Ukonvasara'] = {}
-	sets.WS.AM2.RA['Ukonvasara'] = {}
-	sets.WS.AM3.RA['Ukonvasara'] = {}
+
+	sets.WS.AM1.RA['Some Relic Gun'] = {}
+	sets.WS.AM2.RA['Some Relic Gun'] = {}
+	sets.WS.AM3.RA['Some Relic Gun'] = {}
 
 	-- Great Axe WS
 	sets.WS["Ukko's Fury"] = {
@@ -406,8 +396,8 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear={ name="Schere Earring", augments={'Path: A',}},
 		right_ear={ name="Boii Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+12','Mag. Acc.+12','Crit.hit rate+4',}},
-		left_ring="Lehko's Ring",
-		right_ring="Niqmaddu Ring",
+		left_ring="Niqmaddu Ring",
+		right_ring="Lehko's Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 	sets.WS["Upheaval"] = {
@@ -440,8 +430,6 @@ function get_sets()
 		right_ring="Regal Ring",
 		back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
-
-
 
 	--Axe WS
 	sets.WS["Ragin Axe"] = {}

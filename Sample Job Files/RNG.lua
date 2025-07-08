@@ -24,7 +24,7 @@ Food = "Sublime Sushi"
 Ammo_Warning_Limit = 99
 
 -- Add CRIT the base modes to allow AM3 Critical Builds
-state.OffenseMode:options('TP','ACC','DT','PDL','CRIT')
+state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','True Shot')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Ranger
@@ -37,22 +37,6 @@ UI_Name = 'TP Mode'
 --Melee or Ranged Mode
 state.JobMode:options('Standard','Melee','Ranged')
 state.JobMode:set('Standard')
-
---Set the ammo type for each WeaponMode (above): Bullet, Arrow, Bolt
---This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
-Ranged_Weapons = {
-	{WeaponMode = "Naegling", Type = "Bullet"},
-	{WeaponMode = "Dolichenus", Type = "Arrow"},
-	{WeaponMode = "Fomalhaut", Type = "Bullet"},
-	{WeaponMode = "Annihilator", Type = "Bullet"},
-	{WeaponMode = "Fail-Not", Type = "Arrow"},
-	{WeaponMode = "Yoichinoyumi", Type = "Arrow"},
-	{WeaponMode = "Gastraphetes", Type = "Bolt"},
-	{WeaponMode = "Tauret", Type = "Bullet"},
-}
-
--- Used to determine if Obi is used or Orpheus Sash - if either is not present it will not change the waist slot
-Elemental_WS = S{'Aeolian Edge', 'Flaming Arrow', 'Wildfire','Trueflight','Hot Shot'}
 
 -- Initialize Player
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -107,6 +91,7 @@ function get_sets()
 	sets.Weapons['Dolichenus'] = {
 		main="Dolichenus",
 		sub="Crepuscular Knife",
+		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
 	}
 
 	sets.Weapons.Melee = {
@@ -123,10 +108,24 @@ function get_sets()
 		sub="Nusku Shield",
 	}
 
-	-- Ammo Selection - will choose based off equiped weapon
-	Ammo.Bullet.RA = "Chrono Bullet"		-- TP Ammo
+	--Set the ammo type for each WeaponMode (above): Bullet, Arrow, Bolt
+	--This allows for generic gear sets such as ammo=Ammo.RA for Midcast.RA as an example.
+	Ranged_Weapons = {
+		{WeaponMode = "Naegling", Type = "Bullet"},
+		{WeaponMode = "Dolichenus", Type = "Bullet"},
+		{WeaponMode = "Fomalhaut", Type = "Bullet"},
+		{WeaponMode = "Annihilator", Type = "Bullet"},
+		{WeaponMode = "Fail-Not", Type = "Arrow"},
+		{WeaponMode = "Yoichinoyumi", Type = "Arrow"},
+		{WeaponMode = "Gastraphetes", Type = "Bolt"},
+		{WeaponMode = "Tauret", Type = "Bullet"},
+	}
+
+	-- Ammo Selection - will choose based off equiped weapon and the OffenseMode
+	Ammo.Bullet.TP = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.ACC = "Eradicating Bullet"	-- Accuracy Ammo
 	Ammo.Bullet.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
+
 	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills (consumed)
 	Ammo.Bullet.WSD = "Chrono Bullet"		-- Physical Weaponskills (not consumed)
 	Ammo.Bullet.MAB = "Chrono Bullet"		-- Magical Weaponskills
@@ -134,7 +133,7 @@ function get_sets()
 	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
 	Ammo.Bullet.PHY_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
 
-	Ammo.Arrow.RA = "Chrono Arrow"			-- TP Ammo
+	Ammo.Arrow.TP = "Chrono Arrow"			-- TP Ammo
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
 	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
 	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
@@ -144,9 +143,10 @@ function get_sets()
 	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
 	Ammo.Arrow.PHY_WS = "Chrono Arrow"		-- Magic Weaponskills (Not Consumed)
 
-	Ammo.Bolt.RA = "Quelling Bolt"			-- TP Ammo
+	Ammo.Bolt.TP = "Quelling Bolt"			-- TP Ammo
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
 	Ammo.Bolt.CRIT = "Quelling Bolt"		-- Critical Hit Mode Ammo
+
 	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (consumed)
 	Ammo.Bolt.WSD = "Quelling Bolt"			-- Physical Weaponskills (not consumed)
 	Ammo.Bolt.MAB = "Quelling Bolt"			-- Magical Weaponskills
@@ -155,7 +155,7 @@ function get_sets()
 	Ammo.Bolt.PHY_WS = "Quelling Bolt"		-- Magic Weaponskills (Not Consumed)
 
 	--Modes to select correct ammo based off weapon type
-	Ammo.RA = Ammo[state.RAMode.value].RA
+	Ammo.TP = Ammo[state.RAMode.value].TP
 	Ammo.ACC = Ammo[state.RAMode.value].ACC
 	Ammo.CRIT = Ammo[state.RAMode.value].CRIT
 	Ammo.WS = Ammo[state.RAMode.value].WS
@@ -167,7 +167,6 @@ function get_sets()
 
 	-- Standard Idle set with -DT,Refresh,Regen with NO movement gear
 	sets.Idle = {
-		ammo=Ammo.RA, -- Smart_Ammo() will select from your XXXX.RA type
 		head="Nyame Helm",
 		body="Nyame Mail",
 		hands="Nyame Gauntlets",
@@ -188,6 +187,7 @@ function get_sets()
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.CRIT = set_combine(sets.Idle, {})
 	sets.Idle.Resting = set_combine(sets.Idle, {})
+	sets.Idle['True Shot'] = set_combine(sets.Idle, {})
 
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
@@ -203,7 +203,7 @@ function get_sets()
 
 	--Base TP set to build off when melee'n
 	sets.OffenseMode = {
-		ammo=Ammo.RA,
+		ammo=Ammo.TP,
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -245,12 +245,14 @@ function get_sets()
 	--This set is used when OffenseMode is CRIT and Engaged
 	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.DT, {})
 
+	sets.OffenseMode['True Shot'] = set_combine(sets.OffenseMode.DT, {})
+
 	--The following sets augment the OffenseMode set above for Dual Wielding
 	sets.DualWield = {
 		back={ name="Belenus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dual Wield"+10','Damage taken-5%',}},
 	}
 
-	sets.Precast = {ammo=Ammo.RA,}
+	sets.Precast = {ammo=Ammo.TP,}
 	-- 70 snapshot is Cap
 	-- Velocity Shot is seperate term - JA of Ranger
 	-- Rapid shot is like quick magic
@@ -271,7 +273,6 @@ function get_sets()
 	--No flurry - 60 Snapshot needed (Assuming 10% from Merits)
 	-- Snapshot / Rapidshot
 	sets.Precast.RA = set_combine(sets.Precast, { -- 5 Snapshot on Perun +1 Augment if used
-		ammo=Ammo.RA,
 	    head={ name="Taeon Chapeau", augments={'"Snapshot"+5','"Snapshot"+5',}}, -- 10
 		body="Amini Caban +3", -- 11% Velocity Shot
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}}, -- 8 / 11
@@ -313,7 +314,7 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','"Store TP"+10','Damage taken-5%',}}, -- Need to upgrade Cape with 10% FC
 	} -- 77 FC for Utsusemi (80 is cap)
 	 
-		--Base set for midcast - if not defined will notify and use your idle set for surviability
+	--Base set for midcast - if not defined will notify and use your idle set for surviability
 	sets.Midcast = set_combine(sets.Idle, {})
 
 	-- Ranged Attack Gear (Normal Midshot)
@@ -340,7 +341,6 @@ function get_sets()
 
 	-- Ranged Attack Gear (Physical Damage Limit)
     sets.Midcast.RA.PDL = set_combine(sets.Midcast.RA, {
-		ammo=Ammo.RA,
 		head={ name="Ikenga's Hat", augments={'Path: A',}},
 		body={ name="Ikenga's Vest", augments={'Path: A',}},
 		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
@@ -351,9 +351,6 @@ function get_sets()
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-		sub="Nusku Shield",
-		range={ name="Fomalhaut", augments={'Path: A',}},
-		ammo="Chrono Bullet",
 		head="Meghanada Visor +2",
 		body="Nisroch Jerkin",
 		--body={ name="Ikenga's Vest", augments={'Path: A',}},
@@ -370,6 +367,13 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Crit.hit rate+10','Damage taken-5%',}},
     })
 
+	sets.Midcast.RA['True Shot'] = set_combine(sets.Midcast.RA, {
+		body="Nisroch Jerkin", -- 10
+		legs="Amini Bragues +3", -- 8
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}}, -- 10
+		waist={ name="Tellen Belt", augments={'Path: A',}}, -- 5
+    })
+
 	-- Ranged Attack Gear (Double Shot Midshot)
 	sets.Midcast.RA.DoubleShot = {
 		body={ name="Arc. Jerkin +3", augments={'Enhances "Snapshot" effect',}},
@@ -379,9 +383,7 @@ function get_sets()
     }
 
 	-- Ranged Attack Gear (Barrage active)
-	sets.Midcast.RA.Barrage = set_combine(sets.Midcast.RA, {
-	    hands="Orion Bracers +3",
-    })
+	sets.Midcast.RA.Barrage = { hands="Orion Bracers +3", }
 
 	-- Relic Aftermath
 	sets.Midcast.RA.AM = {}
@@ -525,7 +527,7 @@ function get_sets()
 	})
 
 	sets.WS.RA.CRIT = set_combine(sets.WS.RA, {
-		Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
+		ammo=Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
 	})
 
 	sets.WS.RA.SB = set_combine(sets.WS.RA, { })
@@ -623,7 +625,6 @@ function get_sets()
 	sets.WS["Trueflight"] = set_combine(sets.WS.MAB, {
 		right_ring="Weather. Ring",
 	})
-
 
 	sets.TreasureHunter = {
 	    legs={ name="Herculean Trousers", augments={'Attack+8','Mag. Acc.+13 "Mag.Atk.Bns."+13','"Treasure Hunter"+2','Accuracy+16 Attack+16',}},

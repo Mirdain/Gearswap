@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.5'
+Mirdain_GS = '1.5.6'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -630,65 +630,79 @@ do
 				built_set = set_combine(built_set, sets.WS)
 				local message = ''
 				if spell.skill == "Marksmanship" or spell.skill == "Archery" then
+
 					-- Try to equip a generic ranged WS set
 					if sets.WS.RA then 
 						built_set = set_combine(built_set, sets.WS.RA) 
 					else warn('sets.WS.RA not found!') end
+
+					-- Set is defined
 					if sets.WS[spell.english] then
-						-- Set is defined
 						built_set = set_combine(built_set, sets.WS[spell.english])
 						-- Example would be WS.RA.ACC
 						if state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS.RA[state.OffenseMode.value])
 							-- Augment the specified WS
 							if state.OffenseMode.value == 'ACC' then
-								message = '['..spell.english..'] Set with Accuracy (Ranged)'
+								message = '['..spell.english..'] Set with Accuracy'
 							elseif state.OffenseMode.value == 'PDL' then
-								message = '['..spell.english..'] Set with Physical Damage Limit (Ranged)'
+								message = '['..spell.english..'] Set with Physical Damage Limit'
 							elseif state.OffenseMode.value == 'SB' then
-								message = '['..spell.english..'] Set with Subtle Blow (Ranged)'
+								message = '['..spell.english..'] Set with Subtle Blow'
 							elseif state.OffenseMode.value == 'MEVA' then
-								message = '['..spell.english..'] Set with Magic Evasion (Ranged)'
+								message = '['..spell.english..'] Set with Magic Evasion'
 							elseif state.OffenseMode.value == 'CRIT' then
-								message = '['..spell.english..'] Set with Critical Hit (Ranged)'
+								message = '['..spell.english..'] Set with Critical Hit'
 							end
 						else message = '['..spell.english..'] Set' end
+
+					-- Generic
 					else
-						-- Generic
 						if state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS.RA[state.OffenseMode.value])
 							if state.OffenseMode.value == 'ACC' then
-								message = 'Using Default WS Set with Accuracy (Ranged)'
+								message = 'Using Default WS Set with Accuracy'
 							elseif state.OffenseMode.value == 'PDL' then
-								message = 'Using Default WS Set with Physical Damage Limit (Ranged)'
+								message = 'Using Default WS Set with Physical Damage Limit'
 							elseif state.OffenseMode.value == 'SB' then
-								message = 'Using Default WS Set with Subtle Blow (Ranged)'
+								message = 'Using Default WS Set with Subtle Blow'
 							elseif state.OffenseMode.value == 'MEVA' then
-								message = 'Using Default WS Set with Magic Evasion (Ranged)'
+								message = 'Using Default WS Set with Magic Evasion'
 							elseif state.OffenseMode.value == 'CRIT' then
-								message = 'Using Default WS Set with Critical Hit (Ranged)'
+								message = 'Using Default WS Set with Critical Hit'
 							end
-						else message = 'Using Default WS Set (Ranged)' end
+						else message = 'Using Default WS Set' end
 					end
+
 					-- Check if Aftermath is active
-					if buffactive['Aftermath: Lv.3'] and sets.WS.RA and sets.WS.RA.AM3 and sets.WS.RA.AM3[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.RA.AM3[state.WeaponMode.value])
-						message = message..' and Level 3 Aftermath (Ranged - '..state.WeaponMode.value..')'
-					elseif buffactive['Aftermath: Lv.2'] and sets.WS.RA and sets.WS.RA.AM2 and sets.WS.RA.AM2[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.RA.AM2[state.WeaponMode.value])
-						message = message..' and Level 2 Aftermath (Ranged - '..state.WeaponMode.value..')'
-					elseif buffactive['Aftermath: Lv.1'] and sets.WS.RA and sets.WS.RA.AM1 and sets.WS.RA.AM1[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.RA.AM1[state.WeaponMode.value])
-						message = message..' and Level 1 Aftermath (Ranged - '..state.WeaponMode.value..')'
-					elseif buffactive['Aftermath'] and sets.WS.RA and sets.WS.RA.AM and sets.WS.AM.RA[state.WeaponMode.value] then
-						built_set = set_combine(built_set, sets.WS.RA.AM[state.WeaponMode.value])
-						message = message..' and Aftermath (Ranged - '..state.WeaponMode.value..')'
+					if sets.WS.RA then
+						if buffactive['Aftermath: Lv.3'] and sets.WS.RA.AM3 and sets.WS.RA.AM3[state.WeaponMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA.AM3[state.WeaponMode.value])
+							message = message..' and Level 3 Aftermath ['..state.WeaponMode.value..']'
+						elseif buffactive['Aftermath: Lv.2'] and sets.WS.RA.AM2 and sets.WS.RA.AM2[state.WeaponMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA.AM2[state.WeaponMode.value])
+							message = message..' and Level 2 Aftermath ['..state.WeaponMode.value..']'
+						elseif buffactive['Aftermath: Lv.1'] and sets.WS.RA.AM1 and sets.WS.RA.AM1[state.WeaponMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA.AM1[state.WeaponMode.value])
+							message = message..' and Level 1 Aftermath ['..state.WeaponMode.value..']'
+						elseif buffactive['Aftermath'] and sets.WS.RA.AM and sets.WS.RA.AM[state.WeaponMode.value] then
+							built_set = set_combine(built_set, sets.WS.RA.AM[state.WeaponMode.value])
+							message = message..' and Aftermath ['..state.WeaponMode.value..']'
+						end
 					end
+
+					-- Bullet Check
 					do_bullet_checks(spell, built_set)
+
+					-- Variable Ammo
+					if Ammo and Ammo[state.OffenseMode.value] then built_set = set_combine(built_set, { ammo = Ammo[state.OffenseMode.value] }) end
+
 					message = message..' ['..available_bullets..'x]'
+
 				else
+
+					-- Set is defined
 					if sets.WS[spell.english] then
-						-- Set is defined
 						built_set = set_combine(built_set, sets.WS[spell.english])
 						if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
@@ -705,8 +719,9 @@ do
 								message = '['..spell.english..'] Set with Critical Hit'
 							end
 						else message = '['..spell.english..'] Set' end
+
+					-- Generic
 					else
-						-- Generic
 						if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
 							-- Augment the specified WS
@@ -723,6 +738,7 @@ do
 							end
 						else message = 'Using Default WS Set' end
 					end
+
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.WS.AM3 and sets.WS.AM3[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.WS.AM3[state.WeaponMode.value])
@@ -738,10 +754,13 @@ do
 						message = message..' and Aftermath'
 					end
 				end
+
 				-- Check if an Obi or Orpheus is to be Equiped
 				if Elemental_WS:contains(spell.name) then built_set =  elemental_check(spell, built_set) end
+
 				info(message)
 			else warn('sets.WS not found!') end
+
 		-- Ranged attack
 		elseif spell.action_type == 'Ranged Attack' then
 			if sets.Precast then
@@ -761,11 +780,16 @@ do
 							built_set = set_combine(built_set, sets.Precast.RA.Flurry_II)
 						else warn('sets.Precast.RA.Flurry_II not found!') end
 					end
+
+					-- Variable Ammo
+					if Ammo and Ammo[state.OffenseMode.value] then built_set = set_combine(built_set, { ammo = Ammo[state.OffenseMode.value] }) end
+
 				else warn('sets.Precast.RA not found!') end
 			else warn('sets.Precast not found!') end
-			if built_set.ammo ~= "" and built_set.ranged ~= "" then
-				do_bullet_checks(spell, built_set)
-			end
+
+			-- Check for bullets if shooting a round
+			if built_set.ammo ~= "" and built_set.ranged ~= "" then do_bullet_checks(spell, built_set) end
+
 		-- JobAbility
 		elseif spell.type == 'JobAbility' then
 			if sets.JA then
@@ -785,6 +809,10 @@ do
 					end
 					info('['..spell.english..'] Set')
 				else info('JA not set for ['..spell.english..']') end
+				-- Check for bounty shot ammo
+				if spell.name == 'Bounty Shot' then
+					do_bullet_checks(spell, built_set)
+				end
 			else warn('sets.JA not found!') end
 		-- Items
 		elseif spell.type == 'Item' then 
@@ -1052,7 +1080,6 @@ do
 		elseif spell.type == 'Step' then log('abort midcast') return {}
 		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return {} end
 		
-
 		if pet.isvalid and pet_midaction() then return {} end
 		--Default gearset
 		local built_set = {}
@@ -1063,16 +1090,18 @@ do
 			built_set = set_combine(built_set, sets.Midcast)
 			-- Spell interruption Down for the rest of the actions
 			if sets.Midcast.SIRD and spell.action_type ~= 'Ranged Attack' then built_set = set_combine(built_set, sets.Midcast.SIRD) end
+
 			-- Ranged Attack
 			if spell.action_type == 'Ranged Attack' then
 				if sets.Midcast.RA then 
-					built_set = set_combine(built_set, sets.Midcast.RA)
-					-- Generic
 					local message = ''
+					built_set = set_combine(built_set, sets.Midcast.RA)
+
+					-- Augment based off Mode
 					if state.OffenseMode.value ~= 'TP' and sets.Midcast.RA[state.OffenseMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.RA[state.OffenseMode.value])
 						if state.OffenseMode.value == 'ACC' then
-							message = 'Ranged Attack with Accuracy '
+							message = 'Ranged Attack with Accuracy'
 						elseif state.OffenseMode.value == 'PDL' then
 							message = 'Ranged Attack with Physical Damage Limit'
 						elseif state.OffenseMode.value == 'SB' then
@@ -1089,6 +1118,7 @@ do
 							message = 'Ranged Attack with True Shot'
 						end
 					else message = 'Ranged Attack Set' end
+
 					-- Check if Aftermath is active
 					if buffactive['Aftermath: Lv.3'] and sets.Midcast.RA.AM3 and sets.Midcast.RA.AM3[state.WeaponMode.value] then
 						built_set = set_combine(built_set, sets.Midcast.RA.AM3[state.WeaponMode.value])
@@ -1103,6 +1133,7 @@ do
 						built_set = set_combine(built_set, sets.Midcast.RA.AM[state.WeaponMode.value])
 						message = message.. ' and with Aftermath ['..state.WeaponMode.value..']'
 					end
+
 					-- Buffs
 					if buffactive['Triple Shot'] and sets.Midcast.RA.TripleShot then 
 						built_set = set_combine(built_set, sets.Midcast.RA.TripleShot)
@@ -1114,6 +1145,10 @@ do
 						built_set = set_combine(built_set, sets.Midcast.RA.Barrage)
 						message = 'Using Barrage Set'
 					end
+
+					-- Variable Ammo
+					if Ammo[state.OffenseMode.value] then built_set = set_combine(built_set, { ammo = Ammo[state.OffenseMode.value] }) end
+
 					message = message..' ['..available_bullets..'x]'
 					info(message)
 				else warn('sets.Midcast.RA not found!') end
@@ -1818,13 +1853,13 @@ do
 		if sets.Pet_Midcast then
 			local built_set = sets.Pet_Midcast
 			-- Specific sets are defined
-			if built_set[spell.english] then
-				built_set = set_combine(built_set, built_set[spell.english])
+			if sets.Pet_Midcast[spell.english] then
+				built_set = set_combine(built_set, sets.Pet_Midcast[spell.english])
 				info('['..spell.english..'] Set')
-			else
-				if pet_midcast_custom(spell) then
-					built_set = set_combine(built_set, pet_midcast_custom(spell))
-				end
+			end
+			-- User level commands
+			if pet_midcast_custom(spell) then
+				built_set = set_combine(built_set, pet_midcast_custom(spell))
 			end
 			-- Weapon Checks for precast
 			-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
@@ -1934,11 +1969,12 @@ do
 			end
 
 			-- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-			if spell.type ~= 'CorsairShot' and bullet_name == Ammo.Bullet.QD and available_bullets <= bullet_min_count then
-				add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
+			if spell.type ~= 'CorsairShot' and available_bullets <= bullet_min_count then
+				add_to_chat(104, 'Not enough ammo.  Cancelling.')
 				cancel_spell()
 				return
 			end
+
 			-- Low ammo warning.
 			if spell.type ~= 'CorsairShot' and state.warned.value == false and available_bullets > 1 and available_bullets <= Ammo_Warning_Limit then
 				local msg = '*****  LOW AMMO WARNING: '..tostring(available_bullets)..'x '..bullet_name..' *****'
@@ -3147,6 +3183,10 @@ do
 				end
 			else warn('sets.Idle not found!') end
 		end
+
+		-- Variable Ammo
+		if Ammo and Ammo[state.OffenseMode.value] then built_set = set_combine(built_set, { ammo = Ammo[state.OffenseMode.value] }) end
+
 		return built_set
 	end
 
