@@ -54,43 +54,48 @@ function get_sets()
 		main="Asclepius",
 	}
 
-	-- Will swap weapons based off sets below
-	sets.Weapons['Unlocked'] = {
-		
-	}
-
-	sets.Weapons.Shield = {
+	sets.Weapons['Shield'] = {
 		sub="Genmei Shield",
 	}
 
-	sets.Weapons.Sleep ={
+	sets.Weapons['Sleep'] ={
 		main="Lorg Mor",
 	}
+
+	sets.Weapons['Unlocked'] = {}
 
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		main="Daybreak",
+		sub="Genmei Shield",
 		ammo="Staunch Tathlum +1",
 		head={ name="Bunzi's Hat", augments={'Path: A',}},
 		body="Ebers Bliaut +3",
 		hands={ name="Bunzi's Gloves", augments={'Path: A',}},
 		legs="Ebers Pant. +3",
-		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
+		feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}}, -- +2 Refresh
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear={ name="Ebers Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+14','Mag. Acc.+14','Damage taken-5%',}},
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
+		right_ear={ name="Etiolation Earring", priority=2}, -- 1
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
     }
 
 	-- 'TP','PDL','ACC','DT','PDT','MEVA'
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
-	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.DT = set_combine(sets.Idle, {
+		main={ name="Asclepius", augments={'Path: C',}, priority=5},
+		body={ name="Adamantite Armor", priority=4},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
+		waist={ name="Plat. Mog. Belt", priority=2},
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=3},
+		right_ear="Hearty Earring",
+	})
 	sets.Idle.PDT = set_combine(sets.Idle, {})
-	sets.Idle.MEVA = set_combine(sets.Idle, {
+	sets.Idle.MEVA = set_combine(sets.Idle.DT, {
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
 	})
@@ -100,7 +105,10 @@ function get_sets()
 	})
 	-- Set to swap out when MP is low
 	sets.Idle.Refresh = set_combine(sets.Idle, {
+		body="Ebers Bliaut +3",
 	    feet={ name="Chironic Slippers", augments={'CHR+4','Attack+21','"Refresh"+2','Mag. Acc.+19 "Mag.Atk.Bns."+19',}},
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 	})
 	sets.Idle.Resting = set_combine(sets.Idle, {})
 
@@ -128,8 +136,8 @@ function get_sets()
 		waist="Grunfeld Rope",
 		left_ear="Crep. Earring",
 		right_ear="Telos Earring",
-		left_ring="Chirich Ring +1",
-		right_ring="Chirich Ring +1",
+		left_ring="Lehko's Ring",
+		right_ring={name="Chirich Ring +1", bag="wardrobe2"},
 		back={ name="Alaunus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
@@ -139,95 +147,83 @@ function get_sets()
 	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
 
+	-- ===================================================================================================================
+	--		sets.Precast
+	-- ===================================================================================================================
+
 	sets.Precast = {}
 
 	-- Used for Magic Spells (Cap 80%)
 	sets.Precast.FastCast = {
+		main="C. Palug Hammer",
+		sub="Ammurapi Shield",
 		ammo="Hasty Pinion +1",
-		head="Ebers Cap +3", -- 13
-		body="Inyanga Jubbah +2", -- 14
-		hands="Gende. Gages +1", -- 7
-		legs="Pinga Pants +1", -- 13
-		feet="Volte Gaiters", -- 6
-		neck={ name="Clr. Torque +2", augments={'Path: A',}}, -- 10
-		waist="Embla Sash", -- 5
-		left_ear={ name="Etiolation Earring", priority=2}, -- 1
-		right_ear="Malignance Earring", -- 4
-		left_ring="Kishar Ring", -- 4
-		right_ring="Weather. Ring", -- 5
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
-	} -- 81%
-
-	-- Cap is 10% Quick Magic - used for Raises and Cures
-	sets.Precast.QuickMagic = set_combine(sets.Precast.FastCast, {
-		ammo="Impatiens", -- 2
-		left_ring="Weather. Ring", -- 3
-		right_ring="Lebeche Ring", -- 2
-		waist="Witful Belt", -- 3
-	})
+		head="Ebers Cap +3",
+		body="Zendik Robe",
+		hands={ name="Gende. Gages +1", augments={'Phys. dmg. taken -3%','Magic dmg. taken -2%','"Cure" spellcasting time -5%',}},
+		legs={ name="Pinga Pants +1", priority=1},
+		feet="Volte Gaiters",
+		neck={ name="Clr. Torque +2", augments={'Path: A',}},
+		waist={ name="Plat. Mog. Belt", priority=2},
+		left_ear={ name="Tuisto Earring", priority=3},
+		right_ear={ name="Etiolation Earring", priority=4},
+		left_ring="Lehko's Ring",
+		right_ring="Weather. Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
+	} -- 78% FC 26% 2800 HP
 
 	-- Used for Cure cast
-	sets.Precast.Cure = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic,  {
-
+	-- 3k HP, 80% Cast Speed, 25% gear haste
+	sets.Precast.Cure = set_combine(sets.Precast.FastCast, {
+		ammo="Impatiens",
+		head={ name="Piety Cap +3", augments={'Enhances "Devotion" effect',}},
+		body="Pinga Tunic +1",
+		legs="Ebers Pant. +3",
+		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
 	})
 
 	-- Used for Enhancing cast
-	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic,  {
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {
 
 	})
 
-	-- Job Abilities
-	sets.JA = {}
-	sets.JA["Benediction"] = {
-		body={ name="Piety Bliaut +3", augments={'Enhances "Benediction" effect',}},
-	}
-	sets.JA["Divine Seal"] = {}
-	sets.JA["Convert"] = {}
-	sets.JA["Devotion"] = {
-	    head={ name="Piety Cap +3", augments={'Enhances "Devotion" effect',}},
-	}
-	sets.JA["Afflatus Solace"] = {}
-	sets.JA["Afflatus Misery"] = {}
-	sets.JA["Sacrosanctity"] = {}
-	sets.JA["Asylum"] = {}
-
+	sets.Precast.Healing = set_combine(sets.Precast.FastCast, {
+		body="Pinga Tunic +1",
+		legs="Ebers Pant. +3",
+	})
 
 	-- ===================================================================================================================
-	--		sets.midcast
+	--		sets.Midcast
 	-- ===================================================================================================================
 
 	--Base set for midcast - if not defined will notify and use your idle set for surviability
-	sets.Midcast = set_combine(sets.Idle, {
-	
-	})
+	sets.Midcast = set_combine(sets.Idle, sets.Idle.DT, { })
 
 	--This set is used as base as is overwrote by specific gear changes (Spell Interruption Rate Down)
 	sets.Midcast.SIRD = {}
 
 	-- Cure Set
 	sets.Midcast.Cure = {
-		main={ name="Asclepius", augments={'Path: C',}},
+		main={ name="Asclepius", augments={'Path: C',}, priority=4},
 		sub="Ammurapi Shield",
 		ammo="Psilomene",
 		head="Ebers Cap +3",
 		body="Adamantite Armor",
-		hands={ name="Kaykaus Cuffs +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
+		hands="Kaykaus Cuffs +1",
 		legs="Ebers Pant. +3",
-		feet={ name="Kaykaus Boots +1", augments={'MP+80','"Cure" spellcasting time -7%','Enmity-6',}},
-		neck={ name="Clr. Torque +2", augments={'Path: A',}},
-		waist="Carrier's Sash",
-		left_ear="Mendi. Earring",
-		right_ear={ name="Ebers Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+14','Mag. Acc.+14','Damage taken-5%',}},
-		left_ring="Naji's Loop",
-		right_ring="Lebeche Ring",
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+		feet="Kaykaus Boots +1",
+		neck="Clr. Torque +2",
+		waist={ name="Plat. Mog. Belt", priority=1},
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=2},
+		right_ear="Ebers Earring +1",
+		left_ring="Lehko's Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
     }
+
 	-- For AoE cure
-	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, 
-	{
-		--body="Theo. Bliaut +3",
-	    --left_ring="Defending Ring",
-	})
+	sets.Midcast.Curaga = set_combine(sets.Midcast.Cure, { })
 
 	-- For Cura - foucs on DT
 	sets.Midcast.Cura = set_combine(sets.Midcast.Cure, {body="Theo. Bliaut +3",})
@@ -236,72 +232,64 @@ function get_sets()
 
 	-- Used for base duration
 	sets.Midcast.Enhancing = {
-		main={ name="Gada", augments={'Enh. Mag. eff. dur. +5','MND+5','Mag. Acc.+3','"Mag.Atk.Bns."+20',}},
-		sub={ name="Ammurapi Shield", priority=3},
+		main={ name="Asclepius", augments={'Path: C',}, priority=5},
+		sub="Ammurapi Shield",
 		ammo="Hydrocera",
 		head={ name="Telchine Cap", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
-		hands={ name="Telchine Gloves", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
+		body={ name="Adamantite Armor", priority=4},
+		hands="Inyan. Dastanas +2",
 		legs={ name="Telchine Braconi", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		feet="Theo. Duckbills +3",
-		neck="Incanter's Torque",
-		waist="Embla Sash",
-		left_ear={ name="Etiolation Earring", priority=1},
-		right_ear="Mimir Earring",
-		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2},
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=1},
+		waist={ name="Plat. Mog. Belt", priority=2},
+		left_ear="Mimir Earring",
+		right_ear="Etiolation Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Defending Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
 	}
 	sets.Midcast.Enhancing.Others = set_combine(sets.Midcast.Enhancing, {});
 
-	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
-	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {
-	    main="Beneficus",
-		head="Ebers Cap +3",
-		body="Ebers Bliaut +3",
-		hands="Ebers Mitts +3",
-		left_ear="Andoaa Earring",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
-		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
-		feet="Ebers Duckbills +3",
-	})
-
+	-- Caps at 500 for bar spells
 	--'Barsleepra','Barpoisonra','Barparalyzra','Barblindra','Barvira','Barpetra','Baramnesra','Barsilencera','Barsleep','Barpoison','Barparalyze','Barblind','Barvirus','Barpetrify','Baramnesia','Barsilence'
 	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {
-	    main="Beneficus",
+		ammo="Staunch Tathlum +1",
 		head="Ebers Cap +3",
 		body="Ebers Bliaut +3",
 		hands="Ebers Mitts +3",
-		left_ear="Andoaa Earring",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
 		legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
 		feet="Ebers Duckbills +3",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Ebers Earring +1",
+		left_ring="Lehko's Ring",
+
 	})
 
-	--'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'
-	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {
-	    hands="Inyan. Dastanas +2",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+	--'Barfire','Barblizzard','Baraero','Barstone','Barthunder','Barwater','Barfira','Barblizzara','Baraera','Barstonra','Barthundra','Barwatera'
+	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing.Status, {
+		main="Beneficus",
 	})
+
+	-- This caps at 500 for Gain spells
+	--'Temper','Temper II','Enaero','Enstone','Enthunder','Enwater','Enfire','Enblizzard','Boost-STR','Boost-DEX','Boost-VIT','Boost-AGI','Boost-INT','Boost-MND','Boost-CHR'
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, { })
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
-		main="Maxentius",
+		main={ name="Asclepius", augments={'Path: C',}},
 		sub="Ammurapi Shield",
-		ammo="Hydrocera",
-		head="Theophany Cap +3",
-		body="Theo. Bliaut +3",
-		hands="Ebers Mitts +3",
+		ammo="Pemphredo Tathlum",
+		head="Ebers Cap +3",
+		body="Adamantite Armor",
+		hands="Regal Cuffs",
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
-		feet="Theo. Duckbills +3",
-		neck="Erra Pendant",
+		feet="Ebers Duckbills +3",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
 		waist={ name="Obstin. Sash", augments={'Path: A',}},
-		left_ear="Regal Earring",
-		right_ear="Malignance Earring",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Tuisto Earring",
 		left_ring="Kishar Ring",
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
+		right_ring="Stikini Ring +1",
 		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Damage taken-5%',}},
 	}
 
@@ -319,12 +307,12 @@ function get_sets()
 		legs="Th. Pant. +3",
 		feet="Gende. Galosh. +1",
 		neck="Debilis Medallion",
-		waist="Bishop's Sash",
-		left_ear="Meili Earring",
+		waist={ name="Plat. Mog. Belt", priority=1 },
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		right_ear="Ebers Earring +1",
 		left_ring="Haoma's Ring",
 		right_ring="Menelaus's Ring",
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Damage taken-5%',}},
 	}
 
 	sets.Midcast["Erase"] = set_combine(sets.Midcast, {
@@ -371,7 +359,21 @@ function get_sets()
 	})
 
 	sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
+		main="Vadose Rod",
+		sub="Ammurapi Shield",
+		ammo="Staunch Tathlum +1",
+		head={ name="Chironic Hat", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','"Resist Silence"+1','Mag. Acc.+13','"Mag.Atk.Bns."+4',}},
+		body="Adamantite Armor",
 		hands="Regal Cuffs",
+		legs="Shedir Seraweels",
+		feet="Theo. Duckbills +3",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
+		waist={ name="Plat. Mog. Belt", priority=1 },
+		left_ear="Mimir Earring",
+		right_ear="Andoaa Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Defending Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
 	})
 
 	-- Regen Set
@@ -383,24 +385,51 @@ function get_sets()
 		body={ name="Piety Bliaut +3", augments={'Enhances "Benediction" effect',}},
 		hands="Ebers Mitts +3",
 		legs="Th. Pant. +3",
-		feet="Theo. Duckbills +3",
-		neck={ name="Clr. Torque +2", augments={'Path: A',}},
-		waist="Embla Sash",
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		feet={ name="Bunzi's Sabots", augments={'Path: A',}},
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}, priority=2},
+		waist={ name="Plat. Mog. Belt", priority=1 },
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
 		right_ear="Etiolation Earring",
-		left_ring={ name="Stikini Ring +1", bag="wardrobe1"},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe2"},
-		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Haste+10','Damage taken-5%',}},
+		left_ring="Lehko's Ring",
+		right_ring="Defending Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
 	}
 
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
-		left_ear="Earthcry Earring",
-		waist="Siegel Sash",
+		main={ name="Asclepius", augments={'Path: C',}},
+		sub="Genmei Shield",
+		ammo="Psilomene",
+		head="Null Masque",
+		body="Adamantite Armor",
+		hands="Ebers Mitts +3",
+		legs="Shedir Seraweels",
+		feet="Ebers Duckbills +3",
 		neck="Nodens Gorget",
+		waist="Siegel Sash",
+		left_ear="Earthcry Earring",
+		right_ear="Tuisto Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Etana Ring",
+		back={ name="Alaunus's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','"Fast Cast"+10','Damage taken-5%',}},
 	}
 
 	sets.Midcast.Refresh = {}
+
+	-- Job Abilities
+	sets.JA = {}
+	sets.JA["Benediction"] = {
+		body={ name="Piety Bliaut +3", augments={'Enhances "Benediction" effect',}},
+	}
+	sets.JA["Divine Seal"] = {}
+	sets.JA["Convert"] = {}
+	sets.JA["Devotion"] = {
+		head={ name="Piety Cap +3", augments={'Enhances "Devotion" effect',}},
+	}
+	sets.JA["Afflatus Solace"] = {}
+	sets.JA["Afflatus Misery"] = {}
+	sets.JA["Sacrosanctity"] = {}
+	sets.JA["Asylum"] = {}
 
 	-- ===================================================================================================================
 	--		sets.aftercast
@@ -417,7 +446,7 @@ function get_sets()
 		waist="Fotia Belt",
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Ishvara Earring",
-		left_ring="Cornelia's Ring",
+		left_ring="Ilabrat Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Alaunus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}

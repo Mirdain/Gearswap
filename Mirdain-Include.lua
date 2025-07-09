@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.6'
+Mirdain_GS = '1.5.7'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -296,6 +296,8 @@ BlueSkill = S{'Occultation','Erratic Flutter','Nature\'s Meditation','Cocoon','B
 BlueTank = S{'Jettatura','Geist Wall','Blank Gaze','Sheep Song','Sandspin','Healing Breeze'}
 
 Elemental_Enfeeble = S{'Burn','Frost','Choke','Rasp','Shock','Drown'}
+
+Healing_Magic = S{'Arise','Blinda','Esuna','Paralyna','Poisona','Raise','Raise II','Raise III','Reraise','Reraise II','Reraise III','Reraise IV','Sacrifice','Silena','Stona','Viruna','Cursna'}
 
 Buff_BPs_Duration = S{'Shining Ruby','Aerial Armor','Frost Armor','Rolling Thunder','Crimson Howl','Lightning Armor','Ecliptic Growl','Glittering Ruby','Earthen Ward','Hastega',
 	'Noctoshield','Ecliptic Howl','Dream Shroud','Earthen Armor','Fleet Wind','Inferno Howl','Heavenward Howl','Hastega II','Soothing Current','Crystal Blessing'}
@@ -624,6 +626,7 @@ do
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
+		if sets.Idle.DT then built_set = set_combine(built_set, sets.Idle.DT) end
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then
 			if sets.WS then
@@ -941,7 +944,12 @@ do
 					elseif spell.name:contains('Cure') or spell.name:contains('Cura') then
 						if sets.Precast.Cure then
 							built_set = set_combine(built_set, sets.Precast.Cure)
-						else warn('sets.Precast.Cure not found!') end		
+						else warn('sets.Precast.Cure not found!') end
+				    -- Augment with Healing Magic set
+					elseif Healing_Magic:contains(spell.name) then
+						if sets.Precast.Healing then
+							built_set = set_combine(built_set, sets.Precast.Healing)
+						else warn('sets.Precast.Healing not found!') end
 					-- Ninjutsu
 					elseif spell.type == 'Ninjutsu' and UtsusemiSpell:contains(spell.name) then
 						do_Utsu_checks(spell)
@@ -1085,6 +1093,7 @@ do
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
+		if sets.Idle.DT then built_set = set_combine(built_set, sets.Idle.DT) end
 		-- Merget the Midcast Set
 		if sets.Midcast then 
 			built_set = set_combine(built_set, sets.Midcast)
@@ -2085,7 +2094,7 @@ do
 				info('Treasure Hunter Mode: ['..state.TreasureMode.value..']')
 				display_box_update()
 			end
-			coroutine.schedule(equip_set, .25)
+			equip_set_command()
 			return
 		-- Toggles the Auto Buff function off/on
 		elseif command:contains('autobuff') then
@@ -2099,7 +2108,7 @@ do
 				info('Auto Buff is ['..state.AutoBuff.value..']')
 			end
 			display_box_update()
-			coroutine.schedule(equip_set, .25)
+			equip_set_command()
 			return
 		-- Shuts down instnace
 		elseif command == 'shutdown' then
@@ -2181,7 +2190,7 @@ do
 						end
 						info('Offense Mode: ['..state.OffenseMode.value..']')
 						display_box_update()
-						coroutine.schedule(equip_set, .25)
+						equip_set_command()
 						return
 					end
 				end
@@ -2191,7 +2200,7 @@ do
 				state.OffenseMode:set(mode[2])
 				info('Offense Mode: ['..state.OffenseMode.value..']')
 				display_box_update()
-				coroutine.schedule(equip_set, .25)
+				equip_set_command()
 				return
 			end
 		elseif command:contains('weaponmode') then
@@ -2206,8 +2215,8 @@ do
 						info('Weapon Mode: ['..state.WeaponMode.value..']')
 						display_box_update()
 						if self_command_custom then self_command_custom(command) end
-						coroutine.schedule(equip_set, .25)
-						coroutine.schedule(two_hand_check, .25)
+						two_hand_check()
+						equip_set_command()
 						return
 					end
 				end
@@ -2218,8 +2227,8 @@ do
 				info('Weapon Mode: ['..state.WeaponMode.value..']')
 				display_box_update()
 				if self_command_custom then self_command_custom(command) end
-				coroutine.schedule(equip_set, .25)
-				coroutine.schedule(two_hand_check, .25)
+				two_hand_check()
+				equip_set_command()
 				return
 			end
 		elseif command:contains('jobmode2') then
@@ -2234,7 +2243,7 @@ do
 						info(UI_Name2..': ['..state.JobMode2.value..']')
 						display_box_update()
 						if self_command_custom then self_command_custom(command) end
-						coroutine.schedule(equip_set, .25)
+						equip_set_command()
 						return
 					end
 				end
@@ -2245,7 +2254,7 @@ do
 				info(UI_Name2..': ['..state.JobMode2.value..']')
 				display_box_update()
 				if self_command_custom then self_command_custom(command) end
-				coroutine.schedule(equip_set, .25)
+				equip_set_command()
 				return
 			end
 		elseif command:contains('jobmode') then
@@ -2261,7 +2270,7 @@ do
 						display_box_update()
 						-- Issue a command to the lua for the job specific command
 						if self_command_custom then self_command_custom(command) end
-						coroutine.schedule(equip_set, .25)
+						equip_set_command()
 						return
 					end
 				end
@@ -2273,7 +2282,7 @@ do
 				display_box_update()
 				-- Issue a command to the lua for the job specific command
 				if self_command_custom then self_command_custom(command) end
-				coroutine.schedule(equip_set, .25)
+				equip_set_command()
 				return
 			end
 		-- This profile mode is used to load a Silmaril profile and execute a script
@@ -2391,7 +2400,7 @@ do
 		Use_Item_Command = item_table.en
 		coroutine.schedule(Use_Item, delay_use)
 		coroutine.schedule(Unlock, delay_unlock)
-		coroutine.schedule(equip_set, delay_unlock)
+		coroutine.schedule(equip_set_command, delay_unlock)
 	end
 
 	function Use_Item()
@@ -2446,8 +2455,8 @@ do
 	-- Called when the player's subjob changes.
 	function sub_job_change(new, old)
 		coroutine.schedule(dual_wield_check, 2)
-		coroutine.schedule(two_hand_check, 2)
-		coroutine.schedule(equip_set, 2.25)
+		coroutine.schedule(two_hand_check, 2.1)
+		coroutine.schedule(equip_set_command, 2.2)
 		windower.send_command('wait 3;input /lockstyleset '..LockStylePallet..';')
 		if sub_job_change_custom then
 			sub_job_change_custom()
@@ -2813,7 +2822,7 @@ do
 			Location.z = position.z
 		end
 
-		if Require_Update and not is_busy then equip_set() Require_Update = false end
+		if Require_Update and not is_busy then equip_set_command() Require_Update = false end
 
 		-- 30 second cycle timer
 		if now - UpdateTime1 > 30 then
@@ -3073,8 +3082,9 @@ do
 				built_set = sets.OffenseMode
 				if sets.OffenseMode[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.OffenseMode[state.OffenseMode.value])
+
+					-- Check the weapons
 					if state.WeaponMode.value ~= "Locked" then
-						-- Check the weapons
 						if sets.Weapons then
 							if sets.Weapons[state.WeaponMode.value] then
 								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
@@ -3144,25 +3154,26 @@ do
 						built_set = set_combine(built_set, sets.Idle.Resting)
 					else warn('sets.Idle.Resting not found!') end
 				end
-				-- Weapons
-				if state.WeaponMode.value ~= "Unlocked" then
-					if state.WeaponMode.value == "Locked" then
-						built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
-						log(built_set)
-					else
-						if sets.Weapons then
-							if sets.Weapons[state.WeaponMode.value] then
-								built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
-							else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
-							-- Check for sub weapon
-							if not TwoHand and not DualWield then
-								if sets.Weapons.Shield then
-									built_set = set_combine(built_set, sets.Weapons.Shield)
-								else warn('sets.Weapons.Shield not found!') end
-							end
-						else warn('sets.Weapons not found!') end
+
+				-- Check the weapons
+				if state.WeaponMode.value ~= "Locked" then
+					if sets.Weapons then
+						if sets.Weapons[state.WeaponMode.value] then
+							built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
+						else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
+					else warn('sets.Weapons not found!') end
+					-- Equip sub weapon based off mode
+					if not DualWield and not TwoHand then
+						if sets.Weapons.Shield then
+							built_set = set_combine(built_set, sets.Weapons.Shield)
+						else warn('sets.Weapons.Shield not found!') end
+					elseif DualWield then
+						if sets.DualWield then
+							built_set = set_combine(built_set, sets.DualWield)
+						else warn('sets.DualWield not found!') end
 					end
 				end
+
 				--Pet specific checks
 				if pet.isvalid then
 					if sets.Idle.Pet then
@@ -3190,14 +3201,14 @@ do
 		return built_set
 	end
 
-	function equip_set()
+	function equip_set_command()
 		windower.send_command("gs c update auto")
 	end
 
 	-- Start the engine with a 5 sec delay
 	coroutine.schedule(display_box_update, 2)
-	coroutine.schedule(dual_wield_check, 2)
-	coroutine.schedule(two_hand_check, 2)
-	coroutine.schedule(equip_set, 2)
-	coroutine.schedule(main_engine, 2)
+	coroutine.schedule(dual_wield_check, 2.1)
+	coroutine.schedule(two_hand_check, 2.2)
+	coroutine.schedule(equip_set_command, 2.3)
+	coroutine.schedule(main_engine, 2.4)
 end
