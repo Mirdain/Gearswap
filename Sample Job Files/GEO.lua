@@ -513,14 +513,12 @@ function Luopan() --  This maintains the extra 600hp during midcast of spells wh
 			equipSet = sets.Luopan
 		else
 			log('Regen ['..pet.hpp..']% HP')
-			equip_set()
+			equip_set_command()
 		end
 	end
 	return equipSet
 end
 
 function Cycle_Timer()
-	if player.status == "Idle" then
-		Luopan()
-	end
+	if player.status == "Idle" then Luopan() end
 end
