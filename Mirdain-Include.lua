@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.7'
+Mirdain_GS = '1.5.8'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -2457,7 +2457,6 @@ do
 		coroutine.schedule(dual_wield_check, 2)
 		coroutine.schedule(two_hand_check, 2.1)
 		coroutine.schedule(equip_set_command, 2.2)
-		windower.send_command('wait 3;input /lockstyleset '..LockStylePallet..';')
 		if sub_job_change_custom then
 			sub_job_change_custom()
 		end
@@ -3156,21 +3155,21 @@ do
 				end
 
 				-- Check the weapons
-				if state.WeaponMode.value ~= "Locked" then
+				if state.WeaponMode.value == "Locked" then
+					built_set = set_combine(built_set, { main=player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
+					log(built_set)
+				else
 					if sets.Weapons then
 						if sets.Weapons[state.WeaponMode.value] then
 							built_set = set_combine(built_set, sets.Weapons[state.WeaponMode.value])
 						else warn('sets.Weapons.'..state.WeaponMode.value..' not found!') end
 					else warn('sets.Weapons not found!') end
-					-- Equip sub weapon based off mode
-					if not DualWield and not TwoHand then
+
+					-- Check for sub weapon
+					if not TwoHand and not DualWield then
 						if sets.Weapons.Shield then
 							built_set = set_combine(built_set, sets.Weapons.Shield)
 						else warn('sets.Weapons.Shield not found!') end
-					elseif DualWield then
-						if sets.DualWield then
-							built_set = set_combine(built_set, sets.DualWield)
-						else warn('sets.DualWield not found!') end
 					end
 				end
 
