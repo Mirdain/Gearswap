@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.8'
+Mirdain_GS = '1.5.9'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -626,7 +626,6 @@ do
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
-		if sets.Idle.DT then built_set = set_combine(built_set, sets.Idle.DT) end
 		-- WeaponSkill
 		if spell.type == 'WeaponSkill' then
 			if sets.WS then
@@ -1093,7 +1092,6 @@ do
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
 		if sets.Idle then built_set = set_combine(built_set, sets.Idle) end
-		if sets.Idle.DT then built_set = set_combine(built_set, sets.Idle.DT) end
 		-- Merget the Midcast Set
 		if sets.Midcast then 
 			built_set = set_combine(built_set, sets.Midcast)
@@ -1224,6 +1222,7 @@ do
 				elseif sets.Midcast[spell.english] then
 					built_set = set_combine(built_set, sets.Midcast[spell.english])
 					info('['..spell.english..'] Set')
+				-- Healing Magic
 				elseif spell.name:contains('Raise') or spell.name == "Arise" or spell.name:contains('Reraise') then
 					log('No Swap Defined (Raise)')
 				-- Enhancing
@@ -1506,41 +1505,45 @@ do
 					-- Check for an elemental set
 					if BlueNuke:contains(spell.english) then built_set = elemental_check(spell, built_set) end
 					info( '['..spell.english..'] Set')
-				-- Defined Blue Nukes
-				elseif BlueNuke:contains(spell.english) then
-					if sets.Midcast.BlueMagic.Nuke then
-						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Nuke)
-						info('Blue Nuke set')
-					else warn('sets.Midcast.BlueMagic.Nuke not found!') end
-					built_set = elemental_check(spell, built_set)
-				-- Spells that benifit from Blue Magic Skill
-				elseif BlueSkill:contains(spell.english) then
-					if sets.Midcast.BlueMagic.Skill then
-						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Skill)
-						info('Blue Skill set')
-					else warn('sets.Midcast.BlueMagic.Skill not found!') end
-				elseif BlueTank:contains(spell.english) then
-					if sets.Midcast.BlueMagic.Enmity then
-						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Enmity)
-						info('Blue Enmity set')
-					else warn('sets.Midcast.BlueMagic.Enmity not found!') end
-				elseif BlueHealing:contains(spell.english) then
-					if sets.Midcast.BlueMagic.Healing then
-						built_set = set_combine(built_set, sets.Midcast.BlueMagic.Healing)
-						info('Blue Cure set')
-					else warn('sets.Midcast.BlueMagic.Healing not found!') end
-				elseif BlueACC:contains(spell.english) then
-					if sets.Midcast.BlueMagic.ACC then
-						built_set = set_combine(built_set, sets.Midcast.BlueMagic.ACC)
-						info('Blue Magic Accuracy set')
-					else warn('sets.Midcast.BlueMagic.ACC not found!') end
-				-- Default Spell set
-				else info('Midcast not set') end
-				if buffactive["Diffusion"] then
-					if sets.Diffusion then
-						built_set = set_combine(built_set, sets.Diffusion)
-						info('Diffusion Augment')
-					else warn('sets.Diffusion not found!') end
+				else
+					if sets.Midcast.BlueMagic then
+						-- Defined Blue Nukes
+						if BlueNuke:contains(spell.english) then
+							if sets.Midcast.BlueMagic.Nuke then
+								built_set = set_combine(built_set, sets.Midcast.BlueMagic.Nuke)
+								info('Blue Nuke set')
+							else warn('sets.Midcast.BlueMagic.Nuke not found!') end
+							built_set = elemental_check(spell, built_set)
+						-- Spells that benifit from Blue Magic Skill
+						elseif BlueSkill:contains(spell.english) then
+							if sets.Midcast.BlueMagic.Skill then
+								built_set = set_combine(built_set, sets.Midcast.BlueMagic.Skill)
+								info('Blue Skill set')
+							else warn('sets.Midcast.BlueMagic.Skill not found!') end
+						elseif BlueTank:contains(spell.english) then
+							if sets.Midcast.BlueMagic.Enmity then
+								built_set = set_combine(built_set, sets.Midcast.BlueMagic.Enmity)
+								info('Blue Enmity set')
+							else warn('sets.Midcast.BlueMagic.Enmity not found!') end
+						elseif BlueHealing:contains(spell.english) then
+							if sets.Midcast.BlueMagic.Healing then
+								built_set = set_combine(built_set, sets.Midcast.BlueMagic.Healing)
+								info('Blue Cure set')
+							else warn('sets.Midcast.BlueMagic.Healing not found!') end
+						elseif BlueACC:contains(spell.english) then
+							if sets.Midcast.BlueMagic.ACC then
+								built_set = set_combine(built_set, sets.Midcast.BlueMagic.ACC)
+								info('Blue Magic Accuracy set')
+							else warn('sets.Midcast.BlueMagic.ACC not found!') end
+						-- Default Spell set
+						else info('Midcast not set') end
+						if buffactive["Diffusion"] then
+							if sets.Diffusion then
+								built_set = set_combine(built_set, sets.Diffusion)
+								info('Diffusion Augment')
+							else warn('sets.Diffusion not found!') end
+						end
+					else warn('sets.Midcast.BlueMagic not found!') end
 				end
 			-- Geomancy
 			elseif spell.type == 'Geomancy' then
@@ -1932,10 +1935,8 @@ do
 	function do_bullet_checks(spell, built_set)
 		if spell and built_set then
 			local bullet_name = built_set.ammo
-			if bullet_name == 'empty' then
-				log('Ammo name is: '..bullet_name)
-				return
-			end
+			if bullet_name == 'empty' or not bullet_name then return end
+			log('Ammo name is: '..bullet_name)
 
 			local bullet_min_count = 1
 			if spell.action_type == 'Ranged Attack' then
@@ -2075,9 +2076,9 @@ do
 			local built_set = choose_set()
 			if choose_set_custom then
 				built_set = set_combine(built_set, choose_set_custom())
-				equip(built_set)
-				return
 			else warn('choose_set_custom() not found!') end
+			equip(built_set)
+			return
 		-- Put the UI at 0,0
 		elseif command == 'zero' then
 			display_zero_command()
@@ -2429,8 +2430,7 @@ do
 			LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 		end
 
-		windower.send_command('wait 2;input /lockstyleset '..LockStylePallet..';wait 1;input /macro book '..MacroBook..
-		';wait 1;input /macro set '..MacroSet..';gs validate;wait 2;input /echo Change Complete')
+		windower.send_command('wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';gs validate;wait 3;input /lockstyleset '..LockStylePallet..'input /echo Change Complete;gs c update auto;')
 
 		send_command('bind f12 gs c OffenseMode')
 		send_command('bind f11 gs c TreasureHunter')
@@ -3081,7 +3081,6 @@ do
 				built_set = sets.OffenseMode
 				if sets.OffenseMode[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.OffenseMode[state.OffenseMode.value])
-
 					-- Check the weapons
 					if state.WeaponMode.value ~= "Locked" then
 						if sets.Weapons then

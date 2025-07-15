@@ -133,7 +133,9 @@ function get_sets()
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10','Mag. Evasion+15',}, priority=4},
 	}
 
-	sets.Idle.TP = set_combine( sets.Idle, {})
+	sets.Idle.TP = set_combine( sets.Idle, {
+		sub="Duban",
+	})
 
 	sets.Idle.DT = set_combine( sets.Idle, {
 		sub="Aegis",
