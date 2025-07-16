@@ -254,7 +254,9 @@ function get_sets()
 	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {}) 
 
 	-- Flurry II
-	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, { })
+	sets.Precast.RA.Flurry_II = set_combine( sets.Precast.RA.Flurry, {})
+
+	sets.Precast.BlueMagic = set_combine (sets.Precast.FastCast, {})
 
 	-- ===================================================================================================================
 	--		sets.midcast
@@ -349,6 +351,20 @@ function get_sets()
 	sets.Midcast.Enhancing.Gain = set_combine(sets.Midcast.Enhancing, {
 		hands={ name="Viti. Gloves +3", augments={'Enhancing Magic duration',}},
 	})
+
+	-- Elemental
+	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
+
+	-- Status
+	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {})
+
+	-- Blue Magic
+	sets.Midcast.BlueMagic = {}
+	sets.Midcast.BlueMagic.Skill = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Nuke = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Healing = set_combine(sets.Midcast.Cure, {})
+	sets.Midcast.BlueMagic.ACC = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Enmity = set_combine(sets.Enmity, {})
 
 	-- Enfeebling
 	sets.Midcast.Enfeebling = {
@@ -505,9 +521,7 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
-	sets.WS.ACC = set_combine(sets.WS, {
-	
-	})
+	sets.WS.ACC = set_combine(sets.WS, {})
 
 	sets.WS.PDL = set_combine(sets.WS, 
 	{
@@ -539,9 +553,9 @@ function get_sets()
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Crit.hit rate+10','Damage taken-5%',}},
 	})
 
-	sets.WS.RA = set_combine(sets.WS,{
+	sets.WS.RA = set_combine(sets.WS,{})
 
-	})
+	sets.WS.SB = sets.Subtle_Blow
 
 	sets.WS["Seraph Blade"] =  set_combine(sets.WS.MAB, {
 		right_ring="Weather. Ring",

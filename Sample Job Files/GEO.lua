@@ -90,6 +90,7 @@ function get_sets()
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.SB = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	-- Sets for Idle when player has a pet
 	sets.Idle.Pet = set_combine( sets.Idle, { --2278/1482
@@ -110,8 +111,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -512,15 +513,12 @@ function Luopan() --  This maintains the extra 600hp during midcast of spells wh
 			equipSet = sets.Luopan
 		else
 			log('Regen ['..pet.hpp..']% HP')
-			equip_set()
+			equip_set_command()
 		end
 	end
 	return equipSet
 end
 
-Cycle_Time = 2
 function Cycle_Timer()
-	if player.status == "Idle" then
-		Luopan()
-	end
+	if player.status == "Idle" then Luopan() end
 end

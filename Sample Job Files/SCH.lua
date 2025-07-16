@@ -84,6 +84,7 @@ function get_sets()
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
 	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",

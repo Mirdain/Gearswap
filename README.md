@@ -1,6 +1,8 @@
 # Version 1.4
 Use //gs c version to check your active version
 
+##Discord Link: https://discord.gg/kt68622p
+
 ### Write up: `Sotel` 
 
 # Keybinds

@@ -32,7 +32,7 @@ function get_sets()
 
 	sets.Weapons['Mordant Rime'] = {
 		main={ name="Carnwenhan", augments={'Path: A',}},
-		sub={ name="Gleti's Knife", augments={'Path: A',}},
+		sub="Crepuscular Knife",
 	}
 
 	sets.Weapons['Aeolian Edge'] = {
@@ -75,19 +75,12 @@ function get_sets()
 		sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 	}
 
-	sets.Weapons.Songs.Precast = {
-	}
+	sets.Weapons.Shield = { sub="Genmei Shield",}
 
-	sets.Weapons.Songs.Midcast = {
-	}
+	sets.Weapons.Sleep = { range="Loughnashade",}
 
-	sets.Weapons.Shield = {
-		sub="Genmei Shield",
-	}
-
-	sets.Weapons.Sleep = {
-		range="Loughnashade",
-	}
+	sets.Weapons.Songs.Precast = {}
+	sets.Weapons.Songs.Midcast = {}
 
 	-- Instruments to use
 	Instrument = {}
@@ -98,11 +91,12 @@ function get_sets()
 	Instrument.Honor = { name="Marsyas" }
 	Instrument.Aria = { name="Loughnashade" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }
-	Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','Phys. dmg. taken -4%','HP+20',} }
+	Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','"Waltz" potency +4%','HP+20',} }
 	Instrument.TP = { name="Linos", augments={'Accuracy+20','"Store TP"+4','Quadruple Attack +3',} }
 	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
 	Instrument.QuickMagic = { name="Linos", augments={'Mag. Evasion+15','Occ. quickens spellcasting +4%','HP+20',} }
 	Instrument.FastCast = { name="Linos", augments={'Mag. Evasion+15','"Fast Cast"+6','HP+20',} }
+	Instrument.WS = {  name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','STR+8',} }
 	Instrument.MAB = {  name="Linos", augments={'Mag.Atk.Bns."+15','Weapon skill damage +3%','INT+8',} }
 
 	-- HP/MP Balancing Goal
@@ -112,24 +106,28 @@ function get_sets()
 	sets.Idle = {
 		range=Instrument.Idle,  -- 4/0
 		head="Fili Calot +3", -- 11/11
-		body="Bunzi's Robe", -- 10/10
+		body="Adamantite Armor", -- 20/20
 		hands="Bunzi's Gloves", -- 8/8 
 		legs="Fili Rhingrave +3", -- 13/13
-		feet="Bunzi's Sabots", -- 6/6
-		neck="Loricate Torque +1", -- 6/6
+		feet="Fili Cothurnes +3", -- 18% Movement
+		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}}, -- 3/3
 		right_ear="Sanare Earring",
-		left_ring={ name="Moonlight ring", bag="wardrobe1", priority=2}, -- 5/5 (over capped due to movement gear)
+		left_ring="Warden's Ring",
 		right_ring="Shadow Ring",
-		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Mag. Evasion+15',}},
+		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Waltz" potency +10%','Mag. Evasion+15',}},
     } -- PDT 60%%, MDT 56%
+
+	sets.Idle.Resting = set_combine(sets.Idle, {})
+
+	-- These are used based off your OffenseMode
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {})
-	sets.Idle.Resting = set_combine(sets.Idle, {})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +3"}
@@ -140,6 +138,18 @@ function get_sets()
 	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
+	}
+
+	sets.Subtle_Blow = {
+		neck="Bathy Choker +1",
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2"},
+	}
+
+	--The following sets augment the base TP set 
+	--Only 9 is needed with haste samba and /DNC.  /NIN needs 11 without samba and none with samba
+	sets.DualWield = {
+		waist="Reiki Yotai",
+		--left_ear="Eabani Earring",
 	}
 
 	sets.OffenseMode = {}
@@ -158,19 +168,17 @@ function get_sets()
 		right_ear="Balder Earring +1",
 		left_ring="Lehko's Ring",
 		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
-		back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		back="Null Shawl",
 	}
 
 	--This set is used when OffenseMode is DT and Enaged (Augments the TP base set)
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		legs="Fili Rhingrave +3",
 		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
 	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {
-	
-	})
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {})
 
 	--This set is used when OffenseMode is PDL and Enaged
 	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
@@ -182,11 +190,8 @@ function get_sets()
 		waist="Carrier's Sash",
 	})
 
-	--The following sets augment the base TP set
-	sets.DualWield = {
-		waist="Reiki Yotai",
-		--left_ear="Eabani Earring",
-	}
+	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {})
 
 	sets.Precast = {}
 
@@ -205,15 +210,18 @@ function get_sets()
 		left_ring="Kishar Ring", -- 4
 		right_ring="Weather. Ring", -- 5 3 Quick Magic
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}}, -- 10
-	} -- 81 FC
+	} -- 81 FC and 10 Quick Magic
 
 	-- Used for Songs (now easy to max Fast Cast so not needed)
-	sets.Precast.Songs = set_combine(sets.Precast.FastCast, {
-		head="Fili Calot +3",
-	})
-
+	sets.Precast.Songs = {}
 	-- Used for "-Cure casting time"
 	sets.Precast.Cure = {}
+	-- Used for "-Enhancing casting time"
+	sets.Precast.Enhancing = {}
+	-- Used for "Utsusemi casting time"
+	sets.Precast.Utsusemi = {}
+	-- Used for "Blue Magic casting time"
+	sets.Precast.Blue_Magic = {}
 
 	-- Default song duration / strength
 	sets.Midcast = set_combine(sets.Idle, {
@@ -233,9 +241,7 @@ function get_sets()
 	})
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
-	sets.Midcast.DummySongs = set_combine(sets.Idle, {
-
-	})
+	sets.Midcast.DummySongs = set_combine(sets.Idle, {})
 
 	-- Cure Set
 	sets.Midcast.Cure = {
@@ -254,6 +260,9 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
     } -- 50% Cure Potency / 15% Cure Potency II
 
+	sets.Midcast.Regen = {}
+	sets.Midcast.Refresh = {}
+
 	-- Base set for duration
 	sets.Midcast.Enhancing = {
 		sub="Ammurapi Shield",
@@ -271,6 +280,13 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
+
+	--Used for elemental Bar Magic Spells
+	sets.Midcast.Enhancing.Elemental = {}
+	sets.Midcast.Enhancing.Status = {}
+	sets.Midcast.Enhancing.Skill = {}
+	sets.Midcast.Enhancing.Gain = {}
+
 	-- Curaga Set (different rules than cure)
 	sets.Midcast.Curaga = sets.Midcast.Cure
 
@@ -283,8 +299,8 @@ function get_sets()
 		waist="Bishop's Sash",
 	})
 
-	--Used for elemental Bar Magic Spells
-	sets.Midcast.Enhancing.Elemental = {}
+	sets.Midcast.Divine = {}
+	sets.Midcast.Phalanx = {}
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {
@@ -303,6 +319,11 @@ function get_sets()
 		right_ring={ name="Stikini Ring +1",  bag="wardrobe2"},
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
+
+	sets.Midcast.Enfeebling.MACC = {}
+	sets.Midcast.Enfeebling.Potency = {}
+	sets.Midcast.Enfeebling.Duration = {}
+
 	-- Bard Specific Sets
 
 	-- Max duration
@@ -333,8 +354,6 @@ function get_sets()
 	sets.Midcast.Sirvente = {}
 	sets.Midcast.Aria = {}
 
-	sets.Midcast.Utsusemi = set_combine(sets.Idle, {})
-
 	-- Specific gear for spells
 	sets.Midcast["Stoneskin"] = {
 		waist="Siegel Sash",
@@ -354,18 +373,17 @@ function get_sets()
 
 	sets.Flourish = set_combine(sets.Idle.DT, {})
 	sets.Jig = set_combine(sets.Idle.DT, { })
-	sets.Step = set_combine(sets.OffenseMode.DT, {})
+	sets.Step = set_combine(sets.Idle.DT, {})
 	sets.Samba = set_combine(sets.Idle.DT, {})
-	sets.Waltz = set_combine(sets.OffenseMode.DT, {
-		ammo="Yamarang", -- 5
-		--body={ name="Gleti's Cuirass", augments={'Path: A',}}, -- 10
-		hands="Slither Gloves +1", -- 5
+	sets.Waltz = set_combine(sets.Idle.DT, {
+		range=Instrument.Idle, -- 4
 		legs="Dashing Subligar", -- 10
-	}) -- 30% Potency
+		back={ name="Intarabus's Cape", augments={'MND+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Waltz" potency +10%','Mag. Evasion+15',}}, --10
+	}) -- 24% Potency
 
 	--Default WS set base
 	sets.WS = {
-		range=Instrument.Mordant,
+		range=Instrument.WS,
 		head={ name="Nyame Helm", augments={'Path: B',}},
 		body={ name="Nyame Mail", augments={'Path: B',}},
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -376,7 +394,7 @@ function get_sets()
 		left_ear="Ishvara Earring",
 		right_ear="Regal Earring",
 		right_ring="Sroda Ring",
-		right_ring="Epaminondas's Ring",
+		left_ring="Epaminondas's Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Accuracy+20 Attack+20','CHR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}
 
@@ -414,6 +432,8 @@ function get_sets()
 		right_ring="Ilabrat Ring",
 		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
+
+	sets.WS.SB = sets.Subtle_Blow
 
 	sets.WS["Savage Blade"] =  set_combine(sets.WS.WSD, {
 		right_ring="Sroda Ring",

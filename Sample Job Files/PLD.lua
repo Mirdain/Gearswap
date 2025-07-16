@@ -133,6 +133,10 @@ function get_sets()
 		back={ name="Rudianos's Mantle", augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10','Mag. Evasion+15',}, priority=4},
 	}
 
+	sets.Idle.TP = set_combine( sets.Idle, {
+		sub="Duban",
+	})
+
 	sets.Idle.DT = set_combine( sets.Idle, {
 		sub="Aegis",
 		ammo="Staunch Tathlum +1",
@@ -173,8 +177,8 @@ function get_sets()
 	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 

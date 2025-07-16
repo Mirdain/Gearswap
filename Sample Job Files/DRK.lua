@@ -90,6 +90,7 @@ function get_sets()
 	sets.Idle.DT = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
@@ -105,6 +106,31 @@ function get_sets()
 	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
+	}
+
+	-- This caps with Auspice from WHM
+	sets.Subtle_Blow = {
+		body="Dagon Breast.",
+		feet="Sakpata's Leggings",
+		hands="Sakpata's Gauntlets",
+		right_ring="Niqmaddu Ring",
+	}
+
+	-- Max HP for Dread Spikes
+	sets.Max_HP = {
+		ammo="Staunch Tathlum +1",
+		head="Ratri Sallet +1",
+		body="Ratri Plate +1",
+		hands="Rat. Gadlings +1",
+		legs="Ratri Cuisses +1",
+		feet="Rat. Sollerets +1",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Plat. Mog. Belt",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear="Tuisto Earring",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Moonlight Ring",
+		back={ name="Ankou's Mantle", augments={'HP+60','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}},
 	}
 
 	sets.OffenseMode = {
@@ -129,8 +155,11 @@ function get_sets()
 	})
 
 	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
-		head={ name="Sakpata's Helm", augments={'Path: A',}},
-		feet="Sakpata's Leggings",
+		head="Hjarrandi Helm",
+		body="Hjarrandi Breast.",
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck="Null Loop",
+		left_ring="Lehko's Ring",
 	})
 	
 	--Same TP set but WSD can be altered also
@@ -138,18 +167,10 @@ function get_sets()
 
 	})
 
-	-- This caps with Auspice from WHM
-	sets.Subtle_Blow = {
-		body="Dagon Breast.",
-		feet="Sakpata's Leggings",
-		hands="Sakpata's Gauntlets",
-		right_ear={ name="Schere Earring", augments={'Path: A',}},
-	}
-
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
 	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
-	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.DT, sets.Subtle_Blow, {})
+	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.DT, {})
 
 	sets.DualWield = {}
 
@@ -157,15 +178,19 @@ function get_sets()
 
 	-- Used for Magic Spells (Fast Cast)
 	sets.Precast.FastCast = {
-		ammo="Sapience Orb", --2
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, --14
-		body={ name="Taeon Tabard", augments={'"Fast Cast"+5','HP+44',}}, --9
-		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, --8
-		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
-		feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}}, --8
-		neck="Voltsurge Torque", --4
-		left_ear="Etiolation Earring", --1
-		left_ring="Weather. Ring", --5
+		ammo="Sapience Orb", -- 2
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}}, -- 14
+		body="Sacro Breastplate", -- 10
+		hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}}, -- 8
+		legs={ name="Odyssean Cuisses", augments={'Mag. Acc.+23','"Fast Cast"+6',}}, -- 6
+		feet={ name="Odyssean Greaves", augments={'Mag. Acc.+16','"Fast Cast"+6','CHR+10',}}, -- 13
+		neck="Voltsurge Torque", -- 4
+		waist="Plat. Mog. Belt",
+		left_ear="Malignance Earring", -- 4
+		right_ear="Etiolation Earring", -- 1
+		left_ring="Weather. Ring", -- 5
+		right_ring="Kishar Ring", -- 4
+		back={ name="Ankou's Mantle", augments={'HP+60','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}, -- 10
 	}
 		
 	sets.Enmity = {}
@@ -219,29 +244,17 @@ function get_sets()
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = set_combine(sets.WS, {
+	sets.WS.ACC = set_combine(sets.WS, {})
 
-	})
+	sets.WS.PDL = set_combine(sets.WS, {})
 
-	sets.WS.PDL = set_combine(sets.WS, {
+	sets.WS.WSD = set_combine(sets.WS, {})
 
-	})
+	sets.WS.CRIT = set_combine(sets.WS, {})
 
-	sets.WS.WSD = set_combine(sets.WS, {
+	sets.WS.Multi_Hit = set_combine(sets.WS, {})
 
-	})
-
-	sets.WS.CRIT = set_combine(sets.WS, {
-	
-	})
-
-	sets.WS.Multi_Hit = set_combine(sets.WS, {
-	
-	})
-
-	sets.WS.SB = set_combine(sets.WS, sets.Subtle_Blow, {
-	
-	})
+	sets.WS.SB = sets.Subtle_Blow
 
 	sets.WS['Catastrophe'] = set_combine(sets.WS, { 
 		left_ear="Thrud Earring",
@@ -344,7 +357,7 @@ end
 function midcast_custom(spell)
 	equipSet = {}
 	if spell.name == "Dread Spikes" then
-		equipSet = { main="Crepuscular Scythe" }
+		equipSet = set_combine( sets.Max_HP, { main="Crepuscular Scythe" })
 	end
 	return equipSet
 end
