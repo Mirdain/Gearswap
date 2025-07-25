@@ -280,19 +280,33 @@ function get_sets()
 		sub="Ammurapi Shield",
 		ammo="Pemphredo Tathlum",
 		head="Ebers Cap +3",
-		body="Adamantite Armor",
-		hands="Regal Cuffs",
+		body="Theo. Bliaut +3",
+		hands="Ebers Mitts +3",
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
-		feet="Ebers Duckbills +3",
-		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		feet="Theo. Duckbills +3",
+		neck="Null Loop",
 		waist={ name="Obstin. Sash", augments={'Path: A',}},
-		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		right_ear="Tuisto Earring",
-		left_ring="Kishar Ring",
-		right_ring="Stikini Ring +1",
-		back={ name="Alaunus's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','Haste+10','Damage taken-5%',}},
+		left_ear="Malignance Earring",
+		right_ear="Ebers Earring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
+		back="Null Shawl",
 	}
 
+	-- Skill Based ('Dispel','Aspir','Aspir II','Aspir III','Drain','Drain II','Drain III','Frazzle','Frazzle II','Stun','Poison','Poison II','Poisonga')
+	sets.Midcast.Enfeebling.MACC = set_combine(sets.Midcast.Enfeebling, {})
+
+	 -- Potency Basted ('Paralyze','Paralyze II','Slow','Slow II','Addle','Addle II','Distract','Distract II','Distract III','Frazzle III','Blind','Blind II')
+	sets.Midcast.Enfeebling.Potency = set_combine(sets.Midcast.Enfeebling, { })
+
+	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga', 'Bind', 'Bind II')
+	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, { 
+		left_ring="Kishar Ring",
+		hands="Regal Cuffs",
+		waist={ name="Obstin. Sash", augments={'Path: A',}},
+	})
+
+	sets.Midcast.Phalanx = set_combine(sets.Midcast.Enhancing.Skill, { })
 	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
 	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
 	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
@@ -362,7 +376,7 @@ function get_sets()
 		main="Vadose Rod",
 		sub="Ammurapi Shield",
 		ammo="Staunch Tathlum +1",
-		head={ name="Chironic Hat", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','"Resist Silence"+1','Mag. Acc.+13','"Mag.Atk.Bns."+4',}},
+		head="Chironic Hat",
 		body="Adamantite Armor",
 		hands="Regal Cuffs",
 		legs="Shedir Seraweels",

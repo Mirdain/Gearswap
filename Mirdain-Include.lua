@@ -762,7 +762,6 @@ do
 
 				info(message)
 			else warn('sets.WS not found!') end
-
 		-- Ranged attack
 		elseif spell.action_type == 'Ranged Attack' then
 			if sets.Precast then
@@ -791,7 +790,6 @@ do
 
 			-- Check for bullets if shooting a round
 			if built_set.ammo ~= "" and built_set.ranged ~= "" then do_bullet_checks(spell, built_set) end
-
 		-- JobAbility
 		elseif spell.type == 'JobAbility' then
 			if sets.JA then
@@ -1022,8 +1020,8 @@ do
 
 		-- Weapon Checks for precast
 		-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
-		if state.WeaponMode.value ~= "Unlocked" and not spell.type == 'CorsairRoll' and not spell.name == 'Double-Up' then
-			log('Update Weapons')
+		if state.WeaponMode.value ~= "Unlocked" and spell.type ~= 'CorsairRoll' and spell.name ~= 'Double-Up' then
+			log('Update Weapons - Precast')
 			if state.WeaponMode.value == "Locked" then
 				built_set = set_combine(built_set, { main = player.equipment.main, sub = player.equipment.sub, range = player.equipment.range})
 			else
@@ -1072,22 +1070,22 @@ do
 
 	function midcastequip(spell)
 
-		if spell.type == 'WeaponSkill' then log('abort midcast') return {}
-		elseif spell.type == 'JobAbility' then log('abort midcast') return {}
-		elseif spell.type == 'Item' then log('abort midcast') return {}
-		elseif spell.type == 'Scholar' then log('abort midcast') return {}
-		elseif spell.type == 'Ward' then log('abort midcast') return {}
-		elseif spell.type == 'Rune' then log('abort midcast') return {}
-		elseif spell.type == 'Effusion' then log('abort midcast') return {}
-		elseif spell.type == 'CorsairRoll' then log('abort midcast') return {}
-		elseif spell.type == 'CorsairShot' then log('abort midcast') return {}
-		elseif spell.type == 'Waltz' then log('abort midcast') return {}
-		elseif spell.type == 'Jig' then log('abort midcast') return {}
-		elseif spell.type == 'Samba' then log('abort midcast') return {}
-		elseif spell.type == 'Step' then log('abort midcast') return {}
-		elseif spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return {} end
-		
-		if pet.isvalid and pet_midaction() then return {} end
+		if spell.type == 'WeaponSkill' then log('abort midcast') return end
+		if spell.type == 'JobAbility' then log('abort midcast') return end
+		if spell.type == 'Item' then log('abort midcast') return end
+		if spell.type == 'Scholar' then log('abort midcast') return end
+		if spell.type == 'Ward' then log('abort midcast') return end
+		if spell.type == 'Rune' then log('abort midcast') return end
+		if spell.type == 'Effusion' then log('abort midcast') return end
+		if spell.type == 'CorsairRoll' then log('abort midcast') return end
+		if spell.type == 'CorsairShot' then log('abort midcast') return end
+		if spell.type == 'Waltz' then log('abort midcast') return end
+		if spell.type == 'Jig' then log('abort midcast') return end
+		if spell.type == 'Samba' then log('abort midcast') return end
+		if spell.type == 'Step' then log('abort midcast') return end
+		if spell.type == 'Flourish1' or spell.type == 'Flourish2' or spell.type == 'Flourish3' then log('abort midcast') return end
+		if pet.isvalid and pet_midaction() then return end
+
 		--Default gearset
 		local built_set = {}
 		-- Merge the Idle incase a midcast is not set
@@ -1651,6 +1649,7 @@ do
 				else warn('sets.Weapons not found!') end
 			end
 		end
+
 		--Swap in bard song weapons no matter the mode
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			-- Weapons
@@ -1870,8 +1869,9 @@ do
 				info('['..spell.english..'] Set')
 			end
 			-- User level commands
-			if pet_midcast_custom(spell) then
-				built_set = set_combine(built_set, pet_midcast_custom(spell))
+			local custom_midcast = pet_midcast_custom(spell)
+			if custom_midcast then
+				built_set = set_combine(built_set, custom_midcast)
 			end
 			-- Weapon Checks for precast
 			-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
