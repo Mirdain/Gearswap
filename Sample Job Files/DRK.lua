@@ -170,7 +170,14 @@ function get_sets()
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode,{ })
 	sets.OffenseMode.PDT = set_combine(sets.OffenseMode, { })
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, { })
-	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.DT, {})
+	sets.OffenseMode.SB =  set_combine(sets.OffenseMode, {
+		head="Hjarrandi Helm",
+		body="Hjarrandi Breast.",
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck="Null Loop",
+		right_ear="Tuisto Earring",
+		left_ring="Lehko's Ring",
+	})
 
 	sets.DualWield = {}
 

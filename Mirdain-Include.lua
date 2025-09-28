@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.9'
+Mirdain_GS = '1.5.12'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -172,8 +172,7 @@ Instrument = {}
 Instrument.Count = {}
 Instrument.Potency = {}
 Instrument.Pianissimo = {}
-Instrument.Honor = {}
-Instrument.Aria = {}
+Instrument.Enfeebling = {}
 Instrument.AOE_Sleep = {}
 Instrument.Idle = {}
 Instrument.TP = {}
@@ -241,13 +240,10 @@ Ammo_Warning_Limit = 99
 
 -- User Definde
 
-command_JA = "None"
-command_SP = "None"
-command_BP = "None"
-
 is_Busy = false
 AutoItem = false
 Random_Lockstyle = false
+target_assist = true
 Lockstyle_List = {}
 
 Elemental_WS = S{
@@ -482,13 +478,13 @@ do
 	-------------------------------------------------------------------------------------------------------------------
 
 	function pretargetcheck(spell,action)
+		log('pretargetcheck called')
 		--Cancel if pet is in middle of move
 		if (pet.isvalid and pet_midaction()) then
 			cancel_spell()
 			return
-		end
 		-- Status Ailment Check
-		if buffactive['Sleep'] then
+		elseif buffactive['Sleep'] then
 			cancel_spell()
 			if sets.Idle then
 				equip(sets.Idle)
@@ -498,37 +494,31 @@ do
 					equip(sets.Weapons.Sleep)
 				else warn('sets.Weapons.Sleep not found!') end
 			else warn('sets.Weapons not found!') end
-		end
-		if buffactive['Stun'] then
+		elseif buffactive['Stun'] then
 			cancel_spell()	
 			if sets.Idle then
 				equip(sets.Idle)
 			else warn('sets.Idle not found!') end
 			return
-		end
-		if buffactive['KO'] then
+		elseif buffactive['KO'] then
 			cancel_spell()
 			return
-		end
-		if buffactive['Petrification'] then
+		elseif buffactive['Petrification'] then
 			cancel_spell()	
 			if sets.Idle then
 				equip(sets.Idle)
 			else warn('sets.Idle not found!') end
 			return
-		end
-		if buffactive['Charm'] then
+		elseif buffactive['Charm'] then
 			cancel_spell()
 			return
-		end
-		if buffactive['Terror'] then
+		elseif buffactive['Terror'] then
 			cancel_spell()
 			if sets.Idle then
 				equip(sets.Idle)
 			else warn('sets.Idle not found!') end
 			return
-		end
-		if AutoItem and not buffactive['Muddle'] then
+		elseif AutoItem and not buffactive['Muddle'] then
 			-- Auto Remedy --
 			if buffactive['Paralysis'] and spell.type == 'JobAbility' then
 				if player.inventory['Remedy'] ~= nil then
@@ -545,9 +535,8 @@ do
 					log('Cancel Spell - Using Items')
 				end
 			end											
-		end
 		--Weapon Skill checks
-		if spell.type == 'WeaponSkill' then
+		elseif spell.type == 'WeaponSkill' then
 			--Stop gear swap when you can't WS
 			if player.tp < 1000 then
 				cancel_spell()
@@ -581,37 +570,76 @@ do
 				cancel_spell()
 				return
 			end
-			if spell.target.type then
-				local cast_spell = res.spells[spell.id]
-				if not cast_spell.targets then
-					info('Unable to find spell ['..spell.name..']')
-				-- Self Target spells
-				elseif tostring(cast_spell.targets) == '{Self}' then
-					if spell.target.type ~= 'SELF' then
-						-- Change Target Spell
-						log('Redirect Spell:[SELF TARGET]')
+			if target_assist then
+				--Cancel if null target and redirect to self if bard song
+				if not spell.target.type and spell.type == 'BardSong' then
+					if buffactive['Pianissimo'] then
+						if not is_Pianissimo then
+							cancel_spell()
+							windower.chat.input('/ma "'..spell.name..'" <stpc>')
+							is_Pianissimo = true
+						else
+							is_Pianissimo = false
+						end
+					else
 						change_target('<me>')
 					end
-				-- Enemy Spells
-				elseif tostring(cast_spell.targets) == '{Enemy}' then
-					if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
-						--Cancel Spell
-						log('Cancel Spell:['..tostring(spell.target.type)..']')
-						log('Cancel Spell:[ENEMY TARGET]')
-						cancel_spell()
-						return
-					end
-				-- Party Buffs
-				elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
-					if spell.target.type == 'MONSTER' then
-						-- Cancel Spell
-						log('Cancel Spell:[PARTY TARGET]')
-						cancel_spell()
-						return
+				elseif spell.target.type then
+					local cast_spell = res.spells[spell.id]
+					if not cast_spell.targets then
+						info('Unable to find spell ['..spell.name..']')
+					-- Self Target spells
+					elseif tostring(cast_spell.targets) == '{Self}' then
+						if spell.target.type ~= 'SELF' then
+							-- Change Target Spell
+							log('Redirect Spell:[SELF TARGET]')
+							change_target('<me>')
+						end
+					-- Enemy Spells but not targeting an enemy
+					elseif tostring(cast_spell.targets) == '{Enemy}' then
+						if spell.target.type ~= 'MONSTER' and not spell.name:contains('Lullaby') and not spell.name:contains('Sleep') then
+							--Cancel Spell
+							log('Cancel Spell:['..tostring(spell.target.type)..']')
+							log('Cancel Spell:[ENEMY TARGET]')
+							cancel_spell()
+							return
+						end
+					-- Party Buffs
+					elseif tostring(cast_spell.targets) == '{Self, Party}' or tostring(cast_spell.targets) == '{Self, Party, Ally, NPC}' then
+						if spell.target.type == 'MONSTER' then
+							if spell.type == 'BardSong' then
+								if buffactive['pianissimo'] then
+									if is_Pianissimo == false then
+										cancel_spell()
+										--log('Piassimo Redirect - Select Character')
+										windower.chat.input('/ma \"'..spell.name..'\" <stpc>')
+										is_Pianissimo = true
+									else
+										is_Pianissimo = false
+									end
+								else
+									change_target('<me>')
+									log('Redirect Spell:[SELF TARGET]')
+								end
+							else
+								-- Cancel Spell
+								log('Cancel Spell:[PARTY TARGET]')
+								cancel_spell()
+								return
+							end
+						else
+							if spell.type == 'BardSong' and spell.target.type == 'SELF' and buffactive['Pianissimo'] then
+								log('Pianissimo Redirect - Select Character')
+								cancel_spell()
+								windower.chat.input('/ma \"'..spell.name..'\" <stpc>')
+								return
+							end
+						end
 					end
 				end
 			end
 		end
+		log('pretargetcheck finished')
 	end
 
 	-------------------------------------------------------------------------------------------------------------------
@@ -641,8 +669,12 @@ do
 					-- Set is defined
 					if sets.WS[spell.english] then
 						built_set = set_combine(built_set, sets.WS[spell.english])
+						-- Example would be WS[Savage Blade]['PDL']
+						if sets.WS[spell.english][state.OffenseMode.value] then
+							built_set = set_combine(built_set, sets.WS[spell.english][state.OffenseMode.value])
+							message = '['..spell.english..'] Set (Augmented)'
 						-- Example would be WS.RA.ACC
-						if state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
+						elseif state.OffenseMode.value ~= 'TP' and sets.WS.RA and sets.WS.RA[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS.RA[state.OffenseMode.value])
 							-- Augment the specified WS
 							if state.OffenseMode.value == 'ACC' then
@@ -700,13 +732,16 @@ do
 					if Ammo and Ammo[state.OffenseMode.value] then built_set = set_combine(built_set, { ammo = Ammo[state.OffenseMode.value] }) end
 
 					message = message..' ['..available_bullets..'x]'
-
 				else
-
 					-- Set is defined
 					if sets.WS[spell.english] then
 						built_set = set_combine(built_set, sets.WS[spell.english])
-						if state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] then
+						-- Example would be WS[Savage Blade]['PDL']
+						if sets.WS[spell.english][state.OffenseMode.value] then
+							built_set = set_combine(built_set, sets.WS[spell.english][state.OffenseMode.value])
+							message = '['..spell.english..'] Set (Augmented)'
+						-- Example would be WS.ACC
+						elseif state.OffenseMode.value ~= 'TP' and sets.WS[state.OffenseMode.value] then
 							built_set = set_combine(built_set, sets.WS[state.OffenseMode.value])
 							-- Augment the specified WS
 							if state.OffenseMode.value == 'ACC' then
@@ -976,12 +1011,6 @@ do
 								-- Defined Gear Set
 								if sets.Midcast[spell.english] then
 									built_set = set_combine(built_set, sets.Midcast[spell.english])
-								-- Equip Marsyas
-								elseif spell.name == "Honor March" then
-									built_set = set_combine(built_set, {range=Instrument.Honor})
-								-- Equip Loughnashade
-								elseif spell.name == "Aria of Passion" then
-									built_set = set_combine(built_set, {range=Instrument.Aria})
 								-- Equip Harp
 								elseif spell.name:contains('Horde') then
 									if sets.Midcast.Enfeebling then
@@ -1004,13 +1033,6 @@ do
 						else
 							if sets.Precast.Songs then
 								built_set = set_combine(built_set, sets.Precast.Songs)
-								-- Equip Marsyas
-								if spell.name == "Honor March" then
-									built_set = set_combine(built_set, {range=Instrument.Honor})
-								-- Equip Loughnashade
-								elseif spell.name == "Aria of Passion" then
-									built_set = set_combine(built_set, {range=Instrument.Aria})
-								end
 							else warn('sets.Precast.Songs not found!') end
 						end
 					end
@@ -1037,6 +1059,7 @@ do
 				else warn('sets.Weapons not found!') end
 			end
 		end
+
 		--Swap in bard song weapons no matter the mode
 		if spell.type == 'BardSong' and spell.target.type ~= 'MONSTER' then
 			if sets.Weapons then
@@ -1053,6 +1076,7 @@ do
 				else warn('sets.Weapons.Songs not found!') end
 			else warn('sets.Weapons not found!') end
 		end
+
 		-- If TH mode is on - check if new mob and then equip TH gear
 		if state.TreasureMode.value ~= 'None' and spell.target.type == 'MONSTER' and not th_info.tagged_mobs[spell.target.id] then
 			if sets.TreasureHunter then
@@ -1442,7 +1466,7 @@ do
 							end
 						else warn('sets.Helix not found!') end
 					else
-						if spell.element == "Earth" then
+						if spell.element == "Earth" and sets.Midcast.Nuke.Earth then
 							built_set = set_combine(built_set, sets.Midcast.Nuke.Earth)
 							windower.add_to_chat(8,'Earth Element Detected!')
 						end
@@ -1465,14 +1489,6 @@ do
 					if sets.Midcast[spell.english] then
 						built_set = set_combine(built_set, sets.Midcast[spell.english])
 						info( '['..spell.english..'] Set')
-					-- Equip Marsyas
-					elseif spell.name == "Honor March" then
-						built_set = set_combine(built_set, {range=Instrument.Honor})
-						info( '['..spell.english..'] Set')
-					-- Equip Loughnashade
-					elseif spell.name == "Aria of Passion" then
-						built_set = set_combine(built_set, {range=Instrument.Aria})
-						info( '['..spell.english..'] Set')
 					-- Equip Harp
 					elseif spell.name:contains('Horde') then
 						if sets.Midcast.Enfeebling then
@@ -1485,7 +1501,7 @@ do
 						if sets.Midcast.Enfeebling then
 							built_set = set_combine(built_set, sets.Midcast.Enfeebling)
 						else warn('sets.Midcast.Enfeebling not found!') end
-						built_set = set_combine(built_set, {range=Instrument.Potency})
+						built_set = set_combine(built_set, {range=Instrument.Enfeebling})
 						info( '['..spell.english..'] Set (Enfeebling)')
 					-- Augment the buff songs
 					else
@@ -1665,20 +1681,12 @@ do
 				else warn('sets.Weapons.Songs.Midcast not found!') end
 			else warn('sets.Weapons.Songs not found!') end
 			-- Instruments
-			if spell.target.type ~= 'SELF' and spell.name ~= "Honor March" and spell.name ~= "Aria of Passion" and not SongCount:contains(spell.name) then
+			if buffactive['pianissimo'] and not SongCount:contains(spell.name) then
 				if Instrument then
 					--Check for pianissimo Weapons
 					if Instrument.Pianissimo then
-						built_set = set_combine(built_set, {range=Instrument.Pianissimo})
+						built_set = set_combine(built_set, {range = equip_pianissimo_gear(spell)})
 					else warn('Instrument.Pianissimo not found!') end
-					--Check for Ballad Weapon
-					if spell.name:contains('Ballad') then
-						if Instrument then
-							if Instrument.Ballad then
-								built_set = set_combine(built_set, {range=Instrument.Ballad})
-							else warn('Instrument.Ballad not found!') end
-						else warn('Instrument not found!') end
-					end
 				else warn('Instrument not found!') end
 			end
 		end
@@ -1869,9 +1877,8 @@ do
 				info('['..spell.english..'] Set')
 			end
 			-- User level commands
-			local custom_midcast = pet_midcast_custom(spell)
-			if custom_midcast then
-				built_set = set_combine(built_set, custom_midcast)
+			if pet_midcast_custom then
+				built_set = set_combine(built_set, pet_midcast_custom(spell))
 			end
 			-- Weapon Checks for precast
 			-- If it set to unlocked it will not swap the weapons even if defined in the built_set job lua
@@ -1900,7 +1907,7 @@ do
 
 	function pet_aftercast(spell)
 		local built_set = choose_set()
-		if pet_aftercast_custom(spell) then
+		if pet_aftercast_custom then
 			built_set = set_combine(built_set, pet_aftercast_custom(spell))
 		end
 		equip(built_set)
@@ -1914,16 +1921,19 @@ do
 		-- Auto Buff is on and not in a town
 		if not is_Busy and state.AutoBuff.value ~= 'OFF' and not Cities:contains(world.area) and not buffactive['Stun'] and not buffactive['Terror'] then
 			-- Set defaults
-			command_JA = 'None'	
-			command_SP = 'None'
-			if not is_moving then
-				command_SP = check_buff_SP()
-			end
-			command_JA = check_buff_JA()
+			local command_JA = 'None'	
+			local command_SP = 'None'
+
+			-- Spells
+			if not is_moving and check_buff_SP then command_SP = check_buff_SP() end
+
+			-- Job Abilities
+			if check_buff_JA then command_JA = check_buff_JA() end
+
 			if command_JA ~= 'None' and not buffactive['Amnesia'] then
-				command_JA_execute()
+				command_JA_execute(command_JA)
 			elseif command_SP ~= 'None' then
-				command_SP_execute()
+				command_SP_execute(command_SP)
 			end
 		end
 	end
@@ -2048,9 +2058,14 @@ do
 		--Equip weapon for Dispelga
 		if spell.name == "Dispelga" then
 			built_set = {main="Daybreak"}
-		end
+		-- Equip Marsyas
+		elseif spell.name == "Honor March" then
+			built_set = {range="Marsyas"}
+		-- Equip Loughnashade
+		elseif spell.name == "Aria of Passion" then
+			built_set = {range="Loughnashade"}
 		--Equip body for Impact
-		if spell.name == "Impact" then
+		elseif spell.name == "Impact" then
 			local Crepuscular = player.inventory["Crepuscular Cloak"] or player.wardrobe["Crepuscular Cloak"] or player.wardrobe2["Crepuscular Cloak"]
 			or player.wardrobe3["Crepuscular Cloak"] or player.wardrobe4["Crepuscular Cloak"] or player.wardrobe5["Crepuscular Cloak"] 
 			or player.wardrobe6["Crepuscular Cloak"] or player.wardrobe7["Crepuscular Cloak"] or player.wardrobe8["Crepuscular Cloak"]
@@ -2077,6 +2092,7 @@ do
 			if choose_set_custom then
 				built_set = set_combine(built_set, choose_set_custom())
 			else warn('choose_set_custom() not found!') end
+			-- Order the gear and then equip
 			equip(built_set)
 			return
 		-- Put the UI at 0,0
@@ -2308,7 +2324,7 @@ do
 	end
 
 	-- Functin used to exectue Job Abilities
-	function command_JA_execute()
+	function command_JA_execute(command_JA)
 		local cast_ability = res.job_abilities:with('en', command_JA)
 		local target = ''
 		if tostring(cast_ability.targets) == "{Self}" then
@@ -2323,7 +2339,7 @@ do
 	end
 
 	-- Functin used to exectue Spells
-	function command_SP_execute()
+	function command_SP_execute(command_SP)
 		local cast_spell = res.spells:with('en', command_SP)
 		local spell_cast_time = cast_spell.cast_time
 		local target = ''
@@ -2345,7 +2361,7 @@ do
 	end
 
 	-- Determines correct gear for the songs
-	function equip_song_gear(spell, instruments)
+	function equip_song_gear(spell, instrument)
 		local song_set = {}
 			if string.find(spell.english,'Finale') and sets.Midcast.Finale then song_set = sets.Midcast.Finale
 		elseif string.find(spell.english,'Lullaby') and sets.Midcast.Lullaby then song_set = sets.Midcast.Lullaby
@@ -2367,11 +2383,34 @@ do
 		elseif string.find(spell.english,'Dirge') and sets.Midcast.Dirge then song_set = sets.Midcast.Dirge
 		elseif string.find(spell.english,'Sirvente') and sets.Midcast.Sirvente then song_set = sets.Midcast.Sirvente
 		elseif string.find(spell.english,'Aria') and sets.Midcast.Aria then song_set = sets.Midcast.Aria
-		else
-			info('['..spell.english..'] set not found!')
-		end
-		song_set['range'] = instruments
+		else warn('['..spell.english..'] set not found!') end
+		song_set['range'] = instrument
 		return song_set
+	end
+
+	-- Determines correct instrument for Pianissimo
+	function equip_pianissimo_gear(spell)
+		if spell.english == "Honor March" or spell.english == "Aria of Passion" then return end
+		if Instrument then
+			if Instrument.Pianissimo then
+				log('Check Pianissimo Instrument')
+				if string.find(spell.english,'March') and Instrument.Pianissimo.March then return Instrument.Pianissimo.March
+				elseif string.find(spell.english,'Minuet') and Instrument.Pianissimo.Minuet then return Instrument.Pianissimo.Minuet
+				elseif string.find(spell.english,'Madrigal') and Instrument.Pianissimo.Madrigal then return Instrument.Pianissimo.Madrigal
+				elseif string.find(spell.english,'Ballad') and Instrument.Pianissimo.Ballad then return Instrument.Pianissimo.Ballad
+				elseif string.find(spell.english,'Scherzo') and Instrument.Pianissimo.Scherzo then return Instrument.Pianissimo.Scherzo
+				elseif string.find(spell.english,'Mazurka') and Instrument.Pianissimo.Mazurka then return Instrument.Pianissimo.Mazurka
+				elseif string.find(spell.english,'Paeon') and Instrument.Pianissimo.Paeon then return Instrument.Pianissimo.Paeon
+				elseif string.find(spell.english,'Carol') and Instrument.Pianissimo.Carol then return Instrument.Pianissimo.Carol
+				elseif string.find(spell.english,'Minne') and Instrument.Pianissimo.Minne then return Instrument.Pianissimo.Minne
+				elseif string.find(spell.english,'Mambo') and Instrument.Pianissimo.Mambo then return Instrument.Pianissimo.Mambo
+				elseif string.find(spell.english,'Etude') and Instrument.Pianissimo.Etude then return Instrument.Pianissimo.Etude
+				elseif string.find(spell.english,'Prelude') and Instrument.Pianissimo.Prelude then return Instrument.Pianissimo.Prelude
+				elseif string.find(spell.english,'Dirge') and Instrument.Pianissimo.Dirge then return Instrument.Pianissimo.Dirge
+				elseif string.find(spell.english,'Sirvente') and Instrument.Pianissimo.Sirvente then return Instrument.Pianissimo.Sirvente
+				else return Instrument.Pianissimo end
+			else warn('sets.Instrument.Pianissimo not found!') end
+		else warn('sets.Instrument not found!') end
 	end
 
 	function use_enchantment(item)
@@ -2430,7 +2469,7 @@ do
 			LockStylePallet = Lockstyle_List[ math.random( #Lockstyle_List ) ]
 		end
 
-		windower.send_command('wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';gs validate;wait 3;input /lockstyleset '..LockStylePallet..'input /echo Change Complete;gs c update auto;')
+		windower.send_command('wait 1;input /macro book '..MacroBook..';wait 1;input /macro set '..MacroSet..';gs validate;wait 3;input /lockstyleset '..LockStylePallet..';input /echo Change Complete;gs c update auto;')
 
 		send_command('bind f12 gs c OffenseMode')
 		send_command('bind f11 gs c TreasureHunter')
@@ -2478,7 +2517,7 @@ do
 			if type(weapon_name) == "table" then weapon_name = sets.Weapons[state.WeaponMode.value]['main'].name end
 			local Main_Weapon = res.items:with('en',weapon_name)
 			if Main_Weapon then
-				log('Weapon:['..Main_Weapon.en..']')
+				--log('Weapon:['..Main_Weapon.en..']')
 				local Skill_type = Main_Weapon.skill 
 				if Skill_type == 4 or Skill_type == 6 or Skill_type == 7 or Skill_type == 8 or Skill_type == 10 or Skill_type == 12 then
 					TwoHand = true
@@ -3142,10 +3181,12 @@ do
 		else
 			if sets.Idle then
 				built_set = sets.Idle
+
 				-- Idle state
 				if sets.Idle[state.OffenseMode.value] then
 					built_set = set_combine(built_set, sets.Idle[state.OffenseMode.value])
-				else warn('sets.Idle.'..state.OffenseMode.value..' not found!') end		
+				else warn('sets.Idle.'..state.OffenseMode.value..' not found!') end	
+				
 				-- Resting condition
 				if player.status == "Resting" then
 					if sets.Idle.Resting then

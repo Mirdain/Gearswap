@@ -67,10 +67,9 @@ function get_sets()
 		sub="Ikenga's Axe",
 	}
 
-	sets.Weapons.Shield = {
-		--sub="Sacro Bulwark"
-	}
-	sets.Weapons.Sleep = {}
+	sets.Weapons['Shield'] = {}
+	sets.Weapons['Sleep'] = {}
+	sets.Weapons['Unlocked'] = {}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {

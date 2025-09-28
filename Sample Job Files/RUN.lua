@@ -312,6 +312,9 @@ function get_sets()
 	-- Status
 	sets.Midcast.Enhancing.Status = set_combine(sets.Midcast.Enhancing, {})
 
+	-- Skill
+	sets.Midcast.Enhancing.Skill = set_combine(sets.Midcast.Enhancing, {})
+
 	-- Regen Sets
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {})
 

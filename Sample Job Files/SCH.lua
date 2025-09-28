@@ -142,7 +142,7 @@ function get_sets()
 	sets.Precast.FastCast = {
 		-- 10 FC from Musa staff 
 		main={ name="Musa", augments={'Path: C',}},
-		sub="Enki Strap",
+		sub="Clerisy Strap +1",
 		ammo="Impatiens", -- Quick Magic
 		head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}}, -- 13% Grimoire, 6% Haste
 		body="Pinga Tunic +1", -- 15% FC, Haste
@@ -161,6 +161,8 @@ function get_sets()
 	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {})
 
 	sets.Precast.Cure = set_combine(sets.Precast.FastCast, {})
+
+	sets.Precast.Healing = set_combine(sets.Precast.FastCast, {})
 
 	-- Swaps for Grimoire Fast Cast (Should be over 80% FC)
 	sets.Precast.Grimoire = {}
@@ -255,6 +257,8 @@ function get_sets()
 	--Used for elemental Bar Magic Spells
 	sets.Midcast.Enhancing.Elemental = set_combine(sets.Midcast.Enhancing, {})
 
+	sets.Midcast.Phalanx = set_combine(sets.Midcast.Enhancing, {})
+
 	sets.Midcast.Regen = set_combine(sets.Midcast.Enhancing, {
 		body={ name="Telchine Chas.", augments={'"Regen"+2','Enh. Mag. eff. dur. +10',}},
 		back={ name="Bookworm's Cape", augments={'INT+1','MND+2','Helix eff. dur. +10','"Regen" potency+10',}},
@@ -285,6 +289,11 @@ function get_sets()
 	sets.Midcast.Dark = set_combine(sets.Midcast.Enfeebling, {})
 	sets.Midcast.Dark.MACC = set_combine(sets.Midcast.Enfeebling.MACC, {})
 	sets.Midcast.Dark.Absorb = set_combine(sets.Midcast.Enfeebling, {})
+
+	sets.Midcast["Dispelga"] = set_combine(sets.Midcast.Enfeebling, {
+		main="Daybreak",
+		sub="Ammurapi Shield",
+	})
 
 	 -- Used for Vagary (6k+ nuke no kill)
 	sets.Midcast.Vagary = {

@@ -13,14 +13,14 @@ MacroSet = "1"
 Food = "Tropical Crepe"
 
 --Modes for specific to bard
-state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Eviceration','Rudra\'s Storm','Staff')
+state.WeaponMode:options('Mordant Rime','Aeolian Edge','Shining Strike','Shining Blade','Savage Blade','Evisceration','Rudra\'s Storm','Staff')
 state.WeaponMode:set('Mordant Rime')
 
 --Default to DT Mode
 state.OffenseMode:set('TP')
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA','CRIT') -- ACC effects WS and TP modes
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
@@ -60,9 +60,9 @@ function get_sets()
 		sub="Alber Strap",
 	}
 
-	sets.Weapons['Eviceration'] = {
+	sets.Weapons['Evisceration'] = {
 		main='Tauret',
-		sub="Crepuscular Knife",
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Rudra\'s Storm'] = {
@@ -86,11 +86,13 @@ function get_sets()
 	Instrument = {}
 	Instrument.Count = { name="Daurdabla" }
 	Instrument.Potency = { name="Gjallarhorn" }
-	Instrument.Pianissimo = { name="Gjallarhorn" } -- Possible swap to Miracle Cheer
-	Instrument.Ballad = { name="Miracle Cheer" } -- Possible swap to Miracle Cheer
-	Instrument.Honor = { name="Marsyas" }
-	Instrument.Aria = { name="Loughnashade" }
+	Instrument.Enfeebling = { name="Gjallarhorn" }
+	Instrument.Pianissimo = { name="Gjallarhorn" }
+	-- Note all song types that can be Pianissimo'd can be defined
+	Instrument.Pianissimo.Ballad = { name="Miracle Cheer" } -- Possible swap to Miracle Cheer
+	Instrument.Pianissimo.Minne = { name="Miracle Cheer" }
 	Instrument.AOE_Sleep = { name="Daurdabla" }
+
 	Instrument.Idle = { name="Linos", augments={'Mag. Evasion+15','"Waltz" potency +4%','HP+20',} }
 	Instrument.TP = { name="Linos", augments={'Accuracy+20','"Store TP"+4','Quadruple Attack +3',} }
 	Instrument.Mordant = { name="Linos", augments={'Accuracy+15 Attack+15','Weapon skill damage +3%','CHR+8',} }
@@ -128,6 +130,7 @@ function get_sets()
 	sets.Idle.SB = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = { feet="Fili Cothurnes +3"}
@@ -138,11 +141,6 @@ function get_sets()
 	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
 		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
-	}
-
-	sets.Subtle_Blow = {
-		neck="Bathy Choker +1",
-		right_ring={ name="Chirich Ring +1", bag="wardrobe2"},
 	}
 
 	--The following sets augment the base TP set 
@@ -191,7 +189,15 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is SB and Enaged (Augments the TP base set)
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {})
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode, {
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=1},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=2},
+	})
+
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {
+		body="Adamantite Armor",
+		right_ring="Moonlight Ring",
+	})
 
 	sets.Precast = {}
 
@@ -229,7 +235,7 @@ function get_sets()
 		body="Fili Hongreline +3",
 		hands="Fili Manchettes +3",
 		legs="Inyanga Shalwar +2",
-		feet="Brioso Slippers +3",
+		feet="Brioso Slippers +4",
 		neck="Mnbw. Whistle +1",
 		waist="Flume Belt +1",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=3},
@@ -237,7 +243,6 @@ function get_sets()
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}, priority=2}, -- 7/-1
 		right_ring="Defending Ring",
 		back={ name="Intarabus's Cape", augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
-		feet="Brioso Slippers +3",
 	})
 
 	-- Reduce Durations for Dummy songs (Ballad is lowest duration)
@@ -310,7 +315,7 @@ function get_sets()
 		body="Brioso Justau. +3",
 		hands="Inyan. Dastanas +2",
 		legs="Brioso Cannions +3",
-		feet="Brioso Slippers +3",
+		feet="Brioso Slippers +4",
 		neck="Mnbw. Whistle +1",
 		waist={ name="Obstin. Sash", augments={'Path: A',}},
 		left_ear="Regal Earring",
@@ -330,7 +335,7 @@ function get_sets()
 	sets.Midcast.Lullaby = set_combine(sets.Midcast.Enfeebling, {
 		range=Instrument.Honor,
 		body="Fili Hongreline +3",
-		hands="Brioso Cuffs +3",
+		hands="Brioso Cuffs +4",
 		legs="Inyanga Shalwar +2",
 	})
 
@@ -362,7 +367,7 @@ function get_sets()
 	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Nightingale"] = {feet={ name="Bihu Slippers +3", augments={'Enhances "Nightingale" effect',}}}
-	sets.JA["Troubadour"] = {body={ name="Bihu Jstcorps. +3", augments={'Enhances "Troubadour" effect',}}}
+	sets.JA["Troubadour"] = {body={ name="Bihu Just. +4", augments={'Enhances "Troubadour" effect',}},}
 	sets.JA["Soul Voice"] = {legs={ name="Bihu Cannions +3", augments={'Enhances "Soul Voice" effect',}}}
 	sets.JA["Tenuto"] = {}
 	sets.JA["Marcato"] = {}
@@ -385,7 +390,7 @@ function get_sets()
 	sets.WS = {
 		range=Instrument.WS,
 		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
+		body={ name="Bihu Just. +4", augments={'Enhances "Troubadour" effect',}},
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -413,6 +418,7 @@ function get_sets()
 		range=Instrument.MAB,
 		neck="Sanctity Necklace",
 		waist="Eschan Stone",
+		body={ name="Nyame Mail", augments={'Path: B',}},
 		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		back={ name="Intarabus's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','INT+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
@@ -433,7 +439,10 @@ function get_sets()
 		back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.WS.SB = sets.Subtle_Blow
+	sets.WS.SB = {
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=1},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=2},
+	}
 
 	sets.WS["Savage Blade"] =  set_combine(sets.WS.WSD, {
 		right_ring="Sroda Ring",

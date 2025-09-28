@@ -22,14 +22,14 @@ Lockstyle_List = {1,2,6,12}
 Food = "Tropical Crepe"
 
 --Set default mode (TP,ACC,DT)
-state.OffenseMode:options('TP','ACC','DT','PDL','SB','Enspell')
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','CRIT','Enspell')
 state.OffenseMode:set('DT')
 
 --Command to Lock Style and Set the correct macros
 jobsetup (LockStylePallet,MacroBook,MacroSet)
 
 --Modes for TP
-state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Eviceration', 'Aeolian Edge', 'Black Halo', 'Ullr', 'Unlocked')
+state.WeaponMode:options('Seraph Blade', 'Sanguine Blade', 'Chant du Cygne','Savage Blade', 'Evisceration', 'Aeolian Edge', 'Black Halo', 'Ullr', 'Unlocked')
 state.WeaponMode:set('Sanguine Blade')
 
 -- Goal 2100 hp and 1300 MP
@@ -62,9 +62,9 @@ function get_sets()
 		sub={ name="Demers. Degen +1", augments={'Path: A',}},
 	}
 
-	sets.Weapons['Eviceration'] ={
+	sets.Weapons['Evisceration'] ={
 		main="Tauret",
-		sub={ name="Demers. Degen +1", augments={'Path: A',}},
+		sub="Gleti's Knife",
 	}
 
 	sets.Weapons['Aeolian Edge'] ={
@@ -107,7 +107,7 @@ function get_sets()
 	-- Standard Idle set with -DT,Refresh,Regen and movement gear
 	sets.Idle = {
 		ammo="Staunch Tathlum +1", -- 3/3
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy'}, priority=3}, -- +3 Refresh
+		head={ name="Viti. Chapeau +4", augments={'Enfeebling Magic duration','Magic Accuracy'}, priority=3}, -- +3 Refresh
 		body="Lethargy Sayon +3", -- 14/14  +4 Refresh
 		hands="Leth. Ganth. +3", -- 11/11
 		legs="Bunzi's Pants", -- 9/9
@@ -126,7 +126,9 @@ function get_sets()
 	sets.Idle.PDL = sets.Idle
 	sets.Idle.SB = sets.Idle
 	sets.Idle.MEVA = sets.Idle
+	sets.Idle.CRIT = sets.Idle
 	sets.Idle.Enspell = sets.Idle
+	sets.Idle.Resting = sets.Idle
 
 	-- Set is only applied when sublimation is charging
 	sets.Idle.Sublimation = set_combine(sets.Idle, {
@@ -135,7 +137,7 @@ function get_sets()
 
 	-- Gear to swap out for Movement
 	sets.Movement = {
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}}
+		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
 	}
 
 	-- Set to be used if you get 
@@ -164,7 +166,7 @@ function get_sets()
 		right_ear={ name="Leth. Earring +1",},
 		left_ring={name="Chirich Ring +1", bag="wardrobe1"},
 		right_ring={name="Chirich Ring +1", bag="wardrobe2"},
-		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+		back="Null Shawl",
 	}
 
 	sets.OffenseMode.TP = set_combine(sets.OffenseMode,{ })
@@ -178,6 +180,22 @@ function get_sets()
 		legs="Volte Tights",
 		neck="Bathy Choker +1",
 		waist="Sarissapho. Belt",
+	})
+
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, { 
+	    ammo="Yetshila +1",
+		head={ name="Blistering Sallet +1", augments={'Path: A',}},
+		body="Adamantite Armor",
+		hands="Leth. Ganth. +3",
+		legs="Bunzi's Pants",
+		feet="Thereoid Greaves",
+		neck="Null Loop",
+		waist="Reiki Yotai",
+		left_ear="Sherida Earring",
+		right_ear={ name="Leth. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+14','Mag. Acc.+14','"Dbl.Atk."+5',}},
+		left_ring="Lehko's Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Crit.hit rate+10','Damage taken-5%',}},
 	})
 
 	sets.OffenseMode.Enspell = set_combine(sets.OffenseMode, { 
@@ -194,12 +212,12 @@ function get_sets()
 		right_ear="Leth. Earring +1",
 		left_ring="Freke Ring",
 		right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
+		back="Null Shawl",
 	})
 
 	sets.DualWield = {
 		waist="Reiki Yotai",
-		right_ear="Eabani Earring",
+		left_ear="Eabani Earring",
 	}
 
 	sets.Enspell = {}
@@ -239,10 +257,10 @@ function get_sets()
 	} -- 50%+ total Fast Cast and 11% Quick Magic
 
 	-- Used for Enhancing Magic
-	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {})
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {})
 
 	-- Used for Healing Magic
-	sets.Precast.Cure = set_combine(sets.Precast.FastCast, sets.Precast.QuickMagic, {})
+	sets.Precast.Cure = set_combine(sets.Precast.FastCast, {})
 
 	sets.Precast.RA = set_combine(sets.Precast, {
 		ammo=Ammo.RA,
@@ -369,8 +387,8 @@ function get_sets()
 	-- Enfeebling
 	sets.Midcast.Enfeebling = {
 		ammo="Regal Gem",
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
-		body="Atrophy Tabard +3",
+		head={ name="Viti. Chapeau +4", augments={'Enfeebling Magic duration','Magic Accuracy',}},
+		body="Atrophy Tabard +4",
 		hands="Leth. Ganth. +3",
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Drain" and "Aspir" potency +8','MND+1','Mag. Acc.+12',}},
 		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
@@ -397,7 +415,7 @@ function get_sets()
 
 	-- Duration Based ('Sleep','Sleep II','Sleepga','Sleepga II','Diaga','Dia','Dia II','Dia III','Bio','Bio II','Bio III','Silence','Gravity','Gravity II','Inundation','Break','Breakaga', 'Bind', 'Bind II')
 	sets.Midcast.Enfeebling.Duration = set_combine(sets.Midcast.Enfeebling, {
-		head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
+		head={ name="Viti. Chapeau +4", augments={'Enfeebling Magic duration','Magic Accuracy',}}, -- 15s (3 seconds x 5 merits)
 		hands="Regal Cuffs", --20% swaps out with Saboteur active
 		right_ear="Snotra Earring", -- 10%
 		left_ring="Kishar Ring", -- 10%
@@ -435,7 +453,7 @@ function get_sets()
 
 	sets.Midcast.Refresh = set_combine(sets.Midcast.Enhancing, {
 		head="Amalric Coif +1",
-		body="Atrophy Tabard +3",
+		body="Atrophy Tabard +4",
 		legs="Leth. Fuseau +3",
 	})
 
@@ -516,7 +534,7 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Sherida Earring",
 		right_ear={ name="Leth. Earring +1",},
-		left_ring="Cornelia's Ring",
+		left_ring="Sroda Ring",
 		right_ring="Epaminondas's Ring",
 		back={ name="Sucellos's Cape", augments={'MND+20','Mag. Acc+20 /Mag. Dmg.+20','MND+10','Weapon skill damage +10%','Damage taken-5%',}},
 	}

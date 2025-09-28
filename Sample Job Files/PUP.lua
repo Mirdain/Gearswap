@@ -52,6 +52,8 @@ function get_sets()
 
 	sets.Weapons['Pole'] = {}
 
+	sets.Weapons.Shield = {}
+
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
 	sets.Idle = {
 		head="Nyame Helm",
@@ -73,6 +75,7 @@ function get_sets()
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
 	sets.Idle.PDT = set_combine(sets.Idle, {})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
@@ -86,8 +89,8 @@ function get_sets()
     -- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe2", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe3", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 

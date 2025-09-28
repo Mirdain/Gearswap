@@ -72,9 +72,16 @@ function get_sets()
 		right_ring={ name="Moonlight Ring", bag="wardrobe2", priority=1},
 		back="Null Shawl",
     }
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle.TP = set_combine(sets.Idle, {})
 	sets.Idle.ACC = set_combine(sets.Idle, {})
 	sets.Idle.DT = set_combine(sets.Idle, {})
+	sets.Idle.PDL = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.MEVA = set_combine(sets.Idle, {
+		neck="Warder's Charm +1",
+		waist="Carrier's Sash",
+	})
 
 	sets.Movement = {
 		feet="Fajin Boots",

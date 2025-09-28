@@ -28,7 +28,7 @@ state.OffenseMode:options('DT','TP','PDL','MEVA','ACC','SB','CRIT') -- ACC effec
 state.OffenseMode:set('DT')
 
 --Modes for specific to Dragoon
-state.WeaponMode:options('Trishula','Savage Blade','Staff')
+state.WeaponMode:options('Trishula','Savage Blade','Shining One','Unlocked')
 state.WeaponMode:set('Trishula')
 
 -- Initialize Player
@@ -40,7 +40,12 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Trishula'] = {
-		main={ name="Trishula", augments={'Path: A',}},
+		main="Trishula",
+		sub="Utu Grip",
+	}
+
+	sets.Weapons['Shining One'] = {
+		main="Shining One",
 		sub="Utu Grip",
 	}
 
@@ -48,10 +53,10 @@ function get_sets()
 		main="Naegling",
 	}
 
-	sets.Weapons['Staff'] = {
-		main="Malignance Pole",
-		sub="Utu Grip",
-	}
+	-- This stops GS from chaning weapons (Abyssea Proc etc)
+	sets.Weapons['Unlocked'] ={}
+
+	sets.Weapons.Shield = {}
 
 	-- Standard Idle set
 	sets.Idle = {
@@ -85,6 +90,7 @@ function get_sets()
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
 	})
+	sets.Idle.Resting = set_combine(sets.Idle, {})
 	
 	sets.Movement = {
 		legs={ name="Carmine Cuisses +1", augments={'HP+80','STR+12','INT+12',}},
@@ -98,10 +104,7 @@ function get_sets()
 		waist="Gishdubar Sash",
 	}
 
-	sets.OffenseMode = {}
-
-	--Base TP set to build off
-	sets.OffenseMode.TP = {
+	sets.OffenseMode = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
 		body="Hjarrandi Breast.",
@@ -112,21 +115,23 @@ function get_sets()
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Sherida Earring",
 		right_ear="Pel. Earring +1",
-		left_ring="Niqmaddu Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
+		left_ring="Lehko's Ring",
+		right_ring="Niqmaddu Ring",
+		back="Null Shawl",
 	}
 
-	sets.OffenseMode.DT = set_combine(sets.OffenseMode.TP, {
-		head="Peltast's Mezail +3",
-		body="Hjarrandi Breast.",
+	--Base TP set to build off
+	sets.OffenseMode.TP = set_combine(sets.OffenseMode, {})
+
+	sets.OffenseMode.DT = set_combine(sets.OffenseMode, {
+		head="Hjarrandi Helm",
 		hands="Pel. Vambraces +3",
-		legs="Pelt. Cuissots +3",
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
 		feet="Pelt. Schyn. +3",
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
 	})
 	
-	sets.OffenseMode.PDL = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.PDL = set_combine(sets.OffenseMode, {
 	    head={ name="Gleti's Mask", augments={'Path: A',}},
 		body={ name="Gleti's Cuirass", augments={'Path: A',}},
 		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
@@ -134,7 +139,7 @@ function get_sets()
 		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
-	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {
 	    head={ name="Gleti's Mask", augments={'Path: A',}},
 		body={ name="Gleti's Cuirass", augments={'Path: A',}},
 		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
@@ -142,10 +147,18 @@ function get_sets()
 		feet={ name="Gleti's Boots", augments={'Path: A',}},
 	})
 
-	sets.OffenseMode.SB =  set_combine(sets.OffenseMode.TP, {})
-	sets.OffenseMode.ACC = set_combine(sets.OffenseMode.TP, {})
+	-- With 29 Auspice 70 Subtle Blow
+	sets.OffenseMode.SB =  set_combine(sets.OffenseMode, {
+		left_ear="Sherida Earring", -- SB II 5
+		body="Dagon Breast.", -- SB II 10
+		left_ring="Niqmaddu Ring", -- SB 5
+		legs={ name="Gleti's Breeches", augments={'Path: A',}}, -- SB 15
+		right_ear="Pel. Earring +1", -- SB 6
+	})
 
-	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.TP, {
+	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
+
+	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Peltast's Mezail +3",
 		body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -199,9 +212,11 @@ function get_sets()
 	sets.JA["Warding Circle"] = {}
 	sets.JA["Hasso"] = {}
 	sets.JA["Seigan"] = {}
-	sets.JA['Call Wyvern'] = {} -- body="Ptero. Mail +3"
+	sets.JA['Call Wyvern'] = {
+		body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
+	}
 	sets.JA['Spirit Surge'] = {
-		--body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
+		body={ name="Ptero. Mail +3", augments={'Enhances "Spirit Surge" effect',}},
 		--legs="Vishap Brais +3",
 		--feet={ name="Ptero. Greaves +3", augments={'Enhances "Empathy" effect',}},
 		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
@@ -230,13 +245,9 @@ function get_sets()
 		back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	}
 
-	sets.JA['Jump'] = set_combine(sets.Jump, {
+	sets.JA['Jump'] = set_combine(sets.Jump, {})
 
-	})
-	
-	sets.JA['High Jump'] = set_combine(sets.Jump, {
-
-	})
+	sets.JA['High Jump'] = set_combine(sets.Jump, {})
 
 	sets.JA['Spirit Jump'] = set_combine(sets.Jump, {
 		legs="Pelt. Cuissots +3",
@@ -252,64 +263,10 @@ function get_sets()
 	
 	sets.JA['Angon'] = {
 		ammo="Angon",
-		--hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
+		hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
 	}
 
-	--WS Sets
-	sets.WS = {
-		ammo="Knobkierrie",
-		head="Peltast's Mezail +3",
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-		right_ear="Pel. Earring +1",
-		left_ring="Sroda Ring",
-		right_ring="Cornelia's Ring",
-		back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
-	}
-
-	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
-	sets.WS.ACC = set_combine(sets.WS, {
-
-	})
-
-	sets.WS.PDL = set_combine(sets.WS, {
-		head={ name="Gleti's Mask", augments={'Path: A',}},
-		body={ name="Gleti's Cuirass", augments={'Path: A',}},
-		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-		legs={ name="Gleti's Breeches", augments={'Path: A',}},
-		feet={ name="Gleti's Boots", augments={'Path: A',}},
-	})
-
-	sets.WS.WSD = set_combine(sets.WS, {
-		left_ear="Thrud Earring",
-	})
-
-	sets.WS.CRIT = set_combine(sets.WS, {
-		body="Gleti's Cuirass",
-		hands="Gleti's Gauntlets",
-		legs="Gleti's Breeches",
-		feet="Gleti's Boots",
-	})
-
-	sets.WS["Camlann's Torment"] = sets.WS.CRIT
-	sets.WS['Drakesbane'] = sets.WS.CRIT
-	sets.WS['Geirskogul'] = sets.WS.CRIT
-	sets.WS['Impulse Drive'] = sets.WS.CRIT
-	sets.WS['Sonic Thrust'] = sets.WS.CRIT
-	sets.WS['Stardiver'] = set_combine( sets.WS.CRIT, {
-		waist="Fotia Belt",
-	})
-	sets.WS['Raiden Thrust'] = sets.WS.WSD
-	sets.WS['Thunder Thrust'] = sets.WS.WSD
-	sets.WS['Leg Sweep'] = sets.WS.WSD
-	sets.WS['Savage Blade'] = sets.WS.WSD
-	
--- Wyvern Ability Gear Sets Below
+		-- Wyvern Ability Gear Sets Below
 	sets.Pet_Midcast = {}
 
 	sets.Pet_Midcast['Steady Wing'] = {}
@@ -343,6 +300,144 @@ function get_sets()
 		waist="Chaac Belt",
 	}
 
+	--WS Sets
+	sets.WS = {
+		ammo="Knobkierrie",
+		head="Peltast's Mezail +3",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Pel. Earring +1",
+		left_ring="Sroda Ring",
+		right_ring="Niqmaddu Ring",
+		back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
+	sets.WS.ACC = set_combine(sets.WS, {})
+
+	sets.WS.PDL = set_combine(sets.WS, {
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	})
+
+	sets.WS.WSD = set_combine(sets.WS, {
+		right_ear="Thrud Earring",
+		hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
+	})
+
+	sets.WS.CRIT = {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+		waist="Fotia Belt",
+		left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Pel. Earring +1",
+		left_ring="Lehko's Ring",
+		right_ring="Niqmaddu Ring",
+		back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
+
+	-- Impulse Drive
+	sets.WS['Impulse Drive'] = set_combine(sets.WS.CRIT, {
+		ammo="Knobkierrie",
+		head="Peltast's Mezail +3",
+		right_ear="Thrud Earring",
+		left_ring="Sroda Ring",
+		hands={ name="Ptero. Fin. G. +3", augments={'Enhances "Angon" effect',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	})
+	sets.WS['Impulse Drive']['PDL'] = set_combine(sets.WS.CRIT, {
+		ammo="Knobkierrie",
+		head="Peltast's Mezail +3",
+		left_ring="Sroda Ring",
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	})
+
+	-- Savage Blade
+	sets.WS['Savage Blade'] = set_combine(sets.WS.WSD, {})
+	sets.WS['Savage Blade']['PDL'] = set_combine(sets.WS.WSD, {
+		right_ear="Pel. Earring +1",
+		body="Pelt. Plackart +3",
+		right_ring="Epaminondas's Ring",
+	})
+
+	-- Geirskogul
+	sets.WS['Geirskogul'] = set_combine(sets.WS, {
+		neck="Fotia Gorget",
+		left_ear="Sherida Earring",
+		left_ring="Regal Ring",
+	})
+	sets.WS['Geirskogul']['PDL'] = set_combine(sets.WS, {
+		left_ring="Epaminondas's Ring",
+		left_ear="Pel. Earring +1",
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		waist="Fotia Belt",
+	})
+
+	-- Drakesbane
+	sets.WS['Drakesbane'] = set_combine(sets.WS, {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Gleti's Mask", augments={'Path: A',}},
+		body="Hjarrandi Breast.",
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs="Pelt. Cuissots +3",
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+		left_ring="Lehko's Ring",
+	})
+	sets.WS['Drakesbane']['PDL'] = set_combine(sets.WS, {
+		ammo="Crepuscular Pebble",
+		head={ name="Gleti's Mask", augments={'Path: A',}},
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+		legs="Pelt. Cuissots +3",
+		feet={ name="Gleti's Boots", augments={'Path: A',}},
+		left_ring="Lehko's Ring",
+		left_ear="Thrud Earring",
+	})
+
+	-- Camlann's Torment
+	sets.WS["Camlann's Torment"] = set_combine(sets.WS, {
+		waist="Fotia Belt",
+	})
+	sets.WS["Camlann's Torment"]['PDL'] = set_combine(sets.WS, {
+		left_ear="Thrud Earring",
+		body={ name="Gleti's Cuirass", augments={'Path: A',}},
+		legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	})
+
+	-- Stardiver
+	sets.WS['Stardiver'] = set_combine(sets.WS, {
+		left_ring="Lehko's Ring",
+		neck="Fotia Gorget",
+		hands="Pel. Vambraces +3",
+		right_ear="Sherida Earring",
+		waist="Fotia Belt",
+	})
+	sets.WS['Stardiver']['PDL'] = set_combine(sets.WS.CRIT, {
+		neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+		left_ring="Sroda Ring",
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	})
+
+	sets.WS['Sonic Thrust'] = sets.WS.CRIT
+	sets.WS['Raiden Thrust'] = sets.WS.WSD
+	sets.WS['Thunder Thrust'] = sets.WS.WSD
+	sets.WS['Leg Sweep'] = sets.WS.WSD
+	sets.WS['Diarmuid'] = sets.WS.WSD
+	
 end
 
 -------------------------------------------------------------------------------------------------------------------

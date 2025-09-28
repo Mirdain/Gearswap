@@ -22,7 +22,7 @@ Random_Lockstyle = false
 Lockstyle_List = {1,2,6,12}
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them ( Idle.X and OffenseMode.X )
-state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA') -- ACC effects WS and TP modes
+state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA','CRIT') -- ACC effects WS and TP modes
 
 --Set Mode to Damage Taken as Default
 state.OffenseMode:set('DT')
@@ -76,6 +76,7 @@ function get_sets()
 	sets.Idle.DT = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.SB = set_combine(sets.Idle, {})
+	sets.Idle.CRIT = set_combine(sets.Idle, {})
 	sets.Idle.MEVA = set_combine(sets.Idle, {
 		neck="Warder's Charm +1",
 		waist="Carrier's Sash",
@@ -88,8 +89,8 @@ function get_sets()
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		body="Ken. Samue +1",
 		hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
-		feet="Anch. Gaiters +3",
+		legs={ name="Hesy. Hose +4", augments={'Enhances "Hundred Fists" effect',}},
+		feet="Anch. Gaiters +4",
 		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",
@@ -136,8 +137,19 @@ function get_sets()
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	})
 
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode,{
+		head={ name="Mpaca's Cap", augments={'Path: A',}},
+		body={ name="Mpaca's Doublet", augments={'Path: A',}},
+		hands={ name="Mpaca's Gloves", augments={'Path: A',}},
+		legs={ name="Mpaca's Hose", augments={'Path: A',}},
+		feet="Ken. Sune-Ate +1",
+		left_ring="Niqmaddu Ring",
+		right_ring="Lehko's Ring",
+		back={ name="Segomo's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Magic dmg. taken-10%',}},
+	})
+
 	-- Augments the OffenseMode when in DT stance
-	sets.Foot_Work = { feet="Anch. Gaiters +3", }
+	sets.Foot_Work = { feet="Anch. Gaiters +4", }
 
 	--Used to swap into movement gear when the player is detected movement when not engaged
 	sets.Movement = {
@@ -200,7 +212,7 @@ function get_sets()
 	})
 
 	sets.JA = {}
-	sets.JA["Hundred Fists"] = {legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}}}
+	sets.JA["Hundred Fists"] = {legs={ name="Hesy. Hose +4", augments={'Enhances "Hundred Fists" effect',}}}
 	sets.JA["Berserk"] = {}
 	sets.JA["Warcry"] = {}
 	sets.JA["Defender"] = {}
@@ -211,7 +223,7 @@ function get_sets()
 	sets.JA["Chakra"] = {
 		ammo="Iron Gobbet",
 		head="Null Masque",
-		body="Anch. Cyclas +3",
+		body="Anch. Cyclas +4",
 		hands={ name="Hes. Gloves +3", augments={'Enhances "Invigorate" effect',}},
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -226,7 +238,7 @@ function get_sets()
 	sets.JA["Boost"] = {}
 	sets.JA["Counterstance"] = {}
 	sets.JA["Chi Blast"] = {
-		head={ name="Hes. Crown +3", augments={'Enhances "Penance" effect',}},
+		head={ name="Hes. Crown +4", augments={'Enhances "Penance" effect',}},
 	}
 	sets.JA["Mantra"] = {}
 	sets.JA["Footwork"] = {}
@@ -280,8 +292,8 @@ function get_sets()
 		head="Mpaca's Cap",
 		body="Ken. Samue +1",
 		hands={ name="Ryuo Tekko +1", augments={'STR+12','DEX+12','Accuracy+20',}},
-		legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
-		feet="Anch. Gaiters +3",
+		legs={ name="Hesy. Hose +4", augments={'Enhances "Hundred Fists" effect',}},
+		feet="Anch. Gaiters +4",
 		neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
 		waist="Moonbow Belt +1",
 		left_ear="Sherida Earring",

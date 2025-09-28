@@ -87,8 +87,8 @@ function get_sets()
 	-- Set to be used if you get 
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe1", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe2", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -117,6 +117,9 @@ function get_sets()
 		right_ring="Weather. Ring", -- 5
 		back={ name="Taranus's Cape", augments={'HP+60','HP+20','"Fast Cast"+10',}}, -- 10
 	} -- 80% FC
+
+	-- Used for Enhancing Magic
+	sets.Precast.Enhancing = set_combine(sets.Precast.FastCast, {})
 
 	sets.Precast["Impact"] = set_combine(sets.Precast.FastCast,{
 	    ammo="Sapience Orb",

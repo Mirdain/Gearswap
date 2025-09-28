@@ -94,8 +94,8 @@ function get_sets()
 		waist="Carrier's Sash",
 		left_ear="Etiolation Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		right_ring="Stikini Ring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"}, -- +1 Refresh
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"}, -- +1 Refresh
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Damage taken-5%',}},
     }
 	sets.Idle.TP = set_combine(sets.Idle, {})
@@ -126,7 +126,21 @@ function get_sets()
 		left_ring={ name="Chirich Ring +1", bag="wardrobe2"},
 	}
 
-	sets.OffenseMode = {}
+	sets.OffenseMode = {
+	    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck={ name="Mirage Stole +2", augments={'Path: A',}},
+		waist="Reiki Yotai",
+		left_ear="Eabani Earring",
+		right_ear={ name="Hashi. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+15','Mag. Acc.+15','"Dbl.Atk."+5',}},
+		left_ring="Epona's Ring",
+		right_ring="Lehko's Ring",
+		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Damage taken-5%',}},
+	}
 
 	sets.OffenseMode.TP = {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -177,7 +191,7 @@ function get_sets()
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','"Dbl.Atk."+10','Damage taken-5%',}},
 	})
 
-	sets.OffenseMode.SB = set_combine ( sets.OffenseMode.TP,{
+	sets.OffenseMode.SB = set_combine ( sets.OffenseMode,{
 		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
 		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
 	})
@@ -276,80 +290,13 @@ function get_sets()
 		waist="Olympus Sash",
 		left_ear="Mimir Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}, priority=1},
-		left_ring={ name="Stikini Ring +1", bag="wardrobe2"},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
 	}
 
 	-- High MACC for landing spells
 	sets.Midcast.Enfeebling = {}
-
-	-- Specific gear for spells
-	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
-		left_ring={ name="Stikini Ring +1", bag="wardrobe2"},
-		right_ring={ name="Stikini Ring +1", bag="wardrobe3"},
-		waist="Siegel Sash",
-		neck="Nodens Gorget",
-	})
-
-    sets.Midcast["Refresh"] = set_combine(sets.Midcast.Enhancing, {
-		waist="Gishdubar Sash"
-	})
-
-    sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
-	})
-
-	sets.Midcast["Feather Tickle"] = set_combine(sets.Midcast.Enhancing, {
-		ammo="Pemphredo Tathlum",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
-		body="Hashishin Mintan +3",
-		hands="Hashi. Bazu. +3",
-		legs="Hashishin Tayt +3",
-		feet="Hashi. Basmak +3",
-		neck="Null Loop",
-		waist="Null Belt",
-		left_ear="Crep. Earring",
-		right_ear="Hashi. Earring +1",
-		left_ring="Stikini Ring +1",
-		right_ring="Weather. Ring",
-		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
-	})
-
-	sets.Midcast["Reaving Wind"] = set_combine(sets.Midcast.Enhancing, {
-		ammo="Pemphredo Tathlum",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
-		body="Hashishin Mintan +3",
-		hands="Hashi. Bazu. +3",
-		legs="Hashishin Tayt +3",
-		feet="Hashi. Basmak +3",
-		neck="Null Loop",
-		waist="Null Belt",
-		left_ear="Crep. Earring",
-		right_ear="Hashi. Earring +1",
-		left_ring="Stikini Ring +1",
-		right_ring="Weather. Ring",
-		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
-	})
-
-	sets.Midcast["Cruel Joke"] = set_combine(sets.Midcast.Enhancing, {
-		ammo="Pemphredo Tathlum",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
-		body="Hashishin Mintan +3",
-		hands="Hashi. Bazu. +3",
-		legs="Hashishin Tayt +3",
-		feet="Hashi. Basmak +3",
-		neck="Null Loop",
-		waist="Null Belt",
-		left_ear="Crep. Earring",
-		right_ear="Hashi. Earring +1",
-		left_ring="Stikini Ring +1",
-		right_ring="Weather. Ring",
-		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
-	})
-
-	sets.Midcast['Entomb'] = set_combine(sets.Midcast.Nuke, {
-		neck="Quanpur Necklace",
-	})
 
 	sets.Midcast.Nuke = {
 		ammo="Pemphredo Tathlum",
@@ -370,7 +317,7 @@ function get_sets()
 	-- Blue Magic
 	sets.Midcast.BlueMagic = {}
 	sets.Midcast.BlueMagic.Skill = set_combine(sets.Midcast.Enhancing, {})
-	sets.Midcast.BlueMagic.Nuke = set_combine(sets.Midcast.Enhancing, {})
+	sets.Midcast.BlueMagic.Nuke = set_combine(sets.Midcast.Nuke, {})
 	sets.Midcast.BlueMagic.Healing = set_combine(sets.Midcast.Cure, {})
 	sets.Midcast.BlueMagic.Enmity = set_combine(sets.Enmity, {})
 	sets.Midcast.BlueMagic.ACC = set_combine(sets.Idle, {
@@ -384,9 +331,76 @@ function get_sets()
 		waist="Null Belt",
 		left_ear="Telos Earring",
 		right_ear="Hashi. Earring +1",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
 		back="Null Shawl",
+	})
+
+	-- Specific gear for spells
+	sets.Midcast["Stoneskin"] = set_combine(sets.Midcast.Enhancing, {
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring={name="Stikini Ring +1", bag="wardrobe2"},
+		waist="Siegel Sash",
+		neck="Nodens Gorget",
+	})
+
+    sets.Midcast["Refresh"] = set_combine(sets.Midcast.Enhancing, {
+		waist="Gishdubar Sash"
+	})
+
+    sets.Midcast["Aquaveil"] = set_combine(sets.Midcast.Enhancing, {
+	})
+
+	sets.Midcast["Feather Tickle"] = set_combine(sets.Midcast.BlueMagic.ACC, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
+		body="Hashishin Mintan +3",
+		hands="Hashi. Bazu. +3",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +3",
+		neck="Null Loop",
+		waist="Null Belt",
+		left_ear="Crep. Earring",
+		right_ear="Hashi. Earring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring="Weather. Ring",
+		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
+	})
+
+	sets.Midcast["Reaving Wind"] = set_combine(sets.Midcast.BlueMagic.ACC, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
+		body="Hashishin Mintan +3",
+		hands="Hashi. Bazu. +3",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +3",
+		neck="Null Loop",
+		waist="Null Belt",
+		left_ear="Crep. Earring",
+		right_ear="Hashi. Earring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring="Weather. Ring",
+		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
+	})
+
+	sets.Midcast["Cruel Joke"] = set_combine(sets.Midcast.BlueMagic.ACC, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
+		body="Hashishin Mintan +3",
+		hands="Hashi. Bazu. +3",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +3",
+		neck="Null Loop",
+		waist="Null Belt",
+		left_ear="Crep. Earring",
+		right_ear="Hashi. Earring +1",
+		left_ring={name="Stikini Ring +1", bag="wardrobe1"},
+		right_ring="Weather. Ring",
+		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Spell interruption rate down-10%',}},
+	})
+
+	sets.Midcast['Entomb'] = set_combine(sets.Midcast.BlueMagic.Nuke, {
+		neck="Quanpur Necklace",
 	})
 
 	sets.WS = {

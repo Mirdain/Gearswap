@@ -1,4 +1,4 @@
--- Luthien
+-- Salidar
 
 -- Load and initialize the include file.
 include('Mirdain-Include')
@@ -9,7 +9,7 @@ MacroBook = "6"
 MacroSet = "1"
 
 --Uses Items Automatically
-AutoItem = true
+AutoItem = false
 
 --Upon Job change will use a random lockstyleset
 Random_Lockstyle = true
@@ -21,7 +21,7 @@ Lockstyle_List = {16,17,18}
 Food = "Sublime Sushi"
 
 -- 'TP','ACC','DT' are standard Default modes.  You may add more and assigne equipsets for them
-state.OffenseMode:options('TP','ACC','DT','PDL','SB','MEVA')
+state.OffenseMode:options('DT','TP','SB','Farm') -- ACC effects WS and TP modes
 state.OffenseMode:set('DT')
 
 state.WeaponMode:options('Aeneas','Karambit')
@@ -37,41 +37,64 @@ function get_sets()
 	sets.Weapons['Twashtar'] = {}
 	sets.Weapons['Aeneas'] = {main="Aeneas", sub="Gleti's Knife",}
 	sets.Weapons['Karambit'] = {main="Karambit",}
-	sets.Weapons.Shield = {}
-	sets.Weapons.Sleep = {}
 
 	-- Standard Idle set with -DT, Refresh, Regen and movement gear
-	sets.Idle = {
+	sets.Idle = {}
+
+	sets.Idle.DT = {
 		ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",
+    	head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck="Warder's Charm +1",
-		waist="Carrier's Sash",
-		left_ear="Sanare Earring",
-		right_ear="Eabani Earring",
-		left_ring="Moonlight Ring",
-		right_ring="Moonlight Ring",
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
-	}
-	sets.Idle.TP = set_combine(sets.Idle, {})
-	sets.Idle.ACC = set_combine(sets.Idle, {})
-	sets.Idle.DT = set_combine(sets.Idle, {})
-	sets.Idle.PDL = set_combine(sets.Idle, {})
-	sets.Idle.MEVA = set_combine(sets.Idle, {})
-	sets.Idle.Resting = set_combine(sets.Idle, {})
+    	neck={ name="Loricate Torque +1", augments={'Path: A',}},
+    	waist="Flume Belt +1",
+    	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    	right_ear="Infused Earring",
+    	left_ring="Chirich Ring +1",
+    	right_ring="Chirich Ring +1",
+    	back="Sacro Mantle",}
 
-	sets.Movement = {
+	sets.Idle.TP = {
+		ammo="Staunch Tathlum +1",
+    	head="Gleti's Mask",
+    	body="Gleti's Cuirass",
+    	hands="Gleti's Gauntlets",
+    	legs="Gleti's Breeches",
+    	feet="Gleti's Boots",
+    	neck={ name="Loricate Torque +1", augments={'Path: A',}},
+    	waist="Flume Belt +1",
+    	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    	right_ear="Infused Earring",
+    	left_ring="Chirich Ring +1",
+    	right_ring="Chirich Ring +1",
+    	back="Sacro Mantle",}
 	
-	}
+	sets.Idle.SB = sets.Idle.DT
+
+	sets.Idle.Farm = {
+		ammo="Staunch Tathlum +1",
+    	head="Nyame Helm",
+    	body={ name="Nyame Mail", augments={'Path: B',}},
+    	hands="Nyame Gauntlets",
+    	legs="Nyame Flanchard",
+    	feet="Nyame Sollerets",
+    	neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    	waist="Silver Mog. Belt",
+    	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    	right_ear="Tuisto Earring",
+    	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    	right_ring="Moonlight Ring",
+    	back="Moonlight Cape",}
+
+	sets.Movement = {right_ring="Shneddick Ring",}
 
 	-- Set to be used if you get cursna casted on you
 	sets.Cursna_Received = {
 	    neck="Nicander's Necklace",
-	    left_ring={ name="Saida Ring", bag="wardrobe3", priority=2},
-		right_ring={ name="Saida Ring", bag="wardrobe4", priority=1},
+	    left_ring={ name="Eshmun's Ring", bag="wardrobe1", priority=2},
+		right_ring={ name="Eshmun's Ring", bag="wardrobe2", priority=1},
 		waist="Gishdubar Sash",
 	}
 
@@ -91,7 +114,7 @@ function get_sets()
 		right_ear="Telos Earring",
 		left_ring="Moonlight Ring",
 		right_ring="Moonlight Ring",
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+		back="Sacro Mantle",
 	}
 	--Base TP set to build off
 	sets.OffenseMode.TP = {
@@ -107,7 +130,7 @@ function get_sets()
     	right_ear="Telos Earring",
     	left_ring="Gere Ring",
     	right_ring="Epona's Ring",
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+    	back="Sacro Mantle",
 	}
 	-- Subtle Blow Cap at 50 and II at 25 for a Total of 75.
 	-- DNC Subtle Blow = 20/50 w/ Traits. Need +30 in Gear for SBI Cap.
@@ -125,36 +148,30 @@ function get_sets()
     	right_ear="Telos Earring",
     	left_ring="Chirich Ring +1", -- SB+10
     	right_ring="Chirich Ring +1", -- SB+10
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
+    	back="Sacro Mantle", -- Ambu Cape has SB+10
+	}
+	sets.OffenseMode.Farm = {
+		ammo="Staunch Tathlum +1",
+    	head="Nyame Helm",
+    	body={ name="Nyame Mail", augments={'Path: B',}},
+    	hands="Nyame Gauntlets",
+    	legs="Nyame Flanchard",
+    	feet="Nyame Sollerets",
+    	neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    	waist="Silver Mog. Belt",
+    	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    	right_ear="Tuisto Earring",
+    	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    	right_ring="Moonlight Ring",
+    	back="Moonlight Cape",
 	}
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = {}
-
-	sets.OffenseMode.MEVA = {
-	    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-		head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Warder's Charm +1",
-		waist="Reiki Yotai",
-		left_ear="Sherida Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring="Moonlight Ring",
-		right_ring="Lehko's Ring",
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%',}},
-	}
-
 	--Dual Wield
-	sets.DualWield = {
-		waist="Reiki Yotai",
-		--left_ear="Eabani Earring",
-	}
+	sets.OffenseMode.DW = {}
 
 	sets.Precast = {}
-
 	sets.Precast.FastCast = {
 		ammo="Sapience Orb",
 		head={ name="Herculean Helm", augments={'"Subtle Blow"+1','STR+3','"Treasure Hunter"+2','Mag. Acc.+10 "Mag.Atk.Bns."+10',}},
@@ -165,7 +182,6 @@ function get_sets()
     	right_ear="Enchntr. Earring +1",
     	right_ring="Rahab Ring",
 	}
-
 	sets.Enmity = {}
 	sets.Midcast = {}
 	sets.Midcast.SIRD = {}
@@ -289,7 +305,7 @@ function get_sets()
     	right_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
     	left_ring="Gere Ring",
     	right_ring="Epona's Ring",
-		back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','DEX+10','Weapon skill damage +10%','Damage taken-5%',}},
+    	back="Sacro Mantle",
 	}
 
 	--This set is used when OffenseMode is ACC and a WS is used (Augments the WS base set)
@@ -305,8 +321,33 @@ function get_sets()
 	sets.WS["Energy Drain"] = {}
 	sets.WS["Dancing Edge"] = {}
 	sets.WS["Shark Bite"] = {}
-	sets.WS["Evisceration"] = {}
-	sets.WS["Aeolian Edge"] = {}
+	sets.WS["Evisceration"] = {
+		ammo="Ginsen",
+		head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    	body="Gleti's Cuirass",
+    	hands="Gleti's Gauntlets",
+    	legs="Gleti's Breeches",
+    	feet="Gleti's Boots",
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear="Sherida Earring",
+		right_ear="Odr Earring",
+		left_ring="Regal Ring",
+		right_ring="Epona's Ring",}
+	sets.WS["Aeolian Edge"] = {
+		ammo="Yamarang",
+    	head="Nyame Helm",
+    	body={ name="Nyame Mail", augments={'Path: B',}},
+    	hands="Nyame Gauntlets",
+    	legs="Nyame Flanchard",
+    	feet="Nyame Sollerets",
+    	neck="Baetyl Pendant",
+    	waist="Fotia Belt",
+   		left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    	right_ear="Friomisi Earring",
+    	left_ring="Regal Ring",
+    	right_ring="Ilabrat Ring",
+    	back="Sacro Mantle",}
 	sets.WS["Rudra's Storm"] = {}
 
 	-- Hand to Hand WS
@@ -320,8 +361,8 @@ function get_sets()
 	sets.WS["Tornado Kick"] = {} 	-- Must Sub MNK
 
 	sets.TreasureHunter = {
-		ammo="Per. Lucky Egg",    
-		body="Volte Jupon",
+		head={ name="Herculean Helm", augments={'"Subtle Blow"+1','STR+3','"Treasure Hunter"+2','Mag. Acc.+10 "Mag.Atk.Bns."+10',}}, 
+		legs={ name="Herculean Trousers", augments={'Enmity-2','Pet: Haste+3','"Treasure Hunter"+1','Accuracy+9 Attack+9',}},
 		waist="Chaac Belt",}
 end
 
@@ -434,6 +475,24 @@ end
 
 function Weapon_Check(equipSet)
 	equipSet = set_combine(equipSet,sets.Weapons[state.JobMode.value])
+
+	return equipSet
+end
+
+function pet_change_custom(pet,gain)
+	equipSet = {}
+	
+	return equipSet
+end
+
+function pet_aftercast_custom(spell)
+	equipSet = {}
+
+	return equipSet
+end
+
+function pet_midcast_custom(spell)
+	equipSet = {}
 
 	return equipSet
 end

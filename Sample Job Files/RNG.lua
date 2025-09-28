@@ -24,7 +24,7 @@ Food = "Sublime Sushi"
 Ammo_Warning_Limit = 99
 
 -- Add CRIT the base modes to allow AM3 Critical Builds
-state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','True Shot')
+state.OffenseMode:options('TP','ACC','DT','PDL','CRIT','SB','True Shot')
 state.OffenseMode:set('TP')
 
 --Modes for specific to Ranger
@@ -35,7 +35,7 @@ state.WeaponMode:set('Fomalhaut')
 UI_Name = 'TP Mode'
 
 --Melee or Ranged Mode
-state.JobMode:options('Standard','Melee','Ranged')
+state.JobMode:options('Standard','Melee','Ranged','Subtle Blow')
 state.JobMode:set('Standard')
 
 -- Initialize Player
@@ -66,7 +66,7 @@ function get_sets()
 
 	sets.Weapons['Gastraphetes'] = {
 		main={ name="Perun +1", augments={'Path: A',}},
-		sub={ name="Kustawi +1", augments={'Path: A',}},
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
 		range={ name="Gastraphetes", augments={'Path: A',}},
 	}
 
@@ -104,6 +104,11 @@ function get_sets()
 		sub={ name="Kustawi +1", augments={'Path: A',}},
 	}
 
+	sets.Weapons['Subtle Blow'] = {		
+		main={ name="Ternion Dagger +1", augments={'Path: A',}}, -- SB 9
+		sub={ name="Gleti's Knife", augments={'Path: A',}}, -- Used for SB II
+	}
+
 	sets.Weapons.Shield = {
 		sub="Nusku Shield",
 	}
@@ -125,34 +130,32 @@ function get_sets()
 	Ammo.Bullet.TP = "Chrono Bullet"		-- TP Ammo
 	Ammo.Bullet.ACC = "Eradicating Bullet"	-- Accuracy Ammo
 	Ammo.Bullet.CRIT = "Eradicating Bullet"	-- Critical Hit Mode Ammo
-
-	Ammo.Bullet.WS = "Chrono Bullet"		-- Physical Weaponskills (consumed)
-	Ammo.Bullet.WSD = "Chrono Bullet"		-- Physical Weaponskills (not consumed)
-	Ammo.Bullet.MAB = "Chrono Bullet"		-- Magical Weaponskills
+	Ammo.Bullet.WS = "Chrono Bullet"		-- Default WS Ammo
+	Ammo.Bullet.WSD = "Chrono Bullet"		-- Weaponskill Damage
+	Ammo.Bullet.MAB = "Chrono Bullet"		-- Magic Attack Bonus
 	Ammo.Bullet.MACC = "Chrono Bullet"		-- Magic Accuracy
-	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
-	Ammo.Bullet.PHY_WS = "Chrono Bullet"	-- Magic Weaponskills (Not Consumed)
+	Ammo.Bullet.MAG_WS = "Chrono Bullet"	-- Magic Weaponskills
+	Ammo.Bullet.PHY_WS = "Chrono Bullet"	-- Physical Weaponskills
 
 	Ammo.Arrow.TP = "Chrono Arrow"			-- TP Ammo
 	Ammo.Arrow.ACC = "Chrono Arrow"			-- Accuracy Ammo
 	Ammo.Arrow.CRIT = "Chrono Arrow"		-- Critical Hit Mode Ammo
-	Ammo.Arrow.WS = "Chrono Arrow"			-- Physical Weaponskills (consumed)
-	Ammo.Arrow.WSD = "Chrono Arrow"			-- Physical Weaponskills (not consumed)
-	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magical Weaponskills
+	Ammo.Arrow.WS = "Chrono Arrow"			-- Default WS Ammo
+	Ammo.Arrow.WSD = "Chrono Arrow"			-- Weaponskill Damage
+	Ammo.Arrow.MAB = "Chrono Arrow"			-- Magic Attack Bonus
 	Ammo.Arrow.MACC = "Chrono Arrow"		-- Magic Accuracy
-	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills (Not consumed)
-	Ammo.Arrow.PHY_WS = "Chrono Arrow"		-- Magic Weaponskills (Not Consumed)
+	Ammo.Arrow.MAG_WS = "Chrono Arrow"		-- Magic Weaponskills
+	Ammo.Arrow.PHY_WS = "Chrono Arrow"		-- Physical Weaponskills
 
 	Ammo.Bolt.TP = "Quelling Bolt"			-- TP Ammo
 	Ammo.Bolt.ACC = "Quelling Bolt"			-- Accuracy Ammo
 	Ammo.Bolt.CRIT = "Quelling Bolt"		-- Critical Hit Mode Ammo
-
-	Ammo.Bolt.WS = "Quelling Bolt"			-- Physical Weaponskills (consumed)
-	Ammo.Bolt.WSD = "Quelling Bolt"			-- Physical Weaponskills (not consumed)
+	Ammo.Bolt.WS = "Quelling Bolt"			-- Default WS Ammo
+	Ammo.Bolt.WSD = "Quelling Bolt"			-- Weaponskill Damage
 	Ammo.Bolt.MAB = "Quelling Bolt"			-- Magical Weaponskills
 	Ammo.Bolt.MACC = "Quelling Bolt"		-- Magic Accuracy
-	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic  (Not consumed)
-	Ammo.Bolt.PHY_WS = "Quelling Bolt"		-- Magic Weaponskills (Not Consumed)
+	Ammo.Bolt.MAG_WS = "Quelling Bolt"		-- Magic Weaponskills
+	Ammo.Bolt.PHY_WS = "Quelling Bolt"		-- Physical Weaponskills
 
 	--Modes to select correct ammo based off weapon type
 	Ammo.TP = Ammo[state.RAMode.value].TP
@@ -186,6 +189,9 @@ function get_sets()
 	sets.Idle.DT = set_combine(sets.Idle, {})
 	sets.Idle.PDL = set_combine(sets.Idle, {})
 	sets.Idle.CRIT = set_combine(sets.Idle, {})
+	sets.Idle.SB = set_combine(sets.Idle, {
+		sub={ name="Gleti's Knife", augments={'Path: A',}},
+	})
 	sets.Idle.Resting = set_combine(sets.Idle, {})
 	sets.Idle['True Shot'] = set_combine(sets.Idle, {})
 
@@ -245,6 +251,8 @@ function get_sets()
 	--This set is used when OffenseMode is CRIT and Engaged
 	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode.DT, {})
 
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {})
+
 	sets.OffenseMode['True Shot'] = set_combine(sets.OffenseMode.DT, {})
 
 	--The following sets augment the OffenseMode set above for Dual Wielding
@@ -252,7 +260,8 @@ function get_sets()
 		back={ name="Belenus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dual Wield"+10','Damage taken-5%',}},
 	}
 
-	sets.Precast = {ammo=Ammo.TP,}
+	sets.Precast = { ammo=Ammo.TP,}
+
 	-- 70 snapshot is Cap
 	-- Velocity Shot is seperate term - JA of Ranger
 	-- Rapid shot is like quick magic
@@ -321,12 +330,12 @@ function get_sets()
     sets.Midcast.RA = set_combine(sets.Midcast, {
 		ammo=Ammo.RA,
 		head={ name="Arcadian Beret +3", augments={'Enhances "Recycle" effect',}},
-		body={ name="Ikenga's Vest", augments={'Path: A',}},
+		body="Amini Caban +3",
 		hands="Amini Glove. +3",
 		legs="Amini Bragues +3",
 		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
-		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
-		waist="Yemaya Belt",
+		neck="Iskur Gorget",
+		waist={ name="Tellen Belt", augments={'Path: A',}},
 		left_ear="Telos Earring",
 		right_ear="Crep. Earring",
 		left_ring="Chirich Ring +1",
@@ -351,20 +360,30 @@ function get_sets()
 
 	-- Ranged Attack Gear (Critical Build)
     sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
-		head="Meghanada Visor +2",
-		body="Nisroch Jerkin",
-		--body={ name="Ikenga's Vest", augments={'Path: A',}},
-		hands="Mummu Wrists +2",
-		--hands={ name="Ikenga's Gloves", augments={'Path: A',}},
+		head={ name="Ikenga's Hat", augments={'Path: A',}},
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}},
 		legs="Amini Bragues +3",
-		feet="Osh. Leggings +1",
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}}, -- 10
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist="K. Kachina Belt +1",
-		left_ear="Telos Earring",
-		right_ear="Odr Earring",
+		right_ear="Sherida Earring", -- 5 II
+		left_ear="Odr Earring",
 		left_ring="Lehko's Ring",
-		right_ring="Dingir Ring",
+		right_ring={ name="Chirich Ring +1",  bag="wardrobe2"}, -- 10
 		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Crit.hit rate+10','Damage taken-5%',}},
+    })
+
+	-- Ranged Attack Gear (Critical Build)
+    sets.Midcast.RA.SB = set_combine(sets.Midcast.RA, {
+		-- 10 II from gleti's Knife
+		neck="Bathy Choker +1",
+		head={ name="Ikenga's Hat", augments={'Path: A',}}, -- 5 II
+		right_ear="Sherida Earring", -- 5 II
+		left_ear="Odr Earring",
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}}, -- 15
+		waist={ name="Tellen Belt", augments={'Path: A',}}, -- 5
+		left_ring={ name="Chirich Ring +1",  bag="wardrobe1"}, -- 10
+		right_ring={ name="Chirich Ring +1",  bag="wardrobe2"}, -- 10
     })
 
 	sets.Midcast.RA['True Shot'] = set_combine(sets.Midcast.RA, {
@@ -464,12 +483,7 @@ function get_sets()
 
 	-- Weapon Skill Damage (Melee)
 	sets.WS.WSD = set_combine(sets.WS, {
-		ammo=Ammo.WSD,
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		ammo=Ammo.PHY_WS,
 		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 		left_ear="Ishvara Earring",
@@ -482,8 +496,6 @@ function get_sets()
 	-- Magic Attack Bonus
 	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.MAB,
-		body={ name="Cohort Cloak +1", augments={'Path: A',}},
-		legs={ name="Arc. Braccae +3", augments={'Enhances "Eagle Eye Shot" effect',}},
 		waist="Eschan Stone", -- Orpheus/Obi Swap
 		left_ear="Friomisi Earring",
 		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -530,7 +542,15 @@ function get_sets()
 		ammo=Ammo.CRIT -- Smart_Ammo() will select from your XXXX.RA type
 	})
 
-	sets.WS.RA.SB = set_combine(sets.WS.RA, { })
+	sets.WS.RA.SB = set_combine(sets.WS.RA, {
+		-- 10 II from gleti's Knife
+		neck="Bathy Choker +1",
+		head={ name="Ikenga's Hat", augments={'Path: A',}}, -- 5 II
+		right_ear="Sherida Earring", -- 5 II
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}}, -- 15
+		left_ring={ name="Chirich Ring +1",  bag="wardrobe1"}, -- 10
+		right_ring={ name="Chirich Ring +1",  bag="wardrobe2"}, -- 10
+	})
 
 	-- Below swaps gear based off Aftermath
 
@@ -599,7 +619,20 @@ function get_sets()
 	sets.WS["Refulgent Arrow"] = set_combine(sets.WS.RA, {})
 	sets.WS["Jishnu's Radiance"] = set_combine(sets.WS.RA, {})
 	sets.WS["Apex Arrow"] = set_combine(sets.WS.RA, {})
-	sets.WS["Namas Arrow"] = set_combine(sets.WS.RA, {})
+	sets.WS["Namas Arrow"] = {		
+		head="Orion Beret +3",
+		body="Amini Caban +3",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet="Amini Bottillons +2",
+		neck="Fotia Gorget",
+		waist="Fotia Belt",
+		left_ear="Ishvara Earring",
+		right_ear="Telos Earring",
+		left_ring="Regal Ring",
+		right_ring="Epaminondas's Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	}
 
 	-- Sword Weaponskills
 	sets.WS["Fast Blade"] = set_combine(sets.WS.WSD, {})
@@ -623,11 +656,18 @@ function get_sets()
 
 	-- Crossbow Weaponskills
 	sets.WS["Trueflight"] = set_combine(sets.WS.MAB, {
+		neck={ name="Scout's Gorget +2", augments={'Path: A',}},
+		waist="Eschan Stone",
+		left_ear="Friomisi Earring",
+		right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		left_ring="Dingir Ring",
 		right_ring="Weather. Ring",
+		back={ name="Belenus's Cape", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
 	})
 
-	sets.TreasureHunter = {
-	    legs={ name="Herculean Trousers", augments={'Attack+8','Mag. Acc.+13 "Mag.Atk.Bns."+13','"Treasure Hunter"+2','Accuracy+16 Attack+16',}},
+	sets.TreasureHunter = { 
+		body="Volte Jupon",
+		feet="Volte Boots",
 		waist="Chaac Belt",
 	}
 end
@@ -732,6 +772,8 @@ function Job_Mode_Check(equipSet)
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	elseif state.JobMode.value == 'Subtle Blow' then
+		equipSet = set_combine(equipSet, sets.Weapons['Subtle Blow'])
 	end
 	if DualWield == false then
 		if TwoHand == false then

@@ -32,7 +32,7 @@ state.WeaponMode:set('Death Penalty')
 UI_Name = 'TP Mode'
 
 --Melee or Ranged Mode
-state.JobMode:options('Standard','Melee','Ranged')
+state.JobMode:options('Standard','Melee','Ranged','Subtle Blow')
 state.JobMode:set('Standard')
 
 -- Initialize Player
@@ -57,7 +57,7 @@ function get_sets()
 	sets.Weapons['Evisceration'] = {
 		main="Tauret",
 		sub={ name="Gleti's Knife", augments={'Path: A',}},
-		range={ name="Anarchy +2", augments={'Delay:+60','TP Bonus +1000',}},
+		range={ name="Fomalhaut", augments={'Path: A',}},
 	}
 
 	sets.Weapons['Fomalhaut'] = {
@@ -81,6 +81,10 @@ function get_sets()
 
 	sets.Weapons.Melee = {
 		sub={ name="Gleti's Knife", augments={'Path: A',}},
+	}
+
+	sets.Weapons['Subtle Blow'] = {
+		sub={ name="Gleti's Knife", augments={'Path: A',}}, -- Used for SB II
 	}
 
 	sets.Weapons.Ranged = {
@@ -110,7 +114,7 @@ function get_sets()
 	sets.Idle = {
 		ammo = Ammo.Bullet.RA,
 		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
+		body="Adamantite Armor",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -168,7 +172,7 @@ function get_sets()
 		right_ear="Crep. Earring",
 		left_ring="Lehko's Ring",
 		right_ring="Epona's Ring",
-		back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back="Null Shawl",
 	}
 
 	--Base TP set to build off when melee'n
@@ -186,13 +190,33 @@ function get_sets()
 	})
 
 	--This set is used when OffenseMode is CRIT and Enaged
-	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {})
+	sets.OffenseMode.CRIT = set_combine(sets.OffenseMode, {
+	    head="Null Masque",
+		body={ name="Ikenga's Vest", augments={'Path: A',}},
+		hands="Chasseur's Gants +3",
+		legs="Malignance Tights",
+		feet="Osh. Leggings +1",
+		neck="Null Loop",
+		waist="Reiki Yotai",
+		left_ear="Telos Earring",
+		right_ear="Chas. Earring +1",
+		left_ring="Lehko's Ring",
+		right_ring="Epona's Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','Crit.hit rate+10','Damage taken-5%',}},
+	})
 
 	--This set is used when OffenseMode is ACC and Enaged (Augments the TP base set)
 	sets.OffenseMode.ACC = set_combine(sets.OffenseMode, {})
 
 	-- Subtle Blow Set
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, {})
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode, {
+		body="Adamantite Armor",
+		legs="Chas. Culottes +3",
+		neck="Null Loop",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring={ name="Chirich Ring +1", bag="wardrobe1", priority=2},
+		right_ring={ name="Chirich Ring +1", bag="wardrobe2", priority=1},
+	})
 
 	--This set is used when OffenseMode is MEVA and Enaged
 	sets.OffenseMode.MEVA = set_combine(sets.OffenseMode.DT, {
@@ -237,7 +261,7 @@ function get_sets()
 
 	-- Flurry - 45 Snapshot Needed
 	sets.Precast.RA.Flurry = set_combine(sets.Precast.RA, {
-		body="Laksa. Frac +3", -- 0/20
+		body="Laksa. Frac +4", -- 0/20
 	}) -- Totals 45/63
 
 	-- Flurry II - 30 Snapshot Needed
@@ -288,6 +312,15 @@ function get_sets()
 		left_ring="Sroda Ring",
     })
 
+	-- Ranged Attack Gear (Critical Build)
+    sets.Midcast.RA.SB = set_combine(sets.Midcast.RA, {
+		-- 10 II from gleti's Knife
+		head={ name="Ikenga's Hat", augments={'Path: A',}}, -- 5 II
+		hands={ name="Ikenga's Gloves", augments={'Path: A',}}, -- 15
+		left_ring={ name="Chirich Ring +1",  bag="wardrobe1"}, -- 10
+		right_ring={ name="Chirich Ring +1",  bag="wardrobe2"}, -- 10
+    })
+
 	-- Ranged CRIT
 	sets.Midcast.RA.CRIT = set_combine(sets.Midcast.RA, {
 		head={ name="Ikenga's Hat", augments={'Path: A',}},
@@ -304,7 +337,7 @@ function get_sets()
 	sets.Midcast.RA.TripleShot = set_combine(sets.Midcast.RA, {
         head="Oshosi Mask +1", -- Missing
         body="Chasseur's Frac +3", --14
-        hands="Lanun Gants +3", -- Tripple shot becomes Quad shot
+        hands="Lanun Gants +4", -- Tripple shot becomes Quad shot
         legs="Osh. Trousers +1", -- Missing
         feet="Osh. Leggings +1", --3
     }) --28
@@ -378,7 +411,7 @@ function get_sets()
 	-- Job Abilities
 	sets.JA = {}
 	sets.JA["Wild Card"] = {
-	    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+	    feet={ name="Lanun Bottes +4", augments={'Enhances "Wild Card" effect',}},
 	}
 	sets.JA["Phantom Roll"] = {}
 	sets.JA["Random Deal"] = {
@@ -401,14 +434,14 @@ function get_sets()
 		legs="Dashing Subligar", -- 10
 	}) -- 20% Potency
 
-	sets.Fold = {hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}}}
+	sets.Fold = {hands={ name="Lanun Gants +4", augments={'Enhances "Fold" effect',}}}
 
 	--Base Set used for all rolls
 	sets.PhantomRoll = {
 		main={ name="Rostam", augments={'Path: C'}, bag="Wardrobe 2", priority=1}, -- +8 Effect and 60 sec Duration
 		sub={ name="Nusku Shield", priority=2},
 		range="Compensator", -- 20 sec Duration
-		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
+		head={ name="Lanun Tricorne +4", augments={'Enhances "Winning Streak" effect',}}, -- 50% Job ability Bonus
 		hands="Chasseur's Gants +3", --60 sec Duration
 		neck="Regal Necklace", -- 20 sec Duration
 		right_ring="Luzaf's Ring", -- 16 yalm range
@@ -478,7 +511,7 @@ function get_sets()
 
 	sets.WS.MAB = set_combine(sets.WS, {
 		ammo=Ammo.Bullet.MAB,
-		feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+		feet={ name="Lanun Bottes +4", augments={'Enhances "Wild Card" effect',}},
 		waist="Eschan Stone",
 		left_ear="Friomisi Earring",
 		right_ear="Crematio Earring",
@@ -492,7 +525,7 @@ function get_sets()
 
 	-- Ranged Base Set (Augments the sets.WS)
 	sets.WS.RA = {
-		head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
+		head={ name="Lanun Tricorne +4", augments={'Enhances "Winning Streak" effect',}},
 		body={ name="Ikenga's Vest", augments={'Path: A',}},
 		hands="Chasseur's Gants +3",
 		legs={ name="Ikenga's Trousers", augments={'Path: A',}},
@@ -551,7 +584,20 @@ function get_sets()
 	-- Ranged WS
 	sets.WS["Hot Shot"] = set_combine(sets.WS, sets.WS.RA, {})
 	sets.WS["Split Shot"] = set_combine(sets.WS, sets.WS.RA, {})
-	sets.WS["Sniper Shot"] = set_combine(sets.WS, sets.WS.RA, {})
+	sets.WS["Sniper Shot"] = set_combine(sets.WS, sets.WS.RA, { -- MAX ACC for skillchaining
+	    head="Chass. Tricorne +3",
+		body="Chasseur's Frac +3",
+		hands="Chasseur's Gants +3",
+		legs="Chas. Culottes +3",
+		feet={ name="Ikenga's Clogs", augments={'Path: A',}},
+		neck="Iskur Gorget",
+		waist={ name="Tellen Belt", augments={'Path: A',}},
+		left_ear="Telos Earring",
+		right_ear="Crep. Earring",
+		left_ring="Crepuscular Ring",
+		right_ring="Karieyh Ring",
+		back={ name="Camulus's Mantle", augments={'AGI+20','Rng.Acc.+20 Rng.Atk.+20','AGI+10','Weapon skill damage +10%','Damage taken-5%',}},
+	})
 	sets.WS["Numbing Shot"] = set_combine(sets.WS, sets.WS.RA, {})
 	sets.WS["Slug Shot"] = set_combine(sets.WS, sets.WS.RA, {
 		
@@ -662,6 +708,8 @@ function Job_Mode_Check(equipSet)
 		equipSet = set_combine(equipSet, sets.Weapons.Melee)
 	elseif state.JobMode.value == 'Ranged' then
 		equipSet = set_combine(equipSet, sets.Weapons.Ranged)
+	elseif state.JobMode.value == 'Subtle Blow' then
+		equipSet = set_combine(equipSet, sets.Weapons['Subtle Blow'])
 	end
 	if DualWield == false then
 		if TwoHand == false then

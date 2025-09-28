@@ -27,7 +27,7 @@ state.OffenseMode:options('TP','PDL','ACC','DT','PDT','MEVA','CRIT','SB')
 state.OffenseMode:set('DT')
 
 --Weapons options
-state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation', 'Aeolian Edge', 'Ukonvasara','Unlocked')
+state.WeaponMode:options('Chango','Shining One','Savage Blade','Decimation','Axe','Aeolian Edge', 'Ukonvasara','Labraunda','Unlocked')
 state.WeaponMode:set('Chango')
 
 -- Initialize Player
@@ -39,7 +39,11 @@ function get_sets()
 	sets.Weapons = {}
 
 	sets.Weapons['Chango'] = {
-		main={ name="Chango", augments={'Path: A',}},
+		main="Chango",
+		sub="Utu Grip",
+	}
+	sets.Weapons['Labraunda'] = {
+		main={ name="Labraunda", augments={'Path: C',}},
 		sub="Utu Grip",
 	}
 	sets.Weapons['Shining One'] = {
@@ -54,12 +58,16 @@ function get_sets()
 		main="Dolichenus",
 		sub="Zantetsuken",
 	}
+	sets.Weapons['Axe'] = {
+		main="Ikenga's Axe",
+		sub="Zantetsuken",
+	}
 	sets.Weapons['Aeolian Edge'] = {
-		main={ name="Ternion Dagger +1", augments={'Path: A',}},
+		main="Ternion Dagger +1",
 		sub="Naegling",
 	}
 	sets.Weapons['Ukonvasara'] = {
-		main={ name="Chango", augments={'Path: A',}},
+		main="Chango",
 		sub="Utu Grip",
 	}
 	-- This stops GS from chaning weapons (Abyssea Proc etc)
@@ -173,7 +181,12 @@ function get_sets()
 	})
 
 	-- Max SB set (SB 50 and SBII 15) Need auspice (29) to cap
-	sets.OffenseMode.SB = set_combine(sets.OffenseMode.DT, { })
+	sets.OffenseMode.SB = set_combine(sets.OffenseMode, { 
+		head="Hjarrandi Helm",
+		body="Sakpata's Plate",
+		legs="Sakpata's Cuisses",
+		feet="Sakpata's Leggings",
+	})
 
 	--These base set are used when an aftermath is active and player is enaged and correct weapon type set (Augments the current OffenseMode)
 	--If you don't specify a weapon mode it will use it regardless of Mythic,Empy,Relic,Aeonic
@@ -455,6 +468,10 @@ function get_sets()
 	sets.WS["Spirits Within"] = {}
 	sets.WS["Vorpal Blade"] = {}
 	sets.WS["Savage Blade"] = sets.WS.WSD
+	sets.WS["Savage Blade"]['PDL'] = set_combine(sets.WS.WSD, {
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
+	})
+
 	sets.WS["Sanguine Blade"] = {}
 	sets.WS["Requiescat"] = {}
 

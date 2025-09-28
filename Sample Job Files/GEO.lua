@@ -97,15 +97,15 @@ function get_sets()
 		head="Azimuth Hood +3", -- 11/11
 		neck={ name="Bagua Charm +2", augments={'Path: A',}},
 		body="Adamantite Armor",
-		feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
+		feet={ name="Bagua Sandals +4", augments={'Enhances "Radial Arcana" effect',}},
 		left_ring="Defending Ring",
-		hands="Geo. Mitaines +3",
+		hands="Geo. Mitaines +4",
     }) -- 54 PDT / 45 MDT (with shield)
 
 	--Used to swap into movement gear when the player is moving and not engaged
 	sets.Movement = {
 		left_ring="Defending Ring",
-		feet="Geo. Sandals +3",
+		feet="Geo. Sandals +4",
 	}
 
 	-- Set to be used if you get 
@@ -320,7 +320,7 @@ function get_sets()
 		main={ name="Idris", augments={'Path: A',}},
 		sub="Genmei Shield",
 		range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+		head={ name="Bagua Galero +4", augments={'Enhances "Primeval Zeal" effect',}},
 		body="Azimuth Coat +3",
 		hands="Geo. Mitaines +3",
 		legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}}, -- 21
@@ -348,7 +348,7 @@ function get_sets()
 
 	-- Will be used to keep max HP of Luopan when casting spells but switches when below 70% to the Idle.Pet set.
 	sets.Luopan = {
-		head={ name="Bagua Galero +3", augments={'Enhances "Primeval Zeal" effect',}},
+		head={ name="Bagua Galero +4", augments={'Enhances "Primeval Zeal" effect',}},
 	}
 
 	-- Job Abilities
@@ -360,7 +360,7 @@ function get_sets()
 	}
 	sets.JA["Full Circle"] = {
 		head="Azimuth Hood +3", -- 3
-		hands={ name="Bagua Mitaines +3", augments={'Enhances "Curative Recantation" effect',}},
+		hands={ name="Bagua Mitaines +4", augments={'Enhances "Curative Recantation" effect',}},
 	}
 	sets.JA["Lasting Emanation"] = {}
 	sets.JA["Ecliptic Attrition"] = {} 
@@ -376,7 +376,7 @@ function get_sets()
 	    legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
 	}
 	sets.JA["Radial Arcana"] = {
-	    feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
+	    feet={ name="Bagua Sandals +4", augments={'Enhances "Radial Arcana" effect',}},
 	}
 	sets.JA["Widened Compass"] = {}
 	sets.JA["Entrust"] = {}
@@ -520,5 +520,7 @@ function Luopan() --  This maintains the extra 600hp during midcast of spells wh
 end
 
 function Cycle_Timer()
-	if player.status == "Idle" then Luopan() end
+	if player.status == "Idle" then
+		Luopan()
+	end
 end
