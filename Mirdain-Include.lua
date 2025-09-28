@@ -161,6 +161,9 @@ sets.Geomancy.Indi = {}
 sets.Geomancy.Indi.Entrust = {}
 sets.Pet_Midcast = {}
 
+sets.PhalanxReceived = {}
+sets.CureReceived = {}
+sets.RefreshReceived = {}
 
 sets.Ready = {}
 sets.Ready.Magic = {}
@@ -386,7 +389,11 @@ do
 	local UtsusemiSpell = S{'Utsusemi: Ichi','Utsusemi: Ni', 'Utsusemi: San'}
 	local RecastTimers = S{'WhiteMagic','BlackMagic','Ninjutsu','BlueMagic','BardSong','SummoningMagic','SummonerPact'}
 	local SleepSongs = S{'Foe Lullaby','Foe Lullaby II','Horde Lullaby','Horde Lullaby II',}
-
+	local Phalanxes = S{'Phalanx', 'Phalanx II' }
+	local CureSpells = S{'Cure','Cure II','Cure III','Cure IV','Cure V','Cure VI','Magic Fruit','Wild Carrot','Plenilune Embrace',}
+	local CuragaSpells = S{'Curaga','Curaga II','Curaga III','Curaga IV','Curaga V','Cura','Cura II','Cura III','White Wind',}
+	local RefreshSpells =  S{"Refresh","Refresh II", "Refresh III",}
+	
 	local Divergence_Zones = S { "Dynamis - San d'Oria [D]", "Dynamis - Bastok [D]", "Dynamis - Windurst [D]", "Dynamis - Jeuno [D]" }
 
 	local settings = config.load(default)
@@ -3087,6 +3094,40 @@ do
 						end
 					end
 				end
+				
+			elseif data.targets[1].id == player.id then -- others casting on me
+				if S{4, 8}:contains(data.category) then
+					local action = nil
+					if data.category == 4 then
+						action = res.spells[data.param]
+					elseif data.category == 8 then
+						action = res.spells[data.targets[1].actions[1].param]
+					end
+					if action then
+						local setToEquip = nil
+						if Phalanxes:contains(action.name) then
+							setToEquip = sets.PhalanxReceived
+						elseif CureSpells:contains(action.name) or CuragaSpells:contains(action.name) then
+							setToEquip = sets.CureReceived
+						elseif RefreshSpells:contains(action.name) then
+							setToEquip = sets.RefreshReceived
+						end
+						if setToEquip then
+							if data.category == 8 then
+								-- Casting spell on me
+								equip(set_combine(choose_set(), setToEquip))
+							elseif data.category == 4 then
+								-- Finished casting spell on me
+								if choose_set_custom then
+									equip(set_combine(choose_set(), choose_set_custom()))
+								else
+									equip(set_combine(choose_set()))
+								end
+							end
+						end
+					end
+				end
+				
 			end
 			-- Casting Spell
 			if data.category == 8 then
