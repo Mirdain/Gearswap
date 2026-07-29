@@ -1,5 +1,5 @@
 -- Globals Variables
-Mirdain_GS = '1.5.12'
+Mirdain_GS = '1.5.13'
 
 -- Modes is the include file for a mode-tracking variable class.  Used for state vars, below.
 include('Modes')
@@ -2744,15 +2744,21 @@ do
 				or player.wardrobe3["Chatoyant Staff"] or player.wardrobe4["Chatoyant Staff"] or player.wardrobe5["Chatoyant Staff"] 
 				or player.wardrobe6["Chatoyant Staff"] or player.wardrobe7["Chatoyant Staff"] or player.wardrobe8["Chatoyant Staff"]
 
+				local Cape = player.inventory["Twilight Cape"] or player.wardrobe["Twilight Cape"] or player.wardrobe2["Twilight Cape"]
+				or player.wardrobe3["Twilight Cape"] or player.wardrobe4["Twilight Cape"] or player.wardrobe5["Twilight Cape"] 
+				or player.wardrobe6["Twilight Cape"] or player.wardrobe7["Twilight Cape"] or player.wardrobe8["Twilight Cape"]
+
 				-- Check for bonus
 				if spell.element == world.day_element then
 					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
 					if Staff then built_set = set_combine(built_set, sets.Weapons['Light Bonus'], {main="Chatoyant Staff"}) end
+					if Cape then built_set = set_combine(built_set, {back="Twilight Cape"}) end
 					windower.add_to_chat(8,'[' ..world.day_element.. '] day - using Bonus Gear')
 
 				elseif world.weather_element == spell.element then
 					if Obi then built_set = set_combine(built_set, {waist="Hachirin-no-Obi"}) end
 					if Staff then built_set = set_combine(built_set, sets.Weapons['Light Bonus'], {main="Chatoyant Staff"}) end
+					if Cape then built_set = set_combine(built_set, {back="Twilight Cape"}) end
 					windower.add_to_chat(8,'Weather is ['.. world.weather_element .. '] - using Bonus Gear')
 				end
 			end
